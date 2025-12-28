@@ -1,13 +1,32 @@
 #pragma once
 
+#include "Framebuffer.hpp"
+#include "Mesh.hpp"
+#include "Shader.hpp"
+#include "View.hpp"
+
 namespace cft
 {
 	class Renderer
 	{
 	private:
+		Framebuffer m_framebuffer;
+		Shader m_shader;
+		Mesh m_mesh;
+
+		unsigned int m_width;
+		unsigned int m_height;
+
 		static bool m_intialized;
 
 	public:
-		static bool initialize();
+		Renderer(unsigned int width, unsigned int height);
+
+		unsigned int getOutputTextureId() const;
+
+		void resize(unsigned int width, unsigned int height);
+		void render(const View& view) const;
+
+		static bool initialize(void* loader);
 	};
 }

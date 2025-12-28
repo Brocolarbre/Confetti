@@ -29,13 +29,7 @@ project "ConfettiStudio"
 		"Windove"
 	}
 	
-	filter "not options:shared-library"
-		filter { "not options:shared-library", "configurations:Debug" }
-			links "libglew32d"
-		filter { "not options:shared-library", "configurations:Release" }
-			links "libglew32"
-		filter "not options:shared-library"
-		
+	filter "not options:shared-library"		
 		filter { "not options:shared-library", "system:linux" }
 			links "GL"
 		filter { "not options:shared-library", "system:windows" }
@@ -43,7 +37,7 @@ project "ConfettiStudio"
 		filter "not options:shared-library"
 		
 		links {
-
+			"glad"
 		}
 		
 		defines {

@@ -1,6 +1,12 @@
 {
 	"dependencies": [
-		"glew",
+		{
+			"name": "glad",
+			"features": [
+				"gl-api-latest",
+				"loader"
+			]
+		},
 		"glfw3",
 		"glm",
 		{

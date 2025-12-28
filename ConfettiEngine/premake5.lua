@@ -13,13 +13,7 @@ project "ConfettiEngine"
 		filter { "options:shared-library", "configurations:Release" }
 			postbuildcommands "{COPY} %{cfg.buildtarget.relpath} %{wks.location}/external/bin/release"
 		filter "options:shared-library"
-		
-		filter { "options:shared-library", "configurations:Debug" }
-			links "libglew32d"
-		filter { "options:shared-library", "configurations:Release" }
-			links "libglew32"
-		filter "options:shared-library"
-		
+				
 		filter { "options:shared-library", "system:linux" }
 			links "GL"
 		filter { "options:shared-library", "system:windows" }
@@ -27,7 +21,7 @@ project "ConfettiEngine"
 		filter "options:shared-library"
 		
 		links {
-		
+			"glad"
 		}
 		
 		defines	{
@@ -48,7 +42,7 @@ project "ConfettiEngine"
 	}
 	
 	defines {
-		"GLEW_STATIC"
+
 	}
 
 	files {

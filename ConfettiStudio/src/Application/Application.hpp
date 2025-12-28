@@ -15,7 +15,7 @@ private:
 	double m_accumulator;
 
 	UserInterface m_userInterface;
-	ConfettiInstance m_confettiInstance;
+	std::unique_ptr<ConfettiInstance> m_confettiInstance;
 
 	void fixedUpdate(double fixedTimeStep);
 	void update(double deltaTime);

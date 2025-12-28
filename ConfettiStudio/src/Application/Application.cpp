@@ -14,6 +14,8 @@ void Application::update(double deltaTime)
 
 void Application::render()
 {
+	m_confettiInstance->render();
+
 	m_userInterface.setContext();
 	m_userInterface.render();
 
@@ -29,9 +31,11 @@ Application::Application() :
 	m_confettiInstance()
 {
 	m_window.captureContext();
-	cft::Renderer::initialize();
+	cft::Renderer::initialize(dove::Window::getProcAddress);
 
-	UserInterfaceBuilder::build(m_userInterface, m_window);
+	dove::Vector2 windowSize = m_window.getSize();
+	m_confettiInstance = std::make_unique<ConfettiInstance>(windowSize.x, windowSize.y, m_window);
+	UserInterfaceBuilder::build(m_userInterface, m_window, *m_confettiInstance);
 }
 
 Application::~Application()

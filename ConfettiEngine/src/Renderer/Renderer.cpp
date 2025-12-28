@@ -1,17 +1,54 @@
 #include "ConfettiEngine/Renderer/Renderer.hpp"
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 namespace cft
 {
 	bool Renderer::m_intialized = false;
 
-	bool Renderer::initialize()
+	Renderer::Renderer(unsigned int width, unsigned int height) :
+		m_framebuffer(width, height),
+		m_shader(),
+		m_mesh(),
+		m_width(width),
+		m_height(height)
+	{
+
+	}
+
+	unsigned int Renderer::getOutputTextureId() const
+	{
+		return m_framebuffer.getColorAttachment();
+	}
+
+	void Renderer::resize(unsigned int width, unsigned int height)
+	{
+		m_framebuffer.resize(width, height);
+		m_width = width;
+		m_height = height;
+	}
+
+	void Renderer::render(const View& view) const
+	{
+		m_framebuffer.bind();
+		glViewport(0, 0, m_width, m_height);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		m_shader.use();
+		m_shader.setUniform("uView", view.viewMatrix);
+		m_shader.setUniform("uProjection", view.projectionMatrix);
+
+		m_mesh.draw();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	bool Renderer::initialize(void* loader)
 	{
 		if (m_intialized)
 			return true;
 
-		if (glewInit() == GLEW_OK)
+		if(gladLoadGLLoader(static_cast<GLADloadproc>(loader)))
 			m_intialized = true;
 
 		return m_intialized;
