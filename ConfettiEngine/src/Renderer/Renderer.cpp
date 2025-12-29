@@ -1,6 +1,7 @@
 #include "ConfettiEngine/Renderer/Renderer.hpp"
 
 #include <glad/glad.h>
+#include <iostream>
 
 namespace cft
 {
@@ -10,10 +11,13 @@ namespace cft
 		m_framebuffer(width, height),
 		m_shader(),
 		m_mesh(),
+		m_ssbo(50),
 		m_width(width),
 		m_height(height)
 	{
 		glEnable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	unsigned int Renderer::getOutputTextureId() const
@@ -28,19 +32,24 @@ namespace cft
 		m_height = height;
 	}
 
-	void Renderer::render(const View& view) const
+	void Renderer::render(const View& view, const ParticleData& particleData, unsigned int particleCount) const
 	{
+		while (GLenum error = glGetError())
+			std::cerr << "OpenGL error : " << error << std::endl;
+
+		m_ssbo.setData(particleData);
+
 		m_framebuffer.bind();
 		glViewport(0, 0, m_width, m_height);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		m_ssbo.bind();
+
 		m_shader.use();
 		m_shader.setUniform("uView", view.viewMatrix);
 		m_shader.setUniform("uProjection", view.projectionMatrix);
-		m_shader.setUniform("uPosition", glm::vec3(0.0f));
-		m_shader.setUniform("uSize", glm::vec2(1.0f));
 
-		m_mesh.draw();
+		m_mesh.drawInstanced(particleCount);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

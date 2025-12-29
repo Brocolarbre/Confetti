@@ -13,5 +13,6 @@ namespace cft
 		~Mesh();
 
 		void draw() const;
+		void drawInstanced(unsigned int instanceCount) const;
 	};
 }

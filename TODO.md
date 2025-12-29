@@ -1,4 +1,5 @@
 Optimizations :
+- SSBO : replace the current data update method with persistent mapping
 
 Code cleanup :
 - Refactor camera controllers to avoid code duplication (OrbitCameraController, FirstPersonCameraController)

@@ -40,4 +40,10 @@ namespace cft
 		glBindVertexArray(m_vao);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
+
+	void Mesh::drawInstanced(unsigned int instanceCount) const
+	{
+		glBindVertexArray(m_vao);
+		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, instanceCount);
+	}
 }

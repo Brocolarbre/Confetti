@@ -2,6 +2,7 @@
 
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
     m_renderer(width, height),
+    m_particleSimulation(),
     m_camera(glm::vec3(0.0f), glm::vec2(width, height)),
     m_cameraController(m_camera, window, glm::vec3(0.0f, 2.0f, 4.0f), glm::vec3(0.0f))
 {
@@ -16,6 +17,7 @@ cft::Renderer& ConfettiInstance::getRenderer()
 void ConfettiInstance::update()
 {
     m_cameraController.update();
+    m_particleSimulation.update();
 }
 
 void ConfettiInstance::render()
@@ -32,5 +34,5 @@ void ConfettiInstance::render()
         projectionMatrix
     };
 
-    m_renderer.render(view);
+    m_renderer.render(view, m_particleSimulation.getParticleSystem().getParticleData(), m_particleSimulation.getParticleSystem().getParticleCount());
 }

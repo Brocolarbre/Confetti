@@ -3,11 +3,13 @@
 #include "Camera/OrbitCameraController.hpp"
 
 #include <ConfettiEngine/Renderer/Renderer.hpp>
+#include <ConfettiEngine/Particle/ParticleSimulation.hpp>
 
 class ConfettiInstance
 {
 private:
 	cft::Renderer m_renderer;
+	cft::ParticleSimulation m_particleSimulation;
 	Camera m_camera;
 	OrbitCameraController m_cameraController;
 
