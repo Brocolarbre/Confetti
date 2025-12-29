@@ -28,6 +28,7 @@ namespace cft
 		void setUniform(const std::string& name, unsigned int value) const;
 		void setUniform(const std::string& name, float value) const;
 		void setUniform(const std::string& name, double value) const;
+		void setUniform(const std::string& name, const glm::vec2& value) const;
 		void setUniform(const std::string& name, const glm::vec3& value) const;
 		void setUniform(const std::string& name, const glm::vec4& value) const;
 		void setUniform(const std::string& name, const glm::mat3& value) const;

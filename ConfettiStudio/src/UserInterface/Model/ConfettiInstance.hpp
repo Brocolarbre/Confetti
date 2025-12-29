@@ -16,5 +16,6 @@ public:
 
 	cft::Renderer& getRenderer();
 
+	void update();
 	void render();
 };

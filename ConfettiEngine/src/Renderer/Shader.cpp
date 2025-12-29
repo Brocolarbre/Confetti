@@ -13,14 +13,22 @@ namespace cft
 		constexpr const char* VERTEX_SHADER_SOURCE = R"(
 			#version 460 core
 
-			layout (location = 0) in vec3 vPosition;
+			layout (location = 0) in vec2 vPosition;
 
 			uniform mat4 uProjection;
 			uniform mat4 uView;
 
+			uniform vec3 uPosition;
+			uniform vec2 uSize;
+
 			void main()
 			{
-				gl_Position = uProjection * uView * vec4(vPosition, 1.0);
+				vec3 cameraRight = vec3(uView[0][0], uView[1][0], uView[2][0]);
+				vec3 cameraUp = vec3(uView[0][1], uView[1][1], uView[2][1]);
+
+				vec3 vertexPosition = uPosition + cameraRight * vPosition.x * uSize.x + cameraUp * vPosition.y * uSize.y;
+
+				gl_Position = uProjection * uView * vec4(vertexPosition, 1.0);
 			}
 		)";
 
@@ -183,6 +191,11 @@ namespace cft
 	void Shader::setUniform(const std::string& name, double value) const
 	{
 		glUniform1d(m_uniformLocations.at(name), value);
+	}
+
+	void Shader::setUniform(const std::string& name, const glm::vec2& value) const
+	{
+		glUniform2f(m_uniformLocations.at(name), value.x, value.y);
 	}
 
 	void Shader::setUniform(const std::string& name, const glm::vec3& value) const

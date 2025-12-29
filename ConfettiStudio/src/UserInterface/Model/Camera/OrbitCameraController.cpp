@@ -31,10 +31,11 @@ OrbitCameraController::OrbitCameraController(Camera& camera, dove::Window& windo
 	m_target(target),
 	m_distanceLimit(0.1f, 100.0f),
 	m_mousePosition(0),
-	m_isMoving(false),
+	m_isRotating(false),
 	m_isSliding(false),
 	m_rotationSpeed(0.1f),
-	m_translationSpeed(0.1f)
+	m_slideSpeed(0.1f),
+	m_scrollSpeed(0.1f)
 {
 	glm::vec3 direction = glm::normalize(position - target);
 
@@ -60,14 +61,19 @@ const glm::vec2& OrbitCameraController::getDistanceLimits() const
 	return m_distanceLimit;
 }
 
-float OrbitCameraController::getTranslationSpeed() const
-{
-	return m_translationSpeed;
-}
-
 float OrbitCameraController::getRotationSpeed() const
 {
 	return m_rotationSpeed;
+}
+
+float OrbitCameraController::getSlideSpeed() const
+{
+	return m_slideSpeed;
+}
+
+float OrbitCameraController::getScrollSpeed() const
+{
+	return m_scrollSpeed;
 }
 
 void OrbitCameraController::setTarget(const glm::vec3& target)
@@ -81,19 +87,24 @@ void OrbitCameraController::setDistanceLimits(const glm::vec2& distanceLimits)
 	m_distanceLimit = distanceLimits;
 }
 
-void OrbitCameraController::setTranslationSpeed(float translationSpeed)
-{
-	m_translationSpeed = translationSpeed;
-}
-
 void OrbitCameraController::setRotationSpeed(float rotationSpeed)
 {
 	m_rotationSpeed = rotationSpeed;
 }
 
+void OrbitCameraController::setSlideSpeed(float translationSpeed)
+{
+	m_slideSpeed = translationSpeed;
+}
+
+void OrbitCameraController::setScrollSpeed(float scrollSpeed)
+{
+	m_scrollSpeed = scrollSpeed;
+}
+
 void OrbitCameraController::onMouseMoved(unsigned int x, unsigned int y)
 {
-	if (!m_isMoving && !m_isSliding)
+	if (!m_isRotating && !m_isSliding)
 		return;
 
 	float horizontalOffset = static_cast<float>(static_cast<int>(m_mousePosition.x) - static_cast<int>(x));
@@ -102,7 +113,7 @@ void OrbitCameraController::onMouseMoved(unsigned int x, unsigned int y)
 	m_mousePosition.x = x;
 	m_mousePosition.y = y;
 
-	if (m_isMoving)
+	if (m_isRotating)
 	{
 		m_rotation += glm::vec2(verticalOffset * m_rotationSpeed, -horizontalOffset * m_rotationSpeed);
 
@@ -114,8 +125,9 @@ void OrbitCameraController::onMouseMoved(unsigned int x, unsigned int y)
 	}
 	else if (m_isSliding)
 	{
-		glm::vec3 position = m_camera.getPosition() + m_camera.getRight() * (horizontalOffset * m_translationSpeed) + m_camera.getUp() * (-verticalOffset * m_translationSpeed);
+		glm::vec3 position = m_camera.getPosition() + m_camera.getRight() * (horizontalOffset * m_slideSpeed) + m_camera.getUp() * (-verticalOffset * m_slideSpeed);
 		m_camera.setPosition(position);
+		m_target = position + m_camera.getForward() * glm::distance(position, m_target);
 	}
 
 	updateCameraBasis();
@@ -124,7 +136,7 @@ void OrbitCameraController::onMouseMoved(unsigned int x, unsigned int y)
 void OrbitCameraController::onMousePressed(dove::MouseEvent mouseEvent)
 {
 	if (mouseEvent.button == dove::Mouse::Button::Left)
-		m_isMoving = true;
+		m_isRotating = true;
 	else if (mouseEvent.button == dove::Mouse::Button::Right)
 		m_isSliding = true;
 
@@ -135,7 +147,7 @@ void OrbitCameraController::onMousePressed(dove::MouseEvent mouseEvent)
 void OrbitCameraController::onMouseReleased(dove::MouseEvent mouseEvent)
 {
 	if (mouseEvent.button == dove::Mouse::Button::Left)
-		m_isMoving = false;
+		m_isRotating = false;
 	else if (mouseEvent.button == dove::Mouse::Button::Right)
 		m_isSliding = false;
 }
@@ -149,14 +161,14 @@ void OrbitCameraController::onMouseScrolled(int horizontalScroll, int verticalSc
 	}
 	else
 	{
-		glm::vec3 position = m_camera.getPosition() + verticalScroll * m_translationSpeed * m_camera.getForward();
+		glm::vec3 position = m_camera.getPosition() + verticalScroll * m_scrollSpeed * m_camera.getForward();
 		float distance = glm::distance(position, m_target);
 
 		if (distance >= m_distanceLimit.x && distance <= m_distanceLimit.y)
 		{
 			m_camera.setPosition(position);
 			m_camera.updateViewMatrix();
-		}		
+		}
 	}
 }
 
@@ -170,40 +182,44 @@ void OrbitCameraController::update()
 
 	if (dove::Keyboard::isKeyPressed(m_window, dove::Keyboard::Key::D))
 	{
-		m_camera.setPosition(cameraPosition + m_translationSpeed * cameraRight);
+		m_camera.setPosition(cameraPosition + m_slideSpeed * cameraRight);
 		cameraMoved = true;
 	}
 
 	if (dove::Keyboard::isKeyPressed(m_window, dove::Keyboard::Key::A))
 	{
-		m_camera.setPosition(cameraPosition - m_translationSpeed * cameraRight);
+		m_camera.setPosition(cameraPosition - m_slideSpeed * cameraRight);
 		cameraMoved = true;
 	}
 
 	if (dove::Keyboard::isKeyPressed(m_window, dove::Keyboard::Key::Space))
 	{
-		m_camera.setPosition(cameraPosition + m_translationSpeed * Camera::WORLD_UP);
+		m_camera.setPosition(cameraPosition + m_slideSpeed * Camera::WORLD_UP);
 		cameraMoved = true;
 	}
 
 	if (dove::Keyboard::isKeyPressed(m_window, dove::Keyboard::Key::LeftShift))
 	{
-		m_camera.setPosition(cameraPosition - m_translationSpeed * Camera::WORLD_UP);
+		m_camera.setPosition(cameraPosition - m_slideSpeed * Camera::WORLD_UP);
 		cameraMoved = true;
 	}
 
 	if (dove::Keyboard::isKeyPressed(m_window, dove::Keyboard::Key::W))
 	{
-		m_camera.setPosition(cameraPosition + m_translationSpeed * cameraForward);
+		m_camera.setPosition(cameraPosition + m_slideSpeed * cameraForward);
 		cameraMoved = true;
 	}
 
 	if (dove::Keyboard::isKeyPressed(m_window, dove::Keyboard::Key::S))
 	{
-		m_camera.setPosition(cameraPosition - m_translationSpeed * cameraForward);
+		m_camera.setPosition(cameraPosition - m_slideSpeed * cameraForward);
 		cameraMoved = true;
 	}
 
 	if (cameraMoved)
+	{
+		const glm::vec3& position = m_camera.getPosition();
+		m_target = position + m_camera.getForward() * glm::distance(position, m_target);
 		updateCameraBasis();
+	}
 }

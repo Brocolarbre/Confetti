@@ -10,11 +10,12 @@ private:
 	glm::vec2 m_distanceLimit;
 	glm::uvec2 m_mousePosition;
 
-	bool m_isMoving;
+	bool m_isRotating;
 	bool m_isSliding;
 
-	float m_translationSpeed;
 	float m_rotationSpeed;
+	float m_slideSpeed;
+	float m_scrollSpeed;
 
 	void updateCameraBasis() const;
 
@@ -24,13 +25,15 @@ public:
 	const glm::vec2& getRotation() const;
 	const glm::vec3& getTarget() const;
 	const glm::vec2& getDistanceLimits() const;
-	float getTranslationSpeed() const;
 	float getRotationSpeed() const;
+	float getSlideSpeed() const;
+	float getScrollSpeed() const;
 
 	void setTarget(const glm::vec3& target);
 	void setDistanceLimits(const glm::vec2& distanceLimits);
-	void setTranslationSpeed(float translationSpeed);
 	void setRotationSpeed(float rotationSpeed);
+	void setSlideSpeed(float translationSpeed);
+	void setScrollSpeed(float scrollSpeed);
 
 	void onMouseMoved(unsigned int x, unsigned int y) override;
 	void onMousePressed(dove::MouseEvent mouseEvent) override;

@@ -13,7 +13,7 @@ namespace cft
 		m_width(width),
 		m_height(height)
 	{
-
+		glEnable(GL_CULL_FACE);
 	}
 
 	unsigned int Renderer::getOutputTextureId() const
@@ -37,6 +37,8 @@ namespace cft
 		m_shader.use();
 		m_shader.setUniform("uView", view.viewMatrix);
 		m_shader.setUniform("uProjection", view.projectionMatrix);
+		m_shader.setUniform("uPosition", glm::vec3(0.0f));
+		m_shader.setUniform("uSize", glm::vec2(1.0f));
 
 		m_mesh.draw();
 

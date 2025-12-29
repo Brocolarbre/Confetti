@@ -1,18 +1,21 @@
 #include "ConfettiInstance.hpp"
 
-#include "Camera/OrbitCameraController.hpp"
-
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
     m_renderer(width, height),
     m_camera(glm::vec3(0.0f), glm::vec2(width, height)),
     m_cameraController(m_camera, window, glm::vec3(0.0f, 2.0f, 4.0f), glm::vec3(0.0f))
 {
-    m_cameraController.setRotationSpeed(0.5f);
+    m_cameraController.setSlideSpeed(0.1f);
 }
 
 cft::Renderer& ConfettiInstance::getRenderer()
 {
     return m_renderer;
+}
+
+void ConfettiInstance::update()
+{
+    m_cameraController.update();
 }
 
 void ConfettiInstance::render()

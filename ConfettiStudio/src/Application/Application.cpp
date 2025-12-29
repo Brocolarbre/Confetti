@@ -10,6 +10,8 @@ void Application::fixedUpdate(double fixedTimeStep)
 void Application::update(double deltaTime)
 {
 	m_window.fetchEvents();
+
+	m_confettiInstance->update();
 }
 
 void Application::render()
