@@ -2,7 +2,10 @@
 
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
     m_renderer(width, height),
-    m_particleSimulation(),
+    m_generator(),
+    m_particleSystem(m_generator),
+    m_elapsedTimeChronometer(),
+    m_deltaTimeChronometer(),
     m_camera(glm::vec3(0.0f), glm::vec2(width, height)),
     m_cameraController(m_camera, window, glm::vec3(0.0f, 2.0f, 4.0f), glm::vec3(0.0f))
 {
@@ -17,7 +20,12 @@ cft::Renderer& ConfettiInstance::getRenderer()
 void ConfettiInstance::update()
 {
     m_cameraController.update();
-    m_particleSimulation.update();
+
+    float elapsedTime = static_cast<float>(m_elapsedTimeChronometer.getElapsedTime().seconds);
+    float deltaTime = static_cast<float>(m_deltaTimeChronometer.getElapsedTime().seconds);
+    m_deltaTimeChronometer.restart();
+
+    m_particleSystem.update(elapsedTime, deltaTime);
 }
 
 void ConfettiInstance::render()
@@ -34,5 +42,5 @@ void ConfettiInstance::render()
         projectionMatrix
     };
 
-    m_renderer.render(view, m_particleSimulation.getParticleSystem().getParticleData(), m_particleSimulation.getParticleSystem().getParticleCount());
+    m_renderer.render(view, m_particleSystem.getParticlePool());
 }

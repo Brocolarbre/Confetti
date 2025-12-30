@@ -11,7 +11,7 @@ namespace cft
 		m_framebuffer(width, height),
 		m_shader(),
 		m_mesh(),
-		m_ssbo(50),
+		m_ssbo(100), // dynamique
 		m_width(width),
 		m_height(height)
 	{
@@ -32,12 +32,12 @@ namespace cft
 		m_height = height;
 	}
 
-	void Renderer::render(const View& view, const ParticleData& particleData, unsigned int particleCount) const
+	void Renderer::render(const View& view, const ParticlePool& particlePool) const
 	{
 		while (GLenum error = glGetError())
 			std::cerr << "OpenGL error : " << error << std::endl;
 
-		m_ssbo.setData(particleData);
+		m_ssbo.setData(particlePool);
 
 		m_framebuffer.bind();
 		glViewport(0, 0, m_width, m_height);
@@ -49,7 +49,7 @@ namespace cft
 		m_shader.setUniform("uView", view.viewMatrix);
 		m_shader.setUniform("uProjection", view.projectionMatrix);
 
-		m_mesh.drawInstanced(particleCount);
+		m_mesh.drawInstanced(particlePool.count);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

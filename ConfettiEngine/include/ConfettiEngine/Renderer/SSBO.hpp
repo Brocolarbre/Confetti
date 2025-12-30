@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ConfettiEngine/Particle/ParticleData.hpp"
+#include "ConfettiEngine/Particle/ParticlePool.hpp"
 
 namespace cft
 {
@@ -22,6 +22,6 @@ namespace cft
 		~SSBO();
 
 		void bind() const;
-		void setData(const ParticleData& data) const;
+		void setData(const ParticlePool& data) const;
 	};
 }

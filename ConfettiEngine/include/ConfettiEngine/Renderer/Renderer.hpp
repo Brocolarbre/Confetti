@@ -6,7 +6,7 @@
 #include "SSBO.hpp"
 #include "View.hpp"
 
-#include "ConfettiEngine/Particle/ParticleData.hpp"
+#include "ConfettiEngine/Particle/ParticlePool.hpp"
 
 namespace cft
 {
@@ -29,7 +29,7 @@ namespace cft
 		unsigned int getOutputTextureId() const;
 
 		void resize(unsigned int width, unsigned int height);
-		void render(const View& view, const ParticleData& particleData, unsigned int particleCount) const;
+		void render(const View& view, const ParticlePool& particlePool) const;
 
 		static bool initialize(void* loader);
 	};

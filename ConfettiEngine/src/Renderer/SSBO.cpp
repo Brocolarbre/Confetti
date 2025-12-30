@@ -25,12 +25,12 @@ namespace cft
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_id);
 	}
 
-	void SSBO::setData(const ParticleData& data) const
+	void SSBO::setData(const ParticlePool& data) const
 	{
 		std::vector<Particle> particles;
-		particles.reserve(data.size);
+		particles.reserve(data.count);
 
-		for (unsigned int i = 0; i < data.size; ++i)
+		for (unsigned int i = 0; i < data.count; ++i)
 		{
 			Particle particle{ data.color[i], glm::vec4(data.position[i], 0.0f), glm::vec4(data.scale[i], 0.0f, 0.0f) };
 			particles.push_back(particle);

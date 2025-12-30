@@ -1,19 +1,16 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <vector>
 
 namespace cft
 {
 	struct ParticleData
 	{
-		std::vector<glm::vec4> color;
-		std::vector<glm::vec3> position;
-		std::vector<glm::vec3> velocity;
-		std::vector<glm::vec2> scale;
-		std::vector<float> lifetime;
-		std::vector<float> spawnTime;
-
-		unsigned int size = 0;
+		glm::vec4 color;
+		glm::vec3 position;
+		glm::vec3 velocity;
+		glm::vec2 scale;
+		float lifetime;
+		float spawnTime;
 	};
 }
