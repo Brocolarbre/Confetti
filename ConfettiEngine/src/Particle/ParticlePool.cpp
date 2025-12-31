@@ -90,8 +90,7 @@ namespace cft
 
 	void ParticlePool::update(float elapsedTime, float deltaTime)
 	{
-		unsigned int i = 0;
-		while (i < m_count)
+		for (unsigned int i = 0; i < m_count;)
 		{
 			float despawnTime = m_spawnTime[i] + m_lifetime[i];
 			if (despawnTime <= elapsedTime)

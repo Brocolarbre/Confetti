@@ -13,9 +13,12 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_cameraController.setSlideSpeed(0.1f);
 
     cft::ParticleBoundaries boundaries{ glm::vec4(0.0f), glm::vec4(1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(-1.0f), glm::vec3(1.0f), glm::vec2(0.01f), glm::vec2(1.0f), 2.0f, 5.0f };
-    cft::ParticleEmitter emitter{ 0, 4.0f, 4.0f, 20, 0.0f, boundaries };
+    cft::ParticleEmitter emitter{ 0, 0.0f, 4.0f, 20, 0.0f, boundaries };
     m_confetti.particleEmitters[0] = emitter;
-    m_particleSystem.createParticleEmitter(emitter);
+
+    cft::ParticleEffect effect{ 4.0f, 5.0f, { 0 } };
+    m_confetti.particleEffects[4] = effect;
+    m_particleSystem.addParticleEffect(4);
 }
 
 cft::Renderer& ConfettiInstance::getRenderer()

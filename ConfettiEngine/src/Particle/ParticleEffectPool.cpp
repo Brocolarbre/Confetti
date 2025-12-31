@@ -37,12 +37,13 @@ namespace cft
 	void ParticleEffectPool::resize(unsigned int capacity)
 	{
 		m_effects.resize(capacity);
+		m_capacity = capacity;
+		m_count = glm::min(m_count, m_capacity);
 	}
 
 	void ParticleEffectPool::update(float elapsedTime, float deltaTime)
 	{
-		unsigned int i = 0;
-		while (i < m_count)
+		for (unsigned int i = 0; i < m_count;)
 		{
 			float despawnTime = m_effects[i].spawnTime + m_effects[i].lifetime;
 			if (despawnTime <= elapsedTime)
@@ -52,12 +53,12 @@ namespace cft
 			else
 			{
 				std::vector<unsigned int>& emitters = m_effects[i].emitters;
-				unsigned int j = 0;
-				while(j < emitters.size())
+				for (unsigned int j = 0; j < emitters.size();)
 				{
-					const ParticleEmitter& emitter = m_particleSystem.getParticleEmitter(emitters[j]);
-					if (emitter.spawnTime <= elapsedTime)
+					ParticleEmitter emitter = m_particleSystem.getParticleEmitter(emitters[j]);
+					if (m_effects[i].spawnTime + emitter.spawnTime <= elapsedTime)
 					{
+						emitter.spawnTime = elapsedTime;
 						m_particleSystem.createParticleEmitter(emitter);
 						emitters[j] = emitters[emitters.size() - 1];
 						emitters.erase(emitters.end() - 1);

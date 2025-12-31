@@ -47,14 +47,15 @@ namespace cft
 	void ParticleEmitterPool::resize(unsigned int capacity)
 	{
 		m_emitters.resize(capacity);
+		m_capacity = capacity;
+		m_count = glm::min(m_count, m_capacity);
 	}
 
 	void ParticleEmitterPool::update(float elapsedTime, float deltaTime)
 	{
 		m_particlePool.update(elapsedTime, deltaTime);
 
-		unsigned int i = 0;
-		while (i < m_count)
+		for (unsigned int i = 0; i < m_count;)
 		{
 			float despawnTime = m_emitters[i].spawnTime + m_emitters[i].lifetime;
 			if (despawnTime <= elapsedTime)

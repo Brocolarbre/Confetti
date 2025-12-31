@@ -2,7 +2,6 @@
 
 #include "ParticleEffectPool.hpp"
 #include "ParticleEmitterPool.hpp"
-#include "ConfettiEngine/Confetti.hpp"
 
 #include <unordered_map>
 
@@ -13,9 +12,9 @@ namespace cft
 	class ParticleSystem
 	{
 	private:
-		std::unordered_map<unsigned int, ParticleEffectPool> m_particleEffectPools; // Need multiple pools for effects ?
+		std::vector<unsigned int> m_effects;
+		ParticleEffectPool m_particleEffectPool;
 		std::unordered_map<unsigned int, ParticleEmitterPool> m_particleEmitterPools;
-		// Store effects, instantiate them with time in update
 		Confetti& m_confetti;
 
 	public:
@@ -23,11 +22,13 @@ namespace cft
 
 		const std::unordered_map<unsigned int, ParticleEmitterPool>& getParticleEmitterPools() const;
 
-		const ParticleEffect& getParticleEffect(unsigned int id) const;
+		const ParticleEffect& getParticleEffect(unsigned int id) const; // ?
 		const ParticleEmitter& getParticleEmitter(unsigned int id) const;
 
-		void createParticleEffect(unsigned int type, const ParticleEffect& effect);
+		void createParticleEffect(const ParticleEffect& effect);
 		void createParticleEmitter(const ParticleEmitter& emitter);
+
+		void addParticleEffect(unsigned int id);
 
 		void update(float elapsedTime, float deltaTime);
 	};
