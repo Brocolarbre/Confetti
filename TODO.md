@@ -1,5 +1,6 @@
 Optimizations :
 - SSBO : replace the current data update method with persistent mapping
+- Primitive : render circles instead of quads to reduce overdraw
 
 Code cleanup :
 - Refactor camera controllers to avoid code duplication (OrbitCameraController, FirstPersonCameraController)

@@ -43,6 +43,7 @@ namespace cft
 		std::vector<float> m_spawnTime;
 
 		unsigned int m_capacity;
+		unsigned int m_reservedCapacity;
 		unsigned int m_count;
 
 	public:
@@ -53,7 +54,10 @@ namespace cft
 		const std::vector<glm::vec2>& getScale() const;
 
 		unsigned int getCapacity() const;
+		unsigned int getReservedCapacity() const;
 		unsigned int getCount() const;
+
+		void reserveCapacity(unsigned int capacity);
 
 		void createParticle(const Particle& particle);
 		void destroyParticle(unsigned int index);

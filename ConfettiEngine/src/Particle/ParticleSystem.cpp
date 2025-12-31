@@ -12,21 +12,6 @@ namespace cft
 
 	}
 
-	const std::unordered_map<unsigned int, ParticleEmitterPool>& ParticleSystem::getParticleEmitterPools() const
-	{
-		return m_particleEmitterPools;
-	}
-
-	const ParticleEffect& ParticleSystem::getParticleEffect(unsigned int id) const
-	{
-		return m_confetti.particleEffects.at(id);
-	}
-
-	const ParticleEmitter& ParticleSystem::getParticleEmitter(unsigned int id) const
-	{
-		return m_confetti.particleEmitters.at(id);
-	}
-
 	void ParticleSystem::createParticleEffect(const ParticleEffect& effect)
 	{
 		unsigned int poolCapacity = m_particleEffectPool.getCapacity();
@@ -34,6 +19,16 @@ namespace cft
 			m_particleEffectPool.resize(poolCapacity + 1);
 
 		m_particleEffectPool.createParticleEffect(effect);
+	}
+
+	const std::unordered_map<unsigned int, ParticleEmitterPool>& ParticleSystem::getParticleEmitterPools() const
+	{
+		return m_particleEmitterPools;
+	}
+
+	const ParticleEmitter& ParticleSystem::getParticleEmitter(unsigned int id) const
+	{
+		return m_confetti.particleEmitters.at(id);
 	}
 
 	void ParticleSystem::createParticleEmitter(const ParticleEmitter& emitter)
@@ -59,7 +54,7 @@ namespace cft
 	{
 		for (unsigned int i = 0; i < m_effects.size();)
 		{
-			const ParticleEffect& effect = getParticleEffect(m_effects[i]);
+			const ParticleEffect& effect = m_confetti.particleEffects.at(m_effects[i]);
 			if (effect.spawnTime <= elapsedTime)
 			{
 				createParticleEffect(effect);

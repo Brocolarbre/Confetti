@@ -20,8 +20,8 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_confetti.particleEmitters[1] = emitter2;
 
     cft::ParticleEffect effect{ 0.0f, 10.0f, { 0, 1 } };
-    m_confetti.particleEffects[4] = effect;
-    m_particleSystem.addParticleEffect(4);
+    m_confetti.particleEffects[0] = effect;
+    m_particleSystem.addParticleEffect(0);
 }
 
 cft::Renderer& ConfettiInstance::getRenderer()

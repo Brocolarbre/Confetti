@@ -22,6 +22,7 @@ namespace cft
 		m_lifetime(),
 		m_spawnTime(),
 		m_capacity(0),
+		m_reservedCapacity(0),
 		m_count(0)
 	{
 
@@ -47,9 +48,22 @@ namespace cft
 		return m_capacity;
 	}
 
+	unsigned int ParticlePool::getReservedCapacity() const
+	{
+		return m_reservedCapacity;
+	}
+
 	unsigned int ParticlePool::getCount() const
 	{
 		return m_count;
+	}
+
+	void ParticlePool::reserveCapacity(unsigned int capacity)
+	{
+		if (static_cast<int>(m_capacity) - static_cast<int>(m_count) - static_cast<int>(m_reservedCapacity) < static_cast<int>(capacity))
+			resize(m_capacity + capacity);
+
+		m_reservedCapacity += capacity;
 	}
 
 	void ParticlePool::createParticle(const Particle& data)
@@ -74,6 +88,8 @@ namespace cft
 		m_scale[index] = m_scale[lastIndex];
 		m_lifetime[index] = m_lifetime[lastIndex];
 		m_spawnTime[index] = m_spawnTime[lastIndex];
+
+		--m_reservedCapacity;
 	}
 
 	void ParticlePool::resize(unsigned int capacity)
