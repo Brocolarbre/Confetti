@@ -63,7 +63,6 @@ namespace cft
 			if (effect.spawnTime <= elapsedTime)
 			{
 				createParticleEffect(effect);
-				std::cout << "Particle effect spawned" << std::endl;
 				m_effects[i] = m_effects[m_effects.size() - 1];
 				m_effects.erase(m_effects.end() - 1);
 			}

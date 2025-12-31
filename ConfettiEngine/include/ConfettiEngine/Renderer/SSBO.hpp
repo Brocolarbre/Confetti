@@ -17,11 +17,13 @@ namespace cft
 			glm::vec4 size;
 		};
 
+		void resize(unsigned int capacity);
+
 	public:
-		SSBO(unsigned int particleCount);
+		SSBO();
 		~SSBO();
 
 		void bind() const;
-		void setData(const ParticlePool& data) const;
+		void setData(const std::vector<std::reference_wrapper<const ParticlePool>>& particlePools, unsigned int totalParticleCount);
 	};
 }

@@ -1,5 +1,7 @@
 #include "ConfettiEngine/Particle/ParticleEmitterPool.hpp"
 
+#include <iostream>
+
 namespace cft
 {
 	ParticleEmitterPool::ParticleEmitterPool(RandomNumberGenerator& generator) :
@@ -34,7 +36,11 @@ namespace cft
 		
 		unsigned int emitterMaximumParticleCount = static_cast<unsigned int>(emitter.spawnRate * emitter.boundaries.maximumLifetime);
 		unsigned int particlePoolCapacity = m_particlePool.getCapacity();
-		if(particlePoolCapacity - m_particlePool.getCount() < emitterMaximumParticleCount)
+
+		std::cout << "Capacity: " << particlePoolCapacity << " Count: " << static_cast<int>(m_particlePool.getCount()) <<
+			" Emitter max count: " << emitterMaximumParticleCount << std::endl;
+		// Find a way to reuse expired particles slots
+		//if (static_cast<int>(particlePoolCapacity) < emitterMaximumParticleCount)
 			m_particlePool.resize(particlePoolCapacity + emitterMaximumParticleCount);
 	}
 

@@ -4,14 +4,19 @@
 
 namespace cft
 {
-	SSBO::SSBO(unsigned int particleCount) :
+	void SSBO::resize(unsigned int capacity)
+	{
+		m_capacity = capacity;
+
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_id);
+		glBufferData(GL_SHADER_STORAGE_BUFFER, m_capacity * sizeof(Particle), nullptr, GL_DYNAMIC_DRAW);
+	}
+
+	SSBO::SSBO() :
 		m_id(0),
-		m_capacity(particleCount * sizeof(Particle))
+		m_capacity()
 	{
 		glGenBuffers(1, &m_id);
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_id);
-		glBufferData(GL_SHADER_STORAGE_BUFFER, m_capacity, nullptr, GL_DYNAMIC_DRAW);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_id);
 	}
 
 	SSBO::~SSBO()
@@ -25,20 +30,28 @@ namespace cft
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_id);
 	}
 
-	void SSBO::setData(const ParticlePool& data) const
+	void SSBO::setData(const std::vector<std::reference_wrapper<const ParticlePool>>& particlePools, unsigned int totalParticleCount)
 	{
-		unsigned int dataCount = data.getCount();
-		const std::vector<glm::vec4>& color = data.getColor();
-		const std::vector<glm::vec3>& position = data.getPosition();
-		const std::vector<glm::vec2>& scale = data.getScale();
+		if (m_capacity < totalParticleCount)
+			resize(totalParticleCount);
 
 		std::vector<Particle> particles;
-		particles.reserve(dataCount);
+		particles.reserve(totalParticleCount);
 
-		for (unsigned int i = 0; i < dataCount; ++i)
+		for (const auto& particlePool : particlePools)
 		{
-			Particle particle{ color[i], glm::vec4(position[i], 0.0f), glm::vec4(scale[i], 0.0f, 0.0f) };
-			particles.push_back(particle);
+			const ParticlePool& pool = particlePool.get();
+			unsigned int particleCount = pool.getCount();
+
+			const std::vector<glm::vec4>& color = pool.getColor();
+			const std::vector<glm::vec3>& position = pool.getPosition();
+			const std::vector<glm::vec2>& scale = pool.getScale();
+
+			for (unsigned int i = 0; i < particleCount; ++i)
+			{
+				Particle particle{ color[i], glm::vec4(position[i], 0.0f), glm::vec4(scale[i], 0.0f, 0.0f) };
+				particles.push_back(particle);
+			}
 		}
 
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_id);
