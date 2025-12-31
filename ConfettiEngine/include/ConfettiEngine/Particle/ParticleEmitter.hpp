@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ParticleBoundaries.hpp"
+#include "ParticlePool.hpp"
 
 namespace cft
 {

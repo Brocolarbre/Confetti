@@ -1,7 +1,5 @@
 #include "ConfettiEngine/Particle/ParticleSystem.hpp"
 
-#include <iostream>
-
 namespace cft
 {
 	ParticleSystem::ParticleSystem(Confetti& confetti) :
@@ -47,7 +45,6 @@ namespace cft
 		ParticleEmitterPool& pool = m_particleEmitterPools.at(emitter.type);
 		unsigned int poolCapacity = pool.getCapacity();
 
-		std::cout << poolCapacity << " " << pool.getCount() << std::endl;
 		if (static_cast<int>(poolCapacity) - static_cast<unsigned int>(pool.getCount()) == 0)
 			pool.resize(poolCapacity + 1);
 

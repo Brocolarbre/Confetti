@@ -1,8 +1,6 @@
 #pragma once
 
 #include "ParticleEmitter.hpp"
-#include "ParticlePool.hpp"
-#include "ConfettiEngine/Tools/RandomNumberGenerator.hpp"
 
 namespace cft
 {

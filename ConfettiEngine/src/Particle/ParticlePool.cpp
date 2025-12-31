@@ -2,6 +2,18 @@
 
 namespace cft
 {
+	Particle Particle::create(RandomNumberGenerator& generator, const ParticleBoundaries& boundaries, float elapsedTime)
+	{
+		return Particle{
+			generator.generate(boundaries.minimumColor, boundaries.maximumColor),
+			generator.generate(boundaries.minimumPosition, boundaries.maximumPosition),
+			generator.generate(boundaries.minimumVelocity, boundaries.maximumVelocity),
+			generator.generate(boundaries.minimumScale, boundaries.maximumScale),
+			generator.generate(boundaries.minimumLifetime, boundaries.maximumLifetime),
+			elapsedTime
+		};
+	}
+
 	ParticlePool::ParticlePool() :
 		m_color(),
 		m_position(),

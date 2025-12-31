@@ -1,5 +1,4 @@
 #include "ConfettiEngine/Particle/ParticleEmitterPool.hpp"
-#include "ConfettiEngine/Particle/ParticleGenerator.hpp"
 
 namespace cft
 {
@@ -69,7 +68,7 @@ namespace cft
 
 				unsigned int roundedSpawnCount = static_cast<unsigned int>(spawnCount);
 				for (unsigned int j = 0; j < roundedSpawnCount; ++j)
-					m_particlePool.createParticle(ParticleGenerator::generateParticle(m_generator, m_emitters[i].boundaries, elapsedTime));
+					m_particlePool.createParticle(Particle::create(m_generator, m_emitters[i].boundaries, elapsedTime));
 
 				++i;
 			}
