@@ -3,13 +3,19 @@
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
     m_renderer(width, height),
     m_generator(),
-    m_particleSystem(m_generator),
+    m_confetti(),
+    m_particleSystem(m_confetti),
     m_elapsedTimeChronometer(),
     m_deltaTimeChronometer(),
     m_camera(glm::vec3(0.0f), glm::vec2(width, height)),
     m_cameraController(m_camera, window, glm::vec3(0.0f, 2.0f, 4.0f), glm::vec3(0.0f))
 {
     m_cameraController.setSlideSpeed(0.1f);
+
+    cft::ParticleBoundaries boundaries{ glm::vec4(0.0f), glm::vec4(1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(-1.0f), glm::vec3(1.0f), glm::vec2(0.01f), glm::vec2(1.0f), 2.0f, 5.0f };
+    cft::ParticleEmitter emitter{ 0, 4.0f, 4.0f, 20, 0.0f, boundaries };
+    m_confetti.particleEmitters[0] = emitter;
+    m_particleSystem.createParticleEmitter(emitter);
 }
 
 cft::Renderer& ConfettiInstance::getRenderer()
@@ -42,5 +48,6 @@ void ConfettiInstance::render()
         projectionMatrix
     };
 
-    m_renderer.render(view, m_particleSystem.getParticlePool());
+    for(const auto& [type, pool] : m_particleSystem.getParticleEmitterPools())
+        m_renderer.render(view, pool.getParticlePool());
 }

@@ -2,9 +2,9 @@
 
 namespace cft
 {
-	ParticleData ParticleGenerator::generateParticle(RandomNumberGenerator& generator, const ParticleBoundaries& boundaries, float elapsedTime)
+	Particle ParticleGenerator::generateParticle(RandomNumberGenerator& generator, const ParticleBoundaries& boundaries, float elapsedTime)
 	{
-		return ParticleData{
+		return Particle{
 			generator.generate(boundaries.minimumColor, boundaries.maximumColor),
 			generator.generate(boundaries.minimumPosition, boundaries.maximumPosition),
 			generator.generate(boundaries.minimumVelocity, boundaries.maximumVelocity),

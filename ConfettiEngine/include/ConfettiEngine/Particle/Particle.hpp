@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	struct ParticleData
+	struct Particle
 	{
 		glm::vec4 color;
 		glm::vec3 position;

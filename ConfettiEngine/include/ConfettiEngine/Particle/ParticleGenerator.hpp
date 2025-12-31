@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ParticleData.hpp"
+#include "Particle.hpp"
 #include "ParticleBoundaries.hpp"
 #include "ConfettiEngine/Tools/RandomNumberGenerator.hpp"
 
@@ -9,6 +9,6 @@ namespace cft
 	class ParticleGenerator
 	{
 	public:
-		static ParticleData generateParticle(RandomNumberGenerator& generator, const ParticleBoundaries& boundaries, float elapsedTime);
+		static Particle generateParticle(RandomNumberGenerator& generator, const ParticleBoundaries& boundaries, float elapsedTime);
 	};
 }

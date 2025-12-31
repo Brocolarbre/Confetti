@@ -5,48 +5,74 @@ namespace cft
 {
 	ParticleEmitterPool::ParticleEmitterPool(RandomNumberGenerator& generator) :
 		m_emitters(),
-		m_particles(),
+		m_capacity(0),
+		m_count(0),
+		m_particlePool(),
 		m_generator(generator)
 	{
-		ParticleBoundaries boundaries{ glm::vec4(0.0f), glm::vec4(1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(-1.0f), glm::vec3(1.0f), glm::vec2(0.01f), glm::vec2(1.0f), 2.0f, 5.0f };
-		ParticleEmitter emitter{ 20, 0.0f, boundaries };
-		m_emitters.push_back(emitter);
-		m_particles.allocate(static_cast<unsigned int>(emitter.spawnRate * boundaries.maximumLifetime));
+		
+	}
+
+	unsigned int ParticleEmitterPool::getCapacity() const
+	{
+		return m_capacity;
+	}
+
+	unsigned int ParticleEmitterPool::getCount() const
+	{
+		return m_count;
 	}
 
 	const ParticlePool& ParticleEmitterPool::getParticlePool() const
 	{
-		return m_particles;
+		return m_particlePool;
+	}
+
+	void ParticleEmitterPool::createParticleEmitter(const ParticleEmitter& emitter)
+	{
+		unsigned int newIndex = m_count++;
+		m_emitters[newIndex] = emitter;
+		
+		unsigned int emitterMaximumParticleCount = static_cast<unsigned int>(emitter.spawnRate * emitter.boundaries.maximumLifetime);
+		unsigned int particlePoolCapacity = m_particlePool.getCapacity();
+		if(particlePoolCapacity - m_particlePool.getCount() < emitterMaximumParticleCount)
+			m_particlePool.resize(particlePoolCapacity + emitterMaximumParticleCount);
+	}
+
+	void ParticleEmitterPool::destroyParticleEmitter(unsigned int index)
+	{
+		unsigned int lastIndex = --m_count;
+		m_emitters[index] = m_emitters[lastIndex];
+	}
+
+	void ParticleEmitterPool::resize(unsigned int capacity)
+	{
+		m_emitters.resize(capacity);
 	}
 
 	void ParticleEmitterPool::update(float elapsedTime, float deltaTime)
 	{
-		// Despawn
+		m_particlePool.update(elapsedTime, deltaTime);
+
 		unsigned int i = 0;
-		while (i < m_particles.count)
+		while (i < m_count)
 		{
-			float despawnTime = m_particles.spawnTime[i] + m_particles.lifetime[i];
-			float progress = elapsedTime / despawnTime;
-
+			float despawnTime = m_emitters[i].spawnTime + m_emitters[i].lifetime;
 			if (despawnTime <= elapsedTime)
-				m_particles.remove(i);
+			{
+				destroyParticleEmitter(i);
+			}
 			else
+			{
+				float spawnCount = m_emitters[i].spawnRate * deltaTime + m_emitters[i].accumulator;
+				m_emitters[i].accumulator = spawnCount - glm::floor(spawnCount);
+
+				unsigned int roundedSpawnCount = static_cast<unsigned int>(spawnCount);
+				for (unsigned int j = 0; j < roundedSpawnCount; ++j)
+					m_particlePool.createParticle(ParticleGenerator::generateParticle(m_generator, m_emitters[i].boundaries, elapsedTime));
+
 				++i;
+			}
 		}
-
-		// Spawn
-		for (ParticleEmitter& emitter : m_emitters)
-		{
-			float spawnCount = emitter.spawnRate * deltaTime + emitter.accumulator;
-			emitter.accumulator = spawnCount - glm::floor(spawnCount);
-
-			unsigned int roundedSpawnCount = static_cast<unsigned int>(spawnCount);
-			for (unsigned int i = 0; i < roundedSpawnCount; ++i)
-				m_particles.add(ParticleGenerator::generateParticle(m_generator, emitter.boundaries, elapsedTime));
-		}
-
-		// Physics
-		for (unsigned int i = 0; i < m_particles.count; ++i)
-			m_particles.position[i] += m_particles.velocity[i] * deltaTime;
 	}
 }

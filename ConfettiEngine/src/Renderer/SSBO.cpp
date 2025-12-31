@@ -27,12 +27,17 @@ namespace cft
 
 	void SSBO::setData(const ParticlePool& data) const
 	{
-		std::vector<Particle> particles;
-		particles.reserve(data.count);
+		unsigned int dataCount = data.getCount();
+		const std::vector<glm::vec4>& color = data.getColor();
+		const std::vector<glm::vec3>& position = data.getPosition();
+		const std::vector<glm::vec2>& scale = data.getScale();
 
-		for (unsigned int i = 0; i < data.count; ++i)
+		std::vector<Particle> particles;
+		particles.reserve(dataCount);
+
+		for (unsigned int i = 0; i < dataCount; ++i)
 		{
-			Particle particle{ data.color[i], glm::vec4(data.position[i], 0.0f), glm::vec4(data.scale[i], 0.0f, 0.0f) };
+			Particle particle{ color[i], glm::vec4(position[i], 0.0f), glm::vec4(scale[i], 0.0f, 0.0f) };
 			particles.push_back(particle);
 		}
 

@@ -37,7 +37,7 @@ namespace cft
 		while (GLenum error = glGetError())
 			std::cerr << "OpenGL error : " << error << std::endl;
 
-		m_ssbo.setData(particlePool);
+		m_ssbo.setData(particlePool); // Create one ssbo per particlePool ?
 
 		m_framebuffer.bind();
 		glViewport(0, 0, m_width, m_height);
@@ -49,7 +49,7 @@ namespace cft
 		m_shader.setUniform("uView", view.viewMatrix);
 		m_shader.setUniform("uProjection", view.projectionMatrix);
 
-		m_mesh.drawInstanced(particlePool.count);
+		m_mesh.drawInstanced(particlePool.getCount());
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
