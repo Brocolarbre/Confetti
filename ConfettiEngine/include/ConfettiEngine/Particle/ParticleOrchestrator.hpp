@@ -7,26 +7,31 @@
 
 namespace cft
 {
-	struct Confetti;
+	class ParticleSimulation;
 
-	class ParticleSystem
+	struct ParticleSystem
+	{
+		std::vector<unsigned int> effects;
+	};
+
+	class ParticleOrchestrator
 	{
 	private:
 		std::vector<unsigned int> m_effects;
 		ParticleEffectPool m_particleEffectPool;
 		std::unordered_map<unsigned int, ParticleEmitterPool> m_particleEmitterPools;
-		Confetti& m_confetti;
+		ParticleSimulation& m_particleSimulation;
 
-		void createParticleEffect(const ParticleEffect& effect);
+		void createParticleEffect(const ParticleEffect& particleEffect);
 
 	public:
-		ParticleSystem(Confetti& confetti);
+		ParticleOrchestrator(ParticleSimulation& particleSimulation);
 
 		const std::unordered_map<unsigned int, ParticleEmitterPool>& getParticleEmitterPools() const;
 		const ParticleEmitter& getParticleEmitter(unsigned int id) const;
 
-		void createParticleEmitter(const ParticleEmitter& emitter);
-		void addParticleEffect(unsigned int id);
+		void createParticleEmitter(const ParticleEmitter& particleEmitter);
+		void addParticleSystem(const ParticleSystem& particleSystem);
 
 		void update(float elapsedTime, float deltaTime);
 	};

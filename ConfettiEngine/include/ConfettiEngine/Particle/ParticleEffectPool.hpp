@@ -1,10 +1,17 @@
 #pragma once
 
-#include "ParticleEffect.hpp"
+#include <vector>
 
 namespace cft
 {
-	class ParticleSystem;
+	class ParticleOrchestrator;
+
+	struct ParticleEffect
+	{
+		float spawnTime;
+		float lifetime;
+		std::vector<unsigned int> emitters;
+	};
 
 	class ParticleEffectPool
 	{
@@ -13,10 +20,10 @@ namespace cft
 		unsigned int m_capacity;
 		unsigned int m_count;
 
-		ParticleSystem& m_particleSystem;
+		ParticleOrchestrator& m_particleOrchestrator;
 
 	public:
-		ParticleEffectPool(ParticleSystem& particleSystem);
+		ParticleEffectPool(ParticleOrchestrator& particleOrchestrator);
 
 		unsigned int getCapacity() const;
 		unsigned int getCount() const;

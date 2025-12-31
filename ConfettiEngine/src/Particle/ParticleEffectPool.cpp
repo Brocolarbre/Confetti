@@ -1,13 +1,13 @@
 #include "ConfettiEngine/Particle/ParticleEffectPool.hpp"
-#include "ConfettiEngine/Particle/ParticleSystem.hpp"
+#include "ConfettiEngine/Particle/ParticleOrchestrator.hpp"
 
 namespace cft
 {
-	ParticleEffectPool::ParticleEffectPool(ParticleSystem& particleSystem) :
+	ParticleEffectPool::ParticleEffectPool(ParticleOrchestrator& particleOrchestrator) :
 		m_effects(),
 		m_capacity(0),
 		m_count(0),
-		m_particleSystem(particleSystem)
+		m_particleOrchestrator(particleOrchestrator)
 	{
 
 	}
@@ -55,11 +55,11 @@ namespace cft
 				std::vector<unsigned int>& emitters = m_effects[i].emitters;
 				for (unsigned int j = 0; j < emitters.size();)
 				{
-					ParticleEmitter emitter = m_particleSystem.getParticleEmitter(emitters[j]);
+					ParticleEmitter emitter = m_particleOrchestrator.getParticleEmitter(emitters[j]);
 					if (m_effects[i].spawnTime + emitter.spawnTime <= elapsedTime)
 					{
 						emitter.spawnTime = elapsedTime;
-						m_particleSystem.createParticleEmitter(emitter);
+						m_particleOrchestrator.createParticleEmitter(emitter);
 						emitters[j] = emitters[emitters.size() - 1];
 						emitters.erase(emitters.end() - 1);
 					}
