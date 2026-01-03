@@ -19,6 +19,8 @@ Features :
 - Advanced force field : crowd simulation
 - Particle scrubbing : allow some particles to follow the force fields in reverse
 - Constellation graph : neighbor lookup node, primitives (lines), progress (elapsedTime / despawnTime)
-
+- Save system (JSON)
+- Framebuffer clear : integrate with other graphics environments
+- Grid : render a grid in the editor
 
 https://www.youtube.com/watch?v=ahOfNgvQ93Q

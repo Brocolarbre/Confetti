@@ -1,30 +1,49 @@
 #include "ConfettiInstance.hpp"
 
+void ConfettiInstance::restartSimulation()
+{
+    m_particleSimulation.clear();
+    m_particleSimulation.addParticleSystem(0);
+
+    m_elapsedTimeChronometer.start();
+    m_deltaTimeChronometer.start();
+}
+
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
-    m_particleSimulation(width, height),
     m_camera(glm::vec3(0.0f), glm::vec2(width, height)),
-    m_cameraController(m_camera, window, glm::vec3(0.0f, 2.0f, 4.0f), glm::vec3(0.0f))
+    m_cameraController(m_camera, window, glm::vec3(0.0f, 2.0f, 4.0f), glm::vec3(0.0f)),
+    m_particleSimulation(),
+    m_renderer(width, height),
+    m_elapsedTimeChronometer(false),
+    m_deltaTimeChronometer(false)
 {
     m_cameraController.setSlideSpeed(0.1f);
 
-    m_particleSimulation.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0.0f, 4.0f, 20, 0.0f, cft::ParticleBoundaries{ glm::vec4(0.0f), glm::vec4(1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(-1.0f), glm::vec3(1.0f), glm::vec2(0.01f), glm::vec2(1.0f), 2.0f, 5.0f } });
-    m_particleSimulation.addParticleEmitter(1, cft::ParticleEmitter{ 1, 3.0f, 2.0f, 50, 0.0f, cft::ParticleBoundaries{ glm::vec4(1.0f), glm::vec4(1.0f), glm::vec3(-5.0f), glm::vec3(5.0f), glm::vec3(-0.5f, 0.0f, -0.5f), glm::vec3(0.5f), glm::vec2(0.2f), glm::vec2(0.5f), 2.0f, 5.0f } });
+    cft::ParticleRegistry& particleRegistry = m_particleSimulation.getParticleRegistry();
 
-    m_particleSimulation.addParticleEffect(0, cft::ParticleEffect{ 0.0f, 10.0f, { 0, 1 } });
+    // Builder ?
+    particleRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0.0f, 4.0f, 20, 0.0f, cft::ParticleBoundaries{ glm::vec4(0.0f), glm::vec4(1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(-1.0f), glm::vec3(1.0f), glm::vec2(0.01f), glm::vec2(1.0f), 2.0f, 5.0f } });
+    particleRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 0, 1, 3.0f, 2.0f, 50, 0.0f, cft::ParticleBoundaries{ glm::vec4(1.0f), glm::vec4(1.0f), glm::vec3(-5.0f), glm::vec3(5.0f), glm::vec3(-0.5f, 0.0f, -0.5f), glm::vec3(0.5f), glm::vec2(0.2f), glm::vec2(0.5f), 2.0f, 5.0f } });
+    particleRegistry.addParticleEffect(0, cft::ParticleEffect{ 0, 0.0f, 10.0f, { 0, 1 } });
+    particleRegistry.addParticleSystem(0, cft::ParticleSystem{ 0.0f, 10.0f, { 0 } });
 
-    m_particleSimulation.addParticleSystem(0, cft::ParticleSystem{ { 0 } });
-    m_particleSimulation.start();
+    restartSimulation();
 }
 
 cft::Renderer& ConfettiInstance::getRenderer()
 {
-    return m_particleSimulation.getRenderer();
+    return m_renderer;
 }
 
 void ConfettiInstance::update()
 {
     m_cameraController.update();
-    m_particleSimulation.update();
+
+    float elapsedTime = static_cast<float>(m_elapsedTimeChronometer.getElapsedTime().seconds);
+    float deltaTime = static_cast<float>(m_deltaTimeChronometer.getElapsedTime().seconds);
+    m_deltaTimeChronometer.restart();
+
+    m_particleSimulation.update(elapsedTime, deltaTime);
 }
 
 void ConfettiInstance::render()
@@ -38,5 +57,5 @@ void ConfettiInstance::render()
         m_camera.getViewFrustum().getProjectionMatrix()
     };
 
-    m_particleSimulation.render(view);
+    m_renderer.render(view, m_particleSimulation.getParticlePools());
 }

@@ -29,7 +29,7 @@ namespace cft
 		unsigned int getOutputTextureId() const;
 
 		void resize(unsigned int width, unsigned int height);
-		void render(const View& view, const std::vector<std::reference_wrapper<const ParticlePool>>& particlePools);
+		void render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools);
 
 		static bool initialize(void* loader);
 	};

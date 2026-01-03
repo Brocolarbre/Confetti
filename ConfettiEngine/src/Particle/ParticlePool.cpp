@@ -2,16 +2,17 @@
 
 namespace cft
 {
-	Particle Particle::create(RandomNumberGenerator& generator, const ParticleBoundaries& boundaries, float elapsedTime)
+	void ParticlePool::resize(unsigned int capacity)
 	{
-		return Particle{
-			generator.generate(boundaries.minimumColor, boundaries.maximumColor),
-			generator.generate(boundaries.minimumPosition, boundaries.maximumPosition),
-			generator.generate(boundaries.minimumVelocity, boundaries.maximumVelocity),
-			generator.generate(boundaries.minimumScale, boundaries.maximumScale),
-			generator.generate(boundaries.minimumLifetime, boundaries.maximumLifetime),
-			elapsedTime
-		};
+		m_color.resize(capacity);
+		m_position.resize(capacity);
+		m_velocity.resize(capacity);
+		m_scale.resize(capacity);
+		m_lifetime.resize(capacity);
+		m_spawnTime.resize(capacity);
+		m_capacity = capacity;
+		m_reservedCapacity = glm::min(m_reservedCapacity, m_capacity);
+		m_count = glm::min(m_count, m_capacity);
 	}
 
 	ParticlePool::ParticlePool() :
@@ -38,19 +39,54 @@ namespace cft
 		return m_position;
 	}
 
+	const std::vector<glm::vec3>& ParticlePool::getVelocity() const
+	{
+		return m_velocity;
+	}
+
 	const std::vector<glm::vec2>& ParticlePool::getScale() const
 	{
 		return m_scale;
 	}
 
-	unsigned int ParticlePool::getCapacity() const
+	const std::vector<float>& ParticlePool::getLifetime() const
 	{
-		return m_capacity;
+		return m_lifetime;
 	}
 
-	unsigned int ParticlePool::getReservedCapacity() const
+	const std::vector<float>& ParticlePool::getSpawnTime() const
 	{
-		return m_reservedCapacity;
+		return m_spawnTime;
+	}
+
+	std::vector<glm::vec4>& ParticlePool::getColor()
+	{
+		return m_color;
+	}
+
+	std::vector<glm::vec3>& ParticlePool::getPosition()
+	{
+		return m_position;
+	}
+
+	std::vector<glm::vec3>& ParticlePool::getVelocity()
+	{
+		return m_velocity;
+	}
+
+	std::vector<glm::vec2>& ParticlePool::getScale()
+	{
+		return m_scale;
+	}
+
+	std::vector<float>& ParticlePool::getLifetime()
+	{
+		return m_lifetime;
+	}
+
+	std::vector<float>& ParticlePool::getSpawnTime()
+	{
+		return m_spawnTime;
 	}
 
 	unsigned int ParticlePool::getCount() const
@@ -58,7 +94,7 @@ namespace cft
 		return m_count;
 	}
 
-	void ParticlePool::reserveCapacity(unsigned int capacity)
+	void ParticlePool::reserve(unsigned int capacity)
 	{
 		if (static_cast<int>(m_capacity) - static_cast<int>(m_count) - static_cast<int>(m_reservedCapacity) < static_cast<int>(capacity))
 			resize(m_capacity + capacity);
@@ -66,19 +102,21 @@ namespace cft
 		m_reservedCapacity += capacity;
 	}
 
-	void ParticlePool::createParticle(const Particle& data)
+	void ParticlePool::insert(const Particle& particle)
 	{
 		unsigned int newIndex = m_count++;
 
-		m_color[newIndex] = data.color;
-		m_position[newIndex] = data.position;
-		m_velocity[newIndex] = data.velocity;
-		m_scale[newIndex] = data.scale;
-		m_lifetime[newIndex] = data.lifetime;
-		m_spawnTime[newIndex] = data.spawnTime;
+		m_color[newIndex] = particle.color;
+		m_position[newIndex] = particle.position;
+		m_velocity[newIndex] = particle.velocity;
+		m_scale[newIndex] = particle.scale;
+		m_lifetime[newIndex] = particle.lifetime;
+		m_spawnTime[newIndex] = particle.spawnTime;
+
+		--m_reservedCapacity;
 	}
 
-	void ParticlePool::destroyParticle(unsigned int index)
+	void ParticlePool::remove(unsigned int index)
 	{
 		unsigned int lastIndex = --m_count;
 
@@ -88,36 +126,5 @@ namespace cft
 		m_scale[index] = m_scale[lastIndex];
 		m_lifetime[index] = m_lifetime[lastIndex];
 		m_spawnTime[index] = m_spawnTime[lastIndex];
-
-		--m_reservedCapacity;
-	}
-
-	void ParticlePool::resize(unsigned int capacity)
-	{
-		m_color.resize(capacity);
-		m_position.resize(capacity);
-		m_velocity.resize(capacity);
-		m_scale.resize(capacity);
-		m_lifetime.resize(capacity);
-		m_spawnTime.resize(capacity);
-		m_capacity = capacity;
-		m_count = glm::min(m_count, m_capacity);
-	}
-
-	void ParticlePool::update(float elapsedTime, float deltaTime)
-	{
-		for (unsigned int i = 0; i < m_count;)
-		{
-			float despawnTime = m_spawnTime[i] + m_lifetime[i];
-			if (despawnTime <= elapsedTime)
-			{
-				destroyParticle(i);
-			}
-			else
-			{
-				m_position[i] += m_velocity[i] * deltaTime;
-				++i;
-			}
-		}
 	}
 }

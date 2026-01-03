@@ -32,16 +32,22 @@ namespace cft
 		m_height = height;
 	}
 
-	void Renderer::render(const View& view, const std::vector<std::reference_wrapper<const ParticlePool>>& particlePools)
+	void Renderer::render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools)
 	{
+		std::vector<std::reference_wrapper<const cft::ParticlePool>> pools;
+		pools.reserve(particlePools.size());
+
+		for (const auto& [id, pool] : particlePools)
+			pools.push_back(pool);
+
 		while (GLenum error = glGetError())
 			std::cerr << "OpenGL error : " << error << std::endl;
 
 		unsigned int totalParticleCount = 0;
-		for (const auto& pool : particlePools)
+		for (const auto& pool : pools)
 			totalParticleCount += pool.get().getCount();
 
-		m_ssbo.setData(particlePools, totalParticleCount);
+		m_ssbo.setData(pools, totalParticleCount);
 
 		m_framebuffer.bind();
 		glViewport(0, 0, m_width, m_height);
