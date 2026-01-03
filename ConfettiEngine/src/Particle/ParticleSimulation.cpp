@@ -131,7 +131,7 @@ namespace cft
 					ParticlePool& pool = m_particlePools.at(emitter.type);
 
 					for (unsigned int j = 0; j < roundedSpawnCount; ++j)
-						pool.insert(ParticleGenerator::generate(m_randomNumberGenerator, emitter.boundaries, elapsedTime));
+						pool.insert(ParticleGenerator::generate(m_randomNumberGenerator, emitter.boundaries, elapsedTime, emitter.type, emitter.instance));
 				}
 
 				++i;
@@ -145,6 +145,8 @@ namespace cft
 			std::vector<glm::vec3>& velocity = pool.getVelocity();
 			std::vector<float>& lifetime = pool.getLifetime();
 			std::vector<float>& spawnTime = pool.getSpawnTime();
+			std::vector<unsigned int>& emitterType = pool.getEmitterType();
+			std::vector<unsigned int>& emitterInstance = pool.getEmitterInstance();
 			unsigned int particleCount = pool.getCount();
 
 			for (unsigned int i = 0; i < pool.getCount();)
@@ -156,6 +158,25 @@ namespace cft
 				}
 				else
 				{
+					const ParticleEntry& emitter = m_particleRegistry.getParticleEmitterEntry(emitterType[i], emitterInstance[i]);
+					const ParticleEntry& effect = m_particleRegistry.getParticleEffectEntry(emitter.parentType, emitter.parentInstance);
+					const std::vector<unsigned int>& systemForceFields = m_particleRegistry.getParticleSystemEntry(effect.parentType, effect.parentInstance);
+					const std::vector<unsigned int>& effectForceFields = effect.forceFields;
+					const std::vector<unsigned int>& emitterForceFields = emitter.forceFields;
+
+					auto applyForceFields = [&](const std::vector<unsigned int>& forceFields)
+						{
+							for (unsigned int forceFieldId : forceFields)
+							{
+								const ForceField& forceField = m_particleRegistry.getForceField(forceFieldId);
+								velocity[i] = forceField.apply(velocity[i], elapsedTime, deltaTime);
+							}
+						};
+
+					applyForceFields(systemForceFields);
+					applyForceFields(effectForceFields);
+					applyForceFields(emitterForceFields);
+
 					position[i] += velocity[i] * deltaTime;
 					++i;
 				}

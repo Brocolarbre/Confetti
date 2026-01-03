@@ -1,5 +1,7 @@
 #include "ConfettiInstance.hpp"
 
+#include <ConfettiEngine/Particle/LinearForceField.hpp>
+
 void ConfettiInstance::restartSimulation()
 {
     m_particleSimulation.clear();
@@ -22,10 +24,17 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     cft::ParticleRegistry& particleRegistry = m_particleSimulation.getParticleRegistry();
 
     // Builder ?
+    particleRegistry.addForceField(0, std::make_unique<cft::LinearForceField>(glm::vec3(0.0f, -1.0f, 0.0f), 10.0f));
+
     particleRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0.0f, 4.0f, 20, 0.0f, cft::ParticleBoundaries{ glm::vec4(0.0f), glm::vec4(1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(-1.0f), glm::vec3(1.0f), glm::vec2(0.01f), glm::vec2(1.0f), 2.0f, 5.0f } });
-    particleRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 0, 1, 3.0f, 2.0f, 50, 0.0f, cft::ParticleBoundaries{ glm::vec4(1.0f), glm::vec4(1.0f), glm::vec3(-5.0f), glm::vec3(5.0f), glm::vec3(-0.5f, 0.0f, -0.5f), glm::vec3(0.5f), glm::vec2(0.2f), glm::vec2(0.5f), 2.0f, 5.0f } });
-    particleRegistry.addParticleEffect(0, cft::ParticleEffect{ 0, 0.0f, 10.0f, { 0, 1 } });
+    particleRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 0, 3.0f, 2.0f, 50, 0.0f, cft::ParticleBoundaries{ glm::vec4(1.0f), glm::vec4(1.0f), glm::vec3(-5.0f), glm::vec3(5.0f), glm::vec3(-0.5f, 0.0f, -0.5f), glm::vec3(0.5f), glm::vec2(0.2f), glm::vec2(0.5f), 2.0f, 5.0f } });
+    particleRegistry.addParticleEffect(0, cft::ParticleEffect{ 0.0f, 10.0f, { 0, 1 } });
     particleRegistry.addParticleSystem(0, cft::ParticleSystem{ 0.0f, 10.0f, { 0 } });
+
+    particleRegistry.addParticleSystemEntry(0, 0, {});
+    particleRegistry.addParticleEffectEntry(0, 0, { 0, 0, {} });
+    particleRegistry.addParticleEmitterEntry(0, 0, { 0, 0, {} });
+    particleRegistry.addParticleEmitterEntry(1, 0, { 0, 0, { 0 } });
 
     restartSimulation();
 }
