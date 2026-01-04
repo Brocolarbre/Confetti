@@ -11,6 +11,6 @@ public:
 
 	bool isReversible() const;
 
-	virtual void run() const = 0;
-	virtual void revert() const = 0;
+	virtual void run() = 0;
+	virtual void revert() = 0;
 };

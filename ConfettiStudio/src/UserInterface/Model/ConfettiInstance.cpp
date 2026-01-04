@@ -14,6 +14,7 @@ void ConfettiInstance::restartSimulation()
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
     m_camera(glm::vec3(0.0f), glm::vec2(width, height)),
     m_cameraController(m_camera, window, glm::vec3(0.0f, 2.0f, 4.0f), glm::vec3(0.0f)),
+    m_idGenerators(),
     m_particleSimulation(),
     m_renderer(width, height),
     m_elapsedTimeChronometer(false),
@@ -39,9 +40,24 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     restartSimulation();
 }
 
+Camera& ConfettiInstance::getCamera()
+{
+    return m_camera;
+}
+
+IdGenerators& ConfettiInstance::getIdGenerators()
+{
+    return m_idGenerators;
+}
+
 cft::Renderer& ConfettiInstance::getRenderer()
 {
     return m_renderer;
+}
+
+cft::ParticleSimulation& ConfettiInstance::getParticleSimulation()
+{
+    return m_particleSimulation;
 }
 
 void ConfettiInstance::update()
