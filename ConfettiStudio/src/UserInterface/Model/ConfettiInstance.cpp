@@ -50,6 +50,11 @@ IdGenerators& ConfettiInstance::getIdGenerators()
     return m_idGenerators;
 }
 
+AssetDictionary& ConfettiInstance::getAssetDictionary()
+{
+    return m_assetDictionary;
+}
+
 cft::Renderer& ConfettiInstance::getRenderer()
 {
     return m_renderer;

@@ -17,6 +17,10 @@ private:
 	void onParticleEffectDestroyed();
 	void onParticleEmitterDestroyed();
 
+	void onParticleSystemRenamed();
+	void onParticleEffectRenamed();
+	void onParticleEmitterRenamed();
+
 public:
 	ParticleRegistryPresenter(CommandHistory& commandHistory, ParticleRegistryWidget& widget, ConfettiInstance& confettiInstance);
 };

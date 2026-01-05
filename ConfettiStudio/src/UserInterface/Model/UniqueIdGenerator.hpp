@@ -8,5 +8,7 @@ private:
 public:
 	UniqueIdGenerator();
 
+	unsigned int getLastId() const;
+
 	unsigned int operator()();
 };
