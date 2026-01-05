@@ -19,10 +19,22 @@ struct EmitterAsset
 	float maximumLifetime;
 };
 
+struct EffectAsset
+{
+	std::vector<unsigned int> emitters;
+};
+
+struct SystemAsset
+{
+	std::vector<unsigned int> effects;
+};
+
 class AssetEditorWidget : public WindowWidget
 {
 public:
 	std::optional<EmitterAsset> m_emitterAsset;
+	std::optional<EffectAsset> m_effectAsset;
+	std::optional<SystemAsset> m_systemAsset;
 
 public:
 	AssetEditorWidget();

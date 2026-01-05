@@ -17,12 +17,12 @@ void DestroyParticleEmitterCommand::run()
 	particleRegistry.removeParticleEmitter(m_id);
 	AssetDictionary& assetDictionary = m_confettiInstance.getAssetDictionary();
 	m_name = assetDictionary.getParticleEmitterName(m_id);
-	assetDictionary.removeParticleEffectName(m_id);
+	assetDictionary.removeParticleEmitterName(m_id);
 }
 
 void DestroyParticleEmitterCommand::revert()
 {
 	m_id = m_confettiInstance.getIdGenerators().emitter();
 	m_confettiInstance.getParticleSimulation().getParticleRegistry().addParticleEmitter(m_id, m_particleEmitter);
-	m_confettiInstance.getAssetDictionary().setParticleEffectName(m_id, m_name);
+	m_confettiInstance.getAssetDictionary().setParticleEmitterName(m_id, m_name);
 }

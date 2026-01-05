@@ -18,5 +18,5 @@ void CreateParticleEmitterCommand::run()
 void CreateParticleEmitterCommand::revert()
 {
 	m_confettiInstance.getParticleSimulation().getParticleRegistry().removeParticleEmitter(m_id);
-	m_confettiInstance.getAssetDictionary().removeParticleEffectName(m_id);
+	m_confettiInstance.getAssetDictionary().removeParticleEmitterName(m_id);
 }

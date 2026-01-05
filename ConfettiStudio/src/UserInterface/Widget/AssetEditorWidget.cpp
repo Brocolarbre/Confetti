@@ -3,7 +3,10 @@
 #include <imgui.h>
 
 AssetEditorWidget::AssetEditorWidget() :
-	WindowWidget("Asset Editor", false)
+	WindowWidget("Asset Editor", false),
+	m_emitterAsset(),
+	m_effectAsset(),
+	m_systemAsset()
 {
 
 }
@@ -57,5 +60,13 @@ void AssetEditorWidget::render()
 
 		if (ImGui::InputFloat4("Maximum color", &emitter.maximumColor[0]))
 			sendEvent("particle_emitter_updated");
+	}
+	else if (m_effectAsset.has_value())
+	{
+
+	}
+	else if (m_systemAsset.has_value())
+	{
+
 	}
 }

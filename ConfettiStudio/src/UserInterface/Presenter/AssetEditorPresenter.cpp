@@ -2,12 +2,40 @@
 
 void AssetEditorPresenter::onParticleSystemSelected()
 {
+	std::optional<unsigned int> selectedParticleSystem = m_confettiInstance.getUserInterfaceState().getSelectedParticleSystem();
+	cft::ParticleRegistry& particleRegistry = m_confettiInstance.getParticleSimulation().getParticleRegistry();
 
+	if (selectedParticleSystem.has_value())
+	{
+		const cft::ParticleSystem& particleSystem = particleRegistry.getParticleSystem(selectedParticleSystem.value());
+		m_widget.m_systemAsset = std::make_optional(SystemAsset{ particleSystem.effects });
+	}
+	else
+	{
+		m_widget.m_systemAsset = std::nullopt;
+	}
+
+	m_widget.m_effectAsset = std::nullopt;
+	m_widget.m_emitterAsset = std::nullopt;
 }
 
 void AssetEditorPresenter::onParticleEffectSelected()
 {
+	std::optional<unsigned int> selectedParticleEffect = m_confettiInstance.getUserInterfaceState().getSelectedParticleEffect();
+	cft::ParticleRegistry& particleRegistry = m_confettiInstance.getParticleSimulation().getParticleRegistry();
 
+	if (selectedParticleEffect.has_value())
+	{
+		const cft::ParticleEffect& particleEffect = particleRegistry.getParticleEffect(selectedParticleEffect.value());
+		m_widget.m_effectAsset = std::make_optional(EffectAsset{ particleEffect.emitters });
+	}
+	else
+	{
+		m_widget.m_effectAsset = std::nullopt;
+	}
+
+	m_widget.m_systemAsset = std::nullopt;
+	m_widget.m_emitterAsset = std::nullopt;
 }
 
 void AssetEditorPresenter::onParticleEmitterSelected()
@@ -35,6 +63,43 @@ void AssetEditorPresenter::onParticleEmitterSelected()
 	else
 	{
 		m_widget.m_emitterAsset = std::nullopt;
+	}
+
+	m_widget.m_systemAsset = std::nullopt;
+	m_widget.m_effectAsset = std::nullopt;
+}
+
+void AssetEditorPresenter::onParticleSystemUpdated()
+{
+	std::optional<unsigned int> selectedParticleSystem = m_confettiInstance.getUserInterfaceState().getSelectedParticleSystem();
+	cft::ParticleRegistry& particleRegistry = m_confettiInstance.getParticleSimulation().getParticleRegistry();
+
+	if (selectedParticleSystem.has_value())
+	{
+		cft::ParticleSystem& particleSystem = particleRegistry.getParticleSystem(selectedParticleSystem.value());
+
+		if (m_widget.m_systemAsset.has_value())
+		{
+			const SystemAsset& systemAsset = m_widget.m_systemAsset.value();
+			particleSystem.effects = systemAsset.effects;
+		}
+	}
+}
+
+void AssetEditorPresenter::onParticleEffectUpdated()
+{
+	std::optional<unsigned int> selectedParticleEffect = m_confettiInstance.getUserInterfaceState().getSelectedParticleEffect();
+	cft::ParticleRegistry& particleRegistry = m_confettiInstance.getParticleSimulation().getParticleRegistry();
+
+	if (selectedParticleEffect.has_value())
+	{
+		cft::ParticleEffect& particleEffect = particleRegistry.getParticleEffect(selectedParticleEffect.value());
+
+		if (m_widget.m_effectAsset.has_value())
+		{
+			const EffectAsset& effectAsset = m_widget.m_effectAsset.value();
+			particleEffect.emitters = effectAsset.emitters;
+		}
 	}
 }
 
@@ -75,5 +140,7 @@ AssetEditorPresenter::AssetEditorPresenter(CommandHistory& commandHistory, Asset
 	registerModelEvent("particle_effect_selected", std::bind(&AssetEditorPresenter::onParticleEffectSelected, this));
 	registerModelEvent("particle_emitter_selected", std::bind(&AssetEditorPresenter::onParticleEmitterSelected, this));
 
+	registerWidgetEvent("particle_system_updated", std::bind(&AssetEditorPresenter::onParticleSystemUpdated, this));
+	registerWidgetEvent("particle_effect_updated", std::bind(&AssetEditorPresenter::onParticleEffectUpdated, this));
 	registerWidgetEvent("particle_emitter_updated", std::bind(&AssetEditorPresenter::onParticleEmitterUpdated, this));
 }

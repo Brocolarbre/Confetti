@@ -13,6 +13,8 @@ private:
 	void onParticleEffectSelected();
 	void onParticleEmitterSelected();
 
+	void onParticleSystemUpdated();
+	void onParticleEffectUpdated();
 	void onParticleEmitterUpdated();
 
 public:
