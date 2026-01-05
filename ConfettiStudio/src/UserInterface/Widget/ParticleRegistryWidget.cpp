@@ -54,6 +54,7 @@ void ParticleRegistryWidget::render()
 				else if (ImGui::Selectable(name.c_str(), selected))
 				{
 					m_selectedParticleEmitter = std::make_optional(i);
+					sendEvent("particle_emitter_selected");
 				}
 
 				if (ImGui::IsKeyPressed(ImGuiKey_F2) && !m_renameBuffer.has_value() && m_selectedParticleEmitter.has_value())
@@ -72,6 +73,7 @@ void ParticleRegistryWidget::render()
 					sendEvent("particle_emitter_destroyed");
 					m_particleEmitters.erase(m_particleEmitters.begin() + m_selectedParticleEmitter.value());
 					m_selectedParticleEmitter = std::nullopt;
+					sendEvent("particle_emitter_selected");
 					break;
 				}
 
