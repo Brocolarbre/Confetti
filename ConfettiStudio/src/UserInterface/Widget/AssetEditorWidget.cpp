@@ -20,7 +20,7 @@ void AssetEditorWidget::render()
 			if (emitter.spawnRate < 0.0f)
 				emitter.spawnRate = 0.0f;
 
-			sendEvent("spawn_rate_updated");
+			sendEvent("particle_emitter_updated");
 		}
 
 		if (ImGui::InputFloat("Minimum lifetime", &emitter.minimumLifetime))
@@ -28,34 +28,34 @@ void AssetEditorWidget::render()
 			if (emitter.minimumLifetime < 0.0f)
 				emitter.minimumLifetime = 0.0f;
 
-			sendEvent("minimum_lifetime_updated");
+			sendEvent("particle_emitter_updated");
 		}
 
 		if (ImGui::InputFloat("Maximum lifetime", &emitter.maximumLifetime))
-			sendEvent("maximum_lifetime_updated");
+			sendEvent("particle_emitter_updated");
 
 		if (ImGui::InputFloat3("Minimum position", &emitter.minimumPosition[0]))
-			sendEvent("minimum_position_updated");
+			sendEvent("particle_emitter_updated");
 
 		if (ImGui::InputFloat3("Maximum position", &emitter.maximumPosition[0]))
-			sendEvent("maximum_position_updated");
+			sendEvent("particle_emitter_updated");
 
 		if (ImGui::InputFloat3("Minimum velocity", &emitter.minimumVelocity[0]))
-			sendEvent("minimum_velocity_updated");
+			sendEvent("particle_emitter_updated");
 
 		if (ImGui::InputFloat3("Maximum velocity", &emitter.maximumVelocity[0]))
-			sendEvent("maximum_velocity_updated");
+			sendEvent("particle_emitter_updated");
 
 		if (ImGui::InputFloat3("Minimum scale", &emitter.minimumScale[0]))
-			sendEvent("minimum_scale_updated");
+			sendEvent("particle_emitter_updated");
 
 		if (ImGui::InputFloat3("Maximum scale", &emitter.maximumScale[0]))
-			sendEvent("maximum_scale_updated");
+			sendEvent("particle_emitter_updated");
 
 		if (ImGui::InputFloat4("Minimum color", &emitter.minimumColor[0]))
-			sendEvent("minimum_color_updated");
+			sendEvent("particle_emitter_updated");
 
 		if (ImGui::InputFloat4("Maximum color", &emitter.maximumColor[0]))
-			sendEvent("maximum_color_updated");
+			sendEvent("particle_emitter_updated");
 	}
 }

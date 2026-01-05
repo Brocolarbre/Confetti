@@ -21,6 +21,10 @@ private:
 	void onParticleEffectRenamed();
 	void onParticleEmitterRenamed();
 
+	void onParticleSystemSelected();
+	void onParticleEffectSelected();
+	void onParticleEmitterSelected();
+
 public:
 	ParticleRegistryPresenter(CommandHistory& commandHistory, ParticleRegistryWidget& widget, ConfettiInstance& confettiInstance);
 };

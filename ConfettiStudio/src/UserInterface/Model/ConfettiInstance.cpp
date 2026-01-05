@@ -15,6 +15,8 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_camera(glm::vec3(0.0f), glm::vec2(width, height)),
     m_cameraController(m_camera, window, glm::vec3(0.0f, 2.0f, 4.0f), glm::vec3(0.0f)),
     m_idGenerators(),
+    m_assetDictionary(),
+    m_userInterfaceState(),
     m_particleSimulation(),
     m_renderer(width, height),
     m_elapsedTimeChronometer(false),
@@ -55,14 +57,19 @@ AssetDictionary& ConfettiInstance::getAssetDictionary()
     return m_assetDictionary;
 }
 
-cft::Renderer& ConfettiInstance::getRenderer()
+UserInterfaceState& ConfettiInstance::getUserInterfaceState()
 {
-    return m_renderer;
+    return m_userInterfaceState;
 }
 
 cft::ParticleSimulation& ConfettiInstance::getParticleSimulation()
 {
     return m_particleSimulation;
+}
+
+cft::Renderer& ConfettiInstance::getRenderer()
+{
+    return m_renderer;
 }
 
 void ConfettiInstance::update()

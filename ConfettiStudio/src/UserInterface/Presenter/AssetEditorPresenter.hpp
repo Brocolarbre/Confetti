@@ -9,17 +9,11 @@ private:
 	AssetEditorWidget& m_widget;
 	ConfettiInstance& m_confettiInstance;
 
-	void onSpawnRateUpdated();
-	void onMinimumLifetimeUpdated();
-	void onMaximumLifetimeUpdated();
-	void onMinimumPositionUpdated();
-	void onMaximumPositionUpdated();
-	void onMinimumVelocityUpdated();
-	void onMaximumVelocityUpdated();
-	void onMinimumScaleUpdated();
-	void onMaximumScaleUpdated();
-	void onMinimumColorUpdated();
-	void onMaximumColorUpdated();
+	void onParticleSystemSelected();
+	void onParticleEffectSelected();
+	void onParticleEmitterSelected();
+
+	void onParticleEmitterUpdated();
 
 public:
 	AssetEditorPresenter(CommandHistory& commandHistory, AssetEditorWidget& widget, ConfettiInstance& confettiInstance);

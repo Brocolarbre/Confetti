@@ -2,6 +2,7 @@
 #include "UserInterface/Command/CreateParticleEmitterCommand.hpp"
 #include "UserInterface/Command/DestroyParticleEmitterCommand.hpp"
 #include "UserInterface/Command/RenameParticleEmitterCommand.hpp"
+#include "UserInterface/Command/SelectParticleEmitterCommand.hpp"
 
 void ParticleRegistryPresenter::onParticleSystemCreated()
 {
@@ -51,6 +52,22 @@ void ParticleRegistryPresenter::onParticleEmitterRenamed()
 	m_commandHistory.run<RenameParticleEmitterCommand>(m_confettiInstance, particleAsset.id, particleAsset.name);
 }
 
+void ParticleRegistryPresenter::onParticleSystemSelected()
+{
+
+}
+
+void ParticleRegistryPresenter::onParticleEffectSelected()
+{
+
+}
+
+void ParticleRegistryPresenter::onParticleEmitterSelected()
+{
+	const ParticleAsset& particleAsset = m_widget.m_particleEmitters[m_widget.m_selectedParticleEmitter.value()];
+	m_commandHistory.run<SelectParticleEmitterCommand>(m_confettiInstance, particleAsset.id);
+}
+
 ParticleRegistryPresenter::ParticleRegistryPresenter(CommandHistory& commandHistory, ParticleRegistryWidget& widget, ConfettiInstance& confettiInstance) :
 	Presenter(commandHistory),
 	m_widget(widget),
@@ -65,4 +82,7 @@ ParticleRegistryPresenter::ParticleRegistryPresenter(CommandHistory& commandHist
 	registerWidgetEvent("particle_system_renamed", std::bind(&ParticleRegistryPresenter::onParticleSystemRenamed, this));
 	registerWidgetEvent("particle_effect_renamed", std::bind(&ParticleRegistryPresenter::onParticleEffectRenamed, this));
 	registerWidgetEvent("particle_emitter_renamed", std::bind(&ParticleRegistryPresenter::onParticleEmitterRenamed, this));
+	registerWidgetEvent("particle_system_selected", std::bind(&ParticleRegistryPresenter::onParticleSystemSelected, this));
+	registerWidgetEvent("particle_effect_selected", std::bind(&ParticleRegistryPresenter::onParticleEffectSelected, this));
+	registerWidgetEvent("particle_emitter_selected", std::bind(&ParticleRegistryPresenter::onParticleEmitterSelected, this));
 }

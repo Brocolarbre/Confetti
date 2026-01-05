@@ -21,7 +21,7 @@ struct EmitterAsset
 
 class AssetEditorWidget : public WindowWidget
 {
-private:
+public:
 	std::optional<EmitterAsset> m_emitterAsset;
 
 public:

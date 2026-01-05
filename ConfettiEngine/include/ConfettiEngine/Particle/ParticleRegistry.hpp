@@ -68,6 +68,11 @@ namespace cft
 		const ParticleEmitter& getParticleEmitter(unsigned int id) const;
 		const ForceField& getForceField(unsigned int id) const;
 
+		ParticleSystem& getParticleSystem(unsigned int id);
+		ParticleEffect& getParticleEffect(unsigned int id);
+		ParticleEmitter& getParticleEmitter(unsigned int id);
+		ForceField& getForceField(unsigned int id);
+
 		void addParticleSystemEntry(unsigned int type, unsigned int instance, const std::vector<unsigned int>& entry);
 		void addParticleEffectEntry(unsigned int type, unsigned int instance, const ParticleEntry& entry);
 		void addParticleEmitterEntry(unsigned int type, unsigned int instance, const ParticleEntry& entry);

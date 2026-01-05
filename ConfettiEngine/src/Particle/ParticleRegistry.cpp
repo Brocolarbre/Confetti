@@ -62,6 +62,26 @@ namespace cft
 		return *m_forceFields.at(id);
 	}
 
+	ParticleSystem& ParticleRegistry::getParticleSystem(unsigned int id)
+	{
+		return m_particleSystems.at(id);
+	}
+
+	ParticleEffect& ParticleRegistry::getParticleEffect(unsigned int id)
+	{
+		return m_particleEffects.at(id);
+	}
+
+	ParticleEmitter& ParticleRegistry::getParticleEmitter(unsigned int id)
+	{
+		return m_particleEmitters.at(id);
+	}
+
+	ForceField& ParticleRegistry::getForceField(unsigned int id)
+	{
+		return *m_forceFields.at(id);
+	}
+
 	void ParticleRegistry::addParticleSystemEntry(unsigned int type, unsigned int instance, const std::vector<unsigned int>& entry)
 	{
 		m_particleSystemEntries[type][instance] = entry;
