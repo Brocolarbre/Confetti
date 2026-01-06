@@ -1,33 +1,31 @@
 #pragma once
 
 #include "WindowWidget.hpp"
-
-#include <optional>
-
-struct ParticleAsset
-{
-	unsigned int id;
-	std::string name;
-};
-
-struct RenameBuffer
-{
-	std::string buffer;
-	bool firstFrame;
-};
+#include "ItemListWidget.hpp"
 
 class ParticleRegistryWidget : public WindowWidget
 {
 public:
-	std::vector<ParticleAsset> m_particleSystems;
-	std::vector<ParticleAsset> m_particleEffects;
-	std::vector<ParticleAsset> m_particleEmitters;
+	ItemListWidget m_particleSystems;
+	ItemListWidget m_particleEffects;
+	ItemListWidget m_particleEmitters;
 
-	std::optional<unsigned int> m_selectedParticleSystem;
-	std::optional<unsigned int> m_selectedParticleEffect;
-	std::optional<unsigned int> m_selectedParticleEmitter;
+	unsigned int m_activeTab;
 
-	std::optional<RenameBuffer> m_renameBuffer;
+	void sendParticleSystemCreatedEvent();
+	void sendParticleSystemDestroyedEvent();
+	void sendParticleSystemRenamedEvent();
+	void sendParticleSystemSelectedEvent();
+
+	void sendParticleEffectCreatedEvent();
+	void sendParticleEffectDestroyedEvent();
+	void sendParticleEffectRenamedEvent();
+	void sendParticleEffectSelectedEvent();
+
+	void sendParticleEmitterCreatedEvent();
+	void sendParticleEmitterDestroyedEvent();
+	void sendParticleEmitterRenamedEvent();
+	void sendParticleEmitterSelectedEvent();
 
 public:
 	ParticleRegistryWidget();

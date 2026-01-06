@@ -3,98 +3,126 @@
 #include <imgui.h>
 #include <format>
 
+void ParticleRegistryWidget::sendParticleSystemCreatedEvent()
+{
+	sendEvent("particle_system_created");
+}
+
+void ParticleRegistryWidget::sendParticleSystemDestroyedEvent()
+{
+	sendEvent("particle_system_destroyed");
+}
+
+void ParticleRegistryWidget::sendParticleSystemRenamedEvent()
+{
+	sendEvent("particle_system_renamed");
+}
+
+void ParticleRegistryWidget::sendParticleSystemSelectedEvent()
+{
+	sendEvent("particle_system_selected");
+}
+
+void ParticleRegistryWidget::sendParticleEffectCreatedEvent()
+{
+	sendEvent("particle_effect_created");
+}
+
+void ParticleRegistryWidget::sendParticleEffectDestroyedEvent()
+{
+	sendEvent("particle_effect_destroyed");
+}
+
+void ParticleRegistryWidget::sendParticleEffectRenamedEvent()
+{
+	sendEvent("particle_effect_renamed");
+}
+
+void ParticleRegistryWidget::sendParticleEffectSelectedEvent()
+{
+	sendEvent("particle_effect_selected");
+}
+
+void ParticleRegistryWidget::sendParticleEmitterCreatedEvent()
+{
+	sendEvent("particle_emitter_created");
+}
+
+void ParticleRegistryWidget::sendParticleEmitterDestroyedEvent()
+{
+	sendEvent("particle_emitter_destroyed");
+}
+
+void ParticleRegistryWidget::sendParticleEmitterRenamedEvent()
+{
+	sendEvent("particle_emitter_renamed");
+}
+
+void ParticleRegistryWidget::sendParticleEmitterSelectedEvent()
+{
+	sendEvent("particle_emitter_selected");
+}
+
 ParticleRegistryWidget::ParticleRegistryWidget() :
 	WindowWidget("Particle Registry", false),
-	m_particleSystems(),
-	m_particleEffects(),
-	m_particleEmitters(),
-	m_selectedParticleSystem(),
-	m_selectedParticleEffect(),
-	m_selectedParticleEmitter(),
-	m_renameBuffer()
+	m_particleSystems("Systems", ItemListCallbacks{
+		std::bind(&ParticleRegistryWidget::sendParticleSystemCreatedEvent, this),
+		std::bind(&ParticleRegistryWidget::sendParticleSystemDestroyedEvent, this),
+		std::bind(&ParticleRegistryWidget::sendParticleSystemRenamedEvent, this),
+		std::bind(&ParticleRegistryWidget::sendParticleSystemSelectedEvent, this)
+	}),
+	m_particleEffects("Effects", ItemListCallbacks{
+		std::bind(&ParticleRegistryWidget::sendParticleEffectCreatedEvent, this),
+		std::bind(&ParticleRegistryWidget::sendParticleEffectDestroyedEvent, this),
+		std::bind(&ParticleRegistryWidget::sendParticleEffectRenamedEvent, this),
+		std::bind(&ParticleRegistryWidget::sendParticleEffectSelectedEvent, this)
+	}),
+	m_particleEmitters("Emitters", ItemListCallbacks{
+		std::bind(&ParticleRegistryWidget::sendParticleEmitterCreatedEvent, this),
+		std::bind(&ParticleRegistryWidget::sendParticleEmitterDestroyedEvent, this),
+		std::bind(&ParticleRegistryWidget::sendParticleEmitterRenamedEvent, this),
+		std::bind(&ParticleRegistryWidget::sendParticleEmitterSelectedEvent, this)
+	}),
+	m_activeTab(0)
 {
 
 }
 
 void ParticleRegistryWidget::render()
 {
+	ImGuiID activeTab = 0;
+
 	if (ImGui::BeginTabBar("Particle Assets"))
 	{
-		if (ImGui::BeginTabItem("Systems"))
+		if (ImGui::BeginTabItem(m_particleSystems.getName().c_str()))
 		{
-			
-
+			activeTab = ImGui::GetItemID();
+			m_particleSystems.render();
 			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem("Effects"))
+		if (ImGui::BeginTabItem(m_particleEffects.getName().c_str()))
 		{
-			
-
+			activeTab = ImGui::GetItemID();
+			m_particleEffects.render();
 			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem("Emitters"))
+		if (ImGui::BeginTabItem(m_particleEmitters.getName().c_str()))
 		{
-			for (unsigned int i = 0; i < m_particleEmitters.size(); ++i)
-			{
-				bool selected = m_selectedParticleEmitter.has_value() && i == m_selectedParticleEmitter.value();
-				std::string name = std::format("{}##{}", m_particleEmitters[i].name, m_particleEmitters[i].id);
-				if (selected && m_renameBuffer.has_value())
-				{
-					ImGuiInputTextFlags flags = ImGuiInputFlags_None;
-					if (m_renameBuffer.value().firstFrame)
-					{
-						flags |= ImGuiInputTextFlags_AutoSelectAll;
-						ImGui::SetKeyboardFocusHere();
-					}
-
-					ImGui::InputText("##RenameTextBox", m_renameBuffer.value().buffer.data(), m_renameBuffer.value().buffer.size(), flags);
-				}
-				else if (ImGui::Selectable(name.c_str(), selected))
-				{
-					m_selectedParticleEmitter = std::make_optional(i);
-					sendEvent("particle_emitter_selected");
-				}
-
-				if (ImGui::IsKeyPressed(ImGuiKey_F2) && !m_renameBuffer.has_value() && m_selectedParticleEmitter.has_value())
-				{
-					std::string buffer = std::string(256, '\0').replace(0, m_particleEmitters[i].name.size(), m_particleEmitters[i].name);
-					m_renameBuffer = std::make_optional(RenameBuffer{ buffer, true });
-				}
-
-				if (ImGui::IsKeyPressed(ImGuiKey_Escape) && m_renameBuffer.has_value())
-				{
-					m_renameBuffer = std::nullopt;
-				}
-
-				if (ImGui::IsKeyPressed(ImGuiKey_Delete) && m_selectedParticleEmitter.has_value())
-				{
-					sendEvent("particle_emitter_destroyed");
-					m_particleEmitters.erase(m_particleEmitters.begin() + m_selectedParticleEmitter.value());
-					m_selectedParticleEmitter = std::nullopt;
-					sendEvent("particle_emitter_selected");
-					break;
-				}
-
-				if ((ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter)) && m_renameBuffer.has_value())
-				{
-					const std::string& renameBuffer = m_renameBuffer.value().buffer;
-					std::string newName = renameBuffer.substr(0, renameBuffer.find('\n', 0));
-					if (!newName.empty())
-					{
-						m_particleEmitters[m_selectedParticleEmitter.value()].name = newName;
-						m_renameBuffer = std::nullopt;
-						sendEvent("particle_emitter_renamed");
-					}
-				}
-			}
-
-			if (ImGui::Button("Add"))
-				sendEvent("particle_emitter_created");
-
+			activeTab = ImGui::GetItemID();
+			m_particleEmitters.render(); // Add method in Widget to manually call a widget
 			ImGui::EndTabItem();
 		}
+
+		if (activeTab != m_activeTab)
+		{
+			m_particleSystems.cancelRenaming();
+			m_particleEffects.cancelRenaming();
+			m_particleEmitters.cancelRenaming();
+		}
+
+		m_activeTab = activeTab;
 
 		ImGui::EndTabBar();
 	}

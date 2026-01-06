@@ -15,62 +15,62 @@
 void ParticleRegistryPresenter::onParticleSystemCreated()
 {
 	m_commandHistory.run<CreateParticleSystemCommand>(m_confettiInstance);
-	m_widget.m_particleSystems.push_back(ParticleAsset{ m_confettiInstance.getIdGenerators().system.getLastId(), "System" });
+	m_widget.m_particleSystems.addItem(Item{ m_confettiInstance.getIdGenerators().system.getLastId(), "System" });
 }
 
 void ParticleRegistryPresenter::onParticleEffectCreated()
 {
 	m_commandHistory.run<CreateParticleEffectCommand>(m_confettiInstance);
-	m_widget.m_particleEffects.push_back(ParticleAsset{ m_confettiInstance.getIdGenerators().effect.getLastId(), "Effect" });
+	m_widget.m_particleEffects.addItem(Item{ m_confettiInstance.getIdGenerators().effect.getLastId(), "Effect" });
 }
 
 void ParticleRegistryPresenter::onParticleEmitterCreated()
 {
 	m_commandHistory.run<CreateParticleEmitterCommand>(m_confettiInstance);
-	m_widget.m_particleEmitters.push_back(ParticleAsset{ m_confettiInstance.getIdGenerators().emitter.getLastId(), "Emitter" });
+	m_widget.m_particleEmitters.addItem(Item{ m_confettiInstance.getIdGenerators().emitter.getLastId(), "Emitter" });
 }
 
 void ParticleRegistryPresenter::onParticleSystemDestroyed()
 {
-	const ParticleAsset& particleAsset = m_widget.m_particleSystems[m_widget.m_selectedParticleSystem.value()];
+	const Item& particleAsset = m_widget.m_particleSystems.getItems()[m_widget.m_particleSystems.getSelectedItem().value()];
 	m_commandHistory.run<DestroyParticleSystemCommand>(m_confettiInstance, particleAsset.id);
 }
 
 void ParticleRegistryPresenter::onParticleEffectDestroyed()
 {
-	const ParticleAsset& particleAsset = m_widget.m_particleEffects[m_widget.m_selectedParticleEffect.value()];
+	const Item& particleAsset = m_widget.m_particleEffects.getItems()[m_widget.m_particleEffects.getSelectedItem().value()];
 	m_commandHistory.run<DestroyParticleEffectCommand>(m_confettiInstance, particleAsset.id);
 }
 
 void ParticleRegistryPresenter::onParticleEmitterDestroyed()
 {
-	const ParticleAsset& particleAsset = m_widget.m_particleEmitters[m_widget.m_selectedParticleEmitter.value()];
+	const Item& particleAsset = m_widget.m_particleEmitters.getItems()[m_widget.m_particleEmitters.getSelectedItem().value()];
 	m_commandHistory.run<DestroyParticleEmitterCommand>(m_confettiInstance, particleAsset.id);
 }
 
 void ParticleRegistryPresenter::onParticleSystemRenamed()
 {
-	const ParticleAsset& particleAsset = m_widget.m_particleSystems[m_widget.m_selectedParticleSystem.value()];
+	const Item& particleAsset = m_widget.m_particleSystems.getItems()[m_widget.m_particleSystems.getSelectedItem().value()];
 	m_commandHistory.run<RenameParticleSystemCommand>(m_confettiInstance, particleAsset.id, particleAsset.name);
 }
 
 void ParticleRegistryPresenter::onParticleEffectRenamed()
 {
-	const ParticleAsset& particleAsset = m_widget.m_particleEffects[m_widget.m_selectedParticleEffect.value()];
+	const Item& particleAsset = m_widget.m_particleEffects.getItems()[m_widget.m_particleEffects.getSelectedItem().value()];
 	m_commandHistory.run<RenameParticleEffectCommand>(m_confettiInstance, particleAsset.id, particleAsset.name);
 }
 
 void ParticleRegistryPresenter::onParticleEmitterRenamed()
 {
-	const ParticleAsset& particleAsset = m_widget.m_particleEmitters[m_widget.m_selectedParticleEmitter.value()];
+	const Item& particleAsset = m_widget.m_particleEmitters.getItems()[m_widget.m_particleEmitters.getSelectedItem().value()];
 	m_commandHistory.run<RenameParticleEmitterCommand>(m_confettiInstance, particleAsset.id, particleAsset.name);
 }
 
 void ParticleRegistryPresenter::onParticleSystemSelected()
 {
-	if (m_widget.m_selectedParticleSystem.has_value())
+	if (m_widget.m_particleSystems.getSelectedItem().has_value())
 	{
-		const ParticleAsset& particleAsset = m_widget.m_particleSystems[m_widget.m_selectedParticleSystem.value()];
+		const Item& particleAsset = m_widget.m_particleSystems.getItems()[m_widget.m_particleSystems.getSelectedItem().value()];
 		m_commandHistory.run<SelectParticleSystemCommand>(m_confettiInstance, particleAsset.id);
 	}
 	else
@@ -81,9 +81,9 @@ void ParticleRegistryPresenter::onParticleSystemSelected()
 
 void ParticleRegistryPresenter::onParticleEffectSelected()
 {
-	if (m_widget.m_selectedParticleEffect.has_value())
+	if (m_widget.m_particleEffects.getSelectedItem().has_value())
 	{
-		const ParticleAsset& particleAsset = m_widget.m_particleEffects[m_widget.m_selectedParticleEffect.value()];
+		const Item& particleAsset = m_widget.m_particleEffects.getItems()[m_widget.m_particleEffects.getSelectedItem().value()];
 		m_commandHistory.run<SelectParticleEffectCommand>(m_confettiInstance, particleAsset.id);
 	}
 	else
@@ -94,9 +94,9 @@ void ParticleRegistryPresenter::onParticleEffectSelected()
 
 void ParticleRegistryPresenter::onParticleEmitterSelected()
 {
-	if (m_widget.m_selectedParticleEmitter.has_value())
+	if (m_widget.m_particleEmitters.getSelectedItem().has_value())
 	{
-		const ParticleAsset& particleAsset = m_widget.m_particleEmitters[m_widget.m_selectedParticleEmitter.value()];
+		const Item& particleAsset = m_widget.m_particleEmitters.getItems()[m_widget.m_particleEmitters.getSelectedItem().value()];
 		m_commandHistory.run<SelectParticleEmitterCommand>(m_confettiInstance, particleAsset.id);
 	}
 	else
