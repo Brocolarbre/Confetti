@@ -8,20 +8,26 @@ ItemListWidget::ItemListWidget(const std::string& name, const ItemListCallbacks&
     m_items(),
     m_selectedItem(),
     m_renameBuffer(),
+    m_previousItemName(),
     m_name(name),
     m_callbacks(callbacks)
 {
 
 }
 
-const std::vector<Item>& ItemListWidget::getItems() const
+const std::vector<std::string>& ItemListWidget::getItems() const
 {
     return m_items;
 }
 
-std::vector<Item>& ItemListWidget::getItems()
+std::vector<std::string>& ItemListWidget::getItems()
 {
     return m_items;
+}
+
+const std::string& ItemListWidget::getPreviousItemName() const
+{
+    return m_previousItemName;
 }
 
 const std::string& ItemListWidget::getName() const
@@ -45,16 +51,16 @@ void ItemListWidget::cancelRenaming()
         m_renameBuffer = std::nullopt;
 }
 
-void ItemListWidget::addItem(const Item& item)
+void ItemListWidget::addItem(const std::string& item)
 {
     m_items.push_back(item);
 }
 
-void ItemListWidget::removeItem(unsigned int id)
+void ItemListWidget::removeItem(const std::string& item)
 {
     for (unsigned int i = 0; i < m_items.size(); ++i)
     {
-        if (m_items[i].id == id)
+        if (m_items[i] == item)
         {
             m_items.erase(m_items.begin() + i);
             break;
@@ -62,23 +68,23 @@ void ItemListWidget::removeItem(unsigned int id)
     }
 }
 
-void ItemListWidget::renameItem(unsigned int id, const std::string& name)
+void ItemListWidget::renameItem(const std::string& item, const std::string& name)
 {
     for (unsigned int i = 0; i < m_items.size(); ++i)
     {
-        if (m_items[i].id == id)
+        if (m_items[i] == item)
         {
-            m_items[i].name = name;
+            m_items[i] = name;
             break;
         }
     }
 }
 
-void ItemListWidget::selectItem(unsigned int id)
+void ItemListWidget::selectItem(const std::string& item)
 {
     for (unsigned int i = 0; i < m_items.size(); ++i)
     {
-        if (m_items[i].id == id)
+        if (m_items[i] == item)
         {
             m_selectedItem = std::make_optional(i);
             break;
@@ -95,7 +101,7 @@ void ItemListWidget::render()
 {
     for (unsigned int i = 0; i < m_items.size(); ++i)
     {
-        Item& item = m_items[i];
+        std::string& item = m_items[i];
         bool selected = m_selectedItem.has_value() && i == m_selectedItem.value();
 
         if (selected && m_renameBuffer.has_value())
@@ -109,7 +115,7 @@ void ItemListWidget::render()
             RenameBuffer& renameBuffer = m_renameBuffer.value();
             ImGui::InputText(std::format("##{}RenameInputText", m_name).c_str(), renameBuffer.buffer.data(), renameBuffer.buffer.size(), ImGuiInputTextFlags_AutoSelectAll);
         }
-        else if (ImGui::Selectable(std::format("{}##{}", item.name, item.id).c_str(), selected))
+        else if (ImGui::Selectable(item.c_str(), selected))
         {
             m_selectedItem = std::make_optional(i);
             m_callbacks.selectCallback();
@@ -131,7 +137,7 @@ void ItemListWidget::render()
 
         if (ImGui::IsKeyPressed(ImGuiKey_F2) && m_selectedItem.has_value() && !m_renameBuffer.has_value())
         {
-            std::string buffer = std::string(256, '\0').replace(0, item.name.size(), item.name);
+            std::string buffer = std::string(256, '\0').replace(0, item.size(), item);
             m_renameBuffer = std::make_optional(RenameBuffer{ buffer, true });
         }
 
@@ -141,7 +147,8 @@ void ItemListWidget::render()
             std::string newName = renameBuffer.substr(0, renameBuffer.find('\n', 0));
             if (!newName.empty())
             {
-                m_items[m_selectedItem.value()].name = newName;
+                m_previousItemName = m_items[m_selectedItem.value()];
+                m_items[m_selectedItem.value()] = newName;
                 m_renameBuffer = std::nullopt;
                 m_callbacks.renameCallback();
             }

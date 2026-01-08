@@ -1,10 +1,10 @@
 #include "RenameParticleSystemCommand.hpp"
 
-RenameParticleSystemCommand::RenameParticleSystemCommand(ConfettiInstance& confettiInstance, unsigned int id, const std::string& name) :
+RenameParticleSystemCommand::RenameParticleSystemCommand(ConfettiInstance& confettiInstance, const std::string& name, const std::string& newName) :
 	Command(true),
 	m_confettiInstance(confettiInstance),
-	m_id(id),
-	m_name(name)
+	m_name(name),
+	m_newName(newName)
 {
 
 }
@@ -12,9 +12,10 @@ RenameParticleSystemCommand::RenameParticleSystemCommand(ConfettiInstance& confe
 void RenameParticleSystemCommand::run()
 {
 	AssetDictionary& assetDictionary = m_confettiInstance.getAssetDictionary();
-	std::string name = assetDictionary.getParticleSystemName(m_id);
-	assetDictionary.setParticleSystemName(m_id, m_name);
-	m_name = name;
+	unsigned int id = assetDictionary.getParticleSystemId(m_name);
+	assetDictionary.removeParticleSystemId(m_name);
+	assetDictionary.setParticleSystemId(m_newName, id);
+	std::swap(m_name, m_newName);
 }
 
 void RenameParticleSystemCommand::revert()

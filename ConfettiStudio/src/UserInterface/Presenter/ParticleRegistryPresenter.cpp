@@ -12,66 +12,96 @@
 #include "UserInterface/Command/SelectParticleEffectCommand.hpp"
 #include "UserInterface/Command/SelectParticleEmitterCommand.hpp"
 
+#include <format>
+
+std::string ParticleRegistryPresenter::findSuitableName(const std::string& name, const std::vector<std::string>& items) const
+{
+	if (items.empty())
+		return name;
+
+	std::string suitableName = name;
+	unsigned int duplicateCount = 0;
+	bool duplicate = true;
+	while (duplicate)
+	{
+		for (const std::string& item : items)
+		{
+			if (item == suitableName)
+			{
+				suitableName = std::format("{}_{}", name, ++duplicateCount);
+				break;
+			}
+
+			duplicate = false;
+		}
+	}
+
+	return suitableName;
+}
+
 void ParticleRegistryPresenter::onParticleSystemCreated()
 {
-	m_commandHistory.run<CreateParticleSystemCommand>(m_confettiInstance);
-	m_widget.m_particleSystems.addItem(Item{ m_confettiInstance.getIdGenerators().system.getLastId(), "System" });
+	std::string name = findSuitableName("System", m_widget.m_particleSystems.getItems());
+	m_commandHistory.run<CreateParticleSystemCommand>(m_confettiInstance, name);
+	m_widget.m_particleSystems.addItem(name);
 }
 
 void ParticleRegistryPresenter::onParticleEffectCreated()
 {
-	m_commandHistory.run<CreateParticleEffectCommand>(m_confettiInstance);
-	m_widget.m_particleEffects.addItem(Item{ m_confettiInstance.getIdGenerators().effect.getLastId(), "Effect" });
+	std::string name = findSuitableName("Effect", m_widget.m_particleEffects.getItems());
+	m_commandHistory.run<CreateParticleEffectCommand>(m_confettiInstance, name);
+	m_widget.m_particleEffects.addItem(name);
 }
 
 void ParticleRegistryPresenter::onParticleEmitterCreated()
 {
-	m_commandHistory.run<CreateParticleEmitterCommand>(m_confettiInstance);
-	m_widget.m_particleEmitters.addItem(Item{ m_confettiInstance.getIdGenerators().emitter.getLastId(), "Emitter" });
+	std::string name = findSuitableName("Emitter", m_widget.m_particleEmitters.getItems());
+	m_commandHistory.run<CreateParticleEmitterCommand>(m_confettiInstance, name);
+	m_widget.m_particleEmitters.addItem(name);
 }
 
 void ParticleRegistryPresenter::onParticleSystemDestroyed()
 {
-	const Item& particleAsset = m_widget.m_particleSystems.getItems()[m_widget.m_particleSystems.getSelectedItem().value()];
-	m_commandHistory.run<DestroyParticleSystemCommand>(m_confettiInstance, particleAsset.id);
+	const std::string& particleSystem = m_widget.m_particleSystems.getItems()[m_widget.m_particleSystems.getSelectedItem().value()];
+	m_commandHistory.run<DestroyParticleSystemCommand>(m_confettiInstance, particleSystem);
 }
 
 void ParticleRegistryPresenter::onParticleEffectDestroyed()
 {
-	const Item& particleAsset = m_widget.m_particleEffects.getItems()[m_widget.m_particleEffects.getSelectedItem().value()];
-	m_commandHistory.run<DestroyParticleEffectCommand>(m_confettiInstance, particleAsset.id);
+	const std::string& particleEffect = m_widget.m_particleEffects.getItems()[m_widget.m_particleEffects.getSelectedItem().value()];
+	m_commandHistory.run<DestroyParticleEffectCommand>(m_confettiInstance, particleEffect);
 }
 
 void ParticleRegistryPresenter::onParticleEmitterDestroyed()
 {
-	const Item& particleAsset = m_widget.m_particleEmitters.getItems()[m_widget.m_particleEmitters.getSelectedItem().value()];
-	m_commandHistory.run<DestroyParticleEmitterCommand>(m_confettiInstance, particleAsset.id);
+	const std::string& particleEmitter = m_widget.m_particleEmitters.getItems()[m_widget.m_particleEmitters.getSelectedItem().value()];
+	m_commandHistory.run<DestroyParticleEmitterCommand>(m_confettiInstance, particleEmitter);
 }
 
 void ParticleRegistryPresenter::onParticleSystemRenamed()
 {
-	const Item& particleAsset = m_widget.m_particleSystems.getItems()[m_widget.m_particleSystems.getSelectedItem().value()];
-	m_commandHistory.run<RenameParticleSystemCommand>(m_confettiInstance, particleAsset.id, particleAsset.name);
+	const std::string& particleSystem = m_widget.m_particleSystems.getPreviousItemName();
+	m_commandHistory.run<RenameParticleSystemCommand>(m_confettiInstance, particleSystem, m_widget.m_particleSystems.getItems()[m_widget.m_particleSystems.getSelectedItem().value()]);
 }
 
 void ParticleRegistryPresenter::onParticleEffectRenamed()
 {
-	const Item& particleAsset = m_widget.m_particleEffects.getItems()[m_widget.m_particleEffects.getSelectedItem().value()];
-	m_commandHistory.run<RenameParticleEffectCommand>(m_confettiInstance, particleAsset.id, particleAsset.name);
+	const std::string& particleEffect = m_widget.m_particleEffects.getPreviousItemName();
+	m_commandHistory.run<RenameParticleEffectCommand>(m_confettiInstance, particleEffect, m_widget.m_particleEffects.getItems()[m_widget.m_particleEffects.getSelectedItem().value()]);
 }
 
 void ParticleRegistryPresenter::onParticleEmitterRenamed()
 {
-	const Item& particleAsset = m_widget.m_particleEmitters.getItems()[m_widget.m_particleEmitters.getSelectedItem().value()];
-	m_commandHistory.run<RenameParticleEmitterCommand>(m_confettiInstance, particleAsset.id, particleAsset.name);
+	const std::string& particleEmitter = m_widget.m_particleEmitters.getPreviousItemName();
+	m_commandHistory.run<RenameParticleEmitterCommand>(m_confettiInstance, particleEmitter, m_widget.m_particleEmitters.getItems()[m_widget.m_particleEmitters.getSelectedItem().value()]);
 }
 
 void ParticleRegistryPresenter::onParticleSystemSelected()
 {
 	if (m_widget.m_particleSystems.getSelectedItem().has_value())
 	{
-		const Item& particleAsset = m_widget.m_particleSystems.getItems()[m_widget.m_particleSystems.getSelectedItem().value()];
-		m_commandHistory.run<SelectParticleSystemCommand>(m_confettiInstance, particleAsset.id);
+		const std::string& particleSystem = m_widget.m_particleSystems.getItems()[m_widget.m_particleSystems.getSelectedItem().value()];
+		m_commandHistory.run<SelectParticleSystemCommand>(m_confettiInstance, particleSystem);
 	}
 	else
 	{
@@ -83,8 +113,8 @@ void ParticleRegistryPresenter::onParticleEffectSelected()
 {
 	if (m_widget.m_particleEffects.getSelectedItem().has_value())
 	{
-		const Item& particleAsset = m_widget.m_particleEffects.getItems()[m_widget.m_particleEffects.getSelectedItem().value()];
-		m_commandHistory.run<SelectParticleEffectCommand>(m_confettiInstance, particleAsset.id);
+		const std::string& particleEffect = m_widget.m_particleEffects.getItems()[m_widget.m_particleEffects.getSelectedItem().value()];
+		m_commandHistory.run<SelectParticleEffectCommand>(m_confettiInstance, particleEffect);
 	}
 	else
 	{
@@ -96,8 +126,8 @@ void ParticleRegistryPresenter::onParticleEmitterSelected()
 {
 	if (m_widget.m_particleEmitters.getSelectedItem().has_value())
 	{
-		const Item& particleAsset = m_widget.m_particleEmitters.getItems()[m_widget.m_particleEmitters.getSelectedItem().value()];
-		m_commandHistory.run<SelectParticleEmitterCommand>(m_confettiInstance, particleAsset.id);
+		const std::string& particleEmitter = m_widget.m_particleEmitters.getItems()[m_widget.m_particleEmitters.getSelectedItem().value()];
+		m_commandHistory.run<SelectParticleEmitterCommand>(m_confettiInstance, particleEmitter);
 	}
 	else
 	{

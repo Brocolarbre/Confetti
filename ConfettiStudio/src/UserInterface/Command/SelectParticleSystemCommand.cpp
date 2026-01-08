@@ -1,9 +1,9 @@
 #include "SelectParticleSystemCommand.hpp"
 
-SelectParticleSystemCommand::SelectParticleSystemCommand(ConfettiInstance& confettiInstance, std::optional<unsigned int> id) :
+SelectParticleSystemCommand::SelectParticleSystemCommand(ConfettiInstance& confettiInstance, const std::optional<std::string>& name) :
 	Command(true),
 	m_confettiInstance(confettiInstance),
-	m_id(id)
+	m_name(name)
 {
 	
 }
@@ -11,9 +11,9 @@ SelectParticleSystemCommand::SelectParticleSystemCommand(ConfettiInstance& confe
 void SelectParticleSystemCommand::run()
 {
 	UserInterfaceState& userInterfaceState = m_confettiInstance.getUserInterfaceState();
-	std::optional<unsigned int> id = userInterfaceState.getSelectedParticleSystem();
-	userInterfaceState.setSelectedParticleSystem(m_id);
-	m_id = id;
+	std::optional<std::string> name = userInterfaceState.getSelectedParticleSystem();
+	userInterfaceState.setSelectedParticleSystem(m_name);
+	m_name = name;
 }
 
 void SelectParticleSystemCommand::revert()

@@ -1,67 +1,101 @@
 #include "AssetDictionary.hpp"
 
-void AssetDictionary::setParticleSystemName(unsigned int id, const std::string& name)
+void AssetDictionary::setParticleSystemId(const std::string& name, unsigned int id)
 {
-    m_particleSystems[id] = name;
+    m_particleSystems[name] = id;
     sendEvent("particle_system_list_updated");
 }
 
-void AssetDictionary::setParticleEffectName(unsigned int id, const std::string& name)
+void AssetDictionary::setParticleEffectId(const std::string& name, unsigned int id)
 {
-    m_particleEffects[id] = name;
+    m_particleEffects[name] = id;
     sendEvent("particle_effect_list_updated");
 }
 
-void AssetDictionary::setParticleEmitterName(unsigned int id, const std::string& name)
+void AssetDictionary::setParticleEmitterId(const std::string& name, unsigned int id)
 {
-    m_particleEmitters[id] = name;
+    m_particleEmitters[name] = id;
     sendEvent("particle_emitter_list_updated");
 }
 
-void AssetDictionary::removeParticleSystemName(unsigned int id)
+void AssetDictionary::removeParticleSystemId(const std::string& name)
 {
-    m_particleSystems.erase(id);
+    m_particleSystems.erase(name);
     sendEvent("particle_system_list_updated");
 }
 
-void AssetDictionary::removeParticleEffectName(unsigned int id)
+void AssetDictionary::removeParticleEffectId(const std::string& name)
 {
-    m_particleEffects.erase(id);
+    m_particleEffects.erase(name);
     sendEvent("particle_effect_list_updated");
 }
 
-void AssetDictionary::removeParticleEmitterName(unsigned int id)
+void AssetDictionary::removeParticleEmitterId(const std::string& name)
 {
-    m_particleEmitters.erase(id);
+    m_particleEmitters.erase(name);
     sendEvent("particle_emitter_list_updated");
 }
 
-const std::string& AssetDictionary::getParticleSystemName(unsigned int id) const
+unsigned int AssetDictionary::getParticleSystemId(const std::string& name) const
 {
-    return m_particleSystems.at(id);
+    return m_particleSystems.at(name);
 }
 
-const std::string& AssetDictionary::getParticleEffectName(unsigned int id) const
+unsigned int AssetDictionary::getParticleEffectId(const std::string& name) const
 {
-    return m_particleEffects.at(id);
+    return m_particleEffects.at(name);
 }
 
-const std::string& AssetDictionary::getParticleEmitterName(unsigned int id) const
+unsigned int AssetDictionary::getParticleEmitterId(const std::string& name) const
 {
-    return m_particleEmitters.at(id);
+    return m_particleEmitters.at(name);
 }
 
-const std::unordered_map<unsigned int, std::string>& AssetDictionary::getParticleSystems() const
+std::string AssetDictionary::getParticleSystemName(unsigned int id) const
+{
+    for (const auto& [systemName, systemId] : m_particleSystems)
+    {
+        if (id == systemId)
+            return systemName;
+    }
+
+    return {};
+}
+
+std::string AssetDictionary::getParticleEffectName(unsigned int id) const
+{
+    for (const auto& [effectName, effectId] : m_particleEffects)
+    {
+        if (id == effectId)
+            return effectName;
+    }
+
+    return {};
+}
+
+std::string AssetDictionary::getParticleEmitterName(unsigned int id) const
+{
+    for (const auto& [emitterName, emitterId] : m_particleEmitters)
+    {
+        if (id == emitterId)
+            return emitterName;
+
+    }
+
+    return {};
+}
+
+const std::unordered_map<std::string, unsigned int>& AssetDictionary::getParticleSystems() const
 {
     return m_particleSystems;
 }
 
-const std::unordered_map<unsigned int, std::string>& AssetDictionary::getParticleEffects() const
+const std::unordered_map<std::string, unsigned int>& AssetDictionary::getParticleEffects() const
 {
     return m_particleEffects;
 }
 
-const std::unordered_map<unsigned int, std::string>& AssetDictionary::getParticleEmitters() const
+const std::unordered_map<std::string, unsigned int>& AssetDictionary::getParticleEmitters() const
 {
     return m_particleEmitters;
 }

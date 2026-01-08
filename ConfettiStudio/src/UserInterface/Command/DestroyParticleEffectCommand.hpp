@@ -12,7 +12,7 @@ private:
 	cft::ParticleEffect m_particleEffect;
 
 public:
-	DestroyParticleEffectCommand(ConfettiInstance& confettiInstance, unsigned int id);
+	DestroyParticleEffectCommand(ConfettiInstance& confettiInstance, const std::string& name);
 
 	void run();
 	void revert();

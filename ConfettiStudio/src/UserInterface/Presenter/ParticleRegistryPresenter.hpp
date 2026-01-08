@@ -9,6 +9,8 @@ private:
 	ParticleRegistryWidget& m_widget;
 	ConfettiInstance& m_confettiInstance;
 
+	std::string findSuitableName(const std::string& name, const std::vector<std::string>& items) const;
+
 	void onParticleSystemCreated();
 	void onParticleEffectCreated();
 	void onParticleEmitterCreated();

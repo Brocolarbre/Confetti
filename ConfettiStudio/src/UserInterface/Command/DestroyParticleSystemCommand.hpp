@@ -12,7 +12,7 @@ private:
 	cft::ParticleSystem m_particleSystem;
 
 public:
-	DestroyParticleSystemCommand(ConfettiInstance& confettiInstance, unsigned int id);
+	DestroyParticleSystemCommand(ConfettiInstance& confettiInstance, const std::string& name);
 
 	void run();
 	void revert();

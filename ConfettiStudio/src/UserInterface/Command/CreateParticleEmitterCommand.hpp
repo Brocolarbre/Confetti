@@ -8,9 +8,10 @@ class CreateParticleEmitterCommand : public Command
 private:
 	ConfettiInstance& m_confettiInstance;
 	unsigned int m_id;
+	std::string m_name;
 
 public:
-	CreateParticleEmitterCommand(ConfettiInstance& confettiInstance);
+	CreateParticleEmitterCommand(ConfettiInstance& confettiInstance, const std::string& name);
 
 	void run();
 	void revert();

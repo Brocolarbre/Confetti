@@ -7,11 +7,11 @@ class RenameParticleEffectCommand : public Command
 {
 private:
 	ConfettiInstance& m_confettiInstance;
-	unsigned int m_id;
 	std::string m_name;
+	std::string m_newName;
 
 public:
-	RenameParticleEffectCommand(ConfettiInstance& confettiInstance, unsigned int id, const std::string& name);
+	RenameParticleEffectCommand(ConfettiInstance& confettiInstance, const std::string& name, const std::string& newName);
 
 	void run();
 	void revert();

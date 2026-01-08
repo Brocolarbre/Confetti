@@ -5,20 +5,20 @@
 
 AssetEditorWidget::AssetEditorWidget() :
 	WindowWidget("Asset Editor", false),
-	m_emitterAsset(),
-	m_effectAsset(),
-	m_systemAsset(),
-	m_effectAssets(),
-	m_emitterAssets()
+	m_emitter(),
+	m_effect(),
+	m_system(),
+	m_effects(),
+	m_emitters()
 {
 
 }
 
 void AssetEditorWidget::render()
 {
-	if (m_emitterAsset.has_value())
+	if (m_emitter.has_value())
 	{
-		EmitterAsset& emitter = m_emitterAsset.value();
+		Emitter& emitter = m_emitter.value();
 		ImGui::SeparatorText("Particle Emitter");
 
 		if (ImGui::InputFloat("Spawn rate", &emitter.spawnRate, 0.0f, 0.0f, "%.2f"))
@@ -64,10 +64,9 @@ void AssetEditorWidget::render()
 		if (ImGui::InputFloat4("Maximum color", &emitter.maximumColor[0]))
 			sendEvent("particle_emitter_updated");
 	}
-	else if (m_effectAsset.has_value())
+	else if (m_effect.has_value())
 	{
-		// Make names unique, two way dictionary, code simplification, add number suffix on new asset names
-		EffectAsset& effect = m_effectAsset.value();
+		/*Effect& effect = m_effect.value();
 		for (unsigned int emitter : effect.emitters)
 		{
 			ImGui::Text(std::format("{}##{}", emitter.name, emitter.id).c_str());
@@ -75,12 +74,12 @@ void AssetEditorWidget::render()
 		}
 
 
-		for (const Asset& emitter : m_emitterAssets)
+		for (const Asset& emitter : m_emitters)
 		{
 			
-		}
+		}*/
 	}
-	else if (m_systemAsset.has_value())
+	else if (m_system.has_value())
 	{
 
 	}

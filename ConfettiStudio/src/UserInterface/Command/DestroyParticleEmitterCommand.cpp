@@ -1,10 +1,10 @@
 #include "DestroyParticleEmitterCommand.hpp"
 
-DestroyParticleEmitterCommand::DestroyParticleEmitterCommand(ConfettiInstance& confettiInstance, unsigned int id) :
+DestroyParticleEmitterCommand::DestroyParticleEmitterCommand(ConfettiInstance& confettiInstance, const std::string& name) :
 	Command(true),
 	m_confettiInstance(confettiInstance),
-	m_id(id),
-	m_name(),
+	m_id(0),
+	m_name(name),
 	m_particleEmitter()
 {
 
@@ -13,16 +13,16 @@ DestroyParticleEmitterCommand::DestroyParticleEmitterCommand(ConfettiInstance& c
 void DestroyParticleEmitterCommand::run()
 {
 	cft::ParticleRegistry& particleRegistry = m_confettiInstance.getParticleSimulation().getParticleRegistry();
+	AssetDictionary& assetDictionary = m_confettiInstance.getAssetDictionary();
+	m_id = assetDictionary.getParticleEmitterId(m_name);
 	m_particleEmitter = particleRegistry.getParticleEmitter(m_id);
 	particleRegistry.removeParticleEmitter(m_id);
-	AssetDictionary& assetDictionary = m_confettiInstance.getAssetDictionary();
-	m_name = assetDictionary.getParticleEmitterName(m_id);
-	assetDictionary.removeParticleEmitterName(m_id);
+	assetDictionary.removeParticleEmitterId(m_name);
 }
 
 void DestroyParticleEmitterCommand::revert()
 {
 	m_id = m_confettiInstance.getIdGenerators().emitter();
 	m_confettiInstance.getParticleSimulation().getParticleRegistry().addParticleEmitter(m_id, m_particleEmitter);
-	m_confettiInstance.getAssetDictionary().setParticleEmitterName(m_id, m_name);
+	m_confettiInstance.getAssetDictionary().setParticleEmitterId(m_name, m_id);
 }

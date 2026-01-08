@@ -5,24 +5,28 @@
 class AssetDictionary : public Model
 {
 private:
-	std::unordered_map<unsigned int, std::string> m_particleSystems;
-	std::unordered_map<unsigned int, std::string> m_particleEffects;
-	std::unordered_map<unsigned int, std::string> m_particleEmitters;
+	std::unordered_map<std::string, unsigned int> m_particleSystems;
+	std::unordered_map<std::string, unsigned int> m_particleEffects;
+	std::unordered_map<std::string, unsigned int> m_particleEmitters;
 
 public:
-	void setParticleSystemName(unsigned int id, const std::string& name);
-	void setParticleEffectName(unsigned int id, const std::string& name);
-	void setParticleEmitterName(unsigned int id, const std::string& name);
+	void setParticleSystemId(const std::string& name, unsigned int id);
+	void setParticleEffectId(const std::string& name, unsigned int id);
+	void setParticleEmitterId(const std::string& name, unsigned int id);
 
-	void removeParticleSystemName(unsigned int id);
-	void removeParticleEffectName(unsigned int id);
-	void removeParticleEmitterName(unsigned int id);
+	void removeParticleSystemId(const std::string& name);
+	void removeParticleEffectId(const std::string& name);
+	void removeParticleEmitterId(const std::string& name);
 
-	const std::string& getParticleSystemName(unsigned int id) const;
-	const std::string& getParticleEffectName(unsigned int id) const;
-	const std::string& getParticleEmitterName(unsigned int id) const;
+	unsigned int getParticleSystemId(const std::string& name) const;
+	unsigned int getParticleEffectId(const std::string& name) const;
+	unsigned int getParticleEmitterId(const std::string& name) const;
 
-	const std::unordered_map<unsigned int, std::string>& getParticleSystems() const;
-	const std::unordered_map<unsigned int, std::string>& getParticleEffects() const;
-	const std::unordered_map<unsigned int, std::string>& getParticleEmitters() const;
+	std::string getParticleSystemName(unsigned int id) const;
+	std::string getParticleEffectName(unsigned int id) const;
+	std::string getParticleEmitterName(unsigned int id) const;
+
+	const std::unordered_map<std::string, unsigned int>& getParticleSystems() const;
+	const std::unordered_map<std::string, unsigned int>& getParticleEffects() const;
+	const std::unordered_map<std::string, unsigned int>& getParticleEmitters() const;
 };

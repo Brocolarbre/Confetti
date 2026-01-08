@@ -1,10 +1,10 @@
 #include "RenameParticleEmitterCommand.hpp"
 
-RenameParticleEmitterCommand::RenameParticleEmitterCommand(ConfettiInstance& confettiInstance, unsigned int id, const std::string& name) :
+RenameParticleEmitterCommand::RenameParticleEmitterCommand(ConfettiInstance& confettiInstance, const std::string& name, const std::string& newName) :
 	Command(true),
 	m_confettiInstance(confettiInstance),
-	m_id(id),
-	m_name(name)
+	m_name(name),
+	m_newName(newName)
 {
 
 }
@@ -12,9 +12,10 @@ RenameParticleEmitterCommand::RenameParticleEmitterCommand(ConfettiInstance& con
 void RenameParticleEmitterCommand::run()
 {
 	AssetDictionary& assetDictionary = m_confettiInstance.getAssetDictionary();
-	std::string name = assetDictionary.getParticleEmitterName(m_id);
-	assetDictionary.setParticleEmitterName(m_id, m_name);
-	m_name = name;
+	unsigned int id = assetDictionary.getParticleEmitterId(m_name);
+	assetDictionary.removeParticleEmitterId(m_name);
+	assetDictionary.setParticleEmitterId(m_newName, id);
+	std::swap(m_name, m_newName);
 }
 
 void RenameParticleEmitterCommand::revert()

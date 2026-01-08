@@ -1,9 +1,9 @@
 #include "SelectParticleEmitterCommand.hpp"
 
-SelectParticleEmitterCommand::SelectParticleEmitterCommand(ConfettiInstance& confettiInstance, std::optional<unsigned int> id) :
+SelectParticleEmitterCommand::SelectParticleEmitterCommand(ConfettiInstance& confettiInstance, const std::optional<std::string>& name) :
 	Command(true),
 	m_confettiInstance(confettiInstance),
-	m_id(id)
+	m_name(name)
 {
 	
 }
@@ -11,9 +11,9 @@ SelectParticleEmitterCommand::SelectParticleEmitterCommand(ConfettiInstance& con
 void SelectParticleEmitterCommand::run()
 {
 	UserInterfaceState& userInterfaceState = m_confettiInstance.getUserInterfaceState();
-	std::optional<unsigned int> id = userInterfaceState.getSelectedParticleEmitter();
-	userInterfaceState.setSelectedParticleEmitter(m_id);
-	m_id = id;
+	std::optional<std::string> name = userInterfaceState.getSelectedParticleEmitter();
+	userInterfaceState.setSelectedParticleEmitter(m_name);
+	m_name = name;
 }
 
 void SelectParticleEmitterCommand::revert()

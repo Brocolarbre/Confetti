@@ -7,10 +7,10 @@ class SelectParticleEmitterCommand : public Command
 {
 private:
 	ConfettiInstance& m_confettiInstance;
-	std::optional<unsigned int> m_id;
+	std::optional<std::string> m_name;
 
 public:
-	SelectParticleEmitterCommand(ConfettiInstance& confettiInstance, std::optional<unsigned int> id);
+	SelectParticleEmitterCommand(ConfettiInstance& confettiInstance, const std::optional<std::string>& name);
 
 	void run();
 	void revert();

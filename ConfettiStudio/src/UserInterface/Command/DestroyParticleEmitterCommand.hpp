@@ -12,7 +12,7 @@ private:
 	cft::ParticleEmitter m_particleEmitter;
 
 public:
-	DestroyParticleEmitterCommand(ConfettiInstance& confettiInstance, unsigned int id);
+	DestroyParticleEmitterCommand(ConfettiInstance& confettiInstance, const std::string& name);
 
 	void run();
 	void revert();

@@ -4,46 +4,40 @@
 
 #include <optional>
 
-struct EmitterAsset
-{
-	float spawnRate;
-	glm::vec4 minimumColor;
-	glm::vec4 maximumColor;
-	glm::vec3 minimumPosition;
-	glm::vec3 maximumPosition;
-	glm::vec3 minimumVelocity;
-	glm::vec3 maximumVelocity;
-	glm::vec2 minimumScale;
-	glm::vec2 maximumScale;
-	float minimumLifetime;
-	float maximumLifetime;
-};
-
-struct EffectAsset
-{
-	std::vector<unsigned int> emitters;
-};
-
-struct SystemAsset
-{
-	std::vector<unsigned int> effects;
-};
-
-struct Asset
-{
-	unsigned int id;
-	std::string name;
-};
-
 class AssetEditorWidget : public WindowWidget
 {
 public:
-	std::optional<EmitterAsset> m_emitterAsset;
-	std::optional<EffectAsset> m_effectAsset;
-	std::optional<SystemAsset> m_systemAsset;
+	struct Emitter
+	{
+		float spawnRate;
+		glm::vec4 minimumColor;
+		glm::vec4 maximumColor;
+		glm::vec3 minimumPosition;
+		glm::vec3 maximumPosition;
+		glm::vec3 minimumVelocity;
+		glm::vec3 maximumVelocity;
+		glm::vec2 minimumScale;
+		glm::vec2 maximumScale;
+		float minimumLifetime;
+		float maximumLifetime;
+	};
 
-	std::vector<Asset> m_effectAssets;
-	std::vector<Asset> m_emitterAssets;
+	struct Effect
+	{
+		std::vector<std::string> emitters;
+	};
+
+	struct System
+	{
+		std::vector<std::string> effects;
+	};
+
+	std::optional<Emitter> m_emitter;
+	std::optional<Effect> m_effect;
+	std::optional<System> m_system;
+
+	std::vector<std::string> m_effects;
+	std::vector<std::string> m_emitters;
 
 public:
 	AssetEditorWidget();
