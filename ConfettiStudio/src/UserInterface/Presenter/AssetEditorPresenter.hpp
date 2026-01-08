@@ -12,6 +12,8 @@ private:
 	void onParticleSystemSelected();
 	void onParticleEffectSelected();
 	void onParticleEmitterSelected();
+	void onParticleEffectListUpdated();
+	void onParticleEmitterListUpdated();
 
 	void onParticleSystemUpdated();
 	void onParticleEffectUpdated();

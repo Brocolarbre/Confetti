@@ -69,6 +69,24 @@ void AssetEditorPresenter::onParticleEmitterSelected()
 	m_widget.m_effectAsset = std::nullopt;
 }
 
+void AssetEditorPresenter::onParticleEffectListUpdated()
+{
+	const AssetDictionary& assetDictionary = m_confettiInstance.getAssetDictionary();
+	m_widget.m_effectAssets.clear();
+	m_widget.m_effectAssets.reserve(assetDictionary.getParticleEffects().size());
+	for (const auto& [id, name] : assetDictionary.getParticleEffects())
+		m_widget.m_effectAssets.push_back(Asset{ id, name });
+}
+
+void AssetEditorPresenter::onParticleEmitterListUpdated()
+{
+	const AssetDictionary& assetDictionary = m_confettiInstance.getAssetDictionary();
+	m_widget.m_emitterAssets.clear();
+	m_widget.m_emitterAssets.reserve(assetDictionary.getParticleEmitters().size());
+	for (const auto& [id, name] : assetDictionary.getParticleEmitters())
+		m_widget.m_emitterAssets.push_back(Asset{ id, name });
+}
+
 void AssetEditorPresenter::onParticleSystemUpdated()
 {
 	std::optional<unsigned int> selectedParticleSystem = m_confettiInstance.getUserInterfaceState().getSelectedParticleSystem();
@@ -139,6 +157,8 @@ AssetEditorPresenter::AssetEditorPresenter(CommandHistory& commandHistory, Asset
 	registerModelEvent("particle_system_selected", std::bind(&AssetEditorPresenter::onParticleSystemSelected, this));
 	registerModelEvent("particle_effect_selected", std::bind(&AssetEditorPresenter::onParticleEffectSelected, this));
 	registerModelEvent("particle_emitter_selected", std::bind(&AssetEditorPresenter::onParticleEmitterSelected, this));
+	registerModelEvent("particle_effect_list_updated", std::bind(&AssetEditorPresenter::onParticleEffectListUpdated, this));
+	registerModelEvent("particle_emitter_list_updated", std::bind(&AssetEditorPresenter::onParticleEmitterListUpdated, this));
 
 	registerWidgetEvent("particle_system_updated", std::bind(&AssetEditorPresenter::onParticleSystemUpdated, this));
 	registerWidgetEvent("particle_effect_updated", std::bind(&AssetEditorPresenter::onParticleEffectUpdated, this));

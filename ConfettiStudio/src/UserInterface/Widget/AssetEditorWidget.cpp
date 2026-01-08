@@ -1,12 +1,15 @@
 #include "AssetEditorWidget.hpp"
 
 #include <imgui.h>
+#include <format>
 
 AssetEditorWidget::AssetEditorWidget() :
 	WindowWidget("Asset Editor", false),
 	m_emitterAsset(),
 	m_effectAsset(),
-	m_systemAsset()
+	m_systemAsset(),
+	m_effectAssets(),
+	m_emitterAssets()
 {
 
 }
@@ -63,7 +66,19 @@ void AssetEditorWidget::render()
 	}
 	else if (m_effectAsset.has_value())
 	{
+		// Make names unique, two way dictionary, code simplification, add number suffix on new asset names
+		EffectAsset& effect = m_effectAsset.value();
+		for (unsigned int emitter : effect.emitters)
+		{
+			ImGui::Text(std::format("{}##{}", emitter.name, emitter.id).c_str());
+			ImGui::SameLine();
+		}
 
+
+		for (const Asset& emitter : m_emitterAssets)
+		{
+			
+		}
 	}
 	else if (m_systemAsset.has_value())
 	{

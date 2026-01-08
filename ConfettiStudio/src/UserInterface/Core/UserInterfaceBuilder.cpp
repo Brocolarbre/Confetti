@@ -27,6 +27,7 @@ void UserInterfaceBuilder::build(UserInterface& userInterface, dove::Window& win
     dockspaceWidget->addChildWidget(viewportWidget);
 
     confettiInstance.getUserInterfaceState().registerPresenter(assetEditorPresenter);
+    confettiInstance.getAssetDictionary().registerPresenter(assetEditorPresenter);
 
     userInterface.loadSettings("res/settings/user_interface.ini");
     userInterface.setFont("res/fonts/Inter-Regular.ttf", 16);

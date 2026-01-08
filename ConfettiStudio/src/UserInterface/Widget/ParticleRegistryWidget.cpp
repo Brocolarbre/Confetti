@@ -99,6 +99,9 @@ void ParticleRegistryWidget::render()
 			activeTab = ImGui::GetItemID();
 			m_particleSystems.render();
 			ImGui::EndTabItem();
+
+			if (activeTab != m_activeTab)
+				sendParticleSystemSelectedEvent();
 		}
 
 		if (ImGui::BeginTabItem(m_particleEffects.getName().c_str()))
@@ -106,6 +109,9 @@ void ParticleRegistryWidget::render()
 			activeTab = ImGui::GetItemID();
 			m_particleEffects.render();
 			ImGui::EndTabItem();
+
+			if (activeTab != m_activeTab)
+				sendParticleEffectSelectedEvent();
 		}
 
 		if (ImGui::BeginTabItem(m_particleEmitters.getName().c_str()))
@@ -113,6 +119,9 @@ void ParticleRegistryWidget::render()
 			activeTab = ImGui::GetItemID();
 			m_particleEmitters.render(); // Add method in Widget to manually call a widget
 			ImGui::EndTabItem();
+
+			if (activeTab != m_activeTab)
+				sendParticleEmitterSelectedEvent();
 		}
 
 		if (activeTab != m_activeTab)

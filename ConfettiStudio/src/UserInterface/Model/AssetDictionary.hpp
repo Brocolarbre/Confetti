@@ -1,9 +1,8 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
+#include "Model.hpp"
 
-class AssetDictionary
+class AssetDictionary : public Model
 {
 private:
 	std::unordered_map<unsigned int, std::string> m_particleSystems;
@@ -22,4 +21,8 @@ public:
 	const std::string& getParticleSystemName(unsigned int id) const;
 	const std::string& getParticleEffectName(unsigned int id) const;
 	const std::string& getParticleEmitterName(unsigned int id) const;
+
+	const std::unordered_map<unsigned int, std::string>& getParticleSystems() const;
+	const std::unordered_map<unsigned int, std::string>& getParticleEffects() const;
+	const std::unordered_map<unsigned int, std::string>& getParticleEmitters() const;
 };
