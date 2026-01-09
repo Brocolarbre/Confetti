@@ -121,36 +121,39 @@ void ItemListWidget::render()
             m_callbacks.selectCallback();
         }
 
-        if (ImGui::IsKeyPressed(ImGuiKey_Delete) && m_selectedItem.has_value())
+        if (ImGui::IsWindowFocused())
         {
-            m_callbacks.destroyCallback();
-            m_items.erase(m_items.begin() + m_selectedItem.value());
-            m_selectedItem = std::nullopt;
-            m_callbacks.selectCallback();
-            break;
-        }
-
-        if (ImGui::IsKeyPressed(ImGuiKey_Escape) && m_renameBuffer.has_value())
-        {
-            m_renameBuffer = std::nullopt;
-        }
-
-        if (ImGui::IsKeyPressed(ImGuiKey_F2) && m_selectedItem.has_value() && !m_renameBuffer.has_value())
-        {
-            std::string buffer = std::string(256, '\0').replace(0, item.size(), item);
-            m_renameBuffer = std::make_optional(RenameBuffer{ buffer, true });
-        }
-
-        if ((ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter)) && m_renameBuffer.has_value())
-        {
-            const std::string& renameBuffer = m_renameBuffer.value().buffer;
-            std::string newName = renameBuffer.substr(0, renameBuffer.find('\n', 0));
-            if (!newName.empty())
+            if (ImGui::IsKeyPressed(ImGuiKey_Delete) && m_selectedItem.has_value())
             {
-                m_previousItemName = m_items[m_selectedItem.value()];
-                m_items[m_selectedItem.value()] = newName;
+                m_callbacks.destroyCallback();
+                m_items.erase(m_items.begin() + m_selectedItem.value());
+                m_selectedItem = std::nullopt;
+                m_callbacks.selectCallback();
+                break;
+            }
+
+            if (ImGui::IsKeyPressed(ImGuiKey_Escape) && m_renameBuffer.has_value())
+            {
                 m_renameBuffer = std::nullopt;
-                m_callbacks.renameCallback();
+            }
+
+            if (ImGui::IsKeyPressed(ImGuiKey_F2) && m_selectedItem.has_value() && !m_renameBuffer.has_value())
+            {
+                std::string buffer = std::string(256, '\0').replace(0, item.size(), item);
+                m_renameBuffer = std::make_optional(RenameBuffer{ buffer, true });
+            }
+
+            if ((ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter)) && m_renameBuffer.has_value())
+            {
+                const std::string& renameBuffer = m_renameBuffer.value().buffer;
+                std::string newName = renameBuffer.substr(0, renameBuffer.find('\n', 0));
+                if (!newName.empty())
+                {
+                    m_previousItemName = m_items[m_selectedItem.value()];
+                    m_items[m_selectedItem.value()] = newName;
+                    m_renameBuffer = std::nullopt;
+                    m_callbacks.renameCallback();
+                }
             }
         }
     }

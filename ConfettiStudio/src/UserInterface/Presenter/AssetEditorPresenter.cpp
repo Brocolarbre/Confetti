@@ -146,7 +146,7 @@ void AssetEditorPresenter::onParticleEffectUpdated()
 			particleEmitters.reserve(effect.emitters.size());
 
 			for (const std::string& emitter : effect.emitters)
-				particleEmitters.push_back(assetDictionary.getParticleEffectId(emitter));
+				particleEmitters.push_back(assetDictionary.getParticleEmitterId(emitter));
 
 			particleEffect.emitters = particleEmitters;
 		}

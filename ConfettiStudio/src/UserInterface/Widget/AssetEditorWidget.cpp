@@ -10,6 +10,8 @@ AssetEditorWidget::AssetEditorWidget() :
 	m_system(),
 	m_selectedEffect(),
 	m_selectedEmitter(),
+	m_selectedNewEffect(),
+	m_selectedNewEmitter(),
 	m_effects(),
 	m_emitters()
 {
@@ -70,19 +72,22 @@ void AssetEditorWidget::render()
 	{
 		Effect& effect = m_effect.value();
 
-		for (const std::string& emitter : effect.emitters)
+		for (unsigned int i = 0; i < effect.emitters.size(); ++i)
 		{
-			ImGui::Text(emitter.c_str());
+			if (ImGui::Selectable(std::format("{}##{}", effect.emitters[i], i).c_str(), m_selectedEmitter.has_value() ? i == m_selectedEmitter.value() : false))
+			{
+				m_selectedEmitter = std::make_optional(i);
+			}
 		}
 
-		std::string selectedEmitter = m_selectedEmitter.value_or("");
+		std::string selectedEmitter = m_selectedNewEmitter.value_or("");
 		if (ImGui::BeginCombo("Emitter", selectedEmitter.empty() ? "Select" : selectedEmitter.c_str()))
 		{
 			for (const std::string& emitter : m_emitters)
 			{
 				if (ImGui::Selectable(emitter.c_str(), emitter == selectedEmitter))
 				{
-					m_selectedEmitter = std::make_optional(emitter);
+					m_selectedNewEmitter = std::make_optional(emitter);
 					break;
 				}
 			}
@@ -91,32 +96,46 @@ void AssetEditorWidget::render()
 		}
 
 		ImGui::SameLine();
-		ImGui::BeginDisabled(!m_selectedEmitter.has_value());
+		ImGui::BeginDisabled(!m_selectedNewEmitter.has_value());
 		if (ImGui::Button("Add"))
 		{
-			effect.emitters.push_back(m_selectedEmitter.value());
-			m_selectedEmitter = std::nullopt;
+			effect.emitters.push_back(m_selectedNewEmitter.value());
+			m_selectedNewEmitter = std::nullopt;
+			m_selectedEmitter = std::make_optional(static_cast<unsigned int>(effect.emitters.size() - 1));
 			sendEvent("particle_effect_updated");
 		}
 		ImGui::EndDisabled();
+
+		if (ImGui::IsWindowFocused())
+		{
+			if (ImGui::IsKeyPressed(ImGuiKey_Delete) && m_selectedEmitter.has_value())
+			{
+				effect.emitters.erase(effect.emitters.begin() + m_selectedEmitter.value());
+				m_selectedEmitter = std::nullopt;
+				sendEvent("particle_effect_updated");
+			}
+		}
 	}
 	else if (m_system.has_value())
 	{
 		System& system = m_system.value();
 
-		for (const std::string& effect : system.effects)
+		for (unsigned int i = 0; i < system.effects.size(); ++i)
 		{
-			ImGui::Text(effect.c_str());
+			if (ImGui::Selectable(std::format("{}##{}", system.effects[i], i).c_str(), m_selectedEffect.has_value() ? i == m_selectedEffect.value() : false))
+			{
+				m_selectedEffect = std::make_optional(i);
+			}
 		}
 
-		std::string selectedEffect = m_selectedEffect.value_or("");
+		std::string selectedEffect = m_selectedNewEffect.value_or("");
 		if (ImGui::BeginCombo("Effect", selectedEffect.empty() ? "Select" : selectedEffect.c_str()))
 		{
 			for (const std::string& effect : m_effects)
 			{
 				if (ImGui::Selectable(effect.c_str(), effect == selectedEffect))
 				{
-					m_selectedEffect = std::make_optional(effect);
+					m_selectedNewEffect = std::make_optional(effect);
 					break;
 				}
 			}
@@ -125,13 +144,24 @@ void AssetEditorWidget::render()
 		}
 
 		ImGui::SameLine();
-		ImGui::BeginDisabled(!m_selectedEffect.has_value());
+		ImGui::BeginDisabled(!m_selectedNewEffect.has_value());
 		if (ImGui::Button("Add"))
 		{
-			system.effects.push_back(m_selectedEffect.value());
-			m_selectedEffect = std::nullopt;
+			system.effects.push_back(m_selectedNewEffect.value());
+			m_selectedNewEffect = std::nullopt;
+			m_selectedEffect = std::make_optional(static_cast<unsigned int>(system.effects.size() - 1));
 			sendEvent("particle_system_updated");
 		}
 		ImGui::EndDisabled();
+
+		if (ImGui::IsWindowFocused())
+		{
+			if (ImGui::IsKeyPressed(ImGuiKey_Delete) && m_selectedEffect.has_value())
+			{
+				system.effects.erase(system.effects.begin() + m_selectedEffect.value());
+				m_selectedEffect = std::nullopt;
+				sendEvent("particle_system_updated");
+			}
+		}
 	}
 }

@@ -24,15 +24,16 @@ std::string ParticleRegistryPresenter::findSuitableName(const std::string& name,
 	bool duplicate = true;
 	while (duplicate)
 	{
+		duplicate = false;
+
 		for (const std::string& item : items)
 		{
 			if (item == suitableName)
 			{
 				suitableName = std::format("{}_{}", name, ++duplicateCount);
+				duplicate = true;
 				break;
 			}
-
-			duplicate = false;
 		}
 	}
 
