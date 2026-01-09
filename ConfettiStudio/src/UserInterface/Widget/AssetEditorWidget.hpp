@@ -36,6 +36,9 @@ public:
 	std::optional<Effect> m_effect;
 	std::optional<System> m_system;
 
+	std::optional<std::string> m_selectedEffect;
+	std::optional<std::string> m_selectedEmitter;
+
 	std::vector<std::string> m_effects;
 	std::vector<std::string> m_emitters;
 
