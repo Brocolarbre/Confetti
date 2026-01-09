@@ -18,6 +18,12 @@ void AssetDictionary::setParticleEmitterId(const std::string& name, unsigned int
     sendEvent("particle_emitter_list_updated");
 }
 
+void AssetDictionary::setForceFieldId(const std::string& name, unsigned int id)
+{
+    m_forceFields[name] = id;
+    sendEvent("force_field_list_updated");
+}
+
 void AssetDictionary::removeParticleSystemId(const std::string& name)
 {
     m_particleSystems.erase(name);
@@ -36,6 +42,12 @@ void AssetDictionary::removeParticleEmitterId(const std::string& name)
     sendEvent("particle_emitter_list_updated");
 }
 
+void AssetDictionary::removeForceFieldId(const std::string& name)
+{
+    m_forceFields.erase(name);
+    sendEvent("force_field_list_updated");
+}
+
 unsigned int AssetDictionary::getParticleSystemId(const std::string& name) const
 {
     return m_particleSystems.at(name);
@@ -49,6 +61,11 @@ unsigned int AssetDictionary::getParticleEffectId(const std::string& name) const
 unsigned int AssetDictionary::getParticleEmitterId(const std::string& name) const
 {
     return m_particleEmitters.at(name);
+}
+
+unsigned int AssetDictionary::getForceFieldId(const std::string& name) const
+{
+    return m_forceFields.at(name);
 }
 
 std::string AssetDictionary::getParticleSystemName(unsigned int id) const
@@ -85,6 +102,18 @@ std::string AssetDictionary::getParticleEmitterName(unsigned int id) const
     return {};
 }
 
+std::string AssetDictionary::getForceFieldName(unsigned int id) const
+{
+    for (const auto& [forceFieldName, forceFieldId] : m_forceFields)
+    {
+        if (id == forceFieldId)
+            return forceFieldName;
+
+    }
+
+    return {};
+}
+
 const std::unordered_map<std::string, unsigned int>& AssetDictionary::getParticleSystems() const
 {
     return m_particleSystems;
@@ -98,4 +127,9 @@ const std::unordered_map<std::string, unsigned int>& AssetDictionary::getParticl
 const std::unordered_map<std::string, unsigned int>& AssetDictionary::getParticleEmitters() const
 {
     return m_particleEmitters;
+}
+
+const std::unordered_map<std::string, unsigned int>& AssetDictionary::getForceFields() const
+{
+    return m_forceFields;
 }
