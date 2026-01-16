@@ -17,7 +17,7 @@ struct IdGenerators
 	UniqueIdGenerator forceField;
 };
 
-class ConfettiInstance
+class ConfettiInstance : public dove::EventHandler
 {
 private:
 	Camera m_camera;
@@ -41,6 +41,8 @@ public:
 	UserInterfaceState& getUserInterfaceState();
 	cft::ParticleSimulation& getParticleSimulation();
 	cft::Renderer& getRenderer();
+
+	void onKeyPressed(dove::KeyEvent keyEvent) override;
 
 	void update();
 	void render();

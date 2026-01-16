@@ -169,7 +169,7 @@ namespace cft
 							for (unsigned int forceFieldId : forceFields)
 							{
 								const ForceField& forceField = m_particleRegistry.getForceField(forceFieldId);
-								velocity[i] = forceField.apply(velocity[i], elapsedTime, deltaTime);
+								velocity[i] = forceField.apply(velocity[i], position[i], elapsedTime, deltaTime);
 							}
 						};
 

@@ -13,7 +13,7 @@ Code cleanup :
 
 Features :
 - Acceleration : distinguish between force fields that accumulate force on the velocity and force fields that reset the velocity with a new value
-- ForceField : replace particlePosition with a Particle instance to allow for more complex force fields
+- ForceField : replace particlePosition with a Particle instance to allow for more complex force fields (particle fields, progress)
 - Timed events : spawn emitters from particules (tick -> periodically spawn an emitter, deathEvent -> optionally emit another emitter when despawning)
 - Rendering : instancing, bloom, lens flares, model rendering
 - Advanced force field : crowd simulation
