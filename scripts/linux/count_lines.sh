@@ -2,6 +2,11 @@
 
 #!/bin/bash
 
+root="."
+if [[ "$1" == "--root" && -n "$2" ]]; then
+    root="$2"
+fi
+
 cppCount=0
 hppCount=0
 cCount=0
@@ -11,7 +16,7 @@ folderCount=0
 
 while IFS= read -r -d '' dir; do
     ((folderCount++))
-done < <(find . -path "*/external" -prune -o -type d -print0)
+done < <(find "$root" -path "*/external" -prune -o -type d -print0)
 
 while IFS= read -r -d '' file; do
     ext="${file##*.}"
@@ -27,7 +32,7 @@ while IFS= read -r -d '' file; do
     lines=$(wc -l < "$file")
     ((totalLines += lines))
 
-done < <(find . -path ./external -prune -o -type f \( -iname "*.cpp" -o -iname "*.hpp" -o -iname "*.c" -o -iname "*.h" \) -print0)
+done < <(find "$root" -path "*/external" -prune -o -type f \( -iname "*.cpp" -o -iname "*.hpp" -o -iname "*.c" -o -iname "*.h" \) -print0)
 
 echo "-----------------------------"
 echo "Folders: $folderCount"

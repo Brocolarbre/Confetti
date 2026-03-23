@@ -3,6 +3,9 @@
 @echo off
 setlocal enabledelayedexpansion
 
+set "root=."
+if "%~1"=="--root" if not "%~2"=="" set "root=%~2"
+
 set cppCount=0
 set hppCount=0
 set cCount=0
@@ -10,14 +13,14 @@ set hCount=0
 set totalLines=0
 set folderCount=0
 
-for /d /r %%d in (*) do (
+for /d /r "%root%" %%d in (*) do (
     set "p=%%d"
     if "!p:\external\=!"=="!p!" (
         set /a folderCount+=1
     )
 )
 
-for /r %%f in (*.cpp *.hpp *.c *.h) do (
+for /r "%root%" %%f in (*.cpp *.hpp *.c *.h) do (
     set "p=%%f"
 
     if "!p:\external\=!"=="!p!" (
