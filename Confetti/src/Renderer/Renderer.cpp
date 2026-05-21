@@ -1,23 +1,18 @@
 #include "Confetti/Renderer/Renderer.hpp"
 
 #include <glad/glad.h>
-#include <iostream>
 
 namespace cft
 {
-	bool Renderer::m_intialized = false;
-
 	Renderer::Renderer(unsigned int width, unsigned int height) :
+		m_width(width),
+		m_height(height),
 		m_framebuffer(width, height),
 		m_shader(),
 		m_mesh(),
-		m_ssbo(),
-		m_width(width),
-		m_height(height)
+		m_ssbo()
 	{
-		glEnable(GL_CULL_FACE);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
 	}
 
 	unsigned int Renderer::getOutputTextureId() const
@@ -34,14 +29,15 @@ namespace cft
 
 	void Renderer::render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools)
 	{
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		std::vector<std::reference_wrapper<const cft::ParticlePool>> pools;
 		pools.reserve(particlePools.size());
 
 		for (const auto& [id, pool] : particlePools)
 			pools.push_back(pool);
-
-		while (GLenum error = glGetError())
-			std::cerr << "OpenGL error : " << error << std::endl;
 
 		unsigned int totalParticleCount = 0;
 		for (const auto& pool : pools)
@@ -60,18 +56,5 @@ namespace cft
 		m_shader.setUniform("uProjection", view.projectionMatrix);
 
 		m_mesh.drawInstanced(totalParticleCount);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-
-	bool Renderer::initialize(void* loader)
-	{
-		if (m_intialized)
-			return true;
-
-		if(gladLoadGLLoader(static_cast<GLADloadproc>(loader)))
-			m_intialized = true;
-
-		return m_intialized;
 	}
 }

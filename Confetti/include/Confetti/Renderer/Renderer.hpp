@@ -13,15 +13,13 @@ namespace cft
 	class Renderer
 	{
 	private:
+		unsigned int m_width;
+		unsigned int m_height;
+
 		Framebuffer m_framebuffer;
 		Shader m_shader;
 		Mesh m_mesh;
 		SSBO m_ssbo;
-
-		unsigned int m_width;
-		unsigned int m_height;
-
-		static bool m_intialized;
 
 	public:
 		Renderer(unsigned int width, unsigned int height);
@@ -30,7 +28,5 @@ namespace cft
 
 		void resize(unsigned int width, unsigned int height);
 		void render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools);
-
-		static bool initialize(void* loader);
 	};
 }

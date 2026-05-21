@@ -17,8 +17,9 @@ void ConfettiInstance::restartSimulation()
 }
 
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
-    m_particleSimulation(),
+    m_renderContext(width, height),
     m_renderer(width, height),
+    m_particleSimulation(),
     m_elapsedTimeChronometer(false),
     m_deltaTimeChronometer(false)
 {
@@ -50,11 +51,16 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     restartSimulation();
 }
 
-
 void ConfettiInstance::onKeyPressed(dove::KeyEvent keyEvent)
 {
     if (keyEvent.key == dove::Keyboard::Key::R)
         restartSimulation();
+}
+
+void ConfettiInstance::onWindowResized(unsigned int width, unsigned int height)
+{
+    m_renderContext.resize(width, height);
+    m_renderer.resize(width, height);
 }
 
 void ConfettiInstance::update()
@@ -68,14 +74,22 @@ void ConfettiInstance::update()
 
 void ConfettiInstance::render()
 {
+    glm::vec3 position(0.0f, 5.0f, 10.0f);
+    glm::vec3 right(0.0f, 0.0f, 0.0f);
+    glm::vec3 up(0.0f, 0.0f, 0.0f);
+    glm::vec3 forward(0.0f, 0.0f, 0.0f);
+    glm::mat4 viewMatrix(glm::lookAt(position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    glm::mat4 projectionMatrix(glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.01f, 1000.0f));
+
     cft::View view{
-        glm::vec3(0.0f, 0.0f, 5.0f),
-        glm::vec3(1.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 1.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, -1.0f),
-        glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)),
-        glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.01f, 1000.0f)
+        position,
+        right,
+        up,
+        forward,
+        viewMatrix,
+        projectionMatrix
     };
 
     m_renderer.render(view, m_particleSimulation.getParticlePools());
+    m_renderContext.render(m_renderer.getOutputTextureId());
 }

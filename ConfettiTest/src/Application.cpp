@@ -1,5 +1,7 @@
 #include "Application.hpp"
 
+#include <iostream>
+
 void Application::update(double deltaTime)
 {
 	m_window.fetchEvents();
@@ -26,7 +28,8 @@ Application::Application() :
 	m_window.open("Confetti", 1280, 720, windowSettings);
 
 	m_window.captureContext();
-	cft::Renderer::initialize(dove::Window::getProcAddress);
+	if (!RenderContext::initialize(dove::Window::getProcAddress))
+		std::cerr << "Failed to initialize render context" << std::endl;
 
 	dove::Vector2 windowSize = m_window.getSize();
 	m_confettiInstance = std::make_unique<ConfettiInstance>(windowSize.x, windowSize.y, m_window);

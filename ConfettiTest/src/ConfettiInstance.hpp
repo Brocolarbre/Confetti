@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RenderContext.hpp"
+
 #include <Confetti/Particle/ParticleSimulation.hpp>
 #include <Confetti/Renderer/Renderer.hpp>
 #include <Krono/Krono.hpp>
@@ -8,8 +10,11 @@
 class ConfettiInstance : public dove::EventHandler
 {
 private:
-	cft::ParticleSimulation m_particleSimulation;
+	RenderContext m_renderContext;
+
 	cft::Renderer m_renderer;
+	cft::ParticleSimulation m_particleSimulation;
+
 	krono::Chronometer m_elapsedTimeChronometer;
 	krono::Chronometer m_deltaTimeChronometer;
 
@@ -19,6 +24,7 @@ public:
 	ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window);
 
 	void onKeyPressed(dove::KeyEvent keyEvent) override;
+	void onWindowResized(unsigned int width, unsigned int height) override;
 
 	void update();
 	void render();
