@@ -1,4 +1,4 @@
-#include "ConfettiEngine/Particle/ParticleGenerator.hpp"
+#include "Confetti/Particle/ParticleGenerator.hpp"
 
 namespace cft
 {

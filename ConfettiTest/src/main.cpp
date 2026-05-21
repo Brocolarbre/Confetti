@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Application/Application.hpp"
+#include "Application.hpp"
 
 int main()
 {

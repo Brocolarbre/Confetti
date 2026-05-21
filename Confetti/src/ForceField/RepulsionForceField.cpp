@@ -1,4 +1,4 @@
-#include "ConfettiEngine/ForceField/RepulsionForceField.hpp"
+#include "Confetti/ForceField/RepulsionForceField.hpp"
 
 namespace cft
 {

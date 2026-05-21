@@ -1,4 +1,4 @@
-#include "ConfettiEngine/Renderer/Shader.hpp"
+#include "Confetti/Renderer/Shader.hpp"
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>

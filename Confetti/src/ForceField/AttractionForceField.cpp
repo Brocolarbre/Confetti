@@ -1,4 +1,4 @@
-#include "ConfettiEngine/ForceField/AttractionForceField.hpp"
+#include "Confetti/ForceField/AttractionForceField.hpp"
 
 namespace cft
 {

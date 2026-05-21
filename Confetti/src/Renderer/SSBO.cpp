@@ -1,4 +1,4 @@
-#include "ConfettiEngine/Renderer/SSBO.hpp"
+#include "Confetti/Renderer/SSBO.hpp"
 
 #include <glad/glad.h>
 

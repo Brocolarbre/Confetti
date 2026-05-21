@@ -1,4 +1,4 @@
-#include "ConfettiEngine/Tools/RandomNumberGenerator.hpp"
+#include "Confetti/Tools/RandomNumberGenerator.hpp"
 
 namespace cft
 {

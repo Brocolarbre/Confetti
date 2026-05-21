@@ -1,4 +1,4 @@
-#include "ConfettiEngine/Particle/ParticleRegistry.hpp"
+#include "Confetti/Particle/ParticleRegistry.hpp"
 
 namespace cft
 {
@@ -99,7 +99,7 @@ namespace cft
 
 	void ParticleRegistry::removeParticleSystemEntry(unsigned int type, unsigned int instance)
 	{
-		if (m_particleSystemEntries.contains(type))
+		if (m_particleSystemEntries.find(type) != m_particleSystemEntries.end())
 		{
 			m_particleSystemEntries.at(type).erase(instance);
 
@@ -110,7 +110,7 @@ namespace cft
 
 	void ParticleRegistry::removeParticleEffectEntry(unsigned int type, unsigned int instance)
 	{
-		if (m_particleEffectEntries.contains(type))
+		if (m_particleEffectEntries.find(type) != m_particleEffectEntries.end())
 		{
 			m_particleEffectEntries.at(type).erase(instance);
 
@@ -121,7 +121,7 @@ namespace cft
 
 	void ParticleRegistry::removeParticleEmitterEntry(unsigned int type, unsigned int instance)
 	{
-		if (m_particleEmitterEntries.contains(type))
+		if (m_particleEmitterEntries.find(type) != m_particleEmitterEntries.end())
 		{
 			m_particleEmitterEntries.at(type).erase(instance);
 

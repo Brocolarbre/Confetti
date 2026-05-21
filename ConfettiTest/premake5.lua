@@ -1,7 +1,7 @@
 project "ConfettiTest"
 	kind "ConsoleApp"
 	language "C++"
-	cppdialect "C++17"
+	cppdialect "C++20"
 
 	targetdir (outputdir .. "/%{prj.name}")
 	objdir (outputdir .. "/%{prj.name}/intermediates")

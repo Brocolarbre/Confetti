@@ -1,4 +1,4 @@
-#include "ConfettiEngine/Particle/ParticlePool.hpp"
+#include "Confetti/Particle/ParticlePool.hpp"
 
 namespace cft
 {

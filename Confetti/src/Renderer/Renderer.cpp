@@ -1,4 +1,4 @@
-#include "ConfettiEngine/Renderer/Renderer.hpp"
+#include "Confetti/Renderer/Renderer.hpp"
 
 #include <glad/glad.h>
 #include <iostream>

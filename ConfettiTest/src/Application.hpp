@@ -2,8 +2,6 @@
 
 #include "ConfettiInstance.hpp"
 
-#include <Windove/Window.hpp>
-
 class Application
 {
 private:
@@ -16,5 +14,6 @@ private:
 
 public:
 	Application();
+
 	void run();
 };

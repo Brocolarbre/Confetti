@@ -1,9 +1,11 @@
 #include "ConfettiInstance.hpp"
 
-#include <ConfettiEngine/ForceField/LinearForceField.hpp>
-#include <ConfettiEngine/ForceField/AttractionForceField.hpp>
-#include <ConfettiEngine/ForceField/RepulsionForceField.hpp>
-#include <ConfettiEngine/ForceField/AttenuationForceField.hpp>
+#include <Confetti/ForceField/LinearForceField.hpp>
+#include <Confetti/ForceField/AttractionForceField.hpp>
+#include <Confetti/ForceField/RepulsionForceField.hpp>
+#include <Confetti/ForceField/AttenuationForceField.hpp>
+
+#include <glm/gtc/matrix_transform.hpp>
 
 void ConfettiInstance::restartSimulation()
 {
@@ -57,8 +59,6 @@ void ConfettiInstance::onKeyPressed(dove::KeyEvent keyEvent)
 
 void ConfettiInstance::update()
 {
-    m_cameraController.update();
-
     float elapsedTime = static_cast<float>(m_elapsedTimeChronometer.getElapsedTime().seconds);
     float deltaTime = static_cast<float>(m_deltaTimeChronometer.getElapsedTime().seconds);
     m_deltaTimeChronometer.restart();
@@ -73,7 +73,7 @@ void ConfettiInstance::render()
         glm::vec3(1.0f, 0.0f, 0.0f),
         glm::vec3(0.0f, 1.0f, 0.0f),
         glm::vec3(0.0f, 0.0f, -1.0f),
-        glm::look_at(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)),
+        glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)),
         glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.01f, 1000.0f)
     };
 

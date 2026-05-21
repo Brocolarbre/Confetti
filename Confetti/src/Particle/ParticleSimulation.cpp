@@ -1,4 +1,4 @@
-#include "ConfettiEngine/Particle/ParticleSimulation.hpp"
+#include "Confetti/Particle/ParticleSimulation.hpp"
 
 namespace cft
 {

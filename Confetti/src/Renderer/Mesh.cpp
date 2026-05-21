@@ -1,4 +1,4 @@
-#include "ConfettiEngine/Renderer/Mesh.hpp"
+#include "Confetti/Renderer/Mesh.hpp"
 
 #include <glad/glad.h>
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ParticleGenerator.hpp"
-#include "ConfettiEngine/ForceField/ForceField.hpp"
+#include "Confetti/ForceField/ForceField.hpp"
 
 #include <memory>
 #include <unordered_map>

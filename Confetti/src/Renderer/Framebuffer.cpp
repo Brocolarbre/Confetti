@@ -1,4 +1,4 @@
-#include "ConfettiEngine/Renderer/Framebuffer.hpp"
+#include "Confetti/Renderer/Framebuffer.hpp"
 
 #include <glad/glad.h>
 #include <iostream>

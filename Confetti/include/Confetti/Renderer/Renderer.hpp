@@ -6,7 +6,7 @@
 #include "SSBO.hpp"
 #include "View.hpp"
 
-#include "ConfettiEngine/Particle/ParticlePool.hpp"
+#include "Confetti/Particle/ParticlePool.hpp"
 
 namespace cft
 {
