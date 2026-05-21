@@ -15,22 +15,15 @@ void ConfettiInstance::restartSimulation()
 }
 
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
-    m_camera(glm::vec3(0.0f), glm::vec2(width, height)),
-    m_cameraController(m_camera, window, glm::vec3(0.0f, 2.0f, 4.0f), glm::vec3(0.0f)),
-    m_idGenerators(),
-    m_assetDictionary(),
-    m_userInterfaceState(),
     m_particleSimulation(),
     m_renderer(width, height),
     m_elapsedTimeChronometer(false),
     m_deltaTimeChronometer(false)
 {
     window.addEventHandler(*this);
-    m_cameraController.setSlideSpeed(0.1f);
 
     cft::ParticleRegistry& particleRegistry = m_particleSimulation.getParticleRegistry();
 
-    // Builder ?
     particleRegistry.addForceField(0, std::make_unique<cft::LinearForceField>(glm::vec3(0.0f, -1.0f, 0.0f), 10.0f));
     particleRegistry.addForceField(1, std::make_unique<cft::AttractionForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 20.0f, 10.0f));
     particleRegistry.addForceField(2, std::make_unique<cft::RepulsionForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 3.0f, 1.0f));
@@ -55,35 +48,6 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     restartSimulation();
 }
 
-Camera& ConfettiInstance::getCamera()
-{
-    return m_camera;
-}
-
-IdGenerators& ConfettiInstance::getIdGenerators()
-{
-    return m_idGenerators;
-}
-
-AssetDictionary& ConfettiInstance::getAssetDictionary()
-{
-    return m_assetDictionary;
-}
-
-UserInterfaceState& ConfettiInstance::getUserInterfaceState()
-{
-    return m_userInterfaceState;
-}
-
-cft::ParticleSimulation& ConfettiInstance::getParticleSimulation()
-{
-    return m_particleSimulation;
-}
-
-cft::Renderer& ConfettiInstance::getRenderer()
-{
-    return m_renderer;
-}
 
 void ConfettiInstance::onKeyPressed(dove::KeyEvent keyEvent)
 {
@@ -105,12 +69,12 @@ void ConfettiInstance::update()
 void ConfettiInstance::render()
 {
     cft::View view{
-        m_camera.getPosition(),
-        m_camera.getRight(),
-        m_camera.getUp(),
-        m_camera.getForward(),
-        m_camera.getViewMatrix(),
-        m_camera.getViewFrustum().getProjectionMatrix()
+        glm::vec3(0.0f, 0.0f, 5.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, -1.0f),
+        glm::look_at(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)),
+        glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.01f, 1000.0f)
     };
 
     m_renderer.render(view, m_particleSimulation.getParticlePools());
