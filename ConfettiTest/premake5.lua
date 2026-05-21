@@ -1,30 +1,18 @@
-project "ConfettiStudio"
+project "ConfettiTest"
 	kind "ConsoleApp"
 	language "C++"
-	cppdialect "C++20"
+	cppdialect "C++17"
 
 	targetdir (outputdir .. "/%{prj.name}")
 	objdir (outputdir .. "/%{prj.name}/intermediates")
 
 	includedirs {
-		"%{wks.location}/ConfettiEngine/include",
+		"%{wks.location}/Confetti/include",
 		"src"
 	}
 	
-	filter "configurations:Debug"
-		links {
-			"imguid"
-		}
-
-	filter "configurations:Release"
-		links {
-			"imgui"
-		}
-
-	filter {}
-	
 	links {
-		"ConfettiEngine",
+		"Confetti",
 		"glfw3",
 		"Windove"
 	}
@@ -41,7 +29,7 @@ project "ConfettiStudio"
 		}
 		
 		defines {
-			"CONFETTIENGINE_STATIC"
+			"CONFETTI_STATIC"
 		}
 
 	filter {}

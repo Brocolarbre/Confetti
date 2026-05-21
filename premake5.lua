@@ -12,7 +12,7 @@ workspace "Confetti"
 	platforms { "x86", "x64" }
 	configurations { "Debug", "Release" }
 	
-	startproject "ConfettiStudio"
+	startproject "ConfettiTest"
 	
 	filter "platforms:x86"
 		architecture "x86"
@@ -107,4 +107,4 @@ workspace "Confetti"
 	filter {}
 	
 	include "ConfettiEngine"
-	include "ConfettiStudio"
+	include "ConfettiTest"

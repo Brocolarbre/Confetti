@@ -1,6 +1,6 @@
-project "ConfettiEngine"
+project "Confetti"
 	language "C++"
-	cppdialect "C++20"
+	cppdialect "C++17"
 
 	targetdir (outputdir .. "/%{prj.name}")
 	objdir (outputdir .. "/%{prj.name}/intermediates")
@@ -25,14 +25,14 @@ project "ConfettiEngine"
 		}
 		
 		defines	{
-			"CONFETTIENGINE_EXPORT"
+			"CONFETTI_EXPORT"
 		}
 		
 	filter "not options:shared-library"
 		kind "StaticLib"
 		
 		defines	{
-			"CONFETTIENGINE_STATIC"
+			"CONFETTI_STATIC"
 		}
 		
 	filter {}

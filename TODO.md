@@ -9,7 +9,7 @@ Code cleanup :
 - Fix boundary checking for OrbitCameraController
 - Remove the iostram inclusion from the Presenter.hpp file.
 - Nomenclature : full variable names (ex: particleEffect instead of effect)
-- Use export macro CONFETTIENGINE_EXPORT across the entire engine API
+- Use export macro CONFETTI_EXPORT across the entire engine API
 
 Features :
 - Acceleration : distinguish between force fields that accumulate force on the velocity and force fields that reset the velocity with a new value
