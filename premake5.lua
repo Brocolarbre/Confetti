@@ -106,5 +106,5 @@ workspace "Confetti"
 		
 	filter {}
 	
-	include "ConfettiEngine"
+	include "Confetti"
 	include "ConfettiTest"
