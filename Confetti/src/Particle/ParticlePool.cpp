@@ -10,8 +10,7 @@ namespace cft
 		m_scale.resize(capacity);
 		m_lifetime.resize(capacity);
 		m_spawnTime.resize(capacity);
-		m_emitterType.resize(capacity);
-		m_emitterInstance.resize(capacity);
+		m_forceFieldSetId.resize(capacity);
 
 		m_capacity = capacity;
 		m_reservedCapacity = glm::min(m_reservedCapacity, m_capacity);
@@ -25,8 +24,7 @@ namespace cft
 		m_scale(),
 		m_lifetime(),
 		m_spawnTime(),
-		m_emitterType(),
-		m_emitterInstance(),
+		m_forceFieldSetId(),
 		m_capacity(0),
 		m_reservedCapacity(0),
 		m_count(0)
@@ -64,14 +62,9 @@ namespace cft
 		return m_spawnTime;
 	}
 
-	const std::vector<unsigned int>& ParticlePool::getEmitterType() const
+	const std::vector<unsigned int>& ParticlePool::getForceFieldSetId() const
 	{
-		return m_emitterType;
-	}
-
-	const std::vector<unsigned int>& ParticlePool::getEmitterInstance() const
-	{
-		return m_emitterInstance;
+		return m_forceFieldSetId;
 	}
 
 	std::vector<glm::vec4>& ParticlePool::getColor()
@@ -104,14 +97,9 @@ namespace cft
 		return m_spawnTime;
 	}
 
-	std::vector<unsigned int>& ParticlePool::getEmitterType()
+	std::vector<unsigned int>& ParticlePool::getForceFieldSetId()
 	{
-		return m_emitterType;
-	}
-
-	std::vector<unsigned int>& ParticlePool::getEmitterInstance()
-	{
-		return m_emitterInstance;
+		return m_forceFieldSetId;
 	}
 
 	unsigned int ParticlePool::getCount() const
@@ -137,8 +125,7 @@ namespace cft
 		m_scale[newIndex] = particle.scale;
 		m_lifetime[newIndex] = particle.lifetime;
 		m_spawnTime[newIndex] = particle.spawnTime;
-		m_emitterType[newIndex] = particle.emitterType;
-		m_emitterInstance[newIndex] = particle.emitterInstance;
+		m_forceFieldSetId[newIndex] = particle.forceFieldSetId;
 
 		--m_reservedCapacity;
 	}
@@ -153,7 +140,6 @@ namespace cft
 		m_scale[index] = m_scale[lastIndex];
 		m_lifetime[index] = m_lifetime[lastIndex];
 		m_spawnTime[index] = m_spawnTime[lastIndex];
-		m_emitterType[index] = m_emitterType[lastIndex];
-		m_emitterInstance[index] = m_emitterInstance[lastIndex];
+		m_forceFieldSetId[index] = m_forceFieldSetId[lastIndex];
 	}
 }

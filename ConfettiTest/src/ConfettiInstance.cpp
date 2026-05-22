@@ -10,7 +10,7 @@
 void ConfettiInstance::restartSimulation()
 {
     m_particleSimulation.clear();
-    m_particleSimulation.addParticleSystem(0);
+    m_particleSimulation.start();
 
     m_elapsedTimeChronometer.start();
     m_deltaTimeChronometer.start();
@@ -32,21 +32,18 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     particleRegistry.addForceField(2, std::make_unique<cft::RepulsionForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 3.0f, 1.0f));
     particleRegistry.addForceField(3, std::make_unique<cft::AttenuationForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 3.0f, 0.2f));
 
-    particleRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0.0f, 4.0f, 20, 0.0f, cft::ParticleBoundaries{ glm::vec4(0.0f), glm::vec4(1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(-1.0f), glm::vec3(1.0f), glm::vec2(0.01f), glm::vec2(1.0f), 2.0f, 5.0f } });
-    particleRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 0, 3.0f, 2.0f, 50, 0.0f, cft::ParticleBoundaries{ glm::vec4(1.0f), glm::vec4(1.0f), glm::vec3(-5.0f), glm::vec3(5.0f), glm::vec3(-0.5f, 0.0f, -0.5f), glm::vec3(0.5f), glm::vec2(0.2f), glm::vec2(0.5f), 2.0f, 5.0f } });
-    particleRegistry.addParticleEmitter(2, cft::ParticleEmitter{ 2, 0, 0.0f, 5.0f, 80, 0.0f, cft::ParticleBoundaries{ glm::vec4(0.6f, 0.4f, 0.8f, 1.0f), glm::vec4(0.6f, 0.4f, 0.8f, 1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(0.1f), glm::vec2(0.3f), 4.0f, 6.0f } });
-    particleRegistry.addParticleEmitter(3, cft::ParticleEmitter{ 3, 0, 0.0f, 0.1f, 3000, 0.0f, cft::ParticleBoundaries{ glm::vec4(0.8f, 0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f), glm::vec3(-0.01f), glm::vec3(0.01f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(0.1f), glm::vec2(0.1f), 6.0f, 9.0f } });
-    particleRegistry.addParticleEffect(0, cft::ParticleEffect{ 0.0f, 10.0f, { 0, 1 } });
-    particleRegistry.addParticleEffect(1, cft::ParticleEffect{ 0.0f, 10.0f, { 2 } });
-    particleRegistry.addParticleEffect(2, cft::ParticleEffect{ 0.0f, 10.0f, { 3 } });
-    particleRegistry.addParticleSystem(0, cft::ParticleSystem{ 0.0f, 10.0f, { 2 } });
+    particleRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 20, cft::ParticleBoundaries{ glm::vec4(0.0f), glm::vec4(1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(-1.0f), glm::vec3(1.0f), glm::vec2(0.01f), glm::vec2(1.0f), 2.0f, 5.0f } });
+    particleRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 50, cft::ParticleBoundaries{ glm::vec4(1.0f), glm::vec4(1.0f), glm::vec3(-5.0f), glm::vec3(5.0f), glm::vec3(-0.5f, 0.0f, -0.5f), glm::vec3(0.5f), glm::vec2(0.2f), glm::vec2(0.5f), 2.0f, 5.0f } });
+    particleRegistry.addParticleEmitter(2, cft::ParticleEmitter{ 2, 80, cft::ParticleBoundaries{ glm::vec4(0.6f, 0.4f, 0.8f, 1.0f), glm::vec4(0.6f, 0.4f, 0.8f, 1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(0.1f), glm::vec2(0.3f), 4.0f, 6.0f } });
+    particleRegistry.addParticleEmitter(3, cft::ParticleEmitter{ 3, 3000, cft::ParticleBoundaries{ glm::vec4(0.8f, 0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f), glm::vec3(-0.01f), glm::vec3(0.01f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(0.1f), glm::vec2(0.1f), 6.0f, 9.0f } });
+    
+    particleRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterClip{ 0, cft::TimeRange{ 0.0f, 4.0f }, { 0, 1 } } } });
+    particleRegistry.addParticleEffect(1, cft::ParticleEffect{ { cft::ParticleEmitterClip{ 1, cft::TimeRange{ 3.0f, 2.0f }, { 2 } } } });
+    particleRegistry.addParticleEffect(2, cft::ParticleEffect{ { cft::ParticleEmitterClip{ 2, cft::TimeRange{ 0.0f, 5.0f }, { 3 } } } });
 
-    particleRegistry.addParticleSystemEntry(0, 0, {});
-    particleRegistry.addParticleEffectEntry(0, 0, { 0, 0, {} });
-    particleRegistry.addParticleEmitterEntry(0, 0, { 0, 0, {} });
-    particleRegistry.addParticleEmitterEntry(1, 0, { 0, 0, { 0 } });
-    particleRegistry.addParticleEmitterEntry(2, 0, { 0, 0, { 1, 3 } });
-    particleRegistry.addParticleEmitterEntry(3, 0, { 0, 0, { 2 } });
+    particleRegistry.addParticleSystem(0, cft::ParticleSystem{ { cft::ParticleEffectClip{ 0, cft::TimeRange{ 0.0f, 0.1f }, { 2 } } } });
+
+    m_particleSimulation.addParticleSystemClip(cft::ParticleSystemClip{ 0, cft::TimeRange{ 0.0f, 5.0f }, { 0 } });
 
     restartSimulation();
 }

@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	Particle ParticleGenerator::generate(RandomNumberGenerator& generator, const ParticleBoundaries& boundaries, float elapsedTime, unsigned int emitterType, unsigned int emitterInstance)
+	Particle ParticleGenerator::generate(RandomNumberGenerator& generator, const ParticleBoundaries& boundaries, float elapsedTime, unsigned int forceFieldSetId)
 	{
 		return Particle{
 			generator.generate(boundaries.minimumColor, boundaries.maximumColor),
@@ -11,8 +11,7 @@ namespace cft
 			generator.generate(boundaries.minimumScale, boundaries.maximumScale),
 			generator.generate(boundaries.minimumLifetime, boundaries.maximumLifetime),
 			elapsedTime,
-			emitterType,
-			emitterInstance
+			forceFieldSetId
 		};
 	}
 }

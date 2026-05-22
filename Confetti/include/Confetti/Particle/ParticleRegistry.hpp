@@ -8,36 +8,76 @@
 
 namespace cft
 {
+	// Emitter : behavior
+	// Effect, System : orchestration
+
+	struct TimeRange
+	{
+		float spawnTime;
+		float duration;
+	};
+
+	struct ParticleEmitterClip
+	{
+		unsigned int emitterId;
+		TimeRange timeRange;
+		std::vector<unsigned int> forceFields;
+	};
+
+	struct ParticleEffectClip
+	{
+		unsigned int effectId;
+		TimeRange timeRange;
+		std::vector<unsigned int> forceFields;
+	};
+
+	struct ParticleSystemClip
+	{
+		unsigned int systemId;
+		TimeRange timeRange;
+		std::vector<unsigned int> forceFields;
+	};
+
 	struct ParticleEmitter
 	{
-		unsigned int type;
-		unsigned int instance;
-		float spawnTime;
-		float lifetime;
+		unsigned int group;
+		float spawnRate;
+		ParticleBoundaries boundaries; // SpawnBehavior
+	};
+
+	struct ParticleEffect
+	{
+		std::vector<ParticleEmitterClip> emitters;
+	};
+
+	struct ParticleSystem
+	{
+		std::vector<ParticleEffectClip> effects;
+	};
+
+	struct ParticleEmitterInstance
+	{
+		TimeRange timeRange;
+		std::vector<unsigned int> forceFields;
+		unsigned int forceFieldSetId;
+		unsigned int group;
 		float spawnRate;
 		float accumulator;
 		ParticleBoundaries boundaries;
 	};
 
-	struct ParticleEffect
+	struct ParticleEffectInstance
 	{
-		float spawnTime;
-		float lifetime;
-		std::vector<unsigned int> emitters;
-	};
-
-	struct ParticleSystem
-	{
-		float spawnTime;
-		float lifetime;
-		std::vector<unsigned int> effects;
-	};
-
-	struct ParticleEntry
-	{
-		unsigned int parentType;
-		unsigned int parentInstance;
+		TimeRange timeRange;
 		std::vector<unsigned int> forceFields;
+		std::vector<ParticleEmitterClip> emittersToSpawn;
+	};
+
+	struct ParticleSystemInstance
+	{
+		TimeRange timeRange;
+		std::vector<unsigned int> forceFields;
+		std::vector<ParticleEffectClip> effectsToSpawn;
 	};
 
 	class ParticleRegistry
@@ -47,10 +87,6 @@ namespace cft
 		std::unordered_map<unsigned int, ParticleEffect> m_particleEffects;
 		std::unordered_map<unsigned int, ParticleEmitter> m_particleEmitters;
 		std::unordered_map<unsigned int, std::unique_ptr<ForceField>> m_forceFields;
-
-		std::unordered_map<unsigned int, std::unordered_map<unsigned int, std::vector<unsigned int>>> m_particleSystemEntries;
-		std::unordered_map<unsigned int, std::unordered_map<unsigned int, ParticleEntry>> m_particleEffectEntries;
-		std::unordered_map<unsigned int, std::unordered_map<unsigned int, ParticleEntry>> m_particleEmitterEntries;
 
 	public:
 		void addParticleSystem(unsigned int id, const ParticleSystem& particleSystem);
@@ -72,17 +108,5 @@ namespace cft
 		ParticleEffect& getParticleEffect(unsigned int id);
 		ParticleEmitter& getParticleEmitter(unsigned int id);
 		ForceField& getForceField(unsigned int id);
-
-		void addParticleSystemEntry(unsigned int type, unsigned int instance, const std::vector<unsigned int>& entry);
-		void addParticleEffectEntry(unsigned int type, unsigned int instance, const ParticleEntry& entry);
-		void addParticleEmitterEntry(unsigned int type, unsigned int instance, const ParticleEntry& entry);
-
-		void removeParticleSystemEntry(unsigned int type, unsigned int instance);
-		void removeParticleEffectEntry(unsigned int type, unsigned int instance);
-		void removeParticleEmitterEntry(unsigned int type, unsigned int instance);
-
-		const std::vector<unsigned int>& getParticleSystemEntry(unsigned int type, unsigned int instance) const;
-		const ParticleEntry& getParticleEffectEntry(unsigned int type, unsigned int instance) const;
-		const ParticleEntry& getParticleEmitterEntry(unsigned int type, unsigned int instance) const;
 	};
 }

@@ -69,6 +69,8 @@ void RenderContext::render(unsigned int outputTextureId) const
     while (GLenum error = glGetError())
         std::cerr << "OpenGL error : " << error << std::endl;
 
+    glDisable(GL_DEPTH_TEST);
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, m_width, m_height);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -88,7 +90,7 @@ bool RenderContext::initialize(void* loader)
     if (m_initialized)
         return true;
 
-    if (!gladLoadGLLoader(static_cast<GLADloadproc>(loader)))
+    if (gladLoadGLLoader(static_cast<GLADloadproc>(loader)))
         m_initialized = true;
 
     return m_initialized;

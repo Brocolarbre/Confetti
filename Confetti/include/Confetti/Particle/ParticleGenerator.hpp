@@ -22,6 +22,6 @@ namespace cft
 	class ParticleGenerator
 	{
 	public:
-		static Particle generate(RandomNumberGenerator& generator, const ParticleBoundaries& boundaries, float elapsedTime, unsigned int emitterType, unsigned int emitterInstance);
+		static Particle generate(RandomNumberGenerator& generator, const ParticleBoundaries& boundaries, float elapsedTime, unsigned int forceFieldSetId);
 	};
 }

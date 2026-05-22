@@ -5,10 +5,11 @@ namespace cft
 	ParticleSimulation::ParticleSimulation() :
 		m_particleRegistry(),
 		m_randomNumberGenerator(),
-		m_particlePools(),
-		m_particleSystems(),
-		m_particleEffects(),
-		m_particleEmitters()
+		m_particleSystemClips(),
+		m_particleSystemInstances(),
+		m_particleEffectInstances(),
+		m_particleEmitterInstances(),
+		m_particlePools()
 	{
 
 	}
@@ -23,48 +24,69 @@ namespace cft
 		return m_particlePools;
 	}
 
+	void ParticleSimulation::addParticleSystemClip(const ParticleSystemClip& clip)
+	{
+		m_particleSystemClips.push_back(clip);
+	}
+
+	void ParticleSimulation::removeParticleSystemClip(unsigned int index)
+	{
+		m_particleSystemClips.erase(m_particleSystemClips.begin() + index);
+	}
+
 	void ParticleSimulation::setSeed(unsigned int seed)
 	{
 		m_randomNumberGenerator = RandomNumberGenerator(seed);
 	}
 
-	void ParticleSimulation::addParticleSystem(unsigned int id)
-	{
-		m_particleSystems.push_back(m_particleRegistry.getParticleSystem(id));
-	}
-
 	void ParticleSimulation::clear()
 	{
-		m_particleSystems.clear();
-		m_particleEffects.clear();
-		m_particleEmitters.clear();
+		m_particleSystemInstances.clear();
+		m_particleEffectInstances.clear();
+		m_particleEmitterInstances.clear();
 		m_particlePools.clear();
+		m_forceFieldSet.clear();
+	}
+
+	void ParticleSimulation::start()
+	{
+		for (unsigned int i = 0; i < m_particleSystemClips.size(); ++i)
+		{
+			ParticleSystemClip& particleSystemClip = m_particleSystemClips[i];
+			m_particleSystemInstances.push_back(ParticleSystemInstance{ particleSystemClip.timeRange, particleSystemClip.forceFields, m_particleRegistry.getParticleSystem(particleSystemClip.systemId).effects }); // Instantiate the particle system by making a copy of the system clip and using the bank system effect clip list
+			// EffectClip and EmitterClip instances stored in the class will be read in the update method when creating the corresponding instances
+				// The clip variable structure is untouched during simulation, it is only read, only the instances are added and removed
+		}
 	}
 
 	void ParticleSimulation::update(float elapsedTime, float deltaTime)
 	{
-		// System update
-		for (unsigned int i = 0; i < m_particleSystems.size();)
+		// Particle systems update
+		for (unsigned int i = 0; i < m_particleSystemInstances.size();)
 		{
-			ParticleSystem& system = m_particleSystems[i];
+			ParticleSystemInstance& particleSystemInstance = m_particleSystemInstances[i];
 
-			float despawnTime = system.spawnTime + system.lifetime;
+			float despawnTime = particleSystemInstance.timeRange.spawnTime + particleSystemInstance.timeRange.duration;
 			if (despawnTime <= elapsedTime)
 			{
-				m_particleSystems.erase(m_particleSystems.begin() + i);
+				m_particleSystemInstances.erase(m_particleSystemInstances.begin() + i);
 			}
 			else
 			{
-				std::vector<unsigned int>& effects = system.effects;
-				for (unsigned int j = 0; j < effects.size();)
+				for (unsigned int j = 0; j < particleSystemInstance.effectsToSpawn.size(); ++j)
 				{
-					const ParticleEffect& effect = m_particleRegistry.getParticleEffect(effects[j]);
-					if (system.spawnTime + effect.spawnTime <= elapsedTime)
+					const ParticleEffectClip& particleEffectClip = particleSystemInstance.effectsToSpawn[j];
+					if (elapsedTime >= particleSystemInstance.timeRange.spawnTime + particleEffectClip.timeRange.spawnTime)
 					{
-						m_particleEffects.push_back(effect);
-						m_particleEffects.back().spawnTime = elapsedTime;
+						std::vector<unsigned int> particleEffectInstanceForceFields;
+						particleEffectInstanceForceFields.reserve(particleSystemInstance.forceFields.size() + particleEffectClip.forceFields.size());
+						particleEffectInstanceForceFields.insert(particleEffectInstanceForceFields.end(), particleSystemInstance.forceFields.begin(), particleSystemInstance.forceFields.end());
+						particleEffectInstanceForceFields.insert(particleEffectInstanceForceFields.end(), particleEffectClip.forceFields.begin(), particleEffectClip.forceFields.end());
 
-						effects.erase(effects.begin() + j);
+						m_particleEffectInstances.push_back(ParticleEffectInstance{ particleEffectClip.timeRange, particleEffectInstanceForceFields, m_particleRegistry.getParticleEffect(particleEffectClip.effectId).emitters }); // We give the effect clip force fields to the effect instance, and we also inherit the system force fields to the effect
+						m_particleEffectInstances.back().timeRange.spawnTime = elapsedTime;
+
+						particleSystemInstance.effectsToSpawn.erase(particleSystemInstance.effectsToSpawn.begin() + j);
 					}
 					else
 					{
@@ -76,29 +98,35 @@ namespace cft
 			}
 		}
 
-		// Effect update
-		for (unsigned int i = 0; i < m_particleEffects.size();)
+		// Particle effects update
+		for (unsigned int i = 0; i < m_particleEffectInstances.size();)
 		{
-			ParticleEffect& effect = m_particleEffects[i];
+			ParticleEffectInstance& particleEffectInstance = m_particleEffectInstances[i];
 
-			float despawnTime = effect.spawnTime + effect.lifetime;
+			float despawnTime = particleEffectInstance.timeRange.spawnTime + particleEffectInstance.timeRange.duration;
 			if (despawnTime <= elapsedTime)
 			{
-				m_particleEffects.erase(m_particleEffects.begin() + i);
+				m_particleEffectInstances.erase(m_particleEffectInstances.begin() + i);
 			}
 			else
 			{
-				std::vector<unsigned int>& emitters = effect.emitters;
-				for (unsigned int j = 0; j < emitters.size();)
+				for (unsigned int j = 0; j < particleEffectInstance.emittersToSpawn.size(); ++j)
 				{
-					const ParticleEmitter& emitter = m_particleRegistry.getParticleEmitter(emitters[j]);
-					if (effect.spawnTime + emitter.spawnTime <= elapsedTime)
+					const ParticleEmitterClip& particleEmitterClip = particleEffectInstance.emittersToSpawn[j];
+					if (elapsedTime >= particleEffectInstance.timeRange.spawnTime + particleEmitterClip.timeRange.spawnTime)
 					{
-						m_particleEmitters.push_back(emitter);
-						m_particleEmitters.back().spawnTime = elapsedTime;
+						std::vector<unsigned int> particleEmitterInstanceForceFields;
+						particleEmitterInstanceForceFields.reserve(particleEffectInstance.forceFields.size() + particleEmitterClip.forceFields.size());
+						particleEmitterInstanceForceFields.insert(particleEmitterInstanceForceFields.end(), particleEffectInstance.forceFields.begin(), particleEffectInstance.forceFields.end());
+						particleEmitterInstanceForceFields.insert(particleEmitterInstanceForceFields.end(), particleEmitterClip.forceFields.begin(), particleEmitterClip.forceFields.end());
 
-						m_particlePools[emitter.type].reserve(static_cast<unsigned int>(emitter.spawnRate * emitter.boundaries.maximumLifetime));
-						emitters.erase(emitters.begin() + j);
+						const ParticleEmitter& particleEmitter = m_particleRegistry.getParticleEmitter(particleEmitterClip.emitterId);
+
+						m_particleEmitterInstances.push_back(ParticleEmitterInstance{ particleEffectInstance.timeRange, particleEmitterInstanceForceFields, m_forceFieldSet.createForceFieldSetEntry(particleEmitterInstanceForceFields), particleEmitter.group, particleEmitter.spawnRate, 0.0f, particleEmitter.boundaries});
+						m_particleEmitterInstances.back().timeRange.spawnTime = elapsedTime;
+
+						m_particlePools[particleEmitter.group].reserve(static_cast<unsigned int>(particleEmitter.spawnRate * particleEmitter.boundaries.maximumLifetime));
+						particleEffectInstance.emittersToSpawn.erase(particleEffectInstance.emittersToSpawn.begin() + j);
 					}
 					else
 					{
@@ -110,77 +138,71 @@ namespace cft
 			}
 		}
 
-		// Emitter update
-		for (unsigned int i = 0; i < m_particleEmitters.size();)
+		// Particle emitters update
+		for (unsigned int i = 0; i < m_particleEmitterInstances.size();)
 		{
-			ParticleEmitter& emitter = m_particleEmitters[i];
+			ParticleEmitterInstance& particleEmitterInstance = m_particleEmitterInstances[i];
 
-			float despawnTime = emitter.spawnTime + emitter.lifetime;
+			float despawnTime = particleEmitterInstance.timeRange.spawnTime + particleEmitterInstance.timeRange.duration;
 			if (despawnTime <= elapsedTime)
 			{
-				m_particleEmitters.erase(m_particleEmitters.begin() + i);
+				m_particleEmitterInstances.erase(m_particleEmitterInstances.begin() + i);
 			}
 			else
 			{
-				float spawnCount = emitter.spawnRate * deltaTime + emitter.accumulator;
+				float spawnCount = particleEmitterInstance.spawnRate * deltaTime + particleEmitterInstance.accumulator;
 				unsigned int roundedSpawnCount = static_cast<unsigned int>(spawnCount);
-				emitter.accumulator = spawnCount - static_cast<float>(roundedSpawnCount);
+				particleEmitterInstance.accumulator = spawnCount - static_cast<float>(roundedSpawnCount);
 
 				if (roundedSpawnCount > 0)
 				{
-					ParticlePool& pool = m_particlePools.at(emitter.type);
+					ParticlePool& particlePool = m_particlePools.at(particleEmitterInstance.group);
 
 					for (unsigned int j = 0; j < roundedSpawnCount; ++j)
-						pool.insert(ParticleGenerator::generate(m_randomNumberGenerator, emitter.boundaries, elapsedTime, emitter.type, emitter.instance));
+						particlePool.insert(ParticleGenerator::generate(m_randomNumberGenerator, particleEmitterInstance.boundaries, elapsedTime, particleEmitterInstance.forceFieldSetId));
+
+					m_forceFieldSet.addForceFieldReferenceCount(particleEmitterInstance.forceFieldSetId, roundedSpawnCount);
 				}
 
 				++i;
 			}
 		}
 
-		// Particle update
-		for (auto& [_, pool] : m_particlePools)
+		// Particles update
+		for (auto& [_, particlePool] : m_particlePools)
 		{
-			std::vector<glm::vec3>& position = pool.getPosition();
-			std::vector<glm::vec3>& velocity = pool.getVelocity();
-			std::vector<float>& lifetime = pool.getLifetime();
-			std::vector<float>& spawnTime = pool.getSpawnTime();
-			std::vector<unsigned int>& emitterType = pool.getEmitterType();
-			std::vector<unsigned int>& emitterInstance = pool.getEmitterInstance();
-			unsigned int particleCount = pool.getCount();
+			std::vector<glm::vec3>& position = particlePool.getPosition();
+			std::vector<glm::vec3>& velocity = particlePool.getVelocity();
+			std::vector<float>& lifetime = particlePool.getLifetime();
+			std::vector<float>& spawnTime = particlePool.getSpawnTime();
+			std::vector<unsigned int>& forceFieldSetId = particlePool.getForceFieldSetId();
 
-			for (unsigned int i = 0; i < pool.getCount();)
+			std::unordered_map<unsigned int, unsigned int> removedParticleCount;
+
+			for (unsigned int i = 0; i < particlePool.getCount();)
 			{
 				float despawnTime = spawnTime[i] + lifetime[i];
-				if (despawnTime <= elapsedTime)
+				if (elapsedTime >= despawnTime)
 				{
-					pool.remove(i);
+					unsigned int id = forceFieldSetId[i];
+					particlePool.remove(i);
+					++removedParticleCount[id];
 				}
 				else
 				{
-					const ParticleEntry& emitter = m_particleRegistry.getParticleEmitterEntry(emitterType[i], emitterInstance[i]);
-					const ParticleEntry& effect = m_particleRegistry.getParticleEffectEntry(emitter.parentType, emitter.parentInstance);
-					const std::vector<unsigned int>& systemForceFields = m_particleRegistry.getParticleSystemEntry(effect.parentType, effect.parentInstance);
-					const std::vector<unsigned int>& effectForceFields = effect.forceFields;
-					const std::vector<unsigned int>& emitterForceFields = emitter.forceFields;
-
-					auto applyForceFields = [&](const std::vector<unsigned int>& forceFields)
-						{
-							for (unsigned int forceFieldId : forceFields)
-							{
-								const ForceField& forceField = m_particleRegistry.getForceField(forceFieldId);
-								velocity[i] = forceField.apply(velocity[i], position[i], elapsedTime, deltaTime);
-							}
-						};
-
-					applyForceFields(systemForceFields);
-					applyForceFields(effectForceFields);
-					applyForceFields(emitterForceFields);
+					for (unsigned int forceFieldId : m_forceFieldSet.getForceFieldIds(forceFieldSetId[i]))
+					{
+						const ForceField& forceField = m_particleRegistry.getForceField(forceFieldId);
+						velocity[i] = forceField.apply(velocity[i], position[i], elapsedTime, deltaTime);
+					}
 
 					position[i] += velocity[i] * deltaTime;
 					++i;
 				}
 			}
+
+			for (auto& [id, count] : removedParticleCount)
+				m_forceFieldSet.addForceFieldReferenceCount(id, -static_cast<int>(count));
 		}
 	}
 }

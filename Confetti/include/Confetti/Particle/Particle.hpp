@@ -12,7 +12,6 @@ namespace cft
 		glm::vec2 scale;
 		float lifetime;
 		float spawnTime;
-		unsigned int emitterType;
-		unsigned int emitterInstance;
+		unsigned int forceFieldSetId;
 	};
 }

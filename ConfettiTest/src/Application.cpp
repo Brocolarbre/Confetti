@@ -2,25 +2,24 @@
 
 #include <iostream>
 
-void Application::update(double deltaTime)
+void Application::update()
 {
 	m_window.fetchEvents();
-
 	m_confettiInstance->update();
 }
 
 void Application::render()
 {
 	m_confettiInstance->render();
-
 	m_window.display();
 }
 
 Application::Application() :
 	m_window(),
-	m_chronometer(),
 	m_confettiInstance()
 {
+	dove::Window::initialize();
+
 	dove::WindowSettings windowSettings;
 	windowSettings.openGLVersionMajor = 4;
 	windowSettings.openGLVersionMinor = 6;
@@ -35,14 +34,16 @@ Application::Application() :
 	m_confettiInstance = std::make_unique<ConfettiInstance>(windowSize.x, windowSize.y, m_window);
 }
 
+Application::~Application()
+{
+	dove::Window::terminate();
+}
+
 void Application::run()
 {
 	while (m_window.isOpen())
 	{
-		double deltaTime = m_chronometer.getElapsedTime().seconds;
-		m_chronometer.restart();
-
-		update(deltaTime);
+		update();
 		render();
 	}
 }
