@@ -15,12 +15,12 @@ namespace cft
 		m_nextId = 0;
 	}
 
-	const std::vector<unsigned int>& ForceFieldSet::getForceFieldIds(unsigned int id) const
+	const std::vector<std::reference_wrapper<ForceField>>& ForceFieldSet::getForceFieldIds(unsigned int id) const
 	{
 		return m_forceFieldEntries.at(id).forceFieldIds;
 	}
 
-	unsigned int ForceFieldSet::createForceFieldSetEntry(const std::vector<unsigned int>& forceFieldIds)
+	unsigned int ForceFieldSet::createForceFieldSetEntry(const std::vector<std::reference_wrapper<ForceField>>& forceFieldIds)
 	{
 		unsigned int id = m_nextId++;
 		m_forceFieldEntries[id] = ForceFieldSetEntry{ forceFieldIds, 0 };

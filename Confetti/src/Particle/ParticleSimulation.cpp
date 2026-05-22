@@ -122,7 +122,12 @@ namespace cft
 
 						const ParticleEmitter& particleEmitter = m_particleRegistry.getParticleEmitter(particleEmitterClip.emitterId);
 
-						m_particleEmitterInstances.push_back(ParticleEmitterInstance{ particleEffectInstance.timeRange, particleEmitterInstanceForceFields, m_forceFieldSet.createForceFieldSetEntry(particleEmitterInstanceForceFields), particleEmitter.group, particleEmitter.spawnRate, 0.0f, particleEmitter.boundaries});
+						std::vector<std::reference_wrapper<ForceField>> forceFields;
+						forceFields.reserve(particleEmitterInstanceForceFields.size());
+						for (unsigned int forceFieldId : particleEmitterInstanceForceFields)
+							forceFields.push_back(m_particleRegistry.getForceField(forceFieldId));
+
+						m_particleEmitterInstances.push_back(ParticleEmitterInstance{ particleEffectInstance.timeRange, particleEmitterInstanceForceFields, m_forceFieldSet.createForceFieldSetEntry(forceFields), particleEmitter.group, particleEmitter.spawnRate, 0.0f, particleEmitter.boundaries});
 						m_particleEmitterInstances.back().timeRange.spawnTime = elapsedTime;
 
 						m_particlePools[particleEmitter.group].reserve(static_cast<unsigned int>(particleEmitter.spawnRate * particleEmitter.boundaries.maximumLifetime));
@@ -190,11 +195,8 @@ namespace cft
 				}
 				else
 				{
-					for (unsigned int forceFieldId : m_forceFieldSet.getForceFieldIds(forceFieldSetId[i]))
-					{
-						const ForceField& forceField = m_particleRegistry.getForceField(forceFieldId);
+					for (const ForceField& forceField : m_forceFieldSet.getForceFieldIds(forceFieldSetId[i]))
 						velocity[i] = forceField.apply(velocity[i], position[i], elapsedTime, deltaTime);
-					}
 
 					position[i] += velocity[i] * deltaTime;
 					++i;

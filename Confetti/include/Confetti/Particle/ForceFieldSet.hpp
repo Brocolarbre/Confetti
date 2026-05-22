@@ -1,12 +1,14 @@
 #pragma once
 
+#include "Confetti/ForceField/ForceField.hpp"
+
 #include <unordered_map>
 
 namespace cft
 {
 	struct ForceFieldSetEntry
 	{
-		std::vector<unsigned int> forceFieldIds;
+		std::vector<std::reference_wrapper<ForceField>> forceFieldIds;
 		int count;
 	};
 
@@ -20,8 +22,8 @@ namespace cft
 		ForceFieldSet();
 
 		void clear();
-		const std::vector<unsigned int>& getForceFieldIds(unsigned int id) const;
-		unsigned int createForceFieldSetEntry(const std::vector<unsigned int>& forceFieldIds);
+		const std::vector<std::reference_wrapper<ForceField>>& getForceFieldIds(unsigned int id) const;
+		unsigned int createForceFieldSetEntry(const std::vector<std::reference_wrapper<ForceField>>& forceFieldIds);
 		void addForceFieldReferenceCount(unsigned int id, int referenceCount);
 	};
 }
