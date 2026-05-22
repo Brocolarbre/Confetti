@@ -53,9 +53,7 @@ namespace cft
 		for (unsigned int i = 0; i < m_particleSystemClips.size(); ++i)
 		{
 			ParticleSystemClip& particleSystemClip = m_particleSystemClips[i];
-			m_particleSystemInstances.push_back(ParticleSystemInstance{ particleSystemClip.timeRange, particleSystemClip.forceFields, m_particleRegistry.getParticleSystem(particleSystemClip.systemId).effects }); // Instantiate the particle system by making a copy of the system clip and using the bank system effect clip list
-			// EffectClip and EmitterClip instances stored in the class will be read in the update method when creating the corresponding instances
-				// The clip variable structure is untouched during simulation, it is only read, only the instances are added and removed
+			m_particleSystemInstances.push_back(ParticleSystemInstance{ particleSystemClip.timeRange, particleSystemClip.forceFields, m_particleRegistry.getParticleSystem(particleSystemClip.systemId).effects });
 		}
 	}
 

@@ -40,10 +40,12 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     particleRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterClip{ 0, cft::TimeRange{ 0.0f, 4.0f }, { 0, 1 } } } });
     particleRegistry.addParticleEffect(1, cft::ParticleEffect{ { cft::ParticleEmitterClip{ 1, cft::TimeRange{ 3.0f, 2.0f }, { 2 } } } });
     particleRegistry.addParticleEffect(2, cft::ParticleEffect{ { cft::ParticleEmitterClip{ 2, cft::TimeRange{ 0.0f, 5.0f }, { 3 } } } });
+    particleRegistry.addParticleEffect(3, cft::ParticleEffect{ { cft::ParticleEmitterClip{ 3, cft::TimeRange{ 0.0f, 5.0f }, { 2 } } } });
 
     particleRegistry.addParticleSystem(0, cft::ParticleSystem{ { cft::ParticleEffectClip{ 0, cft::TimeRange{ 0.0f, 0.1f }, { 2 } } } });
+    particleRegistry.addParticleSystem(1, cft::ParticleSystem{ { cft::ParticleEffectClip{ 3, cft::TimeRange{ 0.0f, 0.1f }, { } } } });
 
-    m_particleSimulation.addParticleSystemClip(cft::ParticleSystemClip{ 0, cft::TimeRange{ 0.0f, 5.0f }, { 0 } });
+    m_particleSimulation.addParticleSystemClip(cft::ParticleSystemClip{ 1, cft::TimeRange{ 0.0f, 5.0f }, { } });
 
     restartSimulation();
 }

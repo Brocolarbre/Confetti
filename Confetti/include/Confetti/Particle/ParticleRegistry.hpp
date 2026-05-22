@@ -8,9 +8,6 @@
 
 namespace cft
 {
-	// Emitter : behavior
-	// Effect, System : orchestration
-
 	struct TimeRange
 	{
 		float spawnTime;
