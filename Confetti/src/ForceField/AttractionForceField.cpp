@@ -10,7 +10,12 @@ namespace cft
 
 	}
 
-	glm::vec3 AttractionForceField::apply(const glm::vec3& velocity, const glm::vec3& position, float elapsedTime, float deltaTime) const
+	std::unique_ptr<ForceField> AttractionForceField::clone() const
+	{
+		return std::make_unique<AttractionForceField>(*this);
+	}
+
+	glm::vec3 AttractionForceField::apply(const glm::vec3& position, float elapsedTime, float deltaTime) const
 	{
 		float squaredRadius = m_radius * m_radius;
 		glm::vec3 offset = m_origin - position;
@@ -18,6 +23,6 @@ namespace cft
 		float strengthContribution = 1.0f - glm::clamp(squaredDistance / squaredRadius, 0.0f, 1.0f);
 
 		glm::vec3 direction = glm::normalize(offset);
-		return velocity + direction * m_strength * strengthContribution * deltaTime;
+		return direction * m_strength * strengthContribution * deltaTime;
 	}
 }

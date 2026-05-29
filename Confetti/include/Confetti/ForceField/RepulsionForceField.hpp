@@ -13,6 +13,7 @@ namespace cft
 	public:
 		RepulsionForceField(const glm::vec3& origin, float radius, float strength);
 
-		glm::vec3 apply(const glm::vec3& velocity, const glm::vec3& position, float elapsedTime, float deltaTime) const override;
+		std::unique_ptr<ForceField> clone() const override;
+		glm::vec3 apply(const glm::vec3& position, float elapsedTime, float deltaTime) const override;
 	};
 }

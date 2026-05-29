@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace cft
 {
@@ -16,6 +17,7 @@ namespace cft
 	public:
 		virtual ~ForceField() = default;
 
-		virtual glm::vec3 apply(const glm::vec3& velocity, const glm::vec3& position, float elapsedTime, float deltaTime) const = 0;
+		virtual std::unique_ptr<ForceField> clone() const = 0;
+		virtual glm::vec3 apply(const glm::vec3& position, float elapsedTime, float deltaTime) const = 0;
 	};
 }

@@ -6,8 +6,6 @@
 #include "SSBO.hpp"
 #include "View.hpp"
 
-#include "Confetti/Particle/ParticlePool.hpp"
-
 namespace cft
 {
 	class Renderer

@@ -2,7 +2,7 @@
 
 #include "RenderContext.hpp"
 
-#include <Confetti/Particle/ParticleSimulation.hpp>
+#include <Confetti/ParticleSimulation/ParticleSimulation.hpp>
 #include <Confetti/Renderer/Renderer.hpp>
 #include <Krono/Krono.hpp>
 #include <Windove/Window.hpp>
@@ -12,6 +12,8 @@ class ConfettiInstance : public dove::EventHandler
 private:
 	RenderContext m_renderContext;
 
+	cft::ParticleRegistry m_particleRegistry;
+	cft::RandomNumberGenerator m_randomNumberGenerator;
 	cft::Renderer m_renderer;
 	cft::ParticleSimulation m_particleSimulation;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Particle.hpp"
+#include "Confetti/Particle/Particle.hpp"
 
 #include <vector>
 
@@ -15,7 +15,7 @@ namespace cft
 		std::vector<glm::vec2> m_scale;
 		std::vector<float> m_lifetime;
 		std::vector<float> m_spawnTime;
-		std::vector<unsigned int> m_forceFieldSetId;
+		std::vector<unsigned int> m_id;
 
 		unsigned int m_capacity;
 		unsigned int m_reservedCapacity;
@@ -32,7 +32,7 @@ namespace cft
 		const std::vector<glm::vec2>& getScale() const;
 		const std::vector<float>& getLifetime() const;
 		const std::vector<float>& getSpawnTime() const;
-		const std::vector<unsigned int>& getForceFieldSetId() const;
+		const std::vector<unsigned int>& getId() const;
 
 		std::vector<glm::vec4>& getColor();
 		std::vector<glm::vec3>& getPosition();
@@ -40,7 +40,7 @@ namespace cft
 		std::vector<glm::vec2>& getScale();
 		std::vector<float>& getLifetime();
 		std::vector<float>& getSpawnTime();
-		std::vector<unsigned int>& getForceFieldSetId();
+		std::vector<unsigned int>& getId();
 
 		unsigned int getCount() const;
 

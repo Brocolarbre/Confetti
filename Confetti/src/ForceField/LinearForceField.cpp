@@ -9,8 +9,13 @@ namespace cft
 
 	}
 
-	glm::vec3 LinearForceField::apply(const glm::vec3& velocity, const glm::vec3& position, float elapsedTime, float deltaTime) const
+	std::unique_ptr<ForceField> LinearForceField::clone() const
 	{
-		return velocity + m_direction * m_strength * deltaTime;
+		return std::make_unique<LinearForceField>(*this);
+	}
+
+	glm::vec3 LinearForceField::apply(const glm::vec3& position, float elapsedTime, float deltaTime) const
+	{
+		return m_direction * m_strength * deltaTime;
 	}
 }
