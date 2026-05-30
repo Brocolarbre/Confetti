@@ -8,5 +8,6 @@ namespace cft
 	{
 	public:
 		std::unique_ptr<ParticleEmitterBehavior> clone() const override;
+		void update(float elapsedTime, float deltaTime, ParticleEmitterView& particleEmitter) override;
 	};
 }

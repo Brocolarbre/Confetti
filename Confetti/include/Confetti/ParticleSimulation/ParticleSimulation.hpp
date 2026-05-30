@@ -18,9 +18,11 @@ namespace cft
 		std::unique_ptr<ParticleSpawner> particleSpawner;
 		std::unique_ptr<SpawnPolicy> spawnPolicy;
 		std::unique_ptr<ParticleEmitterBehavior> emitterBehavior;
+		TimeRange timeRange;
 		unsigned int pool;
 		unsigned int id;
-		TimeRange timeRange;
+		glm::vec3 position;
+		glm::vec3 velocity;
 	};
 
 	class ParticleSimulation

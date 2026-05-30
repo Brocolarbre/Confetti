@@ -12,10 +12,11 @@ namespace cft
 
 	struct ParticleEmitterDescriptor
 	{
-		glm::vec3 position;
 		TimeRange timeRange;
 		unsigned int emitterBehavior;
 		unsigned int emitter;
+		glm::vec3 position;
+		glm::vec3 velocity;
 	};
 
 	struct ParticleEffect
