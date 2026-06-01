@@ -5,7 +5,8 @@
 #include <Confetti/ForceField/RepulsionForceField.hpp>
 #include <Confetti/ForceField/AttenuationForceField.hpp>
 #include <Confetti/ParticleBehavior/RandomParticleBehavior.hpp>
-#include <Confetti/ParticleEmitterBehavior/RandomParticleEmitterBehavior.hpp>
+#include <Confetti/MotionBehavior/RandomMotionBehavior.hpp>
+#include <Confetti/MotionBehavior/VibrationMotionBehavior.hpp>
 #include <Confetti/ParticleSpawner/RandomParticleSpawner.hpp>
 #include <Confetti/SpawnPolicy/ConstantSpawnPolicy.hpp>
 
@@ -23,34 +24,35 @@ void ConfettiInstance::restartSimulation()
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
     m_renderContext(width, height),
     m_renderer(width, height),
-    m_particleRegistry(),
+    m_assetRegistry(),
     m_randomNumberGenerator(),
-    m_particleSimulation(m_particleRegistry, m_randomNumberGenerator),
+    m_particleSimulation(m_assetRegistry, m_randomNumberGenerator),
     m_elapsedTimeChronometer(false),
     m_deltaTimeChronometer(false)
 {
     window.addEventHandler(*this);
 
-    m_particleRegistry.addForceField(0, std::make_unique<cft::LinearForceField>(glm::vec3(0.0f, -1.0f, 0.0f), 10.0f));
-    m_particleRegistry.addForceField(1, std::make_unique<cft::AttractionForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 10.0f, 5.0f));
-    m_particleRegistry.addForceField(2, std::make_unique<cft::RepulsionForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 3.0f, 1.0f));
-    m_particleRegistry.addForceField(3, std::make_unique<cft::AttenuationForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 5.0f, 0.01f));
+    m_assetRegistry.addForceField(0, std::make_unique<cft::LinearForceField>(glm::vec3(0.0f, -1.0f, 0.0f), 10.0f));
+    m_assetRegistry.addForceField(1, std::make_unique<cft::AttractionForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 10.0f, 5.0f));
+    m_assetRegistry.addForceField(2, std::make_unique<cft::RepulsionForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 3.0f, 1.0f));
+    m_assetRegistry.addForceField(3, std::make_unique<cft::AttenuationForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 5.0f, 0.01f));
 
-    m_particleRegistry.addParticleBehavior(0, std::make_unique<cft::RandomParticleBehavior>(m_randomNumberGenerator));
+    m_assetRegistry.addParticleBehavior(0, std::make_unique<cft::RandomParticleBehavior>(m_randomNumberGenerator));
 
-    m_particleRegistry.addParticleEmitterBehavior(0, std::make_unique<cft::RandomParticleEmitterBehavior>());
+    m_assetRegistry.addMotionBehavior(0, std::make_unique<cft::RandomMotionBehavior>());
+    m_assetRegistry.addMotionBehavior(1, std::make_unique<cft::VibrationMotionBehavior>());
 
-    m_particleRegistry.addParticleSpawner(0, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(0.8f, 0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f), glm::vec3(-10.01f), glm::vec3(10.01f), glm::vec3(-1.5f), glm::vec3(1.5f), glm::vec2(0.2f), glm::vec2(0.2f), 6.0f, 9.0f }));
-    m_particleRegistry.addParticleSpawner(1, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(0.6f, 0.4f, 0.8f, 1.0f), glm::vec4(0.6f, 0.4f, 0.8f, 1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(0.1f), glm::vec2(0.3f), 4.0f, 6.0f }));
-    m_particleRegistry.addParticleSpawner(2, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(1.0f), glm::vec4(1.0f), glm::vec3(-5.0f), glm::vec3(5.0f), glm::vec3(-0.5f, 0.0f, -0.5f), glm::vec3(0.5f), glm::vec2(0.2f), glm::vec2(0.5f), 2.0f, 5.0f }));
-    m_particleRegistry.addParticleSpawner(3, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(0.0f), glm::vec4(1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(-1.0f), glm::vec3(1.0f), glm::vec2(0.01f), glm::vec2(1.0f), 2.0f, 5.0f }));
-    m_particleRegistry.addParticleSpawner(4, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(0.8f, 0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f), glm::vec3(-0.1f), glm::vec3(0.1f), glm::vec3(-1.5f), glm::vec3(1.5f), glm::vec2(0.2f), glm::vec2(0.2f), 0.4f, 1.0f }));
+    m_assetRegistry.addParticleSpawner(0, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(0.8f, 0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f), glm::vec3(-10.01f), glm::vec3(10.01f), glm::vec3(-1.5f), glm::vec3(1.5f), glm::vec2(0.2f), glm::vec2(0.2f), 6.0f, 9.0f }));
+    m_assetRegistry.addParticleSpawner(1, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(0.6f, 0.4f, 0.8f, 1.0f), glm::vec4(0.6f, 0.4f, 0.8f, 1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(0.1f), glm::vec2(0.3f), 4.0f, 6.0f }));
+    m_assetRegistry.addParticleSpawner(2, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(1.0f), glm::vec4(1.0f), glm::vec3(-5.0f), glm::vec3(5.0f), glm::vec3(-0.5f, 0.0f, -0.5f), glm::vec3(0.5f), glm::vec2(0.2f), glm::vec2(0.5f), 2.0f, 5.0f }));
+    m_assetRegistry.addParticleSpawner(3, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(0.0f), glm::vec4(1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(-1.0f), glm::vec3(1.0f), glm::vec2(0.01f), glm::vec2(1.0f), 2.0f, 5.0f }));
+    m_assetRegistry.addParticleSpawner(4, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(0.8f, 0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.5f, 0.8f, 1.0f), glm::vec3(-0.1f), glm::vec3(0.1f), glm::vec3(-1.5f), glm::vec3(1.5f), glm::vec2(0.2f), glm::vec2(0.2f), 0.4f, 1.0f }));
 
-    m_particleRegistry.addSpawnPolicy(0, std::make_unique<cft::ConstantSpawnPolicy>(30.0f));
+    m_assetRegistry.addSpawnPolicy(0, std::make_unique<cft::ConstantSpawnPolicy>(30.0f));
 
-    m_particleRegistry.addParticleEmitter(0, cft::ParticleEmitter{ { }, 0, 4, 0, 0 });
+    m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 4, 0, { }, { }, { } });
     
-    m_particleRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ cft::TimeRange{ 0.0f, 10.0f }, 0, 0, glm::vec3(0.0f), glm::vec3(0.0f) } } });
+    m_assetRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 0, cft::TimeRange{ 0.0f, 10.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f) }, { }, { 0 } } } });
 
     restartSimulation();
 }
@@ -78,7 +80,7 @@ void ConfettiInstance::update()
 
 void ConfettiInstance::render()
 {
-    glm::vec3 position(0.0f, 20.0f, 20.0f);
+    glm::vec3 position(0.0f, 0.0f, 20.0f);
     glm::vec3 right(0.0f, 0.0f, 0.0f);
     glm::vec3 up(0.0f, 0.0f, 0.0f);
     glm::vec3 forward(0.0f, 0.0f, 0.0f);

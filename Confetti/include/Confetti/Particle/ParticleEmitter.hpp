@@ -8,16 +8,11 @@ namespace cft
 	struct ParticleEmitter
 	{
 	public:
-		std::vector<unsigned int> forceFields;
-		unsigned int particleBehavior;
+		unsigned int pool;
 		unsigned int particleSpawner;
 		unsigned int spawnPolicy;
-		unsigned int pool;
-	};
-
-	struct ParticleEmitterView
-	{
-		glm::vec3& position;
-		glm::vec3& velocity;
+		std::vector<unsigned int> forceFields;
+		std::vector<unsigned int> motionBehaviors;
+		std::vector<unsigned int> particleBehaviors;
 	};
 }

@@ -15,10 +15,10 @@ namespace cft
 		return std::make_unique<AttenuationForceField>(*this);
 	}
 
-	glm::vec3 AttenuationForceField::apply(const glm::vec3& position, float elapsedTime, float deltaTime) const
+	glm::vec3 AttenuationForceField::apply(float elapsedTime, float deltaTime, const Transform& transform) const
 	{
 		float squaredRadius = m_radius * m_radius; // Code duplication
-		glm::vec3 offset = m_origin - position;
+		glm::vec3 offset = m_origin - transform.position;
 		float squaredDistance = glm::dot(offset, offset);
 		float strengthContribution = 1.0f - glm::clamp(squaredDistance / squaredRadius, 0.0f, 1.0f);
 

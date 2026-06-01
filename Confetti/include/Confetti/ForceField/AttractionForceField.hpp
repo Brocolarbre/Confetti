@@ -15,6 +15,6 @@ namespace cft
 		AttractionForceField(const glm::vec3& origin, float radius, float strength);
 
 		std::unique_ptr<ForceField> clone() const override;
-		glm::vec3 apply(const glm::vec3& position, float elapsedTime, float deltaTime) const override;
+		glm::vec3 apply(float elapsedTime, float deltaTime, const Transform& transform) const override;
 	};
 }

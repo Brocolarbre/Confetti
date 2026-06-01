@@ -14,7 +14,7 @@ namespace cft
 		return std::make_unique<LinearForceField>(*this);
 	}
 
-	glm::vec3 LinearForceField::apply(const glm::vec3& position, float elapsedTime, float deltaTime) const
+	glm::vec3 LinearForceField::apply(float elapsedTime, float deltaTime, const Transform& transform) const
 	{
 		return m_direction * m_strength * deltaTime;
 	}

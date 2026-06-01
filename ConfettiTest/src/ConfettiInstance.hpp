@@ -12,7 +12,7 @@ class ConfettiInstance : public dove::EventHandler
 private:
 	RenderContext m_renderContext;
 
-	cft::ParticleRegistry m_particleRegistry;
+	cft::AssetRegistry m_assetRegistry;
 	cft::RandomNumberGenerator m_randomNumberGenerator;
 	cft::Renderer m_renderer;
 	cft::ParticleSimulation m_particleSimulation;

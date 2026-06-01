@@ -1,22 +1,17 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "TimeRange.hpp"
+#include "Transform.hpp"
 
 namespace cft
 {
-	struct TimeRange
-	{
-		float spawnTime;
-		float duration;
-	};
-
 	struct ParticleEmitterDescriptor
 	{
-		TimeRange timeRange;
-		unsigned int emitterBehavior;
 		unsigned int emitter;
-		glm::vec3 position;
-		glm::vec3 velocity;
+		TimeRange timeRange;
+		Transform transform;
+		std::vector<unsigned int> forceFields;
+		std::vector<unsigned int> motionBehaviors;
 	};
 
 	struct ParticleEffect

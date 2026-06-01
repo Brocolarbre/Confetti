@@ -1,6 +1,7 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "Confetti/Particle/Transform.hpp"
+
 #include <memory>
 
 namespace cft
@@ -18,6 +19,6 @@ namespace cft
 		virtual ~ForceField() = default;
 
 		virtual std::unique_ptr<ForceField> clone() const = 0;
-		virtual glm::vec3 apply(const glm::vec3& position, float elapsedTime, float deltaTime) const = 0;
+		virtual glm::vec3 apply(float elapsedTime, float deltaTime, const Transform& transform) const = 0;
 	};
 }
