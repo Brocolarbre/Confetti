@@ -1,18 +1,18 @@
 #pragma once
 
 #include "ForceField.hpp"
-#include "SpatialInfluence.hpp"
+#include "Confetti/Tools/RandomNumberGenerator.hpp"
 
 namespace cft
 {
-	class AttractionForceField : public ForceField
+	class JitterForceField : public ForceField
 	{
 	private:
-		SpatialInfluence m_spatialInfluence;
 		float m_strength;
+		RandomNumberGenerator& m_randomNumberGenerator;
 
 	public:
-		AttractionForceField(const SpatialInfluence& spatialInfluence, float strength);
+		JitterForceField(float strength, RandomNumberGenerator& randomNumberGenerator);
 
 		std::unique_ptr<ForceField> clone() const override;
 		glm::vec3 apply(float elapsedTime, const Transform& transform) const override;

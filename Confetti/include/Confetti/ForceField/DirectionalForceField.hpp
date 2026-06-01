@@ -1,17 +1,17 @@
 #pragma once
 
 #include "ForceField.hpp"
-#include "SpatialInfluence.hpp"
 
 namespace cft
 {
-	class RepulsionForceField : public ForceField
+	class DirectionalForceField : public ForceField
 	{
-		SpatialInfluence m_spatialInfluence;
+	private:
+		glm::vec3 m_direction;
 		float m_strength;
 
 	public:
-		RepulsionForceField(const SpatialInfluence& spatialInfluence, float strength);
+		DirectionalForceField(const glm::vec3& direction, float strength);
 
 		std::unique_ptr<ForceField> clone() const override;
 		glm::vec3 apply(float elapsedTime, const Transform& transform) const override;

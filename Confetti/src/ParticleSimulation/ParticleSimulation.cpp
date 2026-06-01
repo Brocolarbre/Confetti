@@ -119,7 +119,7 @@ namespace cft
 			else
 			{
 				for (const std::unique_ptr<ForceField>& forceField : particleEmitterInstance.inheritedForceFields)
-					particleEmitterInstance.transform.velocity += forceField->apply(elapsedTime, deltaTime, particleEmitterInstance.transform);
+					particleEmitterInstance.transform.velocity += forceField->apply(elapsedTime, particleEmitterInstance.transform) * deltaTime;
 
 				for (const std::unique_ptr<MotionBehavior>& motionBehavior : particleEmitterInstance.inheritedMotionBehaviors)
 					motionBehavior->update(elapsedTime, deltaTime, particleEmitterInstance.transform);
@@ -175,7 +175,7 @@ namespace cft
 					
 					Transform transform{ position[i], velocity[i] };
 					for (const std::unique_ptr<ForceField>& forceField : entry.forceFields)
-						velocity[i] += forceField->apply(elapsedTime, deltaTime, transform);
+						velocity[i] += forceField->apply(elapsedTime, transform) * deltaTime;
 
 					for (const std::unique_ptr<MotionBehavior>& motionBehavior : entry.motionBehaviors)
 						motionBehavior->update(elapsedTime, deltaTime, transform);

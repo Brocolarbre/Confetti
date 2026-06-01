@@ -2,9 +2,8 @@
 
 namespace cft
 {
-	AttractionForceField::AttractionForceField(const glm::vec3& origin, float radius, float strength) :
-		m_origin(origin),
-		m_radius(radius),
+	AttractionForceField::AttractionForceField(const SpatialInfluence& spatialInfluence, float strength) :
+		m_spatialInfluence(spatialInfluence),
 		m_strength(strength)
 	{
 
@@ -15,14 +14,12 @@ namespace cft
 		return std::make_unique<AttractionForceField>(*this);
 	}
 
-	glm::vec3 AttractionForceField::apply(float elapsedTime, float deltaTime, const Transform& transform) const
+	glm::vec3 AttractionForceField::apply(float elapsedTime, const Transform& transform) const
 	{
-		float squaredRadius = m_radius * m_radius;
-		glm::vec3 offset = m_origin - transform.position;
-		float squaredDistance = glm::dot(offset, offset);
-		float strengthContribution = 1.0f - glm::clamp(squaredDistance / squaredRadius, 0.0f, 1.0f);
+		float strengthFactor = m_spatialInfluence.getStrengthFactor(transform.position);
+		glm::vec3 offset = m_spatialInfluence.getOrigin() - transform.position;
 
 		glm::vec3 direction = glm::normalize(offset);
-		return direction * m_strength * strengthContribution * deltaTime;
+		return direction * m_strength * strengthFactor;
 	}
 }
