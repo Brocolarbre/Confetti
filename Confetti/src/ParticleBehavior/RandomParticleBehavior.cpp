@@ -2,7 +2,8 @@
 
 namespace cft
 {
-	RandomParticleBehavior::RandomParticleBehavior(RandomNumberGenerator& randomNumberGenerator) :
+	RandomParticleBehavior::RandomParticleBehavior(float strength, RandomNumberGenerator& randomNumberGenerator) :
+		m_strength(strength),
 		m_randomNumberGenerator(randomNumberGenerator)
 	{
 
@@ -15,6 +16,6 @@ namespace cft
 
 	void RandomParticleBehavior::update(float elapsedTime, float deltaTime, ParticleView& particle)
 	{
-		particle.position += m_randomNumberGenerator.generate(glm::vec3(-0.1f), glm::vec3(0.1f)) * deltaTime;
+		particle.position += m_randomNumberGenerator.generate(glm::vec3(-m_strength), glm::vec3(m_strength)) * deltaTime;
 	}
 }

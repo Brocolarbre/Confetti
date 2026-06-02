@@ -1,9 +1,11 @@
 #include "ConfettiInstance.hpp"
 
-#include <Confetti/ForceField/LinearForceField.hpp>
 #include <Confetti/ForceField/AttractionForceField.hpp>
+#include <Confetti/ForceField/DirectionalForceField.hpp>
+#include <Confetti/ForceField/DragForceField.hpp>
+#include <Confetti/ForceField/JitterForceField.hpp>
 #include <Confetti/ForceField/RepulsionForceField.hpp>
-#include <Confetti/ForceField/AttenuationForceField.hpp>
+#include <Confetti/ForceField/VortexForceField.hpp>
 #include <Confetti/ParticleBehavior/RandomParticleBehavior.hpp>
 #include <Confetti/MotionBehavior/RandomMotionBehavior.hpp>
 #include <Confetti/MotionBehavior/VibrationMotionBehavior.hpp>
@@ -32,10 +34,10 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
 {
     window.addEventHandler(*this);
 
-    m_assetRegistry.addForceField(0, std::make_unique<cft::LinearForceField>(glm::vec3(0.0f, -1.0f, 0.0f), 10.0f));
-    m_assetRegistry.addForceField(1, std::make_unique<cft::AttractionForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 10.0f, 5.0f));
-    m_assetRegistry.addForceField(2, std::make_unique<cft::RepulsionForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 3.0f, 1.0f));
-    m_assetRegistry.addForceField(3, std::make_unique<cft::AttenuationForceField>(glm::vec3(0.0f, 0.0f, 0.0f), 5.0f, 0.01f));
+    m_assetRegistry.addForceField(0, std::make_unique<cft::DirectionalForceField>(glm::vec3(0.0f, -1.0f, 0.0f), 10.0f));
+    m_assetRegistry.addForceField(1, std::make_unique<cft::AttractionForceField>(cft::SpatialInfluence(glm::vec3(0.0f, 0.0f, 0.0f), 10.0f, cft::Falloff::Constant), 5.0f));
+    m_assetRegistry.addForceField(2, std::make_unique<cft::RepulsionForceField>(cft::SpatialInfluence(glm::vec3(0.0f, 0.0f, 0.0f), 3.0f, cft::Falloff::Constant), 1.0f));
+    m_assetRegistry.addForceField(3, std::make_unique<cft::DragForceField>(0.01f));
 
     m_assetRegistry.addParticleBehavior(0, std::make_unique<cft::RandomParticleBehavior>(m_randomNumberGenerator));
 
@@ -48,7 +50,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_assetRegistry.addParticleSpawner(3, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(0.0f), glm::vec4(1.0f), glm::vec3(-10.0f), glm::vec3(10.0f), glm::vec3(-1.0f), glm::vec3(1.0f), glm::vec2(0.01f), glm::vec2(1.0f), 2.0f, 5.0f }));
     m_assetRegistry.addParticleSpawner(4, std::make_unique<cft::RandomParticleSpawner>(m_randomNumberGenerator, cft::RandomParticleSpawner::ParticleBoundaries{ glm::vec4(0.8f, 0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.5f, 0.8f, 1.0f), glm::vec3(-0.1f), glm::vec3(0.1f), glm::vec3(-1.5f), glm::vec3(1.5f), glm::vec2(0.2f), glm::vec2(0.2f), 0.4f, 1.0f }));
 
-    m_assetRegistry.addSpawnPolicy(0, std::make_unique<cft::ConstantSpawnPolicy>(30.0f));
+    m_assetRegistry.addSpawnPolicy(0, std::make_unique<cft::ConstantSpawnPolicy>(30, 1));
 
     m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 4, 0, { }, { }, { } });
     

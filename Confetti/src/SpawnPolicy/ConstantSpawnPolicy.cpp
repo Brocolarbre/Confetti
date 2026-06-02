@@ -1,9 +1,13 @@
 #include "Confetti/SpawnPolicy/ConstantSpawnPolicy.hpp"
 
+#include <algorithm>
+
 namespace cft
 {
-	ConstantSpawnPolicy::ConstantSpawnPolicy(float spawnRate) :
-		m_spawnRate(spawnRate),
+	ConstantSpawnPolicy::ConstantSpawnPolicy(unsigned int count, unsigned int interval) :
+		m_count(std::max(count, 1u)),
+		m_interval(std::max(interval, 1u)),
+		m_spawnRate(static_cast<float>(m_count) / static_cast<float>(m_interval)),
 		m_accumulator(0.0f)
 	{
 

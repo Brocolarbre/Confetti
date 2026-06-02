@@ -2,12 +2,11 @@
 
 namespace cft
 {
-	SpatialInfluence::SpatialInfluence(const glm::vec3& origin, float radius, Falloff falloff, bool infiniteRadius) :
+	SpatialInfluence::SpatialInfluence(const glm::vec3& origin, float radius, Falloff falloff) :
 		m_origin(origin),
 		m_radius(radius),
 		m_squaredRadius(radius * radius),
-		m_falloff(falloff),
-		m_infiniteRadius(infiniteRadius)
+		m_falloff(falloff)
 	{
 
 	}
@@ -22,13 +21,13 @@ namespace cft
 		glm::vec3 offset = m_origin - position;
 		float squaredDistance = glm::dot(offset, offset);
 
-		if (!m_infiniteRadius && squaredDistance > m_squaredRadius)
+		if (!m_radius != 0.0f && squaredDistance > m_squaredRadius)
 			return 0.0f;
 
 		if (m_falloff == Falloff::Constant)
 			return 1.0f;
 
-		float t = m_infiniteRadius ? squaredDistance : squaredDistance / m_squaredRadius;
+		float t = m_radius == 0.0f ? squaredDistance : squaredDistance / m_squaredRadius;
 		float factor = glm::max(0.0f, 1.0f - t);
 
 		float influence = 0.0f;

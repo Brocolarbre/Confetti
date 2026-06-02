@@ -41,7 +41,5 @@ namespace cft
 			particles.push_back(generateParticle(m_randomNumberGenerator, m_boundaries, elapsedTime, id));
 
 		return particles;
-
-		// m_forceFieldSet.addForceFieldReferenceCount(particleEmitterInstance.forceFieldSetId, roundedSpawnCount);
 	}
 }

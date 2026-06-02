@@ -19,10 +19,9 @@ namespace cft
 		float m_radius;
 		float m_squaredRadius;
 		Falloff m_falloff;
-		bool m_infiniteRadius;
 
 	public:
-		SpatialInfluence(const glm::vec3& origin, float radius, Falloff falloff, bool infiniteRadius);
+		SpatialInfluence(const glm::vec3& origin, float radius, Falloff falloff);
 
 		const glm::vec3& getOrigin() const;
 
