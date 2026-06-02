@@ -14,6 +14,8 @@ namespace cft
 	public:
 		RandomNumberGenerator(unsigned int seed = 0);
 
+		int generateInteger(int min, int max);
+		unsigned int generateInteger(unsigned int min, unsigned int max);
 		float generate(float min, float max);
 		glm::vec2 generate(const glm::vec2& min, const glm::vec2& max);
 		glm::vec3 generate(const glm::vec3& min, const glm::vec3& max);

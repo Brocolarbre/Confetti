@@ -17,6 +17,16 @@ namespace cft
 
 	}
 
+	int RandomNumberGenerator::generateInteger(int min, int max)
+	{
+		return std::uniform_int_distribution<int>(min, max)(m_engine);
+	}
+
+	unsigned int RandomNumberGenerator::generateInteger(unsigned int min, unsigned int max)
+	{
+		return std::uniform_int_distribution<unsigned int>(min, max)(m_engine);
+	}
+
 	float RandomNumberGenerator::generate(float min, float max)
 	{
 		return mapRange(m_distribution(m_engine), 0.0f, 1.0f, min, max);

@@ -7,7 +7,6 @@ namespace cft
 {
 	struct ParticleEmitter
 	{
-	public:
 		unsigned int pool;
 		unsigned int particleSpawner;
 		unsigned int spawnPolicy;
