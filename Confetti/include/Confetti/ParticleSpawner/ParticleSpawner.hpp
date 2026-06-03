@@ -1,8 +1,9 @@
 #pragma once
 
-#include "AttributeGenerator.hpp"
-#include "AttributeTypes.hpp"
+#include "AttributeGenerator/AttributeGenerator.hpp"
+#include "AttributeGenerator/AttributeTypes.hpp"
 #include "Confetti/Particle/Particle.hpp"
+#include "SpawnShape/SpawnShape.hpp"
 
 #include <memory>
 
@@ -11,6 +12,7 @@ namespace cft
 	class ParticleSpawner
 	{
 	private:
+		std::unique_ptr<SpawnShape> m_spawnShape;
 		std::unique_ptr<AttributeGenerator<Color>> m_colorGenerator;
 		std::unique_ptr<AttributeGenerator<Position>> m_positionGenerator;
 		std::unique_ptr<AttributeGenerator<Velocity>> m_velocityGenerator;
@@ -20,6 +22,7 @@ namespace cft
 
 	public:
 		ParticleSpawner(std::unique_ptr<AttributeGenerator<Position>> positionGenerator, std::unique_ptr<AttributeGenerator<Velocity>> velocityGenerator, std::unique_ptr<AttributeGenerator<Scale>> scaleGenerator, std::unique_ptr<AttributeGenerator<Color>> colorGenerator, std::unique_ptr<AttributeGenerator<Lifetime>> lifetimeGenerator, float maximumParticleLifetime);
+		ParticleSpawner(std::unique_ptr<SpawnShape> spawnShape, std::unique_ptr<AttributeGenerator<Velocity>> velocityGenerator, std::unique_ptr<AttributeGenerator<Scale>> scaleGenerator, std::unique_ptr<AttributeGenerator<Color>> colorGenerator, std::unique_ptr<AttributeGenerator<Lifetime>> lifetimeGenerator, float maximumParticleLifetime);
 
 		std::unique_ptr<ParticleSpawner> clone() const;
 		float getMaxiumParticleLifetime() const;
