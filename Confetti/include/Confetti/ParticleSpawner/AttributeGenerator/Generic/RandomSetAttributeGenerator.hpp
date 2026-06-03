@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AttributeGenerator.hpp"
+#include "Confetti/ParticleSpawner/AttributeGenerator/AttributeGenerator.hpp"
 #include "Confetti/Tools/RandomNumberGenerator.hpp"
 
 namespace cft

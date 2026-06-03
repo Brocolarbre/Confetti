@@ -10,9 +10,11 @@
 #include <Confetti/MotionBehavior/RandomMotionBehavior.hpp>
 #include <Confetti/MotionBehavior/VibrationMotionBehavior.hpp>
 #include <Confetti/ParticleSpawner/ParticleSpawner.hpp>
-#include <Confetti/ParticleSpawner/AttributeGenerator/ConstantAttributeGenerator.hpp>
-#include <Confetti/ParticleSpawner/AttributeGenerator/RandomAttributeGenerator.hpp>
-#include <Confetti/ParticleSpawner/AttributeGenerator/RandomSetAttributeGenerator.hpp>
+#include <Confetti/ParticleSpawner/AttributeGenerator/Generic/ConstantAttributeGenerator.hpp>
+#include <Confetti/ParticleSpawner/AttributeGenerator/Generic/RandomAttributeGenerator.hpp>
+#include <Confetti/ParticleSpawner/AttributeGenerator/Generic/RandomSetAttributeGenerator.hpp>
+#include <Confetti/ParticleSpawner/AttributeGenerator/Velocity/NormalBurstVelocityGenerator.hpp>
+#include <Confetti/ParticleSpawner/AttributeGenerator/Velocity/NormalVelocityGenerator.hpp>
 #include <Confetti/ParticleSpawner/SpawnShape/SphereSpawnShape.hpp>
 #include <Confetti/SpawnPolicy/ConstantSpawnPolicy.hpp>
 
@@ -52,7 +54,9 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
         //std::make_unique<cft::RandomAttributeGenerator<cft::Position>>(glm::vec3(-2.0f), glm::vec3(2.0f), m_randomNumberGenerator),
         std::make_unique<cft::SphereSpawnShape>(1.0f),
         //std::make_unique<cft::RandomAttributeGenerator<cft::Velocity>>(glm::vec3(-2.0f), glm::vec3(2.0f), m_randomNumberGenerator),
-        std::make_unique<cft::ConstantAttributeGenerator<cft::Velocity>>(glm::vec3(0.0f)),
+        //std::make_unique<cft::ConstantAttributeGenerator<cft::Velocity>>(glm::vec3(0.0f)),
+        //std::make_unique<cft::NormalVelocityGenerator>(1.0f),
+        std::make_unique<cft::NormalBurstVelocityGenerator>(1.0f, 10.0f, m_randomNumberGenerator),
         std::make_unique<cft::RandomAttributeGenerator<cft::Scale>>(glm::vec2(0.1f), glm::vec2(0.2f), m_randomNumberGenerator),
         std::make_unique<cft::RandomSetAttributeGenerator<cft::Color>>(std::vector<glm::vec4>{ glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f) }, m_randomNumberGenerator),
         std::make_unique<cft::RandomAttributeGenerator<cft::Lifetime>>(0.4f, 0.8f, m_randomNumberGenerator),
