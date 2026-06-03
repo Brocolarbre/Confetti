@@ -1,18 +1,13 @@
 #pragma once
 
 #include "AttributeGenerator.hpp"
+#include "AttributeTypes.hpp"
 #include "Confetti/Particle/Particle.hpp"
 
 #include <memory>
 
 namespace cft
 {
-	using Color = glm::vec4;
-	using Lifetime = float;
-	using Position = glm::vec3;
-	using Scale = glm::vec2;
-	using Velocity = glm::vec3;
-
 	class ParticleSpawner
 	{
 	private:
