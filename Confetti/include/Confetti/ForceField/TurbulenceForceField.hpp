@@ -5,14 +5,14 @@
 
 namespace cft
 {
-	class JitterForceField : public ForceField
+	class TurbulenceForceField : public ForceField
 	{
 	private:
 		float m_strength;
 		RandomNumberGenerator& m_randomNumberGenerator;
 
 	public:
-		JitterForceField(float strength, RandomNumberGenerator& randomNumberGenerator);
+		TurbulenceForceField(float strength, RandomNumberGenerator& randomNumberGenerator);
 
 		std::unique_ptr<ForceField> clone() const override;
 		glm::vec3 apply(float elapsedTime, const Transform& transform) const override;

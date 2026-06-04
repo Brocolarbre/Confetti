@@ -3,7 +3,7 @@
 #include <Confetti/ForceField/AttractionForceField.hpp>
 #include <Confetti/ForceField/DirectionalForceField.hpp>
 #include <Confetti/ForceField/DragForceField.hpp>
-#include <Confetti/ForceField/JitterForceField.hpp>
+#include <Confetti/ForceField/TurbulenceForceField.hpp>
 #include <Confetti/ForceField/RepulsionForceField.hpp>
 #include <Confetti/ForceField/VortexForceField.hpp>
 #include <Confetti/ParticleBehavior/ColorShiftParticleBehavior.hpp>
@@ -13,7 +13,6 @@
 #include <Confetti/ParticleBehavior/GrowInParticleBehavior.hpp>
 #include <Confetti/ParticleBehavior/ShrinkOutParticleBehavior.hpp>
 #include <Confetti/ParticleBehavior/SquashStretchParticleBehavior.hpp>
-#include <Confetti/ParticleBehavior/RandomParticleBehavior.hpp>
 #include <Confetti/ParticleBehavior/SmoothColorShiftParticleBehavior.hpp>
 #include <Confetti/MotionBehavior/RandomMotionBehavior.hpp>
 #include <Confetti/MotionBehavior/VibrationMotionBehavior.hpp>
@@ -54,7 +53,6 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_assetRegistry.addForceField(2, std::make_unique<cft::RepulsionForceField>(cft::SpatialInfluence(glm::vec3(0.0f, 0.0f, 0.0f), 3.0f, cft::Falloff::Constant), 1.0f));
     m_assetRegistry.addForceField(3, std::make_unique<cft::DragForceField>(0.01f));
 
-    m_assetRegistry.addParticleBehavior(0, std::make_unique<cft::RandomParticleBehavior>(0.1f, m_randomNumberGenerator));
     m_assetRegistry.addParticleBehavior(1, std::make_unique<cft::FadeOutParticleBehavior>(0.8f));
     m_assetRegistry.addParticleBehavior(2, std::make_unique<cft::ShrinkOutParticleBehavior>(0.7f));
     m_assetRegistry.addParticleBehavior(3, std::make_unique<cft::FlickerParticleBehavior>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(1.0f), 5.0f));
