@@ -21,7 +21,7 @@ namespace cft
 		glm::vec3 offset = m_origin - position;
 		float squaredDistance = glm::dot(offset, offset);
 
-		if (!m_radius != 0.0f && squaredDistance > m_squaredRadius)
+		if (m_radius != 0.0f && squaredDistance > m_squaredRadius)
 			return 0.0f;
 
 		if (m_falloff == Falloff::Constant)
