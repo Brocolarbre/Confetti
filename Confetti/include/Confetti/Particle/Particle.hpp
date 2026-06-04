@@ -12,6 +12,7 @@ namespace cft
 		glm::vec3 velocity;
 		glm::vec2 scale;
 		glm::vec2 initialScale;
+		float phase;
 		float lifetime;
 		float spawnTime;
 		unsigned int id;
@@ -25,6 +26,7 @@ namespace cft
 		glm::vec3& velocity;
 		glm::vec2& scale;
 		const glm::vec2& initialScale;
+		const float& phase;
 		const float& lifetime;
 		const float& spawnTime;
 		const unsigned int& id;

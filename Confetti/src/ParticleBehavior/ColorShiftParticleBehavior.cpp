@@ -20,7 +20,7 @@ namespace cft
 		if (m_colors.empty())
 			return;
 
-		unsigned int colorIndex = static_cast<unsigned int>((elapsedTime - particle.spawnTime) * m_speed);
+		unsigned int colorIndex = static_cast<unsigned int>((elapsedTime - particle.spawnTime) * m_speed + static_cast<unsigned int>(particle.phase));
 
 		if (m_cyclic)
 			colorIndex %= m_colors.size();

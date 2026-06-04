@@ -10,6 +10,7 @@ namespace cft
 		m_velocity.resize(capacity);
 		m_scale.resize(capacity);
 		m_initialScale.resize(capacity);
+		m_phase.resize(capacity);
 		m_lifetime.resize(capacity);
 		m_spawnTime.resize(capacity);
 		m_id.resize(capacity);
@@ -26,6 +27,7 @@ namespace cft
 		m_velocity(),
 		m_scale(),
 		m_initialScale(),
+		m_phase(),
 		m_lifetime(),
 		m_spawnTime(),
 		m_id(),
@@ -64,6 +66,11 @@ namespace cft
 	const std::vector<glm::vec2>& ParticlePool::getInitialScale() const
 	{
 		return m_initialScale;
+	}
+
+	const std::vector<float>& ParticlePool::getPhase() const
+	{
+		return m_phase;
 	}
 
 	const std::vector<float>& ParticlePool::getLifetime() const
@@ -111,6 +118,11 @@ namespace cft
 		return m_initialScale;
 	}
 
+	std::vector<float>& ParticlePool::getPhase()
+	{
+		return m_phase;
+	}
+
 	std::vector<float>& ParticlePool::getLifetime()
 	{
 		return m_lifetime;
@@ -149,6 +161,7 @@ namespace cft
 		m_velocity[newIndex] = particle.velocity;
 		m_scale[newIndex] = particle.scale;
 		m_initialScale[newIndex] = particle.initialScale;
+		m_phase[newIndex] = particle.phase;
 		m_lifetime[newIndex] = particle.lifetime;
 		m_spawnTime[newIndex] = particle.spawnTime;
 		m_id[newIndex] = particle.id;
@@ -166,6 +179,7 @@ namespace cft
 		m_velocity[index] = m_velocity[lastIndex];
 		m_scale[index] = m_scale[lastIndex];
 		m_initialScale[index] = m_initialScale[lastIndex];
+		m_phase[index] = m_phase[lastIndex];
 		m_lifetime[index] = m_lifetime[lastIndex];
 		m_spawnTime[index] = m_spawnTime[lastIndex];
 		m_id[index] = m_id[lastIndex];

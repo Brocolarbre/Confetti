@@ -15,6 +15,7 @@ namespace cft
 		std::vector<glm::vec3> m_velocity;
 		std::vector<glm::vec2> m_scale;
 		std::vector<glm::vec2> m_initialScale;
+		std::vector<float> m_phase;
 		std::vector<float> m_lifetime;
 		std::vector<float> m_spawnTime;
 		std::vector<unsigned int> m_id;
@@ -34,6 +35,7 @@ namespace cft
 		const std::vector<glm::vec3>& getVelocity() const;
 		const std::vector<glm::vec2>& getScale() const;
 		const std::vector<glm::vec2>& getInitialScale() const;
+		const std::vector<float>& getPhase() const;
 		const std::vector<float>& getLifetime() const;
 		const std::vector<float>& getSpawnTime() const;
 		const std::vector<unsigned int>& getId() const;
@@ -44,6 +46,7 @@ namespace cft
 		std::vector<glm::vec3>& getVelocity();
 		std::vector<glm::vec2>& getScale();
 		std::vector<glm::vec2>& getInitialScale();
+		std::vector<float>& getPhase();
 		std::vector<float>& getLifetime();
 		std::vector<float>& getSpawnTime();
 		std::vector<unsigned int>& getId();

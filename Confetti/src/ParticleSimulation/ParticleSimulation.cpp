@@ -159,6 +159,7 @@ namespace cft
 			std::vector<glm::vec3>& velocity = particlePool.getVelocity();
 			std::vector<glm::vec2>& scale = particlePool.getScale();
 			std::vector<glm::vec2>& initialScale = particlePool.getInitialScale();
+			std::vector<float>& phase = particlePool.getPhase();
 			std::vector<float>& lifetime = particlePool.getLifetime();
 			std::vector<float>& spawnTime = particlePool.getSpawnTime();
 			std::vector<unsigned int>& id = particlePool.getId();
@@ -190,7 +191,7 @@ namespace cft
 					float progress = (elapsedTime - spawnTime[i]) / lifetime[i];
 
 					for (const std::unique_ptr<ParticleBehavior>& particleBehavior : entry.particleBehaviors)
-						particleBehavior->update(elapsedTime, deltaTime, progress, ParticleView{ color[i], initialColor[i], position[i], velocity[i], scale[i], initialScale[i], lifetime[i], spawnTime[i], id[i]});
+						particleBehavior->update(elapsedTime, deltaTime, progress, ParticleView{ color[i], initialColor[i], position[i], velocity[i], scale[i], initialScale[i], phase[i], lifetime[i], spawnTime[i], id[i]});
 
 					position[i] += velocity[i] * deltaTime;
 					++i;

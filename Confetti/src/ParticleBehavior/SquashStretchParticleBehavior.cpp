@@ -16,13 +16,10 @@ namespace cft
 
 	void SquashStretchParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
 	{
-		float stretch = std::sin(elapsedTime * m_speed);
+		float stretch = std::sin(elapsedTime * m_speed + particle.phase);
 
-		//float verticalScale = glm::max(1.0f + stretch * m_strength.y, 0.5f);
-		//float horizontalScale = 1.0f / verticalScale;
 		float horizontalScale = std::exp(-stretch * m_strength.x);
 		float verticalScale = std::exp(stretch * m_strength.y);
-		//float horizontalScale = 1.0f / verticalScale;
 
 		particle.scale = particle.initialScale * glm::vec2(horizontalScale, verticalScale);
 	}

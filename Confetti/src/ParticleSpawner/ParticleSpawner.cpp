@@ -2,24 +2,26 @@
 
 namespace cft
 {
-	ParticleSpawner::ParticleSpawner(std::unique_ptr<AttributeGenerator<Position>> positionGenerator, std::unique_ptr<AttributeGenerator<Velocity>> velocityGenerator, std::unique_ptr<AttributeGenerator<Scale>> scaleGenerator, std::unique_ptr<AttributeGenerator<Color>> colorGenerator, std::unique_ptr<AttributeGenerator<Lifetime>> lifetimeGenerator, float maximumParticleLifetime) :
+	ParticleSpawner::ParticleSpawner(std::unique_ptr<AttributeGenerator<Position>> positionGenerator, std::unique_ptr<AttributeGenerator<Velocity>> velocityGenerator, std::unique_ptr<AttributeGenerator<Scale>> scaleGenerator, std::unique_ptr<AttributeGenerator<Color>> colorGenerator, std::unique_ptr<AttributeGenerator<Phase>> phaseGenerator, std::unique_ptr<AttributeGenerator<Lifetime>> lifetimeGenerator, float maximumParticleLifetime) :
 		m_spawnShape(),
 		m_colorGenerator(std::move(colorGenerator)),
 		m_positionGenerator(std::move(positionGenerator)),
 		m_velocityGenerator(std::move(velocityGenerator)),
 		m_scaleGenerator(std::move(scaleGenerator)),
+		m_phaseGenerator(std::move(phaseGenerator)),
 		m_lifetimeGenerator(std::move(lifetimeGenerator)),
 		m_maximumParticleLifetime(maximumParticleLifetime)
 	{
 
 	}
 
-	ParticleSpawner::ParticleSpawner(std::unique_ptr<SpawnShape> spawnShape, std::unique_ptr<AttributeGenerator<Velocity>> velocityGenerator, std::unique_ptr<AttributeGenerator<Scale>> scaleGenerator, std::unique_ptr<AttributeGenerator<Color>> colorGenerator, std::unique_ptr<AttributeGenerator<Lifetime>> lifetimeGenerator, float maximumParticleLifetime) :
+	ParticleSpawner::ParticleSpawner(std::unique_ptr<SpawnShape> spawnShape, std::unique_ptr<AttributeGenerator<Velocity>> velocityGenerator, std::unique_ptr<AttributeGenerator<Scale>> scaleGenerator, std::unique_ptr<AttributeGenerator<Color>> colorGenerator, std::unique_ptr<AttributeGenerator<Phase>> phaseGenerator, std::unique_ptr<AttributeGenerator<Lifetime>> lifetimeGenerator, float maximumParticleLifetime) :
 		m_spawnShape(std::move(spawnShape)),
 		m_colorGenerator(std::move(colorGenerator)),
 		m_positionGenerator(),
 		m_velocityGenerator(std::move(velocityGenerator)),
 		m_scaleGenerator(std::move(scaleGenerator)),
+		m_phaseGenerator(std::move(phaseGenerator)),
 		m_lifetimeGenerator(std::move(lifetimeGenerator)),
 		m_maximumParticleLifetime(maximumParticleLifetime)
 	{
@@ -35,6 +37,7 @@ namespace cft
 				m_velocityGenerator->clone(),
 				m_scaleGenerator->clone(),
 				m_colorGenerator->clone(),
+				m_phaseGenerator->clone(),
 				m_lifetimeGenerator->clone(),
 				m_maximumParticleLifetime
 			);
@@ -46,6 +49,7 @@ namespace cft
 				m_velocityGenerator->clone(),
 				m_scaleGenerator->clone(),
 				m_colorGenerator->clone(),
+				m_phaseGenerator->clone(),
 				m_lifetimeGenerator->clone(),
 				m_maximumParticleLifetime
 			);
@@ -64,6 +68,7 @@ namespace cft
 		std::vector<glm::vec3> position;
 		std::vector<glm::vec3> velocity;
 		std::vector<glm::vec2> scale;
+		std::vector<float> phase;
 		std::vector<float> lifetime;
 
 		if (m_spawnShape)
@@ -82,13 +87,14 @@ namespace cft
 		color = m_colorGenerator->generate(count, spawnContext);
 		velocity = m_velocityGenerator->generate(count, spawnContext);
 		scale = m_scaleGenerator->generate(count, spawnContext);
+		phase = m_phaseGenerator->generate(count, spawnContext);
 		lifetime = m_lifetimeGenerator->generate(count, spawnContext);
 
 		std::vector<Particle> particles;
 		particles.reserve(count);
 
 		for (unsigned int i = 0; i < count; ++i)
-			particles.push_back(Particle{ color[i], color[i], m_spawnShape ? spawnContext[i].position : position[i], velocity[i], scale[i], scale[i], lifetime[i], elapsedTime, id });
+			particles.push_back(Particle{ color[i], color[i], m_spawnShape ? spawnContext[i].position : position[i], velocity[i], scale[i], scale[i], phase[i], lifetime[i], elapsedTime, id });
 
 		return particles;
 	}

@@ -29,7 +29,7 @@ namespace cft
 		}
 
 		float colorIndex;
-		float t = std::modf((elapsedTime - particle.spawnTime) * m_speed, &colorIndex);
+		float t = std::modf((elapsedTime - particle.spawnTime) * m_speed + particle.phase, &colorIndex);
 
 		unsigned int i = static_cast<unsigned int>(colorIndex);
 		unsigned int j;
