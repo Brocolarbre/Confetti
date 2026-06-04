@@ -88,19 +88,7 @@ namespace cft
 		particles.reserve(count);
 
 		for (unsigned int i = 0; i < count; ++i)
-		{
-			Particle particle; //			
-
-			particle.color = color[i];
-			particle.position = m_spawnShape ? spawnContext[i].position : position[i];
-			particle.velocity = velocity[i];
-			particle.scale = scale[i];
-			particle.lifetime = lifetime[i];
-			particle.spawnTime = elapsedTime;
-			particle.id = id;
-
-			particles.push_back(particle);
-		}
+			particles.push_back(Particle{ color[i], color[i], m_spawnShape ? spawnContext[i].position : position[i], velocity[i], scale[i], scale[i], lifetime[i], elapsedTime, id });
 
 		return particles;
 	}

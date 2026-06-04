@@ -5,9 +5,11 @@ namespace cft
 	void ParticlePool::resize(unsigned int capacity)
 	{
 		m_color.resize(capacity);
+		m_initialColor.resize(capacity);
 		m_position.resize(capacity);
 		m_velocity.resize(capacity);
 		m_scale.resize(capacity);
+		m_initialScale.resize(capacity);
 		m_lifetime.resize(capacity);
 		m_spawnTime.resize(capacity);
 		m_id.resize(capacity);
@@ -19,9 +21,11 @@ namespace cft
 
 	ParticlePool::ParticlePool() :
 		m_color(),
+		m_initialColor(),
 		m_position(),
 		m_velocity(),
 		m_scale(),
+		m_initialScale(),
 		m_lifetime(),
 		m_spawnTime(),
 		m_id(),
@@ -37,6 +41,11 @@ namespace cft
 		return m_color;
 	}
 
+	const std::vector<glm::vec4>& ParticlePool::getInitialColor() const
+	{
+		return m_initialColor;
+	}
+
 	const std::vector<glm::vec3>& ParticlePool::getPosition() const
 	{
 		return m_position;
@@ -50,6 +59,11 @@ namespace cft
 	const std::vector<glm::vec2>& ParticlePool::getScale() const
 	{
 		return m_scale;
+	}
+
+	const std::vector<glm::vec2>& ParticlePool::getInitialScale() const
+	{
+		return m_initialScale;
 	}
 
 	const std::vector<float>& ParticlePool::getLifetime() const
@@ -72,6 +86,11 @@ namespace cft
 		return m_color;
 	}
 
+	std::vector<glm::vec4>& ParticlePool::getInitialColor()
+	{
+		return m_initialColor;
+	}
+
 	std::vector<glm::vec3>& ParticlePool::getPosition()
 	{
 		return m_position;
@@ -85,6 +104,11 @@ namespace cft
 	std::vector<glm::vec2>& ParticlePool::getScale()
 	{
 		return m_scale;
+	}
+
+	std::vector<glm::vec2>& ParticlePool::getInitialScale()
+	{
+		return m_initialScale;
 	}
 
 	std::vector<float>& ParticlePool::getLifetime()
@@ -120,9 +144,11 @@ namespace cft
 		unsigned int newIndex = m_count++;
 
 		m_color[newIndex] = particle.color;
+		m_initialColor[newIndex] = particle.initialColor;
 		m_position[newIndex] = particle.position;
 		m_velocity[newIndex] = particle.velocity;
 		m_scale[newIndex] = particle.scale;
+		m_initialScale[newIndex] = particle.initialScale;
 		m_lifetime[newIndex] = particle.lifetime;
 		m_spawnTime[newIndex] = particle.spawnTime;
 		m_id[newIndex] = particle.id;
@@ -135,9 +161,11 @@ namespace cft
 		unsigned int lastIndex = --m_count;
 
 		m_color[index] = m_color[lastIndex];
+		m_initialColor[index] = m_initialColor[lastIndex];
 		m_position[index] = m_position[lastIndex];
 		m_velocity[index] = m_velocity[lastIndex];
 		m_scale[index] = m_scale[lastIndex];
+		m_initialScale[index] = m_initialScale[lastIndex];
 		m_lifetime[index] = m_lifetime[lastIndex];
 		m_spawnTime[index] = m_spawnTime[lastIndex];
 		m_id[index] = m_id[lastIndex];

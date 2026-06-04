@@ -10,9 +10,11 @@ namespace cft
 	{
 	private:
 		std::vector<glm::vec4> m_color;
+		std::vector<glm::vec4> m_initialColor;
 		std::vector<glm::vec3> m_position;
 		std::vector<glm::vec3> m_velocity;
 		std::vector<glm::vec2> m_scale;
+		std::vector<glm::vec2> m_initialScale;
 		std::vector<float> m_lifetime;
 		std::vector<float> m_spawnTime;
 		std::vector<unsigned int> m_id;
@@ -27,17 +29,21 @@ namespace cft
 		ParticlePool();
 
 		const std::vector<glm::vec4>& getColor() const;
+		const std::vector<glm::vec4>& getInitialColor() const;
 		const std::vector<glm::vec3>& getPosition() const;
 		const std::vector<glm::vec3>& getVelocity() const;
 		const std::vector<glm::vec2>& getScale() const;
+		const std::vector<glm::vec2>& getInitialScale() const;
 		const std::vector<float>& getLifetime() const;
 		const std::vector<float>& getSpawnTime() const;
 		const std::vector<unsigned int>& getId() const;
 
 		std::vector<glm::vec4>& getColor();
+		std::vector<glm::vec4>& getInitialColor();
 		std::vector<glm::vec3>& getPosition();
 		std::vector<glm::vec3>& getVelocity();
 		std::vector<glm::vec2>& getScale();
+		std::vector<glm::vec2>& getInitialScale();
 		std::vector<float>& getLifetime();
 		std::vector<float>& getSpawnTime();
 		std::vector<unsigned int>& getId();

@@ -42,7 +42,7 @@ namespace cft
 		{
 			ParticleEffectInstance& particleEffectInstance = m_particleEffectInstances[i];
 
-			for (unsigned int j = 0; j < particleEffectInstance.emitters.size(); ++j)
+			for (unsigned int j = 0; j < particleEffectInstance.emitters.size();)
 			{
 				const ParticleEmitterDescriptor& particleEmitterDescriptor = particleEffectInstance.emitters[j];
 				if (elapsedTime >= particleEffectInstance.spawnTime + particleEmitterDescriptor.timeRange.spawnTime)
@@ -86,6 +86,7 @@ namespace cft
 					particleEffectInstance.emitters[j] = std::move(particleEffectInstance.emitters.back());
 					particleEffectInstance.emitters.pop_back();
 
+					m_particleRegistry.addReferenceCount(particleEmitterInstance.particleRegistryId, 1);
 					m_particleEmitterInstances.push_back(std::move(particleEmitterInstance));
 				}
 				else
@@ -113,6 +114,7 @@ namespace cft
 			float despawnTime = particleEmitterInstance.timeRange.spawnTime + particleEmitterInstance.timeRange.duration;
 			if (elapsedTime >= despawnTime)
 			{
+				m_particleRegistry.addReferenceCount(particleEmitterInstance.particleRegistryId, -1);
 				m_particleEmitterInstances[i] = std::move(m_particleEmitterInstances.back());
 				m_particleEmitterInstances.pop_back();
 			}
@@ -149,12 +151,14 @@ namespace cft
 		}
 
 		// Particles update
-		for (auto& [_, particlePool] : m_particlePools)
+		for (auto& [poolId, particlePool] : m_particlePools)
 		{
 			std::vector<glm::vec4>& color = particlePool.getColor();
+			std::vector<glm::vec4>& initialColor = particlePool.getInitialColor();
 			std::vector<glm::vec3>& position = particlePool.getPosition();
 			std::vector<glm::vec3>& velocity = particlePool.getVelocity();
 			std::vector<glm::vec2>& scale = particlePool.getScale();
+			std::vector<glm::vec2>& initialScale = particlePool.getInitialScale();
 			std::vector<float>& lifetime = particlePool.getLifetime();
 			std::vector<float>& spawnTime = particlePool.getSpawnTime();
 			std::vector<unsigned int>& id = particlePool.getId();
@@ -186,7 +190,7 @@ namespace cft
 					float progress = (elapsedTime - spawnTime[i]) / lifetime[i];
 
 					for (const std::unique_ptr<ParticleBehavior>& particleBehavior : entry.particleBehaviors)
-						particleBehavior->update(elapsedTime, deltaTime, progress, ParticleView{ color[i], position[i], velocity[i], scale[i], lifetime[i], spawnTime[i], id[i] });
+						particleBehavior->update(elapsedTime, deltaTime, progress, ParticleView{ color[i], initialColor[i], position[i], velocity[i], scale[i], initialScale[i], lifetime[i], spawnTime[i], id[i]});
 
 					position[i] += velocity[i] * deltaTime;
 					++i;

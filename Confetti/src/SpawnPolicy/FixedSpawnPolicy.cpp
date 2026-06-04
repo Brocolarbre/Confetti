@@ -29,10 +29,10 @@ namespace cft
 		if (m_spawnCount == 0)
 			return 0;
 
-		--m_spawnCount;
-
 		if (++m_frameCounter >= m_interval)
 		{
+			--m_spawnCount;
+
 			m_frameCounter = 0;
 			return m_count;
 		}
