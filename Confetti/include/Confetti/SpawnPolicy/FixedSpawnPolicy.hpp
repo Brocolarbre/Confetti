@@ -9,9 +9,9 @@ namespace cft
 	private:
 		unsigned int m_count;
 		unsigned int m_interval;
-		float m_spawnRate;
-		float m_accumulator;
 		unsigned int m_spawnCount;
+		unsigned int m_frameCounter;
+		float m_spawnRate;
 
 	public:
 		FixedSpawnPolicy(unsigned int count, unsigned int interval, unsigned int spawnCount);

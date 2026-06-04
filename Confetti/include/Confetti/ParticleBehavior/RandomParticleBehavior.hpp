@@ -15,6 +15,6 @@ namespace cft
 		RandomParticleBehavior(float strength, RandomNumberGenerator& randomNumberGenerator);
 
 		std::unique_ptr<ParticleBehavior> clone() const override;
-		void update(float elapsedTime, float deltaTime, ParticleView& particle) override;
+		void update(float elapsedTime, float deltaTime, float progress, ParticleView& particle) override;
 	};
 }

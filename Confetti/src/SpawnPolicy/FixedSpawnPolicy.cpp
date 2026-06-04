@@ -7,9 +7,9 @@ namespace cft
 	FixedSpawnPolicy::FixedSpawnPolicy(unsigned int count, unsigned int interval, unsigned int spawnCount) :
 		m_count(std::max(count, 1u)),
 		m_interval(std::max(interval, 1u)),
-		m_spawnRate(static_cast<float>(m_count) / static_cast<float>(m_interval)),
-		m_accumulator(0.0f),
-		m_spawnCount(std::max(spawnCount, 1u))
+		m_spawnCount(std::max(spawnCount, 1u)),
+		m_frameCounter(0),
+		m_spawnRate(static_cast<float>(m_count) / static_cast<float>(m_interval))
 	{
 
 	}
@@ -21,9 +21,6 @@ namespace cft
 
 	float FixedSpawnPolicy::getSpawnRate() const
 	{
-		if (m_spawnCount == 0)
-			return 0.0f;
-
 		return m_spawnRate;
 	}
 
@@ -32,12 +29,14 @@ namespace cft
 		if (m_spawnCount == 0)
 			return 0;
 
-		float spawnCount = m_spawnRate * deltaTime + m_accumulator;
-		unsigned int roundedSpawnCount = static_cast<unsigned int>(spawnCount);
-		m_accumulator = spawnCount - static_cast<float>(roundedSpawnCount);
-
 		--m_spawnCount;
 
-		return roundedSpawnCount;
+		if (++m_frameCounter >= m_interval)
+		{
+			m_frameCounter = 0;
+			return m_count;
+		}
+
+		return 0;
 	}
 }

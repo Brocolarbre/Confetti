@@ -183,8 +183,10 @@ namespace cft
 					position[i] = transform.position;
 					velocity[i] = transform.velocity;
 
+					float progress = (elapsedTime - spawnTime[i]) / lifetime[i];
+
 					for (const std::unique_ptr<ParticleBehavior>& particleBehavior : entry.particleBehaviors)
-						particleBehavior->update(elapsedTime, deltaTime, ParticleView{ color[i], position[i], velocity[i], scale[i], lifetime[i], spawnTime[i], id[i] });
+						particleBehavior->update(elapsedTime, deltaTime, progress, ParticleView{ color[i], position[i], velocity[i], scale[i], lifetime[i], spawnTime[i], id[i] });
 
 					position[i] += velocity[i] * deltaTime;
 					++i;

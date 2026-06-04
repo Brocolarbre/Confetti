@@ -14,7 +14,7 @@ namespace cft
 		return std::make_unique<RandomParticleBehavior>(*this);
 	}
 
-	void RandomParticleBehavior::update(float elapsedTime, float deltaTime, ParticleView& particle)
+	void RandomParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
 	{
 		particle.position += m_randomNumberGenerator.generate(glm::vec3(-m_strength), glm::vec3(m_strength)) * deltaTime;
 	}

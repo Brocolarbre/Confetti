@@ -12,8 +12,8 @@ namespace cft
 		unsigned int m_count;
 		unsigned int m_interval;
 		std::optional<float> m_duration;
+		unsigned int m_frameCounter;
 		float m_spawnRate;
-		float m_accumulator;
 
 	public:
 		TimedSpawnPolicy(unsigned int count, unsigned int interval, std::optional<float> duration);

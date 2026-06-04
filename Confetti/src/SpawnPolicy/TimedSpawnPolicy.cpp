@@ -8,8 +8,8 @@ namespace cft
 		m_count(std::max(count, 1u)),
 		m_interval(std::max(interval, 1u)),
 		m_duration(duration.has_value() ? std::max(duration.value(), 0.0f) : duration),
-		m_spawnRate(static_cast<float>(m_count) / static_cast<float>(m_interval)),
-		m_accumulator(0.0f)
+		m_frameCounter(0),
+		m_spawnRate(static_cast<float>(m_count) / static_cast<float>(m_interval))
 	{
 
 	}
@@ -29,10 +29,12 @@ namespace cft
 		if (m_duration.has_value() && elapsedTime >= m_duration.value())
 			return 0;
 
-		float spawnCount = m_spawnRate * deltaTime + m_accumulator;
-		unsigned int roundedSpawnCount = static_cast<unsigned int>(spawnCount);
-		m_accumulator = spawnCount - static_cast<float>(roundedSpawnCount);
+		if (++m_frameCounter >= m_interval)
+		{
+			m_frameCounter = 0;
+			return m_count;
+		}
 
-		return roundedSpawnCount;
+		return 0;
 	}
 }
