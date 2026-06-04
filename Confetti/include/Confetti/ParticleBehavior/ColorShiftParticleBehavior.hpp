@@ -1,0 +1,20 @@
+#pragma once
+
+#include "ParticleBehavior.hpp"
+
+namespace cft
+{
+	class ColorShiftParticleBehavior : public ParticleBehavior
+	{
+	private:
+		std::vector<glm::vec4> m_colors;
+		float m_speed;
+		bool m_cyclic;
+
+	public:
+		ColorShiftParticleBehavior(const std::vector<glm::vec4>& colors, float speed, bool cyclic);
+
+		std::unique_ptr<ParticleBehavior> clone() const override;
+		void update(float elapsedTime, float deltaTime, float progress, ParticleView& particle) override;
+	};
+}

@@ -1,0 +1,53 @@
+#include "Confetti/ParticleBehavior/SmoothColorShiftParticleBehavior.hpp"
+
+#include <cmath>
+
+namespace cft
+{
+	SmoothColorShiftParticleBehavior::SmoothColorShiftParticleBehavior(const std::vector<glm::vec4>& colors, float speed, bool cyclic) :
+		m_colors(colors),
+		m_speed(speed),
+		m_cyclic(cyclic)
+	{
+
+	}
+
+	std::unique_ptr<ParticleBehavior> SmoothColorShiftParticleBehavior::clone() const
+	{
+		return std::make_unique<SmoothColorShiftParticleBehavior>(*this);
+	}
+
+	void SmoothColorShiftParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
+	{
+		if (m_colors.empty())
+			return;
+
+		if (m_colors.size() == 1)
+		{
+			particle.color = m_colors.front();
+			return;
+		}
+
+		float colorIndex;
+		float t = std::modf((elapsedTime - particle.spawnTime) * m_speed, &colorIndex);
+
+		unsigned int i = static_cast<unsigned int>(colorIndex);
+		unsigned int j;
+
+		if (m_cyclic)
+		{
+			i %= m_colors.size();
+			j = (i + 1) % static_cast<unsigned int>(m_colors.size());
+		}
+		else
+		{
+			i = glm::min(i, static_cast<unsigned int>(m_colors.size() - 1));
+			j = glm::min(i + 1, static_cast<unsigned int>(m_colors.size() - 1));
+		}
+
+		if (i == m_colors.size() - 2)
+		unsigned int j = i + 1;
+
+		particle.color = (1.0f - t) * m_colors[i] + t * m_colors[j];
+	}
+}

@@ -15,6 +15,9 @@ namespace cft
 
 	void FadeOutParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
 	{
+		if (progress < m_start)
+			return;
+
 		float t = glm::max(progress - m_start, 0.0f) / (1.0f - m_start);
 		particle.color.a = (1.0f - t) * particle.initialColor.a;
 	}
