@@ -24,7 +24,7 @@ namespace cft
 
 		if (m_colors.size() == 1)
 		{
-			particle.color = m_colors.front();
+			particle.color = m_colors[0];
 			return;
 		}
 

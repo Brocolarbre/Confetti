@@ -6,6 +6,8 @@
 #include "SSBO.hpp"
 #include "View.hpp"
 
+#include "Bloom.hpp"
+
 namespace cft
 {
 	class Renderer
@@ -18,6 +20,8 @@ namespace cft
 		Shader m_shader;
 		Mesh m_mesh;
 		SSBO m_ssbo;
+
+		Bloom m_bloom;
 
 	public:
 		Renderer(unsigned int width, unsigned int height);

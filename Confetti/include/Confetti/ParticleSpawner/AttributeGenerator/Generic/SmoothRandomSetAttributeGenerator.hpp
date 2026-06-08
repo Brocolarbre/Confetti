@@ -27,7 +27,7 @@ namespace cft
 			return T(0.0f);
 
 		if (m_values.size() == 1)
-			return m_values.front();
+			return m_values[0];
 
 		unsigned int i = m_randomNumberGenerator.generateInteger(0, m_values.size() - 2);
 		unsigned int j = i + 1;
