@@ -26,7 +26,6 @@ namespace cft
 		#version 330 core
 
         uniform sampler2D uSourceTexture;
-        uniform vec2 uSourceDefinition;
 
         in vec2 fTextureCoordinates;
 
@@ -34,7 +33,7 @@ namespace cft
 
         void main()
         {
-            vec2 sourceTexelSize = 1.0 / uSourceDefinition;
+            vec2 sourceTexelSize = 1.0 / textureSize(uSourceTexture, 0);
             float x = sourceTexelSize.x;
             float y = sourceTexelSize.y;
 
@@ -74,7 +73,9 @@ namespace cft
 
         void main()
         {
-            float x = uFilterRadius;
+            ivec2 size = textureSize(uSourceTexture, 0);
+
+            float x = uFilterRadius * float(size.y) / float(size.x);
             float y = uFilterRadius;
 
             vec4 a = texture(uSourceTexture, vec2(fTextureCoordinates.x - x, fTextureCoordinates.y + y)).rgba;
@@ -112,7 +113,28 @@ namespace cft
             vec3 sourceColor = texture(uSourceTexture, fTextureCoordinates).rgb;
             vec3 bloomColor = texture(uBloomTexture, fTextureCoordinates).rgb;
             
-            color = vec4(mix(sourceColor, bloomColor, uBloomStrength), 1.0);
+            //color = vec4(mix(sourceColor, bloomColor, uBloomStrength), 1.0);
+            color = vec4(sourceColor + bloomColor * uBloomStrength, 1.0);
+        }
+    )";
+
+    constexpr const char* TONEMAPPING_FRAGMENT_SHADER_SOURCE = R"(
+        #version 330 core
+        
+        uniform sampler2D uTexture;
+        uniform float uExposure;
+        uniform float uGamma;
+        
+        in vec2 fTextureCoordinates;
+        
+        out vec4 color;
+        
+        void main()
+        {
+            vec3 textureColor = texture(uTexture, fTextureCoordinates).rgb;
+            vec3 mappedColor = vec3(1.0) - exp(-textureColor * uExposure);
+            mappedColor = pow(mappedColor, vec3(1.0 / uGamma));
+            color = vec4(mappedColor, 1.0);
         }
     )";
 }

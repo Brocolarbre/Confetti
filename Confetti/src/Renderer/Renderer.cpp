@@ -13,7 +13,8 @@ namespace cft
 		m_shader(),
 		m_mesh(),
 		m_ssbo(),
-		m_bloom(width, height, 5)
+		m_bloom(width, height, 5),
+		m_toneMapping(1.0f, 2.2f)
 	{
 		
 	}

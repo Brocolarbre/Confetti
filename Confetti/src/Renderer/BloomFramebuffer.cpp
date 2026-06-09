@@ -36,13 +36,13 @@ namespace cft
 		m_mips.clear();
 		m_mips.reserve(m_mipCount);
 
-		glm::vec2 mipSize(width, height);
+		glm::uvec2 mipSize(width, height);
 		for (unsigned int i = 0; i < m_mipCount; ++i)
 		{
 			BloomMip mip{};
 
-			mipSize.x = std::max(1.0f, mipSize.x * 0.5f);
-			mipSize.y = std::max(1.0f, mipSize.y * 0.5f);
+			mipSize.x = std::max(1u, mipSize.x / 2);
+			mipSize.y = std::max(1u, mipSize.y / 2);
 			mip.size = mipSize;
 
 			glGenTextures(1, &mip.texture);
@@ -53,7 +53,7 @@ namespace cft
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, static_cast<unsigned int>(mipSize.x), static_cast<unsigned int>(mipSize.y), 0, GL_RGB, GL_FLOAT, nullptr);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, mipSize.x, mipSize.y, 0, GL_RGB, GL_FLOAT, nullptr);
 
 			m_mips.push_back(mip);
 		}

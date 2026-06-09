@@ -14,7 +14,6 @@ namespace cft
 		const std::vector<BloomMip>& mips = m_bloomFramebuffer.getMips();
 
 		m_downsampleShader.use();
-		m_downsampleShader.setUniform("uSourceDefinition", glm::vec2(m_viewportSize));	
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, sourceTexture);
@@ -30,7 +29,6 @@ namespace cft
 			glBindVertexArray(m_vertexArray);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-			m_downsampleShader.setUniform("uSourceDefinition", glm::vec2(mip.size));
 			glBindTexture(GL_TEXTURE_2D, mip.texture);
 		}
 	}
@@ -123,6 +121,7 @@ namespace cft
 	void Bloom::resize(unsigned int width, unsigned int height)
 	{
 		m_bloomFramebuffer.resize(width, height);
+		m_framebuffer.resize(width, height);
 		m_viewportSize = glm::uvec2(width, height);
 	}
 

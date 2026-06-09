@@ -7,6 +7,7 @@
 #include "View.hpp"
 
 #include "Bloom.hpp"
+#include "ToneMapping.hpp"
 
 namespace cft
 {
@@ -22,6 +23,7 @@ namespace cft
 		SSBO m_ssbo;
 
 		Bloom m_bloom;
+		ToneMapping m_toneMapping;
 
 	public:
 		Renderer(unsigned int width, unsigned int height);
