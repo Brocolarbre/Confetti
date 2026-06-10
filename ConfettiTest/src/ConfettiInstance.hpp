@@ -3,7 +3,7 @@
 #include "RenderContext.hpp"
 
 #include <Confetti/ParticleSimulation/ParticleSimulation.hpp>
-#include <Confetti/Renderer/Renderer.hpp>
+#include <Confetti/Renderer/Particle/ParticleRenderer.hpp>
 #include <Krono/Krono.hpp>
 #include <Windove/Window.hpp>
 
@@ -14,7 +14,7 @@ private:
 
 	cft::AssetRegistry m_assetRegistry;
 	cft::RandomNumberGenerator m_randomNumberGenerator;
-	cft::Renderer m_renderer;
+	cft::ParticleRenderer m_particleRenderer;
 	cft::ParticleSimulation m_particleSimulation;
 
 	krono::Chronometer m_elapsedTimeChronometer;

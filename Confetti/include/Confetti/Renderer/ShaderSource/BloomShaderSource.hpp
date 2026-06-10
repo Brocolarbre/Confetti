@@ -2,28 +2,8 @@
 
 namespace cft
 {
-    constexpr const char* SAMPLE_VERTEX_SHADER_SOURCE = R"(
-        #version 330 core
-
-        const vec2 vertexPositions[] = vec2[](
-            vec2(-1.0, -1.0),
-            vec2(1.0, -1.0),
-            vec2(-1.0, 1.0),
-            vec2(1.0, 1.0)
-        );
-
-        out vec2 fTextureCoordinates;
-
-        void main()
-        {
-            vec2 vertexPosition = vertexPositions[gl_VertexID];
-            gl_Position = vec4(vertexPosition, 0.0, 1.0);
-            fTextureCoordinates = vertexPosition * 0.5 + 0.5;
-        }
-    )";
-
-	constexpr const char* DOWNSAMPLE_FRAGMENT_SHADER_SOURCE = R"(
-		#version 330 core
+    constexpr const char* DOWNSAMPLE_FRAGMENT_SHADER_SOURCE = R"(
+		#version 460 core
 
         uniform sampler2D uSourceTexture;
 
@@ -62,7 +42,7 @@ namespace cft
 	)";
 
     constexpr const char* UPSAMPLE_FRAGMENT_SHADER_SOURCE = R"(
-		#version 330 core
+		#version 460 core
 
         uniform sampler2D uSourceTexture;
         uniform float uFilterRadius;
@@ -98,7 +78,7 @@ namespace cft
 	)";
 
     constexpr const char* BLOOM_FRAGMENT_SHADER_SOURCE = R"(
-        #version 330 core
+        #version 460 core
         
         uniform sampler2D uSourceTexture;
         uniform sampler2D uBloomTexture;
@@ -115,26 +95,6 @@ namespace cft
             
             //color = vec4(mix(sourceColor, bloomColor, uBloomStrength), 1.0);
             color = vec4(sourceColor + bloomColor * uBloomStrength, 1.0);
-        }
-    )";
-
-    constexpr const char* TONEMAPPING_FRAGMENT_SHADER_SOURCE = R"(
-        #version 330 core
-        
-        uniform sampler2D uTexture;
-        uniform float uExposure;
-        uniform float uGamma;
-        
-        in vec2 fTextureCoordinates;
-        
-        out vec4 color;
-        
-        void main()
-        {
-            vec3 textureColor = texture(uTexture, fTextureCoordinates).rgb;
-            vec3 mappedColor = vec3(1.0) - exp(-textureColor * uExposure);
-            mappedColor = pow(mappedColor, vec3(1.0 / uGamma));
-            color = vec4(mappedColor, 1.0);
         }
     )";
 }

@@ -1,4 +1,4 @@
-#include "Confetti/Renderer/BloomFramebuffer.hpp"
+#include "Confetti/Renderer/PostProcessing/BloomFramebuffer.hpp"
 
 #include <glad/glad.h>
 #include <iostream>
@@ -17,49 +17,33 @@ namespace cft
 
 	BloomFramebuffer::~BloomFramebuffer()
 	{
-		for (const BloomMip& mip : m_mips)
-			glDeleteTextures(1, &mip.texture);
-
 		glDeleteFramebuffers(1, &m_id);
 	}
 
-	const std::vector<BloomMip>& BloomFramebuffer::getMips() const
+	const std::vector<Texture>& BloomFramebuffer::getMips() const
 	{
 		return m_mips;
 	}
 
 	void BloomFramebuffer::resize(unsigned int width, unsigned int height)
 	{
-		for (const BloomMip& mip : m_mips)
-			glDeleteTextures(1, &mip.texture);
-
 		m_mips.clear();
 		m_mips.reserve(m_mipCount);
 
 		glm::uvec2 mipSize(width, height);
 		for (unsigned int i = 0; i < m_mipCount; ++i)
 		{
-			BloomMip mip{};
-
 			mipSize.x = std::max(1u, mipSize.x / 2);
 			mipSize.y = std::max(1u, mipSize.y / 2);
-			mip.size = mipSize;
 
-			glGenTextures(1, &mip.texture);
-			glBindTexture(GL_TEXTURE_2D, mip.texture);
+			Texture mip(GL_TEXTURE_2D, GL_R11F_G11F_B10F, GL_RGB, GL_FLOAT);
+			mip.load(nullptr, mipSize.x, mipSize.y, GL_LINEAR, GL_CLAMP_TO_EDGE, false, 0);
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, mipSize.x, mipSize.y, 0, GL_RGB, GL_FLOAT, nullptr);
-
-			m_mips.push_back(mip);
+			m_mips.push_back(std::move(mip));
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, m_id);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_mips[0].texture, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_mips[0].getId(), 0);
 
 		unsigned int drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, drawBuffers);

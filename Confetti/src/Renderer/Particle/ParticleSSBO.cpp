@@ -1,4 +1,4 @@
-#include "Confetti/Renderer/SSBO.hpp"
+#include "Confetti/Renderer/Particle/ParticleSSBO.hpp"
 
 #include <glad/glad.h>
 

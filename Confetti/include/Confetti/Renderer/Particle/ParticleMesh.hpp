@@ -2,15 +2,15 @@
 
 namespace cft
 {
-	class Mesh
+	class ParticleMesh
 	{
 	private:
 		unsigned int m_vao;
 		unsigned int m_vbo;
 
 	public:
-		Mesh();
-		~Mesh();
+		ParticleMesh();
+		~ParticleMesh();
 
 		void draw() const;
 		void drawInstanced(unsigned int instanceCount) const;

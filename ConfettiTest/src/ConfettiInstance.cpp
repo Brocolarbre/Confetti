@@ -39,7 +39,7 @@ void ConfettiInstance::restartSimulation()
 
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
     m_renderContext(width, height),
-    m_renderer(width, height),
+    m_particleRenderer(width, height),
     m_assetRegistry(),
     m_randomNumberGenerator(),
     m_particleSimulation(m_assetRegistry, m_randomNumberGenerator),
@@ -102,7 +102,7 @@ void ConfettiInstance::onKeyPressed(dove::KeyEvent keyEvent)
 void ConfettiInstance::onWindowResized(unsigned int width, unsigned int height)
 {
     m_renderContext.resize(width, height);
-    m_renderer.resize(width, height);
+    m_particleRenderer.resize(width, height);
 }
 
 void ConfettiInstance::update()
@@ -132,6 +132,6 @@ void ConfettiInstance::render()
         projectionMatrix
     };
 
-    m_renderer.render(view, m_particleSimulation.getParticlePools());
-    m_renderContext.render(m_renderer.getOutputTextureId());
+    m_particleRenderer.render(view, m_particleSimulation.getParticlePools());
+    m_renderContext.render(m_particleRenderer.getOutputTextureId());
 }

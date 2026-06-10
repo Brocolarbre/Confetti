@@ -1,10 +1,10 @@
-#include "Confetti/Renderer/Mesh.hpp"
+#include "Confetti/Renderer/Particle/ParticleMesh.hpp"
 
 #include <glad/glad.h>
 
 namespace cft
 {
-	Mesh::Mesh() :
+	ParticleMesh::ParticleMesh() :
 		m_vao(0),
 		m_vbo(0)
 	{
@@ -29,19 +29,19 @@ namespace cft
 		glBindVertexArray(0);
 	}
 
-	Mesh::~Mesh()
+	ParticleMesh::~ParticleMesh()
 	{
 		glDeleteVertexArrays(1, &m_vao);
 		glDeleteBuffers(1, &m_vbo);
 	}
 
-	void Mesh::draw() const
+	void ParticleMesh::draw() const
 	{
 		glBindVertexArray(m_vao);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
-	void Mesh::drawInstanced(unsigned int instanceCount) const
+	void ParticleMesh::drawInstanced(unsigned int instanceCount) const
 	{
 		glBindVertexArray(m_vao);
 		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, instanceCount);

@@ -1,41 +1,36 @@
-#include "Confetti/Renderer/Bloom.hpp"
-#include "Confetti/Renderer/ShaderSource.hpp"
+#include "Confetti/Renderer/PostProcessing/Bloom.hpp"
+#include "Confetti/Renderer/ShaderSource/BloomShaderSource.hpp"
+#include "Confetti/Renderer/ShaderSource/FullscreenShaderSource.hpp"
 
 #include <glad/glad.h>
-
-
-//
-#include <iostream>
 
 namespace cft
 {
 	void Bloom::renderDownsamples(unsigned int sourceTexture)
 	{
-		const std::vector<BloomMip>& mips = m_bloomFramebuffer.getMips();
+		const std::vector<Texture>& mips = m_bloomFramebuffer.getMips();
 
 		m_downsampleShader.use();
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, sourceTexture);
 
-		for (int i = 0; i < mips.size(); ++i)
+		for (const Texture& mip : m_bloomFramebuffer.getMips())
 		{
-			const BloomMip& mip = mips[i];
-
-			glViewport(0, 0, mip.size.x, mip.size.y);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mip.texture, 0);
+			glViewport(0, 0, mip.getWidth(), mip.getHeight());
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mip.getId(), 0);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			glBindVertexArray(m_vertexArray);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-			glBindTexture(GL_TEXTURE_2D, mip.texture);
+			mip.bind();
 		}
 	}
 
 	void Bloom::renderUpsamples(float filterRadius)
 	{
-		const std::vector<BloomMip>& mips = m_bloomFramebuffer.getMips();
+		const std::vector<Texture>& mips = m_bloomFramebuffer.getMips();
 
 		m_upsampleShader.use();
 		m_upsampleShader.setUniform("uFilterRadius", filterRadius);
@@ -46,14 +41,14 @@ namespace cft
 
 		for (int i = static_cast<int>(mips.size()) - 1; i > 0; --i)
 		{
-			const BloomMip& mip = mips[i];
-			const BloomMip& nextMip = mips[static_cast<size_t>(i) - 1];
+			const Texture& mip = mips[i];
+			const Texture& nextMip = mips[static_cast<size_t>(i) - 1];
 
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, mip.texture);
+			mip.bind();
 
-			glViewport(0, 0, nextMip.size.x, nextMip.size.y);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, nextMip.texture, 0);
+			glViewport(0, 0, nextMip.getWidth(), nextMip.getHeight());
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, nextMip.getId(), 0);
 
 			glBindVertexArray(m_vertexArray);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -64,13 +59,14 @@ namespace cft
 
 	void Bloom::applyBloom(unsigned int sourceTexture)
 	{
-		glActiveTexture(GL_TEXTURE0);
+		Texture::setActiveSlot(0);
 		glBindTexture(GL_TEXTURE_2D, sourceTexture);
 
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, m_bloomFramebuffer.getMips()[0].texture);
+		Texture::setActiveSlot(1);
+		m_bloomFramebuffer.getMips()[0].bind();
 
 		m_framebuffer.bind();
+		m_framebuffer.setViewport();
 		glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -91,9 +87,15 @@ namespace cft
 		m_viewportSize(width, height),
 		m_vertexArray(0)
 	{
-		m_downsampleShader.loadFromMemory(SAMPLE_VERTEX_SHADER_SOURCE, DOWNSAMPLE_FRAGMENT_SHADER_SOURCE);
-		m_upsampleShader.loadFromMemory(SAMPLE_VERTEX_SHADER_SOURCE, UPSAMPLE_FRAGMENT_SHADER_SOURCE);
-		m_bloomShader.loadFromMemory(SAMPLE_VERTEX_SHADER_SOURCE, BLOOM_FRAGMENT_SHADER_SOURCE);
+		Texture colorAttachment(GL_TEXTURE_2D, GL_RGB16F, GL_RGB, GL_FLOAT);
+		colorAttachment.load(nullptr, width, height, GL_NEAREST, GL_CLAMP_TO_EDGE, false, 0);
+
+		m_framebuffer.setColorAttachment(0, std::move(colorAttachment));
+		m_framebuffer.build();
+
+		m_downsampleShader.loadFromMemory(FULLSCREEN_VERTEX_SHADER_SOURCE, DOWNSAMPLE_FRAGMENT_SHADER_SOURCE);
+		m_upsampleShader.loadFromMemory(FULLSCREEN_VERTEX_SHADER_SOURCE, UPSAMPLE_FRAGMENT_SHADER_SOURCE);
+		m_bloomShader.loadFromMemory(FULLSCREEN_VERTEX_SHADER_SOURCE, BLOOM_FRAGMENT_SHADER_SOURCE);
 
 		m_downsampleShader.use();
 		m_downsampleShader.setUniform("uSourceTexture", 0);
@@ -113,9 +115,9 @@ namespace cft
 		glDeleteVertexArrays(1, &m_vertexArray);
 	}
 
-	unsigned int Bloom::getBloomTexture() const
+	const Texture& Bloom::getBloomTexture() const
 	{
-		return m_framebuffer.getColorAttachment();
+		return std::get<Texture>(m_framebuffer.getColorAttachment(0));
 	}
 
 	void Bloom::resize(unsigned int width, unsigned int height)

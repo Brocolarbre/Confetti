@@ -1,8 +1,8 @@
 #pragma once
 
 #include "BloomFramebuffer.hpp"
-#include "Framebuffer.hpp"
-#include "Shader.hpp"
+#include "Confetti/Renderer/Tools/Framebuffer.hpp"
+#include "Confetti/Renderer/Tools/Shader.hpp"
 
 namespace cft
 {
@@ -28,7 +28,7 @@ namespace cft
 		Bloom(unsigned int width, unsigned int height, unsigned int mipCount);
 		~Bloom();
 
-		unsigned int getBloomTexture() const;
+		const Texture& getBloomTexture() const;
 
 		void resize(unsigned int width, unsigned int height);
 		void render(unsigned int sourceTexture, float filterRadius);
