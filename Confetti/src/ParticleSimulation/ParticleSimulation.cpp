@@ -18,6 +18,11 @@ namespace cft
 		return m_particlePools;
 	}
 
+	const ParticleRegistry& ParticleSimulation::getParticleRegistry() const
+	{
+		return m_particleRegistry;
+	}
+
 	void ParticleSimulation::addParticleEffect(float elapsedTime, unsigned int id)
 	{
 		const ParticleEffect& particleEffect = m_assetRegistry.getParticleEffect(id);
@@ -69,8 +74,7 @@ namespace cft
 					particleEmitterInstance.timeRange = particleEmitterDescriptor.timeRange;
 					particleEmitterInstance.timeRange.spawnTime += elapsedTime;
 					particleEmitterInstance.transform = particleEmitterDescriptor.transform;
-					particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
-					particleEmitterInstance.pool = particleEmitter.pool;
+					particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitter.pool, particleEmitter.image, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
 					particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitter.particleSpawner).clone();
 					particleEmitterInstance.spawnPolicy = m_assetRegistry.getSpawnPolicy(particleEmitter.spawnPolicy).clone();
 					
@@ -82,7 +86,7 @@ namespace cft
 					for (unsigned int motionBehavior : particleEmitterDescriptor.motionBehaviors)
 						particleEmitterInstance.inheritedMotionBehaviors.push_back(m_assetRegistry.getMotionBehavior(motionBehavior).clone());
 
-					m_particlePools[particleEmitterInstance.pool].reserve(static_cast<unsigned int>(particleEmitterInstance.spawnPolicy->getSpawnRate() * particleEmitterInstance.particleSpawner->getMaxiumParticleLifetime()));
+					m_particlePools[particleEmitter.pool].reserve(static_cast<unsigned int>(particleEmitterInstance.spawnPolicy->getSpawnRate() * particleEmitterInstance.particleSpawner->getMaxiumParticleLifetime()));
 					particleEffectInstance.emitters[j] = std::move(particleEffectInstance.emitters.back());
 					particleEffectInstance.emitters.pop_back();
 
@@ -133,7 +137,7 @@ namespace cft
 				{
 					std::vector<Particle> particles = particleEmitterInstance.particleSpawner->spawn(particleSpawnCount, elapsedTime, deltaTime, particleEmitterInstance.particleRegistryId);
 					
-					ParticlePool& particlePool = m_particlePools.at(particleEmitterInstance.pool);
+					ParticlePool& particlePool = m_particlePools.at(m_particleRegistry.getEntry(particleEmitterInstance.particleRegistryId).pool);
 					particlePool.reserve(particleSpawnCount);
 
 					for (Particle& particle : particles)

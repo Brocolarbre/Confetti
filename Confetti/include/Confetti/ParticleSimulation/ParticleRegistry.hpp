@@ -4,6 +4,7 @@
 #include "Confetti/MotionBehavior/MotionBehavior.hpp"
 #include "Confetti/ParticleBehavior/ParticleBehavior.hpp"
 
+#include <optional>
 #include <unordered_map>
 
 namespace cft
@@ -11,6 +12,8 @@ namespace cft
 	struct ParticleRegistryEntry
 	{
 		int count;
+		unsigned int pool;
+		std::optional<unsigned int> image;
 		std::vector<std::unique_ptr<ForceField>> forceFields;
 		std::vector<std::unique_ptr<MotionBehavior>> motionBehaviors;
 		std::vector<std::unique_ptr<ParticleBehavior>> particleBehaviors;
@@ -27,7 +30,7 @@ namespace cft
 
 		void clear();
 		const ParticleRegistryEntry& getEntry(unsigned int id) const;
-		unsigned int createEntry(std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<ParticleBehavior>>& particleBehaviors);
+		unsigned int createEntry(unsigned int pool, std::optional<unsigned int> image, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<ParticleBehavior>>& particleBehaviors);
 		void addReferenceCount(unsigned int id, int referenceCount);
 	};
 }

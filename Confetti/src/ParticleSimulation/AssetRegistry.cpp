@@ -2,6 +2,11 @@
 
 namespace cft
 {
+	void AssetRegistry::addImage(unsigned int id, std::unique_ptr<Image> image)
+	{
+		m_images[id] = std::move(image);
+	}
+
 	void AssetRegistry::addForceField(unsigned int id, std::unique_ptr<ForceField> forceField)
 	{
 		m_forceFields[id] = std::move(forceField);
@@ -35,6 +40,11 @@ namespace cft
 	void AssetRegistry::addParticleEmitter(unsigned int id, const ParticleEmitter& particleEmitter)
 	{
 		m_particleEmitters[id] = particleEmitter;
+	}
+
+	void AssetRegistry::removeImage(unsigned int id)
+	{
+		m_images.erase(id);
 	}
 
 	void AssetRegistry::removeForceField(unsigned int id)
@@ -72,6 +82,11 @@ namespace cft
 		m_particleEmitters.erase(id);
 	}
 
+	const Image& AssetRegistry::getImage(unsigned int id) const
+	{
+		return *m_images.at(id);
+	}
+
 	const ForceField& AssetRegistry::getForceField(unsigned int id) const
 	{
 		return *m_forceFields.at(id);
@@ -107,6 +122,11 @@ namespace cft
 		return m_particleEmitters.at(id);
 	}
 
+	Image& AssetRegistry::getImage(unsigned int id)
+	{
+		return *m_images.at(id);
+	}
+
 	ForceField& AssetRegistry::getForceField(unsigned int id)
 	{
 		return *m_forceFields.at(id);
@@ -140,5 +160,45 @@ namespace cft
 	ParticleEmitter& AssetRegistry::getParticleEmitter(unsigned int id)
 	{
 		return m_particleEmitters.at(id);
+	}
+
+	const std::unordered_map<unsigned int, std::unique_ptr<Image>>& AssetRegistry::getImages() const
+	{
+		return m_images;
+	}
+
+	const std::unordered_map<unsigned int, std::unique_ptr<ForceField>>& AssetRegistry::getForceFields() const
+	{
+		return m_forceFields;
+	}
+
+	const std::unordered_map<unsigned int, std::unique_ptr<MotionBehavior>>& AssetRegistry::getMotionBehaviors() const
+	{
+		return m_motionBehaviors;
+	}
+
+	const std::unordered_map<unsigned int, std::unique_ptr<ParticleBehavior>>& AssetRegistry::getParticleBehaviors() const
+	{
+		return m_particleBehaviors;
+	}
+
+	const std::unordered_map<unsigned int, std::unique_ptr<ParticleSpawner>>& AssetRegistry::getParticleSpawners() const
+	{
+		return m_particleSpawners;
+	}
+
+	const std::unordered_map<unsigned int, std::unique_ptr<SpawnPolicy>>& AssetRegistry::getSpawnPolicies() const
+	{
+		return m_spawnPolicies;
+	}
+
+	const std::unordered_map<unsigned int, ParticleEffect>& AssetRegistry::getParticleEffects() const
+	{
+		return m_particleEffects;
+	}
+
+	const std::unordered_map<unsigned int, ParticleEmitter>& AssetRegistry::getParticleEmitters() const
+	{
+		return m_particleEmitters;
 	}
 }

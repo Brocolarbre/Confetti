@@ -76,10 +76,12 @@ namespace cft
 		m_height = height;
 
 		glBindRenderbuffer(GL_RENDERBUFFER, m_id);
+
 		if (m_samples > 1)
 			glRenderbufferStorageMultisample(GL_RENDERBUFFER, m_samples, m_internalFormat, m_width, m_height);
 		else
 			glRenderbufferStorage(GL_RENDERBUFFER, m_internalFormat, m_width, m_height);
+
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 

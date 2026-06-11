@@ -91,10 +91,12 @@ namespace cft
 		m_height = height;
 
 		glBindTexture(m_target, m_id);
+
 		if (m_samples > 1)
 			glTexImage2DMultisample(m_target, m_samples, m_internalFormat, m_width, m_height, GL_TRUE);
 		else
 			glTexImage2D(m_target, 0, m_internalFormat, m_width, m_height, 0, m_format, m_type, nullptr);
+
 		glBindTexture(m_target, 0);
 	}
 
@@ -116,12 +118,12 @@ namespace cft
 		}
 		else
 		{
-			glTexImage2D(m_target, 0, m_internalFormat, m_width, m_height, 0, m_format, m_type, data);
-
 			glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, filtering);
 			glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, filtering);
 			glTexParameteri(m_target, GL_TEXTURE_WRAP_S, wrapping);
 			glTexParameteri(m_target, GL_TEXTURE_WRAP_T, wrapping);
+
+			glTexImage2D(m_target, 0, m_internalFormat, m_width, m_height, 0, m_format, m_type, data);
 		}
 
 		if (mipmaps)

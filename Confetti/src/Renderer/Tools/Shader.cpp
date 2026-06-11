@@ -1,5 +1,4 @@
 #include "Confetti/Renderer/Tools/Shader.hpp"
-#include "Confetti/Renderer/ShaderSource/ParticleShaderSource.hpp"
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -84,12 +83,33 @@ namespace cft
 		m_id(0),
 		m_uniformLocations()
 	{
-		loadFromMemory(std::string(PARTICLE_VERTEX_SHADER_SOURCE), std::string(PARTICLE_FRAGMENT_SHADER_SOURCE));
+		
+	}
+
+	Shader::Shader(Shader&& shader) noexcept :
+		m_id(shader.m_id),
+		m_uniformLocations(std::move(shader.m_uniformLocations))
+	{
+		shader.m_id = 0;
 	}
 
 	Shader::~Shader()
 	{
-		glDeleteProgram(m_id);
+		if (m_id != 0)
+			glDeleteProgram(m_id);
+	}
+
+	Shader& Shader::operator=(Shader&& shader) noexcept
+	{
+		if (m_id != 0)
+			glDeleteProgram(m_id);
+
+		m_id = shader.m_id;
+		m_uniformLocations = std::move(shader.m_uniformLocations);
+
+		shader.m_id = 0;
+
+		return *this;
 	}
 
 	void Shader::loadFromFile(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
@@ -171,6 +191,11 @@ namespace cft
 	void Shader::setUniform(const std::string& name, const glm::vec4& value) const
 	{
 		glUniform4f(m_uniformLocations.at(name), value.x, value.y, value.z, value.w);
+	}
+
+	void Shader::setUniform(const std::string& name, const glm::mat2& value) const
+	{
+		glUniformMatrix2fv(m_uniformLocations.at(name), 1, GL_FALSE, glm::value_ptr(value));
 	}
 
 	void Shader::setUniform(const std::string& name, const glm::mat3& value) const

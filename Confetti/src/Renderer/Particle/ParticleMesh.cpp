@@ -9,10 +9,10 @@ namespace cft
 		m_vbo(0)
 	{
 		float vertexData[] = {
-			-0.5f, -0.5f,
-			0.5f, -0.5f,
-			-0.5f, 0.5f,
-			0.5f, 0.5f
+			-0.5f, -0.5f, 0.0f, 0.0f,
+			0.5f, -0.5f, 1.0f, 0.0f,
+			-0.5f, 0.5f, 0.0f, 1.0f,
+			0.5f, 0.5f, 1.0f, 1.0f
 		};
 
 		glGenVertexArrays(1, &m_vao);
@@ -21,10 +21,13 @@ namespace cft
 		glBindVertexArray(m_vao);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-		glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), vertexData, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, 16 * sizeof(float), vertexData, GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), static_cast<const void*>(0));
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), reinterpret_cast<const void*>(0));
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), reinterpret_cast<const void*>(2 * sizeof(float)));
 
 		glBindVertexArray(0);
 	}
