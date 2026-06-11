@@ -9,9 +9,10 @@ namespace cft
 		unsigned int m_width;
 		unsigned int m_height;
 		unsigned int m_internalFormat;
+		unsigned int m_samples;
 
 	public:
-		Renderbuffer(unsigned int internalFormat);
+		Renderbuffer(unsigned int internalFormat, unsigned int samples = 1);
 		Renderbuffer(const Renderbuffer& renderbuffer) = delete;
 		Renderbuffer(Renderbuffer&& renderbuffer) noexcept;
 		~Renderbuffer();

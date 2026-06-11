@@ -180,7 +180,7 @@ namespace cft
 					
 					Transform transform{ position[i], velocity[i] };
 					for (const std::unique_ptr<ForceField>& forceField : entry.forceFields)
-						velocity[i] += forceField->apply(elapsedTime, transform) * deltaTime;
+						transform.velocity += forceField->apply(elapsedTime, transform) * deltaTime;
 
 					for (const std::unique_ptr<MotionBehavior>& motionBehavior : entry.motionBehaviors)
 						motionBehavior->update(elapsedTime, deltaTime, transform);

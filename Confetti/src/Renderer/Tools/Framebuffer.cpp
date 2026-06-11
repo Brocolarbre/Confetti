@@ -237,7 +237,7 @@ namespace cft
 
 	void Framebuffer::copy(const Framebuffer& destination, unsigned int mask, std::optional<unsigned int> sourceColorAttachmentIndex, std::optional<unsigned int> destinationColorAttachmentIndex) const
 	{
-		if (sourceColorAttachmentIndex.has_value() && std::holds_alternative<std::monostate>(m_colorAttachments[sourceColorAttachmentIndex.value()]) || destinationColorAttachmentIndex.has_value() && std::holds_alternative<std::monostate>(m_colorAttachments[destinationColorAttachmentIndex.value()]))
+		if (sourceColorAttachmentIndex.has_value() && std::holds_alternative<std::monostate>(m_colorAttachments[sourceColorAttachmentIndex.value()]) || destinationColorAttachmentIndex.has_value() && std::holds_alternative<std::monostate>(destination.m_colorAttachments[destinationColorAttachmentIndex.value()]))
 		{
 			std::cerr << "Framebuffer error : invalid color attachment index for copy" << std::endl;
 			return;

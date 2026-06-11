@@ -19,8 +19,14 @@ private:
 
 	krono::Chronometer m_elapsedTimeChronometer;
 	krono::Chronometer m_deltaTimeChronometer;
+	double m_timeStep;
+	double m_timeAccumulator;
+
+	unsigned int m_width;
+	unsigned int m_height;
 
 	void restartSimulation();
+	void updateSimulation(float elapsedTime, float deltaTime);
 
 public:
 	ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window);

@@ -17,6 +17,7 @@ namespace cft
 		unsigned int m_height;
 
 		Framebuffer m_framebuffer;
+		Framebuffer m_resolvedFramebuffer;
 		Shader m_shader;
 		ParticleMesh m_mesh;
 		SSBO m_ssbo;

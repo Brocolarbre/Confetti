@@ -8,8 +8,8 @@ namespace cft
 		struct Particle
 		{
 			vec4 color;
-			vec3 position;
-			vec2 scale;
+			vec4 position;
+			vec4 scale;
 		};
 
 		layout (std430, binding = 0) buffer ParticleData
@@ -30,8 +30,8 @@ namespace cft
 			vec3 cameraUp = vec3(uView[0][1], uView[1][1], uView[2][1]);
 
 			vec4 color = particleData.particle[gl_InstanceID].color;
-			vec3 position = particleData.particle[gl_InstanceID].position;
-			vec2 scale = particleData.particle[gl_InstanceID].scale;
+			vec3 position = particleData.particle[gl_InstanceID].position.xyz;
+			vec2 scale = particleData.particle[gl_InstanceID].scale.xy;
 
 			vec3 vertexPosition = position + cameraRight * vPosition.x * scale.x + cameraUp * vPosition.y * scale.y;
 

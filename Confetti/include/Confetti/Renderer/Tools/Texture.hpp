@@ -12,9 +12,10 @@ namespace cft
 		unsigned int m_internalFormat;
 		unsigned int m_format;
 		unsigned int m_type;
+		unsigned int m_samples;
 
 	public:
-		Texture(unsigned int target, unsigned int internalFormat, int format, unsigned int type);
+		Texture(unsigned int target, unsigned int internalFormat, int format, unsigned int type, unsigned int samples = 1);
 		Texture(const Texture& texture) = delete;
 		Texture(Texture&& texture) noexcept;
 		~Texture();

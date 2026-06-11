@@ -29,7 +29,7 @@ namespace cft
 		if (m_values.size() == 1)
 			return m_values[0];
 
-		unsigned int i = m_randomNumberGenerator.generateInteger(0, m_values.size() - 2);
+		unsigned int i = m_randomNumberGenerator.generateInteger(0u, static_cast<unsigned int>(m_values.size() - 2));
 		unsigned int j = i + 1;
 
 		float t = m_randomNumberGenerator.generate(0.0f, 1.0f);
