@@ -23,7 +23,12 @@
 #include <Confetti/ParticleSpawner/AttributeGenerator/Generic/SmoothRandomSetAttributeGenerator.hpp>
 #include <Confetti/ParticleSpawner/AttributeGenerator/Velocity/NormalBurstVelocityGenerator.hpp>
 #include <Confetti/ParticleSpawner/AttributeGenerator/Velocity/NormalVelocityGenerator.hpp>
+#include <Confetti/ParticleSpawner/SpawnShape/CircleSpawnShape.hpp>
+#include <Confetti/ParticleSpawner/SpawnShape/ConeSpawnShape.hpp>
+#include <Confetti/ParticleSpawner/SpawnShape/ConeVolumeSpawnShape.hpp>
+#include <Confetti/ParticleSpawner/SpawnShape/DiskSpawnShape.hpp>
 #include <Confetti/ParticleSpawner/SpawnShape/SphereSpawnShape.hpp>
+#include <Confetti/ParticleSpawner/SpawnShape/SphereVolumeSpawnShape.hpp>
 #include <Confetti/SpawnPolicy/ConstantSpawnPolicy.hpp>
 #include <Confetti/SpawnPolicy/FixedSpawnPolicy.hpp>
 
@@ -76,10 +81,10 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_assetRegistry.addMotionBehavior(1, std::make_unique<cft::VibrationMotionBehavior>());
     float strength = 3.0f;
     m_assetRegistry.addParticleSpawner(0, std::make_unique<cft::ParticleSpawner>(
-        std::make_unique<cft::RandomAttributeGenerator<cft::Position>>(glm::vec3(-10.0f), glm::vec3(30.0f) , m_randomNumberGenerator),
-        //std::make_unique<cft::SphereSpawnShape>(1.0f),
-        std::make_unique<cft::RandomAttributeGenerator<cft::Velocity>>(glm::vec3(-0.8f, -0.4f, -0.1f), glm::vec3(0.8f, 0.4f, 0.1f), m_randomNumberGenerator),
-        //std::make_unique<cft::ConstantAttributeGenerator<cft::Velocity>>(glm::vec3(0.0f)),
+        //std::make_unique<cft::RandomAttributeGenerator<cft::Position>>(glm::vec3(-10.0f), glm::vec3(30.0f) , m_randomNumberGenerator),
+        std::make_unique<cft::ConeVolumeSpawnShape>(6.0f, 4.0f, glm::vec3(0.0f, 1.0f, 0.0f)),
+        //std::make_unique<cft::RandomAttributeGenerator<cft::Velocity>>(glm::vec3(-0.8f, -0.4f, -0.1f), glm::vec3(0.8f, 0.4f, 0.1f), m_randomNumberGenerator),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Velocity>>(glm::vec3(0.0f)),
         //std::make_unique<cft::NormalVelocityGenerator>(1.0f),
         //std::make_unique<cft::NormalBurstVelocityGenerator>(1.0f, 10.0f, m_randomNumberGenerator),
         std::make_unique<cft::RandomAttributeGenerator<cft::Scale>>(glm::vec2(0.1f), glm::vec2(0.2f), m_randomNumberGenerator),
@@ -97,7 +102,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_assetRegistry.addSpawnPolicy(0, std::make_unique<cft::ConstantSpawnPolicy>(50, 10));
     m_assetRegistry.addSpawnPolicy(1, std::make_unique<cft::FixedSpawnPolicy>(50, 0, 1));
 
-    m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, { 0 }, { }, { 1, 4 } });
+    m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 1, { }, { }, { 1, 4 } });
     
     m_assetRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 0, cft::TimeRange{ 0.0f, 100.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f) }, { }, { } } } });
 

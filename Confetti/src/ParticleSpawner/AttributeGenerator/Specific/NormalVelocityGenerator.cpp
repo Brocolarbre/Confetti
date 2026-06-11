@@ -1,4 +1,4 @@
-#include "Confetti/ParticleSpawner/AttributeGenerator/Velocity/NormalVelocityGenerator.hpp"
+#include "Confetti/ParticleSpawner/AttributeGenerator/Specific/NormalVelocityGenerator.hpp"
 
 namespace cft
 {
