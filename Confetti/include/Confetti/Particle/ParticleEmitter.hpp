@@ -11,7 +11,7 @@ namespace cft
 		unsigned int pool;
 		unsigned int particleSpawner;
 		unsigned int spawnPolicy;
-		std::optional<unsigned int> image;
+		std::optional<unsigned int> spriteSheet;
 		std::vector<unsigned int> forceFields;
 		std::vector<unsigned int> motionBehaviors;
 		std::vector<unsigned int> particleBehaviors;

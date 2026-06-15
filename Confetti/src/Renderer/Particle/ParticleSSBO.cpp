@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	void SSBO::resize(unsigned int capacity)
+	void ParticleSSBO::resize(unsigned int capacity)
 	{
 		m_capacity = capacity;
 
@@ -12,33 +12,50 @@ namespace cft
 		glBufferData(GL_SHADER_STORAGE_BUFFER, m_capacity * sizeof(ParticleData), nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	SSBO::SSBO() :
+	ParticleSSBO::ParticleSSBO() :
 		m_id(0),
-		m_capacity()
+		m_capacity(0),
+		m_particleCount(0)
 	{
 		glGenBuffers(1, &m_id);
 	}
 
-	SSBO::~SSBO()
+	ParticleSSBO::~ParticleSSBO()
 	{
-		glDeleteBuffers(1, &m_id);
+		if (m_id != 0)
+			glDeleteBuffers(1, &m_id);
 	}
 
-	void SSBO::bind() const
+	unsigned int ParticleSSBO::getParticleCount() const
+	{
+		return m_particleCount;
+	}
+
+	void ParticleSSBO::bind() const
 	{
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_id);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_id);
 	}
 
-	void SSBO::setData(const std::vector<std::reference_wrapper<const ParticlePool>>& particlePools, unsigned int totalParticleCount, const std::unordered_map<unsigned int, unsigned int>& imageTextureIdMapping, const ParticleRegistry& particleRegistry)
+	void ParticleSSBO::setData(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, unsigned int>& imageTextureIdMapping, const std::unordered_map<unsigned int, unsigned int>& spriteSheetSpriteSheetIdMapping, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
 	{
-		if (m_capacity < totalParticleCount)
-			resize(totalParticleCount);
+		std::vector<std::reference_wrapper<const cft::ParticlePool>> pools;
+		pools.reserve(particlePools.size());
 
-		std::vector<ParticleData> particles;
-		particles.reserve(totalParticleCount);
+		for (const auto& [id, pool] : particlePools)
+			pools.push_back(pool);
 
-		for (const auto& particlePool : particlePools)
+		m_particleCount = 0;
+		for (const auto& pool : pools)
+			m_particleCount += pool.get().getCount();
+
+		if (m_capacity < m_particleCount)
+			resize(m_particleCount);
+
+		std::vector<ParticleData> particlesData;
+		particlesData.reserve(m_particleCount);
+
+		for (const auto& particlePool : pools)
 		{
 			const ParticlePool& pool = particlePool.get();
 			unsigned int particleCount = pool.getCount();
@@ -46,21 +63,28 @@ namespace cft
 			const std::vector<glm::vec4>& color = pool.getColor();
 			const std::vector<glm::vec3>& position = pool.getPosition();
 			const std::vector<glm::vec2>& scale = pool.getScale();
+			const std::vector<float>& phase = pool.getPhase();
 			const std::vector<unsigned int>& id = pool.getId();
 
 			for (unsigned int i = 0; i < particleCount; ++i)
 			{
-				std::optional<unsigned int> imageId = particleRegistry.getEntry(id[i]).image;
+				float spriteSheetId = -1.0f;
 				float textureId = -1.0f;
-				if (imageId.has_value())
-					textureId = static_cast<float>(imageTextureIdMapping.at(imageId.value()));
 
-				ParticleData particleData{ color[i], glm::vec4(position[i], 0.0f), glm::vec4(scale[i], textureId, 0.0f) };
-				particles.push_back(particleData);
+				std::optional<unsigned int> spriteSheet = particleRegistry.getEntry(id[i]).spriteSheet;
+				if (spriteSheet.has_value())
+				{
+					spriteSheetId = static_cast<float>(spriteSheetSpriteSheetIdMapping.at(spriteSheet.value()));
+					unsigned int imageId = assetRegistry.getSpriteSheet(spriteSheet.value()).imageId;
+					textureId = static_cast<float>(imageTextureIdMapping.at(imageId));
+				}
+
+				ParticleData particleData{ color[i], glm::vec4(position[i], phase[i]), glm::vec4(scale[i], spriteSheetId, textureId)};
+				particlesData.push_back(particleData);
 			}
 		}
 
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_id);
-		glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, particles.size() * sizeof(ParticleData), particles.data());
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, particlesData.size() * sizeof(ParticleData), particlesData.data());
 	}
 }

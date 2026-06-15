@@ -40,7 +40,7 @@ namespace cft
 
 	Texture& Texture::operator=(Texture&& texture) noexcept
 	{
-		if (this == &texture)
+		if (&texture == this)
 			return *this;
 
 		if (m_id != 0)

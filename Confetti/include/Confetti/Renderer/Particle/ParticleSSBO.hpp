@@ -1,30 +1,34 @@
 #pragma once
 
 #include "Confetti/ParticleSimulation/ParticlePool.hpp"
+#include "Confetti/ParticleSimulation/AssetRegistry.hpp"
 #include "Confetti/ParticleSimulation/ParticleRegistry.hpp"
 
 namespace cft
 {
-	class SSBO
+	class ParticleSSBO
 	{
 	private:
 		unsigned int m_id;
 		unsigned int m_capacity;
+		unsigned int m_particleCount;
 
 		struct ParticleData
 		{
 			glm::vec4 color;
-			glm::vec4 position;
-			glm::vec4 size;
+			glm::vec4 positionPhase;
+			glm::vec4 sizeSpriteSheetIdTextureId;
 		};
 
 		void resize(unsigned int capacity);
 
 	public:
-		SSBO();
-		~SSBO();
+		ParticleSSBO();
+		~ParticleSSBO();
+
+		unsigned int getParticleCount() const;
 
 		void bind() const;
-		void setData(const std::vector<std::reference_wrapper<const ParticlePool>>& particlePools, unsigned int totalParticleCount, const std::unordered_map<unsigned int, unsigned int>& imageTextureIdMapping, const ParticleRegistry& particleRegistry);
+		void setData(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, unsigned int>& imageTextureIdMapping, const std::unordered_map<unsigned int, unsigned int>& spriteSheetSpriteSheetIdMapping, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
 	};
 }

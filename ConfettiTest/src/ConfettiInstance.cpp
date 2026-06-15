@@ -63,12 +63,15 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
 {
     window.addEventHandler(*this);
 
-    std::unique_ptr<cft::Image> bubbleImage = std::make_unique<cft::Image>();
-    bubbleImage->loadFromFile("res/images/bubble_128.png");
+    cft::Image bubbleImage;
+    bubbleImage.loadFromFile("res/images/fire.png");
 
-    m_assetRegistry.addImage(0, std::move(bubbleImage));
+    m_assetRegistry.addImage(0, bubbleImage);
 
-    m_particleRenderer.loadTextures(m_assetRegistry, 128, 128);
+    m_assetRegistry.addSpriteSheet(0, cft::SpriteSheet{ 0, 64, 8, 512, 512, 36.0f });
+
+    m_particleRenderer.loadTextures(m_assetRegistry, 4096, 4096);
+    m_particleRenderer.loadSpriteSheets(m_assetRegistry);
 
     m_assetRegistry.addForceField(0, std::make_unique<cft::DirectionalForceField>(glm::vec3(-1.0f, 0.0f, 0.0f), 2.0f));
     m_assetRegistry.addForceField(1, std::make_unique<cft::AttractionForceField>(cft::SpatialInfluence(glm::vec3(0.0f, 0.0f, 0.0f), 10.0f, cft::Falloff::Constant), 5.0f));
@@ -90,27 +93,28 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_assetRegistry.addParticleSpawner(0, std::make_unique<cft::ParticleSpawner>(
         std::make_unique<cft::RandomAttributeGenerator<cft::Position>>(glm::vec3(-10.0f), glm::vec3(30.0f) , m_randomNumberGenerator),
         //std::make_unique<cft::CylinderVolumeSpawnShape>(6.0f, 2.0f, glm::vec3(0.0f, 1.0f, 0.0f)),
-        std::make_unique<cft::RandomAttributeGenerator<cft::Velocity>>(glm::vec3(-0.8f, -0.4f, -0.1f), glm::vec3(0.8f, 0.4f, 0.1f), m_randomNumberGenerator),
-        //std::make_unique<cft::ConstantAttributeGenerator<cft::Velocity>>(glm::vec3(0.0f)),
+        //std::make_unique<cft::RandomAttributeGenerator<cft::Velocity>>(glm::vec3(-0.8f, -0.4f, -0.1f), glm::vec3(0.8f, 0.4f, 0.1f), m_randomNumberGenerator),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Velocity>>(glm::vec3(0.0f)),
         //std::make_unique<cft::NormalVelocityGenerator>(1.0f),
         //std::make_unique<cft::NormalBurstVelocityGenerator>(1.0f, 10.0f, m_randomNumberGenerator),
         //std::make_unique<cft::RandomAttributeGenerator<cft::Scale>>(glm::vec2(0.1f), glm::vec2(0.2f), m_randomNumberGenerator),
-        std::make_unique<cft::ConstantAttributeGenerator<cft::Scale>>(glm::vec2(0.7f)),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Scale>>(glm::vec2(1.3f)),
         //std::make_unique<cft::RandomSetAttributeGenerator<cft::Color>>(std::vector<glm::vec4>{ strength * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), strength * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), strength * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f) }, m_randomNumberGenerator),
         //std::make_unique<cft::SmoothRandomSetAttributeGenerator<cft::Color>>(std::vector<glm::vec4>{ strength * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), strength * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), strength * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f) }, m_randomNumberGenerator),
         //std::make_unique<cft::RandomSetAttributeGenerator<cft::Color>>(std::vector<glm::vec4>{ strength * glm::vec4(0.635f, 0.376f, 0.941f, 1.0f), strength * glm::vec4(0.751f, 0.488f, 0.9f, 1.0f), strength * glm::vec4(0.798f, 0.696f, 0.963f, 1.0f), strength * glm::vec4(0.722f, 0.816f, 0.922f, 0.1f), strength * glm::vec4(0.725f, 0.98f, 0.973f, 0.1f) }, m_randomNumberGenerator),
-        std::make_unique<cft::ConstantAttributeGenerator<cft::Color>>(glm::vec4(0.8f, 0.8f, 1.0f, 1.0f)),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Color>>( 2.0f * glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)),
         //std::make_unique<cft::RandomAttributeGenerator<cft::Phase>>(0.0f, 5.0f, m_randomNumberGenerator),
         std::make_unique<cft::RandomAttributeGenerator<cft::Phase>>(0.0f, 15.0f, m_randomNumberGenerator),
+        //std::make_unique<cft::ConstantAttributeGenerator<cft::Phase>>(0.0f),
         //std::make_unique<cft::ConstantAttributeGenerator<cft::Lifetime>>(0.0f),
-        std::make_unique<cft::ConstantAttributeGenerator<cft::Lifetime>>(4.0f),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Lifetime>>(14.0f),
         4.0f
     ));
 
-    m_assetRegistry.addSpawnPolicy(0, std::make_unique<cft::ConstantSpawnPolicy>(50, 10));
+    m_assetRegistry.addSpawnPolicy(0, std::make_unique<cft::ConstantSpawnPolicy>(5, 10));
     m_assetRegistry.addSpawnPolicy(1, std::make_unique<cft::FixedSpawnPolicy>(50, 0, 1));
 
-    m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, std::make_optional<unsigned int>(0), { 0 }, { }, { 1, 4 } });
+    m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, std::make_optional<unsigned int>(0), {}, {}, { 5, 2 }});
     
     m_assetRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 0, cft::TimeRange{ 0.0f, 100.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f) }, { }, { } } } });
 
@@ -134,14 +138,14 @@ void ConfettiInstance::onWindowResized(unsigned int width, unsigned int height)
 
 void ConfettiInstance::update()
 {
-    float elapsedTime = static_cast<float>(m_elapsedTimeChronometer.getElapsedTime().seconds);
+    m_elapsedTime = static_cast<float>(m_elapsedTimeChronometer.getElapsedTime().seconds);
     float deltaTime = static_cast<float>(m_deltaTimeChronometer.getElapsedTime().seconds);
     m_deltaTimeChronometer.restart();
 
     m_timeAccumulator += deltaTime;
     while (m_timeAccumulator > m_timeStep)
     {
-        updateSimulation(elapsedTime, static_cast<float>(m_timeStep));
+        updateSimulation(static_cast<float>(m_elapsedTime), static_cast<float>(m_timeStep));
         m_timeAccumulator -= m_timeStep;
     }
 }
@@ -164,6 +168,6 @@ void ConfettiInstance::render()
         projectionMatrix
     };
 
-    m_particleRenderer.render(view, m_particleSimulation.getParticlePools(), m_particleSimulation.getParticleRegistry());
+    m_particleRenderer.render(view, static_cast<float>(m_elapsedTime), m_particleSimulation.getParticlePools(), m_particleSimulation.getParticleRegistry(), m_assetRegistry);
     m_renderContext.render(m_particleRenderer.getOutputTextureId());
 }

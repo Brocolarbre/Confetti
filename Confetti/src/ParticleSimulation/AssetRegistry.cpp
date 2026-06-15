@@ -2,11 +2,6 @@
 
 namespace cft
 {
-	void AssetRegistry::addImage(unsigned int id, std::unique_ptr<Image> image)
-	{
-		m_images[id] = std::move(image);
-	}
-
 	void AssetRegistry::addForceField(unsigned int id, std::unique_ptr<ForceField> forceField)
 	{
 		m_forceFields[id] = std::move(forceField);
@@ -32,6 +27,16 @@ namespace cft
 		m_spawnPolicies[id] = std::move(spawnPolicy);
 	}
 
+	void AssetRegistry::addImage(unsigned int id, const Image& image)
+	{
+		m_images[id] = image;
+	}
+
+	void AssetRegistry::addSpriteSheet(unsigned int id, const SpriteSheet& spriteSheet)
+	{
+		m_spriteSheets[id] = spriteSheet;
+	}
+
 	void AssetRegistry::addParticleEffect(unsigned int id, const ParticleEffect& particleEffect)
 	{
 		m_particleEffects[id] = particleEffect;
@@ -40,11 +45,6 @@ namespace cft
 	void AssetRegistry::addParticleEmitter(unsigned int id, const ParticleEmitter& particleEmitter)
 	{
 		m_particleEmitters[id] = particleEmitter;
-	}
-
-	void AssetRegistry::removeImage(unsigned int id)
-	{
-		m_images.erase(id);
 	}
 
 	void AssetRegistry::removeForceField(unsigned int id)
@@ -72,6 +72,16 @@ namespace cft
 		m_spawnPolicies.erase(id);
 	}
 
+	void AssetRegistry::removeImage(unsigned int id)
+	{
+		m_images.erase(id);
+	}
+
+	void AssetRegistry::removeSpriteSheet(unsigned int id)
+	{
+		m_spriteSheets.erase(id);
+	}
+
 	void AssetRegistry::removeParticleEffect(unsigned int id)
 	{
 		m_particleEffects.erase(id);
@@ -80,11 +90,6 @@ namespace cft
 	void AssetRegistry::removeParticleEmitter(unsigned int id)
 	{
 		m_particleEmitters.erase(id);
-	}
-
-	const Image& AssetRegistry::getImage(unsigned int id) const
-	{
-		return *m_images.at(id);
 	}
 
 	const ForceField& AssetRegistry::getForceField(unsigned int id) const
@@ -112,6 +117,16 @@ namespace cft
 		return *m_spawnPolicies.at(id);
 	}
 
+	const Image& AssetRegistry::getImage(unsigned int id) const
+	{
+		return m_images.at(id);
+	}
+
+	const SpriteSheet& AssetRegistry::getSpriteSheet(unsigned int id) const
+	{
+		return m_spriteSheets.at(id);
+	}
+
 	const ParticleEffect& AssetRegistry::getParticleEffect(unsigned int id) const
 	{
 		return m_particleEffects.at(id);
@@ -120,11 +135,6 @@ namespace cft
 	const ParticleEmitter& AssetRegistry::getParticleEmitter(unsigned int id) const
 	{
 		return m_particleEmitters.at(id);
-	}
-
-	Image& AssetRegistry::getImage(unsigned int id)
-	{
-		return *m_images.at(id);
 	}
 
 	ForceField& AssetRegistry::getForceField(unsigned int id)
@@ -152,6 +162,16 @@ namespace cft
 		return *m_spawnPolicies.at(id);
 	}
 
+	Image& AssetRegistry::getImage(unsigned int id)
+	{
+		return m_images.at(id);
+	}
+
+	SpriteSheet& AssetRegistry::getSpriteSheet(unsigned int id)
+	{
+		return m_spriteSheets.at(id);
+	}
+
 	ParticleEffect& AssetRegistry::getParticleEffect(unsigned int id)
 	{
 		return m_particleEffects.at(id);
@@ -160,11 +180,6 @@ namespace cft
 	ParticleEmitter& AssetRegistry::getParticleEmitter(unsigned int id)
 	{
 		return m_particleEmitters.at(id);
-	}
-
-	const std::unordered_map<unsigned int, std::unique_ptr<Image>>& AssetRegistry::getImages() const
-	{
-		return m_images;
 	}
 
 	const std::unordered_map<unsigned int, std::unique_ptr<ForceField>>& AssetRegistry::getForceFields() const
@@ -190,6 +205,16 @@ namespace cft
 	const std::unordered_map<unsigned int, std::unique_ptr<SpawnPolicy>>& AssetRegistry::getSpawnPolicies() const
 	{
 		return m_spawnPolicies;
+	}
+
+	const std::unordered_map<unsigned int, Image>& AssetRegistry::getImages() const
+	{
+		return m_images;
+	}
+
+	const std::unordered_map<unsigned int, SpriteSheet>& AssetRegistry::getSpriteSheets() const
+	{
+		return m_spriteSheets;
 	}
 
 	const std::unordered_map<unsigned int, ParticleEffect>& AssetRegistry::getParticleEffects() const

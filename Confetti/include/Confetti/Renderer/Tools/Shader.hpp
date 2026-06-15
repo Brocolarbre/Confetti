@@ -15,6 +15,7 @@ namespace cft
 		std::string loadShaderSource(const std::string& path) const;
 		unsigned int createShader(const std::string& source, unsigned int type) const;
 		void bakeUniformLocations();
+		int getUniformLocation(const std::string& name) const;
 
 	public:
 		Shader();

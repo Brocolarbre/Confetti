@@ -27,7 +27,7 @@ namespace cft
 				return;
 			else
 				value.resize(width, height);
-			}, attachment);
+		}, attachment);
 	}
 
 	Framebuffer::Framebuffer(unsigned int width, unsigned int height) :
@@ -62,6 +62,9 @@ namespace cft
 
 	Framebuffer& Framebuffer::operator=(Framebuffer&& framebuffer) noexcept
 	{
+		if (&framebuffer == this)
+			return *this;
+
 		if (m_id != 0)
 			glDeleteFramebuffers(1, &m_id);
 

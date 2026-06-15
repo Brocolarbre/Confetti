@@ -21,6 +21,7 @@ private:
 	krono::Chronometer m_deltaTimeChronometer;
 	double m_timeStep;
 	double m_timeAccumulator;
+	double m_elapsedTime;
 
 	unsigned int m_width;
 	unsigned int m_height;

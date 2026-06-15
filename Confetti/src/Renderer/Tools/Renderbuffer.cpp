@@ -33,7 +33,7 @@ namespace cft
 
 	Renderbuffer& Renderbuffer::operator=(Renderbuffer&& renderbuffer) noexcept
 	{
-		if (this == &renderbuffer)
+		if (&renderbuffer == this)
 			return *this;
 
 		if (m_id != 0)

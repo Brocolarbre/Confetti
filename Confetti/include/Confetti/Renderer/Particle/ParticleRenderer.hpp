@@ -3,6 +3,7 @@
 #include "Confetti/ParticleSimulation/AssetRegistry.hpp"
 #include "Confetti/Renderer/Particle/ParticleMesh.hpp"
 #include "Confetti/Renderer/Particle/ParticleSSBO.hpp"
+#include "Confetti/Renderer/Particle/SpriteSheetSSBO.hpp"
 #include "Confetti/Renderer/Particle/View.hpp"
 #include "Confetti/Renderer/Tools/Framebuffer.hpp"
 #include "Confetti/Renderer/Tools/Shader.hpp"
@@ -18,14 +19,16 @@ namespace cft
 		unsigned int m_width;
 		unsigned int m_height;
 
-		std::unordered_map<unsigned int, unsigned int> m_imageTextureIdMapping;
+		std::unordered_map<unsigned int, unsigned int> m_imageTextureIdMapping; // rename
+		std::unordered_map<unsigned int, unsigned int> m_spriteSheetSpriteSheetIdMapping; // rename
 
 		TextureArray m_textureArray;
 		Framebuffer m_framebuffer;
 		Framebuffer m_resolvedFramebuffer;
 		Shader m_shader;
 		ParticleMesh m_mesh;
-		SSBO m_ssbo;
+		ParticleSSBO m_particleSsbo;
+		SpriteSheetSSBO m_spriteSheetSsbo;
 
 		Bloom m_bloom;
 		ToneMapping m_toneMapping;
@@ -36,7 +39,8 @@ namespace cft
 		unsigned int getOutputTextureId() const;
 
 		void loadTextures(AssetRegistry& assetRegistry, unsigned int width, unsigned int height);
+		void loadSpriteSheets(AssetRegistry& assetRegistry);
 		void resize(unsigned int width, unsigned int height);
-		void render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry);
+		void render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
 	};
 }

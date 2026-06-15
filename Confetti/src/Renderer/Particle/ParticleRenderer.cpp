@@ -10,12 +10,14 @@ namespace cft
 		m_width(width),
 		m_height(height),
 		m_imageTextureIdMapping(),
+		m_spriteSheetSpriteSheetIdMapping(),
 		m_textureArray(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE),
 		m_framebuffer(width, height),
 		m_resolvedFramebuffer(width, height),
 		m_shader(),
 		m_mesh(),
-		m_ssbo(),
+		m_particleSsbo(),
+		m_spriteSheetSsbo(),
 		m_bloom(width, height, 5),
 		m_toneMapping(width, height, 0.25f, 2.2f)
 	{
@@ -50,7 +52,7 @@ namespace cft
 	void ParticleRenderer::loadTextures(AssetRegistry& assetRegistry, unsigned int width, unsigned int height)
 	{
 		m_imageTextureIdMapping.clear();
-		const std::unordered_map<unsigned int, std::unique_ptr<cft::Image>>& images = assetRegistry.getImages();
+		const std::unordered_map<unsigned int, Image>& images = assetRegistry.getImages();
 
 		std::vector<std::vector<std::byte>> imageData;
 		imageData.reserve(images.size());
@@ -58,10 +60,10 @@ namespace cft
 		for (const auto& [id, image] : images)
 		{
 			m_imageTextureIdMapping[id] = static_cast<unsigned int>(imageData.size());
-			imageData.push_back(image->getData());
+			imageData.push_back(image.getData());
 
-			unsigned int imageWidth = image->getWidth();
-			unsigned int imageHeight = image->getHeight();
+			unsigned int imageWidth = image.getWidth();
+			unsigned int imageHeight = image.getHeight();
 			
 			if (imageWidth != width || imageHeight != height)
 				std::cerr << "Particle renderer texture loading error : size mismatch for image at id " << id << " : " << imageWidth << "x" << imageHeight << " instead of " << width << "x" << height << std::endl;
@@ -76,6 +78,25 @@ namespace cft
 		m_textureArray.load(textureData, width, height, GL_NEAREST, GL_CLAMP_TO_EDGE);
 	}
 
+	void ParticleRenderer::loadSpriteSheets(AssetRegistry& assetRegistry)
+	{
+		m_spriteSheetSpriteSheetIdMapping.clear();
+		const std::unordered_map<unsigned int, SpriteSheet>& spriteSheets = assetRegistry.getSpriteSheets();
+
+		unsigned int spriteSheetCounter = 0;
+		std::vector<std::reference_wrapper<const SpriteSheet>> spriteSheetData;
+		spriteSheetData.reserve(spriteSheets.size());
+
+		for (const std::pair<unsigned int, SpriteSheet>& spriteSheet : spriteSheets)
+		{
+			m_spriteSheetSpriteSheetIdMapping[spriteSheet.first] = spriteSheetCounter++;
+			spriteSheetData.push_back(std::ref(spriteSheet.second));
+		}
+
+		m_spriteSheetSsbo.bind();
+		m_spriteSheetSsbo.setData(spriteSheetData);
+	}
+
 	void ParticleRenderer::resize(unsigned int width, unsigned int height)
 	{
 		m_width = width;
@@ -88,7 +109,7 @@ namespace cft
 		m_toneMapping.resize(width, height);
 	}
 
-	void ParticleRenderer::render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry)
+	void ParticleRenderer::render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
 	{		
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
@@ -96,23 +117,14 @@ namespace cft
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		std::vector<std::reference_wrapper<const cft::ParticlePool>> pools;
-		pools.reserve(particlePools.size());
-
-		for (const auto& [id, pool] : particlePools)
-			pools.push_back(pool);
-
-		unsigned int totalParticleCount = 0;
-		for (const auto& pool : pools)
-			totalParticleCount += pool.get().getCount();
-
-		m_ssbo.setData(pools, totalParticleCount, m_imageTextureIdMapping, particleRegistry);
+		m_particleSsbo.setData(particlePools, m_imageTextureIdMapping, m_spriteSheetSpriteSheetIdMapping, particleRegistry, assetRegistry);
 		
 		m_framebuffer.bind();
 		glViewport(0, 0, m_width, m_height);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_ssbo.bind();
+		m_particleSsbo.bind();
+		m_spriteSheetSsbo.bind();
 
 		TextureArray::setActiveSlot(0);
 		m_textureArray.bind();
@@ -120,8 +132,9 @@ namespace cft
 		m_shader.use();
 		m_shader.setUniform("uView", view.viewMatrix);
 		m_shader.setUniform("uProjection", view.projectionMatrix);
+		m_shader.setUniform("uTime", elapsedTime);
 
-		m_mesh.drawInstanced(totalParticleCount);
+		m_mesh.drawInstanced(m_particleSsbo.getParticleCount());
 		
 		m_framebuffer.copy(m_resolvedFramebuffer, GL_COLOR_BUFFER_BIT, 0, 0);
 

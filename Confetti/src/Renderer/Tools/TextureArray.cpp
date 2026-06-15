@@ -12,7 +12,7 @@ namespace cft
 		m_format(format),
 		m_type(type)
 	{
-		glGenTextures(1, &m_id);
+		
 	}
 
 	TextureArray::TextureArray(TextureArray&& textureArray) noexcept :
@@ -34,6 +34,9 @@ namespace cft
 
 	TextureArray& TextureArray::operator=(TextureArray&& textureArray) noexcept
 	{
+		if (&textureArray == this)
+			return *this;
+
 		if (m_id != 0)
 			glDeleteTextures(1, &m_id);
 
@@ -77,8 +80,12 @@ namespace cft
 		m_width = width;
 		m_height = height;
 
+		if (m_id != 0)
+			glDeleteTextures(1, &m_id);
+
+		glGenTextures(1, &m_id);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
-		glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, m_internalFormat, width, height, data.size());
+		glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, m_internalFormat, width, height, static_cast<int>(data.size()));
 
 		for (unsigned int layer = 0; layer < data.size(); ++layer)
 			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layer, width, height, 1, m_format, m_type, data[layer]);
