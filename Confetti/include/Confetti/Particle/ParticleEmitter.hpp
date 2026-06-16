@@ -1,7 +1,8 @@
 #pragma once
 
+#include "RenderDescriptor.hpp"
+
 #include <glm/glm.hpp>
-#include <optional>
 #include <vector>
 
 namespace cft
@@ -11,7 +12,7 @@ namespace cft
 		unsigned int pool;
 		unsigned int particleSpawner;
 		unsigned int spawnPolicy;
-		std::optional<unsigned int> spriteSheet;
+		RenderDescriptor renderDescriptor;
 		std::vector<unsigned int> forceFields;
 		std::vector<unsigned int> motionBehaviors;
 		std::vector<unsigned int> particleBehaviors;

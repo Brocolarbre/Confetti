@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Confetti/Particle/SpriteSheet.hpp"
+#include "Confetti/Particle/RenderDescriptor.hpp"
 #include "Confetti/ForceField/ForceField.hpp"
 #include "Confetti/MotionBehavior/MotionBehavior.hpp"
 #include "Confetti/ParticleBehavior/ParticleBehavior.hpp"
@@ -14,7 +14,7 @@ namespace cft
 	{
 		int count;
 		unsigned int pool;
-		std::optional<unsigned int> spriteSheet;
+		RenderDescriptor renderDescriptor;
 		std::vector<std::unique_ptr<ForceField>> forceFields;
 		std::vector<std::unique_ptr<MotionBehavior>> motionBehaviors;
 		std::vector<std::unique_ptr<ParticleBehavior>> particleBehaviors;
@@ -31,7 +31,7 @@ namespace cft
 
 		void clear();
 		const ParticleRegistryEntry& getEntry(unsigned int id) const;
-		unsigned int createEntry(unsigned int pool, std::optional<unsigned int> spriteSheet, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<ParticleBehavior>>& particleBehaviors);
+		unsigned int createEntry(unsigned int pool, const RenderDescriptor& renderDescriptor, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<ParticleBehavior>>& particleBehaviors);
 		void addReferenceCount(unsigned int id, int referenceCount);
 	};
 }

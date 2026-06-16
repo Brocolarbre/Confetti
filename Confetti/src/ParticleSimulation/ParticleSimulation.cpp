@@ -74,7 +74,7 @@ namespace cft
 					particleEmitterInstance.timeRange = particleEmitterDescriptor.timeRange;
 					particleEmitterInstance.timeRange.spawnTime += elapsedTime;
 					particleEmitterInstance.transform = particleEmitterDescriptor.transform;
-					particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitter.pool, particleEmitter.spriteSheet, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
+					particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitter.pool, particleEmitter.renderDescriptor, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
 					particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitter.particleSpawner).clone();
 					particleEmitterInstance.spawnPolicy = m_assetRegistry.getSpawnPolicy(particleEmitter.spawnPolicy).clone();
 					

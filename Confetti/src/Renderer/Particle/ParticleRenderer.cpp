@@ -116,14 +116,13 @@ namespace cft
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		m_particleSsbo.setData(particlePools, m_imageTextureIdMapping, m_spriteSheetSpriteSheetIdMapping, particleRegistry, assetRegistry);
 		
 		m_framebuffer.bind();
 		glViewport(0, 0, m_width, m_height);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		m_particleSsbo.bind();
+		m_particleSsbo.setData(particlePools, m_imageTextureIdMapping, m_spriteSheetSpriteSheetIdMapping, particleRegistry, assetRegistry);
 		m_spriteSheetSsbo.bind();
 
 		TextureArray::setActiveSlot(0);

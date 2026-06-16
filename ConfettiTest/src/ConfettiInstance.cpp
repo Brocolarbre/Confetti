@@ -116,7 +116,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_assetRegistry.addSpawnPolicy(0, std::make_unique<cft::ConstantSpawnPolicy>(5, 10));
     m_assetRegistry.addSpawnPolicy(1, std::make_unique<cft::FixedSpawnPolicy>(50, 0, 1));
 
-    m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, /*std::nullopt*/0, {}, {}, { }});
+    m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ /*std::nullopt*/0 }}, {}, {}, {}});
     
     m_assetRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 0, cft::TimeRange{ 0.0f, 100.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f) }, { }, { } } } });
 

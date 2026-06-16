@@ -71,7 +71,7 @@ namespace cft
 				float spriteSheetId = -1.0f;
 				float textureId = -1.0f;
 
-				std::optional<unsigned int> spriteSheet = particleRegistry.getEntry(id[i]).spriteSheet;
+				std::optional<unsigned int> spriteSheet = std::get<BillboardRenderDescriptor>(particleRegistry.getEntry(id[i]).renderDescriptor.descriptorData).spriteSheet;
 				if (spriteSheet.has_value())
 				{
 					spriteSheetId = static_cast<float>(spriteSheetSpriteSheetIdMapping.at(spriteSheet.value()));
