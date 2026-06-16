@@ -5,9 +5,11 @@
 namespace cft
 {
 	using Color = glm::vec4;
-	using Lifetime = float;
-	using Phase = float;
 	using Position = glm::vec3;
-	using Scale = glm::vec2;
 	using Velocity = glm::vec3;
+	using Rotation = glm::quat;
+	using AngularVelocity = glm::vec3;
+	using Scale = glm::vec3;
+	using Phase = float;
+	using Lifetime = float;
 }

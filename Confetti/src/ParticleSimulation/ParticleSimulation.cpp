@@ -161,8 +161,10 @@ namespace cft
 			std::vector<glm::vec4>& initialColor = particlePool.getInitialColor();
 			std::vector<glm::vec3>& position = particlePool.getPosition();
 			std::vector<glm::vec3>& velocity = particlePool.getVelocity();
-			std::vector<glm::vec2>& scale = particlePool.getScale();
-			std::vector<glm::vec2>& initialScale = particlePool.getInitialScale();
+			std::vector<glm::quat>& rotation = particlePool.getRotation();
+			std::vector<glm::vec3>& angularVelocity = particlePool.getAngularVelocity();
+			std::vector<glm::vec3>& scale = particlePool.getScale();
+			std::vector<glm::vec3>& initialScale = particlePool.getInitialScale();
 			std::vector<float>& phase = particlePool.getPhase();
 			std::vector<float>& lifetime = particlePool.getLifetime();
 			std::vector<float>& spawnTime = particlePool.getSpawnTime();
@@ -182,7 +184,7 @@ namespace cft
 				{
 					const ParticleRegistryEntry& entry = m_particleRegistry.getEntry(id[i]);
 					
-					Transform transform{ position[i], velocity[i] };
+					Transform transform{ position[i], velocity[i], rotation[i], angularVelocity[i] };
 					for (const std::unique_ptr<ForceField>& forceField : entry.forceFields)
 						transform.velocity += forceField->apply(elapsedTime, transform) * deltaTime;
 
@@ -195,8 +197,9 @@ namespace cft
 					float progress = (elapsedTime - spawnTime[i]) / lifetime[i];
 
 					for (const std::unique_ptr<ParticleBehavior>& particleBehavior : entry.particleBehaviors)
-						particleBehavior->update(elapsedTime, deltaTime, progress, ParticleView{ color[i], initialColor[i], position[i], velocity[i], scale[i], initialScale[i], phase[i], lifetime[i], spawnTime[i], id[i]});
+						particleBehavior->update(elapsedTime, deltaTime, progress, ParticleView{ color[i], initialColor[i], position[i], velocity[i], rotation[i], angularVelocity[i], scale[i], initialScale[i], phase[i], lifetime[i], spawnTime[i], id[i]});
 
+					rotation[i] = glm::normalize(glm::quat(1.0f, 0.5f * angularVelocity[i] * deltaTime) * rotation[i]);
 					position[i] += velocity[i] * deltaTime;
 					++i;
 				}

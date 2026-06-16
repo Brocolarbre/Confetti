@@ -21,6 +21,6 @@ namespace cft
 		float horizontalScale = std::exp(-stretch * m_strength.x);
 		float verticalScale = std::exp(stretch * m_strength.y);
 
-		particle.scale = particle.initialScale * glm::vec2(horizontalScale, verticalScale);
+		particle.scale = particle.initialScale * glm::vec3(horizontalScale, verticalScale, horizontalScale);
 	}
 }

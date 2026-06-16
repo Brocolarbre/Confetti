@@ -8,6 +8,8 @@ namespace cft
 		m_initialColor.resize(capacity);
 		m_position.resize(capacity);
 		m_velocity.resize(capacity);
+		m_rotation.resize(capacity);
+		m_angularVelocity.resize(capacity);
 		m_scale.resize(capacity);
 		m_initialScale.resize(capacity);
 		m_phase.resize(capacity);
@@ -25,6 +27,8 @@ namespace cft
 		m_initialColor(),
 		m_position(),
 		m_velocity(),
+		m_rotation(),
+		m_angularVelocity(),
 		m_scale(),
 		m_initialScale(),
 		m_phase(),
@@ -58,12 +62,22 @@ namespace cft
 		return m_velocity;
 	}
 
-	const std::vector<glm::vec2>& ParticlePool::getScale() const
+	const std::vector<glm::quat>& ParticlePool::getRotation() const
+	{
+		return m_rotation;
+	}
+
+	const std::vector<glm::vec3>& ParticlePool::getAngularVelocity() const
+	{
+		return m_angularVelocity;
+	}
+
+	const std::vector<glm::vec3>& ParticlePool::getScale() const
 	{
 		return m_scale;
 	}
 
-	const std::vector<glm::vec2>& ParticlePool::getInitialScale() const
+	const std::vector<glm::vec3>& ParticlePool::getInitialScale() const
 	{
 		return m_initialScale;
 	}
@@ -108,12 +122,22 @@ namespace cft
 		return m_velocity;
 	}
 
-	std::vector<glm::vec2>& ParticlePool::getScale()
+	std::vector<glm::quat>& ParticlePool::getRotation()
+	{
+		return m_rotation;
+	}
+
+	std::vector<glm::vec3>& ParticlePool::getAngularVelocity()
+	{
+		return m_angularVelocity;
+	}
+
+	std::vector<glm::vec3>& ParticlePool::getScale()
 	{
 		return m_scale;
 	}
 
-	std::vector<glm::vec2>& ParticlePool::getInitialScale()
+	std::vector<glm::vec3>& ParticlePool::getInitialScale()
 	{
 		return m_initialScale;
 	}
@@ -159,6 +183,8 @@ namespace cft
 		m_initialColor[newIndex] = particle.initialColor;
 		m_position[newIndex] = particle.position;
 		m_velocity[newIndex] = particle.velocity;
+		m_rotation[newIndex] = particle.rotation;
+		m_angularVelocity[newIndex] = particle.angularVelocity;
 		m_scale[newIndex] = particle.scale;
 		m_initialScale[newIndex] = particle.initialScale;
 		m_phase[newIndex] = particle.phase;
@@ -177,6 +203,8 @@ namespace cft
 		m_initialColor[index] = m_initialColor[lastIndex];
 		m_position[index] = m_position[lastIndex];
 		m_velocity[index] = m_velocity[lastIndex];
+		m_rotation[index] = m_rotation[lastIndex];
+		m_angularVelocity[index] = m_angularVelocity[lastIndex];
 		m_scale[index] = m_scale[lastIndex];
 		m_initialScale[index] = m_initialScale[lastIndex];
 		m_phase[index] = m_phase[lastIndex];

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace cft
 {
@@ -10,8 +11,10 @@ namespace cft
 		glm::vec4 initialColor;
 		glm::vec3 position;
 		glm::vec3 velocity;
-		glm::vec2 scale;
-		glm::vec2 initialScale;
+		glm::quat rotation;
+		glm::vec3 angularVelocity;
+		glm::vec3 scale;
+		glm::vec3 initialScale;
 		float phase;
 		float lifetime;
 		float spawnTime;
@@ -24,8 +27,10 @@ namespace cft
 		const glm::vec4& initialColor;
 		glm::vec3& position;
 		glm::vec3& velocity;
-		glm::vec2& scale;
-		const glm::vec2& initialScale;
+		glm::quat& rotation;
+		glm::vec3& angularVelocity;
+		glm::vec3& scale;
+		const glm::vec3& initialScale;
 		const float& phase;
 		const float& lifetime;
 		const float& spawnTime;

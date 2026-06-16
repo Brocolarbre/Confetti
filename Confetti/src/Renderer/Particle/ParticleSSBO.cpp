@@ -62,7 +62,7 @@ namespace cft
 
 			const std::vector<glm::vec4>& color = pool.getColor();
 			const std::vector<glm::vec3>& position = pool.getPosition();
-			const std::vector<glm::vec2>& scale = pool.getScale();
+			const std::vector<glm::vec3>& scale = pool.getScale();
 			const std::vector<float>& phase = pool.getPhase();
 			const std::vector<unsigned int>& id = pool.getId();
 
@@ -79,7 +79,7 @@ namespace cft
 					textureId = static_cast<float>(imageTextureIdMapping.at(imageId));
 				}
 
-				ParticleData particleData{ color[i], glm::vec4(position[i], phase[i]), glm::vec4(scale[i], spriteSheetId, textureId)};
+				ParticleData particleData{ color[i], glm::vec4(position[i], phase[i]), glm::vec4(scale[i].x, scale[i].y, spriteSheetId, textureId)};
 				particlesData.push_back(particleData);
 			}
 		}
