@@ -12,6 +12,7 @@ namespace cft
 			vec4 color;
 			vec4 positionPhase;
 			vec4 scaleSpriteSheetIdTextureId;
+			vec4 rotation;
 		};
 
 		struct SpriteSheet
@@ -56,7 +57,12 @@ namespace cft
 			float spriteSheetId = particleData.particle[gl_InstanceID].scaleSpriteSheetIdTextureId.z;
 			float textureId = particleData.particle[gl_InstanceID].scaleSpriteSheetIdTextureId.w;
 
-			vec3 vertexPosition = position + cameraRight * vPosition.x * scale.x + cameraUp * vPosition.y * scale.y;
+			float angle = particleData.particle[gl_InstanceID].rotation.x;
+			float c = cos(angle);
+			float s = sin(angle);
+			vec2 localVertexPosition = vPosition * scale;
+			vec2 rotatedVertexPosition = vec2(c * localVertexPosition.x - s * localVertexPosition.y, s * localVertexPosition.x + c * localVertexPosition.y);
+			vec3 vertexPosition = position + cameraRight * rotatedVertexPosition.x + cameraUp * rotatedVertexPosition.y;
 
 			gl_Position = uProjection * uView * vec4(vertexPosition, 1.0);
 			fColor = color;

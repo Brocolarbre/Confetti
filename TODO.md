@@ -12,6 +12,7 @@ Features :
 - Particle rotation
 - Spline motion behavior
 - Lens flare
+- Particle sorting for blending
 
 Application :
 - Save system (JSON)

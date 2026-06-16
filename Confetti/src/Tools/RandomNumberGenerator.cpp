@@ -46,4 +46,9 @@ namespace cft
 	{
 		return glm::vec4(generate(min.x, max.x), generate(min.y, max.y), generate(min.z, max.z), generate(min.w, max.w));
 	}
+
+	glm::quat RandomNumberGenerator::generate(const glm::quat& min, const glm::quat& max)
+	{
+		return glm::normalize(glm::slerp(min, max, generate(0.0f, 1.0f)));
+	}
 }

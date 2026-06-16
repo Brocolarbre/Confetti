@@ -18,6 +18,7 @@ namespace cft
 			glm::vec4 color;
 			glm::vec4 positionPhase;
 			glm::vec4 sizeSpriteSheetIdTextureId;
+			glm::vec4 rotation;
 		};
 
 		void resize(unsigned int capacity);
