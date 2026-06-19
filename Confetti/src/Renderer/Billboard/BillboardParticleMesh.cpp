@@ -1,10 +1,10 @@
-#include "Confetti/Renderer/Particle/ParticleMesh.hpp"
+#include "Confetti/Renderer/Billboard/BillboardParticleMesh.hpp"
 
 #include <glad/glad.h>
 
 namespace cft
 {
-	ParticleMesh::ParticleMesh() :
+	BillboardParticleMesh::BillboardParticleMesh() :
 		m_vao(0),
 		m_vbo(0)
 	{
@@ -32,21 +32,21 @@ namespace cft
 		glBindVertexArray(0);
 	}
 
-	ParticleMesh::~ParticleMesh()
+	BillboardParticleMesh::~BillboardParticleMesh()
 	{
 		glDeleteVertexArrays(1, &m_vao);
 		glDeleteBuffers(1, &m_vbo);
 	}
 
-	void ParticleMesh::draw() const
+	void BillboardParticleMesh::draw() const
 	{
 		glBindVertexArray(m_vao);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
-	void ParticleMesh::drawInstanced(unsigned int instanceCount) const
+	void BillboardParticleMesh::drawInstanced(unsigned int count) const
 	{
 		glBindVertexArray(m_vao);
-		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, instanceCount);
+		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, count);
 	}
 }

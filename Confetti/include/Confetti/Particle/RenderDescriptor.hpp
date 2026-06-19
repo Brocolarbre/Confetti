@@ -19,7 +19,7 @@ namespace cft
 	struct MeshRenderDescriptor
 	{
 		unsigned int mesh;
-		unsigned int material;
+		std::optional<unsigned int> colorTexture;
 	};
 
 	struct RenderDescriptor

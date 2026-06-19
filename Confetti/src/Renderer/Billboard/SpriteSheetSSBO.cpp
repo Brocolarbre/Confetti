@@ -1,4 +1,4 @@
-#include "Confetti/Renderer/Particle/SpriteSheetSSBO.hpp"
+#include "Confetti/Renderer/Billboard/SpriteSheetSSBO.hpp"
 
 #include <glad/glad.h>
 

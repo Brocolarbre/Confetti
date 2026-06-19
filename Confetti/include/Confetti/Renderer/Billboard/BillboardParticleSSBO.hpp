@@ -6,13 +6,9 @@
 
 namespace cft
 {
-	class ParticleSSBO
+	class BillboardParticleSSBO
 	{
 	private:
-		unsigned int m_id;
-		unsigned int m_capacity;
-		unsigned int m_particleCount;
-
 		struct ParticleData
 		{
 			glm::vec4 color;
@@ -21,11 +17,16 @@ namespace cft
 			glm::vec4 rotation;
 		};
 
+	private:
+		unsigned int m_id;
+		unsigned int m_capacity;
+		unsigned int m_particleCount;
+
 		void resize(unsigned int capacity);
 
 	public:
-		ParticleSSBO();
-		~ParticleSSBO();
+		BillboardParticleSSBO();
+		~BillboardParticleSSBO();
 
 		unsigned int getParticleCount() const;
 

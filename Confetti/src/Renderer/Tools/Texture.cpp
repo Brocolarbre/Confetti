@@ -100,7 +100,7 @@ namespace cft
 		glBindTexture(m_target, 0);
 	}
 
-	void Texture::load(const void* data, unsigned int width, unsigned int height, unsigned int filtering, unsigned int wrapping, bool mipmaps, unsigned int level)
+	void Texture::load(const void* data, unsigned int width, unsigned int height, unsigned int filtering, unsigned int wrapping, bool mipmaps)
 	{
 		if (m_samples > 1 && data != nullptr)
 		{

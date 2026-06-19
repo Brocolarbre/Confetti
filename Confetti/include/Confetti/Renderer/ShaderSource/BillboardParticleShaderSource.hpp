@@ -2,10 +2,8 @@
 
 namespace cft
 {
-	constexpr const char* PARTICLE_VERTEX_SHADER_SOURCE = R"(
+	constexpr const char* BILLBOARD_PARTICLE_VERTEX_SHADER_SOURCE = R"(
 		#version 460 core
-
-		uniform sampler2DArray uTexture;
 
 		struct Particle
 		{
@@ -34,6 +32,7 @@ namespace cft
 			SpriteSheet spriteSheet[];
 		} spriteSheetData;
 
+		uniform sampler2DArray uTexture;
 		uniform mat4 uProjection;
 		uniform mat4 uView;
 		uniform float uTime;
@@ -89,7 +88,7 @@ namespace cft
 		}
 	)";
 
-	constexpr const char* PARTICLE_FRAGMENT_SHADER_SOURCE = R"(
+	constexpr const char* BILLBOARD_PARTICLE_FRAGMENT_SHADER_SOURCE = R"(
 		#version 460 core
 
 		uniform sampler2DArray uTexture;

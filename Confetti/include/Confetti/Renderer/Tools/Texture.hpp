@@ -29,7 +29,7 @@ namespace cft
 		unsigned int getTarget() const;
 
 		void bind() const;
-		void load(const void* data, unsigned int width, unsigned int height, unsigned int filtering, unsigned int wrapping, bool mipmaps, unsigned int level);
+		void load(const void* data, unsigned int width, unsigned int height, unsigned int filtering, unsigned int wrapping, bool mipmaps);
 		void resize(unsigned int width, unsigned int height);
 
 		static void setActiveSlot(unsigned int slot);

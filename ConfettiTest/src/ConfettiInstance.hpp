@@ -3,7 +3,7 @@
 #include "RenderContext.hpp"
 
 #include <Confetti/ParticleSimulation/ParticleSimulation.hpp>
-#include <Confetti/Renderer/Particle/ParticleRenderer.hpp>
+#include <Confetti/Renderer/ParticleRenderer.hpp>
 #include <Krono/Krono.hpp>
 #include <Windove/Window.hpp>
 

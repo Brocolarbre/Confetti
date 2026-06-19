@@ -37,7 +37,7 @@ namespace cft
 			mipSize.y = std::max(1u, mipSize.y / 2);
 
 			Texture mip(GL_TEXTURE_2D, GL_R11F_G11F_B10F, GL_RGB, GL_FLOAT);
-			mip.load(nullptr, mipSize.x, mipSize.y, GL_LINEAR, GL_CLAMP_TO_EDGE, false, 0);
+			mip.load(nullptr, mipSize.x, mipSize.y, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
 
 			m_mips.push_back(std::move(mip));
 		}

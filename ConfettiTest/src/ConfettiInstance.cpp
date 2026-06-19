@@ -70,8 +70,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
 
     //m_assetRegistry.addSpriteSheet(0, cft::SpriteSheet{ 0, 64, 8, 512, 512, 18.0f });
 
-    m_particleRenderer.loadTextures(m_assetRegistry, 4096, 4096);
-    m_particleRenderer.loadSpriteSheets(m_assetRegistry);
+    //m_particleRenderer.loadBillboardTextures(m_assetRegistry, {  }, 4096, 4096);
 
     m_assetRegistry.addForceField(0, std::make_unique<cft::DirectionalForceField>(glm::vec3(-1.0f, 0.0f, 0.0f), 2.0f));
     m_assetRegistry.addForceField(1, std::make_unique<cft::AttractionForceField>(cft::SpatialInfluence(glm::vec3(0.0f, 0.0f, 0.0f), 10.0f, cft::Falloff::Constant), 5.0f));
@@ -150,6 +149,7 @@ void ConfettiInstance::update()
     while (m_timeAccumulator > m_timeStep)
     {
         updateSimulation(static_cast<float>(m_elapsedTime), static_cast<float>(m_timeStep));
+        m_particleRenderer.update(m_particleSimulation.getParticlePools(), m_particleSimulation.getParticleRegistry(), m_assetRegistry);
         m_timeAccumulator -= m_timeStep;
     }
 }

@@ -1,10 +1,10 @@
-#include "Confetti/Renderer/Particle/ParticleSSBO.hpp"
+#include "Confetti/Renderer/Billboard/BillboardParticleSSBO.hpp"
 
 #include <glad/glad.h>
 
 namespace cft
 {
-	void ParticleSSBO::resize(unsigned int capacity)
+	void BillboardParticleSSBO::resize(unsigned int capacity)
 	{
 		m_capacity = capacity;
 
@@ -12,7 +12,7 @@ namespace cft
 		glBufferData(GL_SHADER_STORAGE_BUFFER, m_capacity * sizeof(ParticleData), nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	ParticleSSBO::ParticleSSBO() :
+	BillboardParticleSSBO::BillboardParticleSSBO() :
 		m_id(0),
 		m_capacity(0),
 		m_particleCount(0)
@@ -20,24 +20,24 @@ namespace cft
 		glGenBuffers(1, &m_id);
 	}
 
-	ParticleSSBO::~ParticleSSBO()
+	BillboardParticleSSBO::~BillboardParticleSSBO()
 	{
 		if (m_id != 0)
 			glDeleteBuffers(1, &m_id);
 	}
 
-	unsigned int ParticleSSBO::getParticleCount() const
+	unsigned int BillboardParticleSSBO::getParticleCount() const
 	{
 		return m_particleCount;
 	}
 
-	void ParticleSSBO::bind() const
+	void BillboardParticleSSBO::bind() const
 	{
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_id);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_id);
 	}
 
-	void ParticleSSBO::setData(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, unsigned int>& imageTextureIdMapping, const std::unordered_map<unsigned int, unsigned int>& spriteSheetSpriteSheetIdMapping, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
+	void BillboardParticleSSBO::setData(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, unsigned int>& imageTextureIdMapping, const std::unordered_map<unsigned int, unsigned int>& spriteSheetSpriteSheetIdMapping, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
 	{
 		std::vector<std::reference_wrapper<const cft::ParticlePool>> pools;
 		pools.reserve(particlePools.size());
@@ -46,14 +46,8 @@ namespace cft
 			pools.push_back(pool);
 
 		m_particleCount = 0;
-		for (const auto& pool : pools)
-			m_particleCount += pool.get().getCount();
-
-		if (m_capacity < m_particleCount)
-			resize(m_particleCount);
 
 		std::vector<ParticleData> particlesData;
-		particlesData.reserve(m_particleCount);
 
 		for (const auto& particlePool : pools)
 		{
@@ -66,6 +60,11 @@ namespace cft
 			const std::vector<glm::vec3>& scale = pool.getScale();
 			const std::vector<float>& phase = pool.getPhase();
 			const std::vector<unsigned int>& id = pool.getId();
+
+			if (id.empty() || particleRegistry.getEntry(id.front()).renderDescriptor.renderType != RenderType::Billboard)
+				continue;
+
+			particlesData.reserve(particlesData.size() + id.size());
 
 			for (unsigned int i = 0; i < particleCount; ++i)
 			{
@@ -85,7 +84,12 @@ namespace cft
 				ParticleData particleData{ color[i], glm::vec4(position[i], phase[i]), glm::vec4(scale[i].x, scale[i].y, spriteSheetId, textureId), glm::vec4(angle, 0.0f, 0.0f, 0.0f) };
 				particlesData.push_back(particleData);
 			}
+
+			m_particleCount += pool.getCount();
 		}
+
+		if (m_capacity < m_particleCount)
+			resize(m_particleCount);
 
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_id);
 		glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, particlesData.size() * sizeof(ParticleData), particlesData.data());
