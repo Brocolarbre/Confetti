@@ -39,9 +39,19 @@ namespace cft
 		return m_toneMapping.getOutputTexture();
 	}
 
-	void ParticleRenderer::loadBillboardTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images, unsigned int width, unsigned int height)
+	void ParticleRenderer::loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images, unsigned int width, unsigned int height)
 	{
 		m_billboardParticleRenderer.loadTextures(assetRegistry, images, width, height);
+	}
+
+	void ParticleRenderer::loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images)
+	{
+		m_meshParticleRenderer.loadTextures(assetRegistry, images);
+	}
+
+	void ParticleRenderer::loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& models)
+	{
+		m_meshParticleRenderer.loadMeshes(assetRegistry, models);
 	}
 
 	void ParticleRenderer::resize(unsigned int width, unsigned int height)

@@ -7,7 +7,7 @@ namespace cft
 {
 	class MeshParticleMesh
 	{
-	private:
+	public:
 		struct Vertex
 		{
 			glm::vec3 position;

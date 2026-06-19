@@ -13,13 +13,13 @@ namespace cft
 
 	struct BillboardRenderDescriptor
 	{
-		std::optional<unsigned int> spriteSheet;
+		std::optional<unsigned int> spriteSheetId;
 	};
 
 	struct MeshRenderDescriptor
 	{
-		unsigned int mesh;
-		std::optional<unsigned int> colorTexture;
+		unsigned int modelId;
+		std::optional<unsigned int> imageId;
 	};
 
 	struct RenderDescriptor

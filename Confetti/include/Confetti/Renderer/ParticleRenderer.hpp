@@ -28,7 +28,10 @@ namespace cft
 
 		unsigned int getOutputTextureId() const;
 
-		void loadBillboardTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images, unsigned int width, unsigned int height);
+		void loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images, unsigned int width, unsigned int height);
+		void loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images);
+		void loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& models);
+
 		void resize(unsigned int width, unsigned int height);
 		void update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
 		void render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);

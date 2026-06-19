@@ -66,11 +66,18 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     //cft::Image bubbleImage;
     //bubbleImage.loadFromFile("res/images/fire.png");
 
-    //m_assetRegistry.addImage(0, bubbleImage);
+    //m_assetRegistry.addImage(0, std::move(bubbleImage));
 
     //m_assetRegistry.addSpriteSheet(0, cft::SpriteSheet{ 0, 64, 8, 512, 512, 18.0f });
 
-    //m_particleRenderer.loadBillboardTextures(m_assetRegistry, {  }, 4096, 4096);
+    cft::Model pebbleModel;
+    pebbleModel.loadFromFile("res/models/pebble.obj");
+
+    m_assetRegistry.addModel(0, std::move(pebbleModel));
+
+    m_particleRenderer.loadBillboardRendererTextures(m_assetRegistry, {}, 4096, 4096);
+    m_particleRenderer.loadMeshRendererTextures(m_assetRegistry, {});
+    m_particleRenderer.loadMeshRendererMeshes(m_assetRegistry, { 0 });
 
     m_assetRegistry.addForceField(0, std::make_unique<cft::DirectionalForceField>(glm::vec3(-1.0f, 0.0f, 0.0f), 2.0f));
     m_assetRegistry.addForceField(1, std::make_unique<cft::AttractionForceField>(cft::SpatialInfluence(glm::vec3(0.0f, 0.0f, 0.0f), 10.0f, cft::Falloff::Constant), 5.0f));
@@ -117,7 +124,8 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_assetRegistry.addSpawnPolicy(0, std::make_unique<cft::ConstantSpawnPolicy>(5, 10));
     m_assetRegistry.addSpawnPolicy(1, std::make_unique<cft::FixedSpawnPolicy>(50, 0, 1));
 
-    m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ std::nullopt }}, {}, {}, {}});
+    //m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ std::nullopt }}, {}, {}, {}});
+    m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, cft::RenderDescriptor{ cft::RenderType::Mesh, cft::MeshRenderDescriptor{ 0, std::nullopt }}, {}, {}, {}});
     
     m_assetRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 0, cft::TimeRange{ 0.0f, 100.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f) }, { }, { } } } });
 

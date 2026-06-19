@@ -27,24 +27,29 @@ namespace cft
 		m_spawnPolicies[id] = std::move(spawnPolicy);
 	}
 
-	void AssetRegistry::addImage(unsigned int id, const Image& image)
+	void AssetRegistry::addImage(unsigned int id, Image image)
 	{
-		m_images[id] = image;
+		m_images[id] = std::move(image);
 	}
 
-	void AssetRegistry::addSpriteSheet(unsigned int id, const SpriteSheet& spriteSheet)
+	void AssetRegistry::addModel(unsigned int id, Model model)
 	{
-		m_spriteSheets[id] = spriteSheet;
+		m_models[id] = std::move(model);
 	}
 
-	void AssetRegistry::addParticleEffect(unsigned int id, const ParticleEffect& particleEffect)
+	void AssetRegistry::addSpriteSheet(unsigned int id, SpriteSheet spriteSheet)
 	{
-		m_particleEffects[id] = particleEffect;
+		m_spriteSheets[id] = std::move(spriteSheet);
 	}
 
-	void AssetRegistry::addParticleEmitter(unsigned int id, const ParticleEmitter& particleEmitter)
+	void AssetRegistry::addParticleEffect(unsigned int id, ParticleEffect particleEffect)
 	{
-		m_particleEmitters[id] = particleEmitter;
+		m_particleEffects[id] = std::move(particleEffect);
+	}
+
+	void AssetRegistry::addParticleEmitter(unsigned int id, ParticleEmitter particleEmitter)
+	{
+		m_particleEmitters[id] = std::move(particleEmitter);
 	}
 
 	void AssetRegistry::removeForceField(unsigned int id)
@@ -75,6 +80,11 @@ namespace cft
 	void AssetRegistry::removeImage(unsigned int id)
 	{
 		m_images.erase(id);
+	}
+
+	void AssetRegistry::removeModel(unsigned int id)
+	{
+		m_models.erase(id);
 	}
 
 	void AssetRegistry::removeSpriteSheet(unsigned int id)
@@ -122,6 +132,11 @@ namespace cft
 		return m_images.at(id);
 	}
 
+	const Model& AssetRegistry::getModel(unsigned int id) const
+	{
+		return m_models.at(id);
+	}
+
 	const SpriteSheet& AssetRegistry::getSpriteSheet(unsigned int id) const
 	{
 		return m_spriteSheets.at(id);
@@ -167,6 +182,11 @@ namespace cft
 		return m_images.at(id);
 	}
 
+	Model& AssetRegistry::getModel(unsigned int id)
+	{
+		return m_models.at(id);
+	}
+
 	SpriteSheet& AssetRegistry::getSpriteSheet(unsigned int id)
 	{
 		return m_spriteSheets.at(id);
@@ -210,6 +230,11 @@ namespace cft
 	const std::unordered_map<unsigned int, Image>& AssetRegistry::getImages() const
 	{
 		return m_images;
+	}
+
+	const std::unordered_map<unsigned int, Model>& AssetRegistry::getModels() const
+	{
+		return m_models;
 	}
 
 	const std::unordered_map<unsigned int, SpriteSheet>& AssetRegistry::getSpriteSheets() const

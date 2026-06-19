@@ -34,9 +34,20 @@ namespace cft
 	{
 		m_meshes.clear();
 
-		for (unsigned int model : models)
+		for (unsigned int modelId : models)
 		{
+			const Model& model = assetRegistry.getModel(modelId);
+			MeshParticleMesh mesh;
 
+			const std::vector<Vertex>& vertexData = model.getVertexData();
+			std::vector<MeshParticleMesh::Vertex> particleMeshVertexData;
+			particleMeshVertexData.reserve(vertexData.size());
+
+			for (const Vertex& vertex : vertexData)
+				particleMeshVertexData.push_back(MeshParticleMesh::Vertex{ vertex.position, vertex.color, vertex.textureCoordinates });
+
+			mesh.load(particleMeshVertexData, model.getIndexData());
+			m_meshes.insert({ modelId, std::move(mesh) });
 		}
 	}
 
@@ -63,7 +74,7 @@ namespace cft
 
 				const MeshRenderDescriptor& descriptor = std::get<MeshRenderDescriptor>(entry.renderDescriptor.descriptorData);
 
-				MeshParticleBatchKey key{ descriptor.mesh, descriptor.colorTexture };
+				MeshParticleBatchKey key{ descriptor.modelId, descriptor.imageId };
 
 				glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), position[i]);
 				glm::mat4 rotationMatrix = glm::mat4_cast(rotation[i]);
