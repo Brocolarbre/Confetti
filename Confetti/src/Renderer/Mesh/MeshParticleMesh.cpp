@@ -15,11 +15,53 @@ namespace cft
 		glGenBuffers(1, &m_ebo);
 	}
 
+	MeshParticleMesh::MeshParticleMesh(MeshParticleMesh&& meshParticleMesh) noexcept :
+		m_vao(meshParticleMesh.m_vao),
+		m_vbo(meshParticleMesh.m_vbo),
+		m_ebo(meshParticleMesh.m_ebo),
+		m_indexCount(meshParticleMesh.m_indexCount)
+	{
+		meshParticleMesh.m_vao = 0;
+		meshParticleMesh.m_vbo = 0;
+		meshParticleMesh.m_ebo = 0;
+	}
+
 	MeshParticleMesh::~MeshParticleMesh()
 	{
-		glDeleteVertexArrays(1, &m_vao);
-		glDeleteBuffers(1, &m_vbo);
-		glDeleteBuffers(1, &m_ebo);
+		if (m_vao != 0)
+			glDeleteVertexArrays(1, &m_vao);
+
+		if (m_vbo != 0)
+			glDeleteBuffers(1, &m_vbo);
+
+		if (m_ebo != 0)
+			glDeleteBuffers(1, &m_ebo);
+	}
+
+	MeshParticleMesh& MeshParticleMesh::operator=(MeshParticleMesh&& meshParticleMesh) noexcept
+	{
+		if (&meshParticleMesh == this)
+			return *this;
+
+		if (m_vao != 0)
+			glDeleteVertexArrays(1, &m_vao);
+
+		if (m_vbo != 0)
+			glDeleteBuffers(1, &m_vbo);
+
+		if (m_ebo != 0)
+			glDeleteBuffers(1, &m_ebo);
+
+		m_vao = meshParticleMesh.m_vao;
+		m_vbo = meshParticleMesh.m_vbo;
+		m_ebo = meshParticleMesh.m_ebo;
+		m_indexCount = meshParticleMesh.m_indexCount;
+
+		meshParticleMesh.m_vao = 0;
+		meshParticleMesh.m_vbo = 0;
+		meshParticleMesh.m_ebo = 0;
+
+		return *this;
 	}
 
 	void MeshParticleMesh::load(const std::vector<Vertex>& vertexData, const std::vector<unsigned int>& indexData)

@@ -23,7 +23,12 @@ namespace cft
 
 	public:
 		MeshParticleMesh();
+		MeshParticleMesh(const MeshParticleMesh& meshParticleMesh) = delete;
+		MeshParticleMesh(MeshParticleMesh&& meshParticleMesh) noexcept;
 		~MeshParticleMesh();
+
+		MeshParticleMesh& operator=(const MeshParticleMesh& meshParticleMesh) = delete;
+		MeshParticleMesh& operator=(MeshParticleMesh&& meshParticleMesh) noexcept;
 
 		void load(const std::vector<Vertex>& vertexData, const std::vector<unsigned int>& indexData);
 
