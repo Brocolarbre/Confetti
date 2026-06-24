@@ -36,6 +36,8 @@ namespace cft
 		std::unordered_map<unsigned int, ParticlePool> m_particlePools;
 		ParticleRegistry m_particleRegistry;
 
+		ParticleEmitterInstance createParticleEmitter(const ParticleEmitterDescriptor& descriptor, const Transform& parentTransform, unsigned int recursionDepth, float elapsedTime);
+
 	public:
 		ParticleSimulation(AssetRegistry& assetRegistry, RandomNumberGenerator& randomNumberGenerator);
 
