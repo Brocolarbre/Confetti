@@ -14,7 +14,7 @@ namespace cft
 		m_gamma(gamma)
 	{
 		Texture colorAttachment(GL_TEXTURE_2D, GL_RGB, GL_RGB, GL_UNSIGNED_BYTE);
-		colorAttachment.load(nullptr, width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
+		colorAttachment.load(nullptr, width, height, GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
 
 		m_framebuffer.setColorAttachment(0, std::move(colorAttachment));
 		m_framebuffer.build();

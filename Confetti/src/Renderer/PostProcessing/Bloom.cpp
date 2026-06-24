@@ -88,7 +88,7 @@ namespace cft
 		m_vertexArray(0)
 	{
 		Texture colorAttachment(GL_TEXTURE_2D, GL_RGB16F, GL_RGB, GL_FLOAT);
-		colorAttachment.load(nullptr, width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
+		colorAttachment.load(nullptr, width, height, GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
 
 		m_framebuffer.setColorAttachment(0, std::move(colorAttachment));
 		m_framebuffer.build();

@@ -100,7 +100,7 @@ namespace cft
 		glBindTexture(m_target, 0);
 	}
 
-	void Texture::load(const void* data, unsigned int width, unsigned int height, unsigned int filtering, unsigned int wrapping, bool mipmaps)
+	void Texture::load(const void* data, unsigned int width, unsigned int height, unsigned int minFilter, unsigned int magFilter, unsigned int wrapping, bool mipmaps)
 	{
 		if (m_samples > 1 && data != nullptr)
 		{
@@ -118,13 +118,14 @@ namespace cft
 		}
 		else
 		{
-			glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, filtering);
-			glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, filtering);
+			glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, minFilter);
+			glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, magFilter);
 			glTexParameteri(m_target, GL_TEXTURE_WRAP_S, wrapping);
 			glTexParameteri(m_target, GL_TEXTURE_WRAP_T, wrapping);
 
 			glTexImage2D(m_target, 0, m_internalFormat, m_width, m_height, 0, m_format, m_type, data);
 		}
+
 
 		if (mipmaps)
 			glGenerateMipmap(m_target);

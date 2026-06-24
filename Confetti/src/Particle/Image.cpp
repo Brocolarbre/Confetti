@@ -15,6 +15,11 @@ namespace cft
 		return m_height;
 	}
 
+	unsigned int Image::getChannelCount() const
+	{
+		return m_channelCount;
+	}
+
 	const std::vector<std::byte>& Image::getData() const
 	{
 		return m_data;
@@ -37,15 +42,17 @@ namespace cft
 		m_data = std::vector<std::byte>(reinterpret_cast<std::byte*>(data), reinterpret_cast<std::byte*>(data + width * height * channelCount));
 		m_width = static_cast<unsigned int>(width);
 		m_height = static_cast<unsigned int>(height);
+		m_channelCount = static_cast<unsigned int>(channelCount);
 
 		stbi_image_free(data);
 		stbi_set_flip_vertically_on_load(false);
 	}
 
-	void Image::loadFromMemory(unsigned int width, unsigned int height, std::vector<std::byte> data)
+	void Image::loadFromMemory(unsigned int width, unsigned int height, unsigned int channelCount, std::vector<std::byte> data)
 	{
 		m_width = width;
 		m_height = height;
+		m_channelCount = channelCount;
 
 		m_data = std::move(data);
 	}

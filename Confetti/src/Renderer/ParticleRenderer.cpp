@@ -18,7 +18,7 @@ namespace cft
 		constexpr unsigned int SAMPLES = 4;
 
 		Texture colorAttachment(GL_TEXTURE_2D_MULTISAMPLE, GL_RGBA16F, GL_RGBA, GL_FLOAT, SAMPLES);
-		colorAttachment.load(nullptr, m_width, m_height, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
+		colorAttachment.load(nullptr, m_width, m_height, GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
 
 		Renderbuffer depthAttachment(GL_DEPTH_COMPONENT, SAMPLES);
 		depthAttachment.load(m_width, m_height);
@@ -28,7 +28,7 @@ namespace cft
 		m_framebuffer.build();
 
 		Texture resolvedColorAttachment(GL_TEXTURE_2D, GL_RGBA16F, GL_RGBA, GL_FLOAT);
-		resolvedColorAttachment.load(nullptr, m_width, m_height, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
+		resolvedColorAttachment.load(nullptr, m_width, m_height, GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
 
 		m_resolvedFramebuffer.setColorAttachment(0, std::move(resolvedColorAttachment));
 		m_resolvedFramebuffer.build();
@@ -73,7 +73,7 @@ namespace cft
 	}
 
 	void ParticleRenderer::render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
-	{		
+	{
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);

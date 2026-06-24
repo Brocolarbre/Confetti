@@ -24,8 +24,9 @@ namespace cft
 		for (unsigned int imageId : images)
 		{
 			const Image& image = assetRegistry.getImage(imageId);
-			Texture texture(GL_TEXTURE_2D, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
-			texture.load(image.getData().data(), image.getWidth(), image.getHeight(), GL_LINEAR_MIPMAP_LINEAR, GL_CLAMP_TO_EDGE, true);
+			unsigned int channelCount = image.getChannelCount();
+			Texture texture(GL_TEXTURE_2D, channelCount > 3 ? GL_RGBA8 : GL_RGB8, channelCount > 3 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE);
+			texture.load(image.getData().data(), image.getWidth(), image.getHeight(), GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, true);
 			m_textures.insert({ imageId, std::move(texture) });
 		}
 	}

@@ -61,7 +61,7 @@ namespace cft
 			const std::vector<float>& phase = pool.getPhase();
 			const std::vector<unsigned int>& id = pool.getId();
 
-			if (id.empty() || particleRegistry.getEntry(id.front()).renderDescriptor.renderType != RenderType::Billboard)
+			if (particleCount == 0 || particleRegistry.getEntry(id.front()).renderDescriptor.renderType != RenderType::Billboard)
 				continue;
 
 			particlesData.reserve(particlesData.size() + id.size());
