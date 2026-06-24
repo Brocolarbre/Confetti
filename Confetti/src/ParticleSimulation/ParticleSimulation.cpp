@@ -249,7 +249,7 @@ namespace cft
 
 			for (unsigned int i = 0; i < particlePool.getCount();)
 			{
-				const ParticleRegistryEntry& entry = m_particleRegistry.getEntry(id[i]);
+				ParticleRegistryEntry& entry = m_particleRegistry.getEntry(id[i]);
 
 				float despawnTime = spawnTime[i] + lifetime[i];
 				if (elapsedTime >= despawnTime)
@@ -269,7 +269,24 @@ namespace cft
 					particlePool.remove(i);
 				}
 				else
-				{					
+				{
+					if (entry.spawnTrigger.has_value())
+					{
+						const SpawnTrigger& spawnTriggerValue = entry.spawnTrigger.value();
+						if (entry.recursionDepth < spawnTriggerValue.maximumRecursionDepth && spawnTriggerValue.periodicEmitter.has_value())
+						{
+							entry.periodicTriggerAccumulator += deltaTime;
+							if (entry.periodicTriggerAccumulator >= spawnTriggerValue.periodicEmitter.value().interval)
+							{
+								ParticleEmitterInstance periodicParticleEmitterInstance = createParticleEmitter(spawnTriggerValue.periodicEmitter.value().emitter, Transform{ position[i], velocity[i], rotation[i], angularVelocity[i] }, entry.recursionDepth + 1, elapsedTime);
+								m_particleRegistry.addReferenceCount(periodicParticleEmitterInstance.particleRegistryId, 1);
+								m_particleEmitterInstances.push_back(std::move(periodicParticleEmitterInstance));
+
+								entry.periodicTriggerAccumulator -= spawnTriggerValue.periodicEmitter.value().interval;
+							}
+						}
+					}
+
 					Transform transform{ position[i], velocity[i], rotation[i], angularVelocity[i] };
 					for (const std::unique_ptr<ForceField>& forceField : entry.forceFields)
 						transform.velocity += forceField->apply(elapsedTime, transform) * deltaTime;

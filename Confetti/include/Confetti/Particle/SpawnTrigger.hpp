@@ -6,7 +6,7 @@
 
 namespace cft
 {
-	struct PeriodicalSpawnTrigger
+	struct PeriodicSpawnTrigger
 	{
 		ParticleEmitterDescriptor emitter;
 		float interval;
@@ -17,6 +17,6 @@ namespace cft
 		unsigned int maximumRecursionDepth;
 		std::optional<ParticleEmitterDescriptor> spawnEmitter;
 		std::optional<ParticleEmitterDescriptor> deathEmitter;
-		std::optional<PeriodicalSpawnTrigger> periodicalEmitter;
+		std::optional<PeriodicSpawnTrigger> periodicEmitter;
 	};
 }

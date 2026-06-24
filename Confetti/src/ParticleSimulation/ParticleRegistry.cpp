@@ -20,10 +20,15 @@ namespace cft
 		return m_entries.at(id);
 	}
 
+	ParticleRegistryEntry& ParticleRegistry::getEntry(unsigned int id)
+	{
+		return m_entries.at(id);
+	}
+
 	unsigned int ParticleRegistry::createEntry(unsigned int pool, unsigned int recursionDepth, const std::optional<SpawnTrigger>& spawnTrigger, const RenderDescriptor& renderDescriptor, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<ParticleBehavior>>& particleBehaviors)
 	{
 		unsigned int id = m_nextId++;
-		m_entries.insert({ id, ParticleRegistryEntry{ 0, pool, recursionDepth, spawnTrigger, renderDescriptor, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors) } });
+		m_entries.insert({ id, ParticleRegistryEntry{ 0, pool, recursionDepth, 0.0f, spawnTrigger, renderDescriptor, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors) } });
 
 		return id;
 	}
