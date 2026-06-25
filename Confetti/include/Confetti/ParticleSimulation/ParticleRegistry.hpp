@@ -33,6 +33,8 @@ namespace cft
 	public:
 		ParticleRegistry();
 
+		std::unordered_map<unsigned int, ParticleRegistryEntry>& getEntries();
+
 		void clear();
 		const ParticleRegistryEntry& getEntry(unsigned int id) const;
 		ParticleRegistryEntry& getEntry(unsigned int id);

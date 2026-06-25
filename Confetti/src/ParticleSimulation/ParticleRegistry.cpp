@@ -9,6 +9,11 @@ namespace cft
 
 	}
 
+	std::unordered_map<unsigned int, ParticleRegistryEntry>& ParticleRegistry::getEntries()
+	{
+		return m_entries;
+	}
+
 	void ParticleRegistry::clear()
 	{
 		m_entries.clear();

@@ -2,9 +2,9 @@
 
 namespace cft
 {
-	FlickerParticleBehavior::FlickerParticleBehavior(const glm::vec4& colorA, const glm::vec4& colorB, float speed) :
-		m_colorA(colorA),
-		m_colorB(colorB),
+	FlickerParticleBehavior::FlickerParticleBehavior(float minimumBrightness, float maximumBrightness, float speed) :
+		m_minimumBrightness(minimumBrightness),
+		m_maximumBrightness(maximumBrightness),
 		m_speed(speed)
 	{
 
@@ -18,6 +18,6 @@ namespace cft
 	void FlickerParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
 	{
 		float t = glm::sin(elapsedTime * m_speed + particle.phase) * 0.5f + 0.5f;
-		particle.color = (1.0f - t) * m_colorA + t * m_colorB;
+		particle.color = (1.0f - t) * particle.initialColor * glm::vec4(glm::vec3(m_minimumBrightness), 1.0f) + t * particle.initialColor * glm::vec4(glm::vec3(m_maximumBrightness), 1.0f);
 	}
 }

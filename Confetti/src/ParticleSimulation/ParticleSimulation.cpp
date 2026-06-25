@@ -1,5 +1,7 @@
 #include "Confetti/ParticleSimulation/ParticleSimulation.hpp"
 
+#include <unordered_set>
+
 namespace cft
 {
 	ParticleEmitterInstance ParticleSimulation::createParticleEmitter(const ParticleEmitterDescriptor& descriptor, const Transform& parentTransform, unsigned int recursionDepth, float elapsedTime)
@@ -100,48 +102,6 @@ namespace cft
 
 					particleEffectInstance.emitters[j] = std::move(particleEffectInstance.emitters.back());
 					particleEffectInstance.emitters.pop_back();
-
-
-					/*const ParticleEmitter& particleEmitter = m_assetRegistry.getParticleEmitter(particleEmitterDescriptor.emitter);
-
-					std::vector<std::unique_ptr<ForceField>> forceFields;
-					forceFields.reserve(particleEmitter.forceFields.size());
-					for (unsigned int forceField : particleEmitter.forceFields)
-						forceFields.push_back(m_assetRegistry.getForceField(forceField).clone());
-
-					std::vector<std::unique_ptr<MotionBehavior>> motionBehaviors;
-					motionBehaviors.reserve(particleEmitter.motionBehaviors.size());
-					for (unsigned int motionBehavior : particleEmitter.motionBehaviors)
-						motionBehaviors.push_back(m_assetRegistry.getMotionBehavior(motionBehavior).clone());
-
-					std::vector<std::unique_ptr<ParticleBehavior>> particleBehaviors;
-					particleBehaviors.reserve(particleEmitter.particleBehaviors.size());
-					for (unsigned int particleBehavior : particleEmitter.particleBehaviors)
-						particleBehaviors.push_back(m_assetRegistry.getParticleBehavior(particleBehavior).clone());
-
-					ParticleEmitterInstance particleEmitterInstance;
-
-					particleEmitterInstance.timeRange = particleEmitterDescriptor.timeRange;
-					particleEmitterInstance.timeRange.spawnTime += elapsedTime;
-					particleEmitterInstance.transform = particleEmitterDescriptor.transform;
-					particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitter.pool, 0, particleEmitter.spawnTrigger, particleEmitter.renderDescriptor, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
-					particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitter.particleSpawner).clone();
-					particleEmitterInstance.spawnPolicy = m_assetRegistry.getSpawnPolicy(particleEmitter.spawnPolicy).clone();
-					
-					particleEmitterInstance.inheritedForceFields.reserve(particleEmitterDescriptor.forceFields.size());
-					for (unsigned int forceField : particleEmitterDescriptor.forceFields)
-						particleEmitterInstance.inheritedForceFields.push_back(m_assetRegistry.getForceField(forceField).clone());
-
-					particleEmitterInstance.inheritedMotionBehaviors.reserve(particleEmitterDescriptor.motionBehaviors.size());
-					for (unsigned int motionBehavior : particleEmitterDescriptor.motionBehaviors)
-						particleEmitterInstance.inheritedMotionBehaviors.push_back(m_assetRegistry.getMotionBehavior(motionBehavior).clone());
-
-					m_particlePools[particleEmitter.pool].reserve(static_cast<unsigned int>(particleEmitterInstance.spawnPolicy->getSpawnRate() * particleEmitterInstance.particleSpawner->getMaxiumParticleLifetime()));
-					particleEffectInstance.emitters[j] = std::move(particleEffectInstance.emitters.back());
-					particleEffectInstance.emitters.pop_back();
-
-					m_particleRegistry.addReferenceCount(particleEmitterInstance.particleRegistryId, 1);
-					m_particleEmitterInstances.push_back(std::move(particleEmitterInstance));*/
 				}
 				else
 				{
@@ -229,6 +189,27 @@ namespace cft
 			m_particleEmitterInstances.push_back(std::move(particleEmitterInstance));
 		}
 
+		std::unordered_set<unsigned int> triggeredPeriodicSpawnTriggers;
+
+		for (auto& [id, entry] : m_particleRegistry.getEntries())
+		{
+			if (entry.spawnTrigger.has_value() && entry.spawnTrigger.value().periodicEmitter.has_value())
+			{
+				SpawnTrigger& spawnTrigger = entry.spawnTrigger.value();
+				if (spawnTrigger.periodicEmitter.has_value())
+				{
+					PeriodicSpawnTrigger& periodicSpawnTrigger = spawnTrigger.periodicEmitter.value();
+					entry.periodicTriggerAccumulator += deltaTime;
+
+					if (entry.recursionDepth < spawnTrigger.maximumRecursionDepth && entry.periodicTriggerAccumulator >= periodicSpawnTrigger.interval)
+					{
+						triggeredPeriodicSpawnTriggers.insert(id);
+						entry.periodicTriggerAccumulator -= periodicSpawnTrigger.interval;
+					}
+				}
+			}
+		}
+
 		// Particles update
 		for (auto& [poolId, particlePool] : m_particlePools)
 		{
@@ -270,21 +251,11 @@ namespace cft
 				}
 				else
 				{
-					if (entry.spawnTrigger.has_value())
+					if (triggeredPeriodicSpawnTriggers.find(id[i]) != triggeredPeriodicSpawnTriggers.end())
 					{
-						const SpawnTrigger& spawnTriggerValue = entry.spawnTrigger.value();
-						if (entry.recursionDepth < spawnTriggerValue.maximumRecursionDepth && spawnTriggerValue.periodicEmitter.has_value())
-						{
-							entry.periodicTriggerAccumulator += deltaTime;
-							if (entry.periodicTriggerAccumulator >= spawnTriggerValue.periodicEmitter.value().interval)
-							{
-								ParticleEmitterInstance periodicParticleEmitterInstance = createParticleEmitter(spawnTriggerValue.periodicEmitter.value().emitter, Transform{ position[i], velocity[i], rotation[i], angularVelocity[i] }, entry.recursionDepth + 1, elapsedTime);
-								m_particleRegistry.addReferenceCount(periodicParticleEmitterInstance.particleRegistryId, 1);
-								m_particleEmitterInstances.push_back(std::move(periodicParticleEmitterInstance));
-
-								entry.periodicTriggerAccumulator -= spawnTriggerValue.periodicEmitter.value().interval;
-							}
-						}
+						ParticleEmitterInstance periodicParticleEmitterInstance = createParticleEmitter(entry.spawnTrigger.value().periodicEmitter.value().emitter, Transform{position[i], velocity[i], rotation[i], angularVelocity[i]}, entry.recursionDepth + 1, elapsedTime);
+						m_particleRegistry.addReferenceCount(periodicParticleEmitterInstance.particleRegistryId, 1);
+						m_particleEmitterInstances.push_back(std::move(periodicParticleEmitterInstance));
 					}
 
 					Transform transform{ position[i], velocity[i], rotation[i], angularVelocity[i] };

@@ -23,6 +23,7 @@ Application::Application() :
 	dove::WindowSettings windowSettings;
 	windowSettings.openGLVersionMajor = 4;
 	windowSettings.openGLVersionMinor = 6;
+	windowSettings.samples = 4;
 
 	m_window.open("Confetti", 1280, 720, windowSettings);
 
