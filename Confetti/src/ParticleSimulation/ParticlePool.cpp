@@ -16,6 +16,7 @@ namespace cft
 		m_lifetime.resize(capacity);
 		m_spawnTime.resize(capacity);
 		m_id.resize(capacity);
+		m_particleRegistryId.resize(capacity);
 
 		m_capacity = capacity;
 		m_reservedCapacity = glm::min(m_reservedCapacity, m_capacity);
@@ -35,6 +36,8 @@ namespace cft
 		m_lifetime(),
 		m_spawnTime(),
 		m_id(),
+		m_particleRegistryId(),
+		m_idIndexMapping(),
 		m_capacity(0),
 		m_reservedCapacity(0),
 		m_count(0)
@@ -102,6 +105,11 @@ namespace cft
 		return m_id;
 	}
 
+	const std::vector<unsigned int>& ParticlePool::getParticleRegistryId() const
+	{
+		return m_particleRegistryId;
+	}
+
 	std::vector<glm::vec4>& ParticlePool::getColor()
 	{
 		return m_color;
@@ -162,6 +170,20 @@ namespace cft
 		return m_id;
 	}
 
+	std::vector<unsigned int>& ParticlePool::getParticleRegistryId()
+	{
+		return m_particleRegistryId;
+	}
+
+	std::optional<unsigned int> ParticlePool::getIndex(unsigned int id) const
+	{
+		auto index = m_idIndexMapping.find(id);
+		if (index == m_idIndexMapping.end())
+			return std::nullopt;
+
+		return index->second;
+	}
+
 	unsigned int ParticlePool::getCount() const
 	{
 		return m_count;
@@ -172,6 +194,7 @@ namespace cft
 		if (static_cast<int>(m_capacity) - static_cast<int>(m_count) - static_cast<int>(m_reservedCapacity) < static_cast<int>(capacity))
 			resize(m_capacity + capacity);
 
+		m_idIndexMapping.reserve(capacity);
 		m_reservedCapacity += capacity;
 	}
 
@@ -191,6 +214,9 @@ namespace cft
 		m_lifetime[newIndex] = particle.lifetime;
 		m_spawnTime[newIndex] = particle.spawnTime;
 		m_id[newIndex] = particle.id;
+		m_particleRegistryId[newIndex] = particle.particleRegistryId;
+
+		m_idIndexMapping[newIndex] = particle.id;
 
 		--m_reservedCapacity;
 	}
@@ -211,5 +237,9 @@ namespace cft
 		m_lifetime[index] = m_lifetime[lastIndex];
 		m_spawnTime[index] = m_spawnTime[lastIndex];
 		m_id[index] = m_id[lastIndex];
+		m_particleRegistryId[index] = m_particleRegistryId[lastIndex];
+
+		m_idIndexMapping[m_id[index]] = index;
+		m_idIndexMapping.erase(m_id[lastIndex]);
 	}
 }

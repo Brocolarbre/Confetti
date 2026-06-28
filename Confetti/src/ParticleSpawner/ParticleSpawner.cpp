@@ -2,6 +2,13 @@
 
 namespace cft
 {
+	unsigned int ParticleSpawner::m_nextId = 0;
+
+	unsigned int ParticleSpawner::getNextId()
+	{
+		return m_nextId++;
+	}
+
 	ParticleSpawner::ParticleSpawner(std::unique_ptr<AttributeGenerator<Position>> positionGenerator, std::unique_ptr<AttributeGenerator<Velocity>> velocityGenerator, std::unique_ptr<AttributeGenerator<Rotation>> rotationGenerator, std::unique_ptr<AttributeGenerator<AngularVelocity>> angularVelocityGenerator, std::unique_ptr<AttributeGenerator<Scale>> scaleGenerator, std::unique_ptr<AttributeGenerator<Color>> colorGenerator, std::unique_ptr<AttributeGenerator<Phase>> phaseGenerator, std::unique_ptr<AttributeGenerator<Lifetime>> lifetimeGenerator, float maximumParticleLifetime) :
 		m_spawnShape(),
 		m_colorGenerator(std::move(colorGenerator)),
@@ -69,7 +76,7 @@ namespace cft
 		return m_maximumParticleLifetime;
 	}
 
-	std::vector<Particle> ParticleSpawner::spawn(unsigned int count, float elapsedTime, float deltaTime, unsigned int id)
+	std::vector<Particle> ParticleSpawner::spawn(unsigned int count, float elapsedTime, float deltaTime, unsigned int particleRegistryId)
 	{
 		std::vector<SpawnContext> spawnContext;
 		std::vector<glm::vec4> color;
@@ -106,8 +113,13 @@ namespace cft
 		particles.reserve(count);
 
 		for (unsigned int i = 0; i < count; ++i)
-			particles.push_back(Particle{ color[i], color[i], m_spawnShape ? spawnContext[i].position : position[i], velocity[i], rotation[i], angularVelocity[i], scale[i], scale[i], phase[i], lifetime[i], elapsedTime, id });
+			particles.push_back(Particle{ color[i], color[i], m_spawnShape ? spawnContext[i].position : position[i], velocity[i], rotation[i], angularVelocity[i], scale[i], scale[i], phase[i], lifetime[i], elapsedTime, getNextId(), particleRegistryId});
 
 		return particles;
+	}
+
+	void ParticleSpawner::resetNextId()
+	{
+		m_nextId = 0;
 	}
 }

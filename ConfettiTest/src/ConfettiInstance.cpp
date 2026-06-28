@@ -38,6 +38,8 @@
 
 void ConfettiInstance::restartSimulation()
 {
+    cft::ParticleSpawner::resetNextId();
+
     m_particleSimulation.clear();
     m_particleSimulation.addParticleEffect(0.0f, 0);
 
@@ -175,13 +177,13 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
         4.0f
     ));
 
-    m_assetRegistry.addSpawnPolicy(0, std::make_unique<cft::FixedSpawnPolicy>(3, 0, 1));
+    m_assetRegistry.addSpawnPolicy(0, std::make_unique<cft::FixedSpawnPolicy>(1, 0, 1));
     m_assetRegistry.addSpawnPolicy(1, std::make_unique<cft::FixedSpawnPolicy>(15, 0, 1));
     m_assetRegistry.addSpawnPolicy(2, std::make_unique<cft::FixedSpawnPolicy>(8, 0, 1));
 
-    m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, cft::SpawnTrigger{ 1, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, cft::PeriodicSpawnTrigger{ cft::ParticleEmitterDescriptor{ 1, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, 0.1f } }, cft::RenderDescriptor{cft::RenderType::Mesh, cft::MeshRenderDescriptor{ 0, 1 } }, { 4 }, {}, {} });
-    m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, std::nullopt, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 }}, { 0 }, {}, { 2, 4 } });
-    m_assetRegistry.addParticleEmitter(2, cft::ParticleEmitter{ 2, 2, 2, cft::SpawnTrigger{ 4, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, std::nullopt }, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 } }, { 5 }, {}, { 9 } });
+    m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, std::nullopt, cft::SpawnTrigger{ 1, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, cft::PeriodicSpawnTrigger{ cft::ParticleEmitterDescriptor{ 1, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, 0.1f } }, cft::RenderDescriptor{cft::RenderType::Mesh, cft::MeshRenderDescriptor{ 0, 1 } }, { 4 }, {}, {} });
+    m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, std::nullopt, std::nullopt, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 }}, { 0 }, {}, { 2, 4 } });
+    m_assetRegistry.addParticleEmitter(2, cft::ParticleEmitter{ 2, 2, 2, std::nullopt, cft::SpawnTrigger{ 4, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, std::nullopt }, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 } }, { 5 }, {}, { 9 } });
     
     m_assetRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 0, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}}});
 

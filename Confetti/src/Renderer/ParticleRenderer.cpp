@@ -36,6 +36,7 @@ namespace cft
 
 	unsigned int ParticleRenderer::getOutputTextureId() const
 	{
+		//return std::get<Texture>(m_resolvedFramebuffer.getColorAttachment(0)).getId();
 		return m_toneMapping.getOutputTexture();
 	}
 

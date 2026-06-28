@@ -29,6 +29,7 @@ namespace cft
 		particleEmitterInstance.timeRange.spawnTime += elapsedTime;
 		particleEmitterInstance.transform = Transform{ parentTransform.position + descriptor.transform.position, parentTransform.velocity + descriptor.transform.velocity, parentTransform.rotation + descriptor.transform.rotation, parentTransform.angularVelocity + descriptor.transform.angularVelocity };
 		particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitter.pool, recursionDepth, particleEmitter.spawnTrigger, particleEmitter.renderDescriptor, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
+		particleEmitterInstance.trailRegistryId = particleEmitter.trailConfiguration.has_value() ? std::make_optional<unsigned int>(m_trailRegistry.createEntry(particleEmitter.trailConfiguration.value())) : std::nullopt;
 		particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitter.particleSpawner).clone();
 		particleEmitterInstance.spawnPolicy = m_assetRegistry.getSpawnPolicy(particleEmitter.spawnPolicy).clone();
 
@@ -40,7 +41,9 @@ namespace cft
 		for (unsigned int motionBehavior : descriptor.motionBehaviors)
 			particleEmitterInstance.inheritedMotionBehaviors.push_back(m_assetRegistry.getMotionBehavior(motionBehavior).clone());
 
-		m_particlePools[particleEmitter.pool].reserve(static_cast<unsigned int>(particleEmitterInstance.spawnPolicy->getSpawnRate() * particleEmitterInstance.particleSpawner->getMaxiumParticleLifetime()));
+		unsigned int maximumParticleCount = static_cast<unsigned int>(particleEmitterInstance.spawnPolicy->getSpawnRate() * particleEmitterInstance.particleSpawner->getMaxiumParticleLifetime());
+		m_particlePools[particleEmitter.pool].reserve(maximumParticleCount);
+		m_trailPools[particleEmitter.pool].reserve(maximumParticleCount);
 		
 		return particleEmitterInstance;
 	}
@@ -51,7 +54,9 @@ namespace cft
 		m_particleEffectInstances(),
 		m_particleEmitterInstances(),
 		m_particlePools(),
-		m_particleRegistry()
+		m_trailPools(),
+		m_particleRegistry(),
+		m_trailRegistry()
 	{
 
 	}
@@ -98,6 +103,10 @@ namespace cft
 					ParticleEmitterInstance particleEmitterInstance = createParticleEmitter(particleEmitterDescriptor, Transform{}, 0, elapsedTime);
 
 					m_particleRegistry.addReferenceCount(particleEmitterInstance.particleRegistryId, 1);
+					//
+					if (particleEmitterInstance.trailRegistryId.has_value())
+						m_trailRegistry.addReferenceCount(particleEmitterInstance.trailRegistryId.value(), 1);
+					//
 					m_particleEmitterInstances.push_back(std::move(particleEmitterInstance));
 
 					particleEffectInstance.emitters[j] = std::move(particleEffectInstance.emitters.back());
@@ -131,6 +140,10 @@ namespace cft
 			if (elapsedTime >= despawnTime)
 			{
 				m_particleRegistry.addReferenceCount(particleEmitterInstance.particleRegistryId, -1);
+				//
+				if (particleEmitterInstance.trailRegistryId.has_value())
+					m_trailRegistry.addReferenceCount(particleEmitterInstance.trailRegistryId.value(), -1);
+				//
 				m_particleEmitterInstances[i] = std::move(m_particleEmitterInstances.back());
 				m_particleEmitterInstances.pop_back();
 			}
@@ -147,6 +160,7 @@ namespace cft
 				unsigned int particleSpawnCount = particleEmitterInstance.spawnPolicy->getSpawnCount(elapsedTime, deltaTime);
 				if (particleSpawnCount > 0)
 				{
+					// Create particle id
 					std::vector<Particle> particles = particleEmitterInstance.particleSpawner->spawn(particleSpawnCount, elapsedTime, deltaTime, particleEmitterInstance.particleRegistryId);
 					
 					const ParticleRegistryEntry& particleRegistryEntry = m_particleRegistry.getEntry(particleEmitterInstance.particleRegistryId);
@@ -163,11 +177,19 @@ namespace cft
 							spawnParticleEmitterDescriptor = spawnTriggerValue.spawnEmitter.value();
 					}
 
+					bool spawnTrails = particleEmitterInstance.trailRegistryId.has_value();
+					std::optional<TrailPool*> trailPool;
+					if (spawnTrails)
+						trailPool = &m_trailPools.at(particleRegistryEntry.pool);
+
 					for (Particle& particle : particles)
 					{
 						particle.position += particleEmitterInstance.transform.position;
 						particle.velocity += particleEmitterInstance.transform.velocity;
 						particlePool.insert(particle);
+
+						if (spawnTrails)
+							trailPool.value()->insert(Trail{ particleEmitterInstance.trailRegistryId.value(), particle.id, -1.0f, {} });
 
 						if (spawnSpawnTrigger)
 						{
@@ -213,6 +235,7 @@ namespace cft
 		// Particles update
 		for (auto& [poolId, particlePool] : m_particlePools)
 		{
+			// const
 			std::vector<glm::vec4>& color = particlePool.getColor();
 			std::vector<glm::vec4>& initialColor = particlePool.getInitialColor();
 			std::vector<glm::vec3>& position = particlePool.getPosition();
@@ -225,12 +248,13 @@ namespace cft
 			std::vector<float>& lifetime = particlePool.getLifetime();
 			std::vector<float>& spawnTime = particlePool.getSpawnTime();
 			std::vector<unsigned int>& id = particlePool.getId();
+			std::vector<unsigned int>& particleRegistryId = particlePool.getParticleRegistryId();
 
 			std::unordered_map<unsigned int, unsigned int> removedParticleCount;
 
 			for (unsigned int i = 0; i < particlePool.getCount();)
 			{
-				ParticleRegistryEntry& entry = m_particleRegistry.getEntry(id[i]);
+				ParticleRegistryEntry& entry = m_particleRegistry.getEntry(particleRegistryId[i]);
 
 				float despawnTime = spawnTime[i] + lifetime[i];
 				if (elapsedTime >= despawnTime)
@@ -246,12 +270,12 @@ namespace cft
 						}
 					}
 
-					++removedParticleCount[id[i]];
+					++removedParticleCount[particleRegistryId[i]];
 					particlePool.remove(i);
 				}
 				else
 				{
-					if (triggeredPeriodicSpawnTriggers.find(id[i]) != triggeredPeriodicSpawnTriggers.end())
+					if (triggeredPeriodicSpawnTriggers.find(particleRegistryId[i]) != triggeredPeriodicSpawnTriggers.end())
 					{
 						ParticleEmitterInstance periodicParticleEmitterInstance = createParticleEmitter(entry.spawnTrigger.value().periodicEmitter.value().emitter, Transform{position[i], velocity[i], rotation[i], angularVelocity[i]}, entry.recursionDepth + 1, elapsedTime);
 						m_particleRegistry.addReferenceCount(periodicParticleEmitterInstance.particleRegistryId, 1);
@@ -271,7 +295,7 @@ namespace cft
 					float progress = (elapsedTime - spawnTime[i]) / lifetime[i];
 
 					for (const std::unique_ptr<ParticleBehavior>& particleBehavior : entry.particleBehaviors)
-						particleBehavior->update(elapsedTime, deltaTime, progress, ParticleView{ color[i], initialColor[i], position[i], velocity[i], rotation[i], angularVelocity[i], scale[i], initialScale[i], phase[i], lifetime[i], spawnTime[i], id[i]});
+						particleBehavior->update(elapsedTime, deltaTime, progress, ParticleView{ color[i], initialColor[i], position[i], velocity[i], rotation[i], angularVelocity[i], scale[i], initialScale[i], phase[i], lifetime[i], spawnTime[i], particleRegistryId[i], id[i] });
 
 					rotation[i] = glm::normalize(glm::quat(1.0f, 0.5f * angularVelocity[i] * deltaTime) * rotation[i]);
 					position[i] += velocity[i] * deltaTime;
@@ -279,8 +303,105 @@ namespace cft
 				}
 			}
 
-			for (auto& [id, count] : removedParticleCount)
-				m_particleRegistry.addReferenceCount(id, -static_cast<int>(count));
+			for (auto& [particleRegistry, count] : removedParticleCount)
+				m_particleRegistry.addReferenceCount(particleRegistry, -static_cast<int>(count));
+		}
+
+		// Trails update
+		for (auto& [poolId, trailPool] : m_trailPools)
+		{
+			// const
+			std::vector<unsigned int>& trailRegistryId = trailPool.getTrailRegistryId();
+			std::vector<unsigned int>& particleId = trailPool.getParticleId();
+			std::vector<float>& particleDeathTime = trailPool.getParticleDeathTime();
+			std::vector<std::deque<TrailPoint>>& trailPoints = trailPool.getTrailPoints();
+
+			std::unordered_map<unsigned int, unsigned int> removedTrailCount;
+
+			for (unsigned int i = 0; i < trailPool.getCount();)
+			{
+				TrailRegistryEntry& trailRegistryEntry = m_trailRegistry.getEntry(trailRegistryId[i]);
+
+				if (particleDeathTime[i] < 0.0f)
+				{
+					const ParticlePool& particlePool = m_particlePools.at(poolId);
+
+					std::optional<unsigned int> ownerParticleIndex = particlePool.getIndex(particleId[i]);
+					if (!ownerParticleIndex.has_value())
+					{
+						particleDeathTime[i] = elapsedTime;
+					}
+					else
+					{
+						glm::vec3 particlePosition = particlePool.getPosition()[ownerParticleIndex.value()];
+						if (trailPoints[i].empty() || glm::distance(particlePosition, trailPoints[i].back().position) > trailRegistryEntry.trailConfiguration.minimumSpawnDistance || (trailRegistryEntry.trailConfiguration.maximumSpawnTime.has_value() && elapsedTime - trailPoints[i].back().spawnTime > trailRegistryEntry.trailConfiguration.maximumSpawnTime.value()))
+						{
+							trailPoints[i].push_back(TrailPoint{ glm::vec4(0.0f), particlePosition, 0.0f, elapsedTime });
+
+							if (trailRegistryEntry.trailConfiguration.maximumSegmentCount.value() > trailPoints[i].size())
+							{
+								while (trailPoints[i].size() > trailRegistryEntry.trailConfiguration.maximumSegmentCount.value())
+									trailPoints[i].pop_front();
+							}
+						}
+					}
+				}
+
+				if (particleDeathTime[i] >= 0.0f && elapsedTime >= trailRegistryEntry.trailConfiguration.presistenceLifetime + particleDeathTime[i])
+				{
+					++removedTrailCount[trailRegistryId[i]];
+					trailPool.remove(i);
+				}
+				else
+				{
+					std::deque<TrailPoint>& trail = trailPoints[i];
+					unsigned int trailSize = static_cast<unsigned int>(trail.size());
+
+					for (unsigned int pointIndex = 0; pointIndex < trail.size(); ++pointIndex)
+					{
+						float t = static_cast<float>(pointIndex) / static_cast<float>(trailSize - 1);
+
+						switch (trailRegistryEntry.trailConfiguration.thicknessEvolution)
+						{
+						case TrailThicknessEvolution::Constant: trail[pointIndex].thickness = trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::LinearDecreasing: trail[pointIndex].thickness = (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::QuadraticDecreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::LinearIncreasing: trail[pointIndex].thickness = t * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::QuadraticIncreasing: trail[pointIndex].thickness = t * t * trailRegistryEntry.trailConfiguration.thickness; break;
+						}
+
+						unsigned int gradientSize = static_cast<unsigned int>(trailRegistryEntry.trailConfiguration.colorGradient.size());
+						float integralPart;
+						float colorT = std::modf(t * static_cast<float>(gradientSize - 1), &integralPart);
+						
+						unsigned int colorIndexA = static_cast<unsigned int>(integralPart);
+						unsigned int colorIndexB = glm::min(colorIndexA + 1, gradientSize - 1);
+						trail[pointIndex].color = (1.0f - colorT) * trailRegistryEntry.trailConfiguration.colorGradient[colorIndexA] + colorT * trailRegistryEntry.trailConfiguration.colorGradient[colorIndexB];
+
+						if (trailRegistryEntry.trailConfiguration.lifetimeFade.has_value())
+						{
+							float start = trailRegistryEntry.trailConfiguration.lifetimeFade.value().start;
+							float end = trailRegistryEntry.trailConfiguration.lifetimeFade.value().end;
+	
+							float age = elapsedTime - trail[pointIndex].spawnTime;
+							float trailFadeT = end > start ? (glm::clamp(age, start, end) - start) / (end - start) : 1.0f;
+
+							trail[pointIndex].color.a *= (1.0f - trailFadeT) * 1.0f + trailFadeT * 0.0f;
+						}
+					}
+
+					if (trailRegistryEntry.trailConfiguration.pointLifetime.has_value())
+					{
+						while (!trail.empty() && elapsedTime >= trail.front().spawnTime + trailRegistryEntry.trailConfiguration.pointLifetime.value())
+							trail.pop_front();
+					}
+
+					++i;
+				}
+			}
+
+			for (auto& [trailRegistry, count] : removedTrailCount)
+				m_trailRegistry.addReferenceCount(trailRegistry, -static_cast<int>(count));
 		}
 	}
 }

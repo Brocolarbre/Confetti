@@ -19,6 +19,7 @@ namespace cft
 		float lifetime;
 		float spawnTime;
 		unsigned int id;
+		unsigned int particleRegistryId;
 	};
 
 	struct ParticleView
@@ -35,5 +36,6 @@ namespace cft
 		const float& lifetime;
 		const float& spawnTime;
 		const unsigned int& id;
+		const unsigned int& particleRegistryId;
 	};
 }

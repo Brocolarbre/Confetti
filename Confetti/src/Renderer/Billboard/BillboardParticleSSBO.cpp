@@ -59,7 +59,7 @@ namespace cft
 			const std::vector<glm::quat>& rotation = pool.getRotation();
 			const std::vector<glm::vec3>& scale = pool.getScale();
 			const std::vector<float>& phase = pool.getPhase();
-			const std::vector<unsigned int>& id = pool.getId();
+			const std::vector<unsigned int>& id = pool.getParticleRegistryId();
 
 			if (particleCount == 0 || particleRegistry.getEntry(id.front()).renderDescriptor.renderType != RenderType::Billboard)
 				continue;

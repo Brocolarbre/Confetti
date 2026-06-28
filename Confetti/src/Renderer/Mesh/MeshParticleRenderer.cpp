@@ -63,7 +63,7 @@ namespace cft
 			const std::vector<glm::vec3>& position = pool.getPosition();
 			const std::vector<glm::quat>& rotation = pool.getRotation();
 			const std::vector<glm::vec3>& scale = pool.getScale();
-			const std::vector<unsigned int>& id = pool.getId();
+			const std::vector<unsigned int>& id = pool.getParticleRegistryId();
 			unsigned int count = pool.getCount();
 
 			for (unsigned int i = 0; i < count; ++i)

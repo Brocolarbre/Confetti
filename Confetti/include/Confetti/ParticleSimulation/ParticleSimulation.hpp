@@ -3,6 +3,8 @@
 #include "AssetRegistry.hpp"
 #include "ParticleRegistry.hpp"
 #include "ParticlePool.hpp"
+#include "TrailPool.hpp"
+#include "TrailRegistry.hpp"
 #include "Confetti/Tools/RandomNumberGenerator.hpp"
 
 namespace cft
@@ -18,6 +20,7 @@ namespace cft
 		TimeRange timeRange;
 		Transform transform;
 		unsigned int particleRegistryId;
+		std::optional<unsigned int> trailRegistryId;
 		std::unique_ptr<ParticleSpawner> particleSpawner;
 		std::unique_ptr<SpawnPolicy> spawnPolicy;
 		std::vector<std::unique_ptr<ForceField>> inheritedForceFields;
@@ -34,7 +37,9 @@ namespace cft
 		std::vector<ParticleEmitterInstance> m_particleEmitterInstances;
 
 		std::unordered_map<unsigned int, ParticlePool> m_particlePools;
+		std::unordered_map<unsigned int, TrailPool> m_trailPools;
 		ParticleRegistry m_particleRegistry;
+		TrailRegistry m_trailRegistry;
 
 		ParticleEmitterInstance createParticleEmitter(const ParticleEmitterDescriptor& descriptor, const Transform& parentTransform, unsigned int recursionDepth, float elapsedTime);
 

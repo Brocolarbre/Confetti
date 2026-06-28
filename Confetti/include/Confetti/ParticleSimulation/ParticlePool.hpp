@@ -2,6 +2,7 @@
 
 #include "Confetti/Particle/Particle.hpp"
 
+#include <optional>
 #include <vector>
 
 namespace cft
@@ -21,6 +22,9 @@ namespace cft
 		std::vector<float> m_lifetime;
 		std::vector<float> m_spawnTime;
 		std::vector<unsigned int> m_id;
+		std::vector<unsigned int> m_particleRegistryId;
+
+		std::unordered_map<unsigned int, unsigned int> m_idIndexMapping;
 
 		unsigned int m_capacity;
 		unsigned int m_reservedCapacity;
@@ -43,6 +47,7 @@ namespace cft
 		const std::vector<float>& getLifetime() const;
 		const std::vector<float>& getSpawnTime() const;
 		const std::vector<unsigned int>& getId() const;
+		const std::vector<unsigned int>& getParticleRegistryId() const;
 
 		std::vector<glm::vec4>& getColor();
 		std::vector<glm::vec4>& getInitialColor();
@@ -56,7 +61,9 @@ namespace cft
 		std::vector<float>& getLifetime();
 		std::vector<float>& getSpawnTime();
 		std::vector<unsigned int>& getId();
+		std::vector<unsigned int>& getParticleRegistryId();
 
+		std::optional<unsigned int> getIndex(unsigned int id) const;
 		unsigned int getCount() const;
 
 		void reserve(unsigned int capacity);
