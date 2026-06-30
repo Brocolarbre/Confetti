@@ -2,6 +2,7 @@
 
 #include "Billboard/BillboardParticleRenderer.hpp"
 #include "Mesh/MeshParticleRenderer.hpp"
+#include "Trail/TrailRenderer.hpp"
 #include "Confetti/Renderer/PostProcessing/Bloom.hpp"
 #include "Confetti/Renderer/PostProcessing/ToneMapping.hpp"
 #include "Confetti/Renderer/Tools/Framebuffer.hpp"
@@ -22,6 +23,7 @@ namespace cft
 
 		BillboardParticleRenderer m_billboardParticleRenderer;
 		MeshParticleRenderer m_meshParticleRenderer;
+		TrailRenderer m_trailRenderer;
 
 	public:
 		ParticleRenderer(unsigned int width, unsigned int height);
@@ -33,7 +35,7 @@ namespace cft
 		void loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& models);
 
 		void resize(unsigned int width, unsigned int height);
-		void update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
+		void update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, TrailPool>& trailPools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry, const View& view);
 		void render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
 	};
 }

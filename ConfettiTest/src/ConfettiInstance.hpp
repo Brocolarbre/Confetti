@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Camera.hpp"
 #include "RenderContext.hpp"
 
 #include <Confetti/ParticleSimulation/ParticleSimulation.hpp>
@@ -11,6 +12,7 @@ class ConfettiInstance : public dove::EventHandler
 {
 private:
 	RenderContext m_renderContext;
+	Camera m_camera;
 
 	cft::AssetRegistry m_assetRegistry;
 	cft::RandomNumberGenerator m_randomNumberGenerator;

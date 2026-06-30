@@ -54,6 +54,7 @@ void ConfettiInstance::updateSimulation(float elapsedTime, float deltaTime)
 
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
     m_renderContext(width, height),
+    m_camera(width, height),
     m_particleRenderer(width, height),
     m_assetRegistry(),
     m_randomNumberGenerator(),
@@ -182,7 +183,8 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_assetRegistry.addSpawnPolicy(2, std::make_unique<cft::FixedSpawnPolicy>(8, 0, 1));
 
     m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, std::nullopt, cft::SpawnTrigger{ 1, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, cft::PeriodicSpawnTrigger{ cft::ParticleEmitterDescriptor{ 1, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, 0.1f } }, cft::RenderDescriptor{cft::RenderType::Mesh, cft::MeshRenderDescriptor{ 0, 1 } }, { 4 }, {}, {} });
-    m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, std::nullopt, std::nullopt, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 }}, { 0 }, {}, { 2, 4 } });
+    //m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, std::nullopt, std::nullopt, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 }}, { 0 }, {}, { 2, 4 } });
+    m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, cft::TrailConfiguration{ 1.0f, 0.2f, 0.05f, std::nullopt, 2.5f, std::nullopt, std::nullopt, { glm::vec4(1.0f) }, cft::TrailThicknessEvolution::Constant }, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{1}}, {0}, {}, {2, 4}});
     m_assetRegistry.addParticleEmitter(2, cft::ParticleEmitter{ 2, 2, 2, std::nullopt, cft::SpawnTrigger{ 4, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, std::nullopt }, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 } }, { 5 }, {}, { 9 } });
     
     m_assetRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 0, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}}});
@@ -201,6 +203,7 @@ void ConfettiInstance::onWindowResized(unsigned int width, unsigned int height)
     m_width = width;
     m_height = height;
 
+    m_camera = Camera(width, height);
     m_renderContext.resize(width, height);
     m_particleRenderer.resize(width, height);
 }
@@ -215,29 +218,13 @@ void ConfettiInstance::update()
     while (m_timeAccumulator > m_timeStep)
     {
         updateSimulation(static_cast<float>(m_elapsedTime), static_cast<float>(m_timeStep));
-        m_particleRenderer.update(m_particleSimulation.getParticlePools(), m_particleSimulation.getParticleRegistry(), m_assetRegistry);
+        m_particleRenderer.update(m_particleSimulation.getParticlePools(), m_particleSimulation.getTrailPools(), m_particleSimulation.getParticleRegistry(), m_assetRegistry, m_camera.getView());
         m_timeAccumulator -= m_timeStep;
     }
 }
 
 void ConfettiInstance::render()
 {
-    glm::vec3 position(0.0f, 0.0f, 40.0f);
-    glm::vec3 right(0.0f, 0.0f, 0.0f);
-    glm::vec3 up(0.0f, 0.0f, 0.0f);
-    glm::vec3 forward(0.0f, 0.0f, 0.0f);
-    glm::mat4 viewMatrix(glm::lookAt(position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
-    glm::mat4 projectionMatrix(glm::perspective(glm::radians(45.0f), static_cast<float>(m_width) / static_cast<float>(m_height), 0.01f, 1000.0f));
-
-    cft::View view{
-        position,
-        right,
-        up,
-        forward,
-        viewMatrix,
-        projectionMatrix
-    };
-
-    m_particleRenderer.render(view, static_cast<float>(m_elapsedTime), m_particleSimulation.getParticlePools(), m_particleSimulation.getParticleRegistry(), m_assetRegistry);
+    m_particleRenderer.render(m_camera.getView(), static_cast<float>(m_elapsedTime), m_particleSimulation.getParticlePools(), m_particleSimulation.getParticleRegistry(), m_assetRegistry);
     m_renderContext.render(m_particleRenderer.getOutputTextureId());
 }

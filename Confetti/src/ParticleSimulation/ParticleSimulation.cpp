@@ -66,6 +66,11 @@ namespace cft
 		return m_particlePools;
 	}
 
+	const std::unordered_map<unsigned int, TrailPool>& ParticleSimulation::getTrailPools() const
+	{
+		return m_trailPools;
+	}
+
 	const ParticleRegistry& ParticleSimulation::getParticleRegistry() const
 	{
 		return m_particleRegistry;
@@ -103,10 +108,10 @@ namespace cft
 					ParticleEmitterInstance particleEmitterInstance = createParticleEmitter(particleEmitterDescriptor, Transform{}, 0, elapsedTime);
 
 					m_particleRegistry.addReferenceCount(particleEmitterInstance.particleRegistryId, 1);
-					//
+
 					if (particleEmitterInstance.trailRegistryId.has_value())
 						m_trailRegistry.addReferenceCount(particleEmitterInstance.trailRegistryId.value(), 1);
-					//
+
 					m_particleEmitterInstances.push_back(std::move(particleEmitterInstance));
 
 					particleEffectInstance.emitters[j] = std::move(particleEffectInstance.emitters.back());
@@ -140,10 +145,10 @@ namespace cft
 			if (elapsedTime >= despawnTime)
 			{
 				m_particleRegistry.addReferenceCount(particleEmitterInstance.particleRegistryId, -1);
-				//
+
 				if (particleEmitterInstance.trailRegistryId.has_value())
 					m_trailRegistry.addReferenceCount(particleEmitterInstance.trailRegistryId.value(), -1);
-				//
+
 				m_particleEmitterInstances[i] = std::move(m_particleEmitterInstances.back());
 				m_particleEmitterInstances.pop_back();
 			}
@@ -160,7 +165,6 @@ namespace cft
 				unsigned int particleSpawnCount = particleEmitterInstance.spawnPolicy->getSpawnCount(elapsedTime, deltaTime);
 				if (particleSpawnCount > 0)
 				{
-					// Create particle id
 					std::vector<Particle> particles = particleEmitterInstance.particleSpawner->spawn(particleSpawnCount, elapsedTime, deltaTime, particleEmitterInstance.particleRegistryId);
 					
 					const ParticleRegistryEntry& particleRegistryEntry = m_particleRegistry.getEntry(particleEmitterInstance.particleRegistryId);
@@ -180,7 +184,10 @@ namespace cft
 					bool spawnTrails = particleEmitterInstance.trailRegistryId.has_value();
 					std::optional<TrailPool*> trailPool;
 					if (spawnTrails)
+					{
 						trailPool = &m_trailPools.at(particleRegistryEntry.pool);
+						trailPool.value()->reserve(particleSpawnCount);
+					}						
 
 					for (Particle& particle : particles)
 					{
@@ -199,6 +206,8 @@ namespace cft
 					}
 
 					m_particleRegistry.addReferenceCount(particleEmitterInstance.particleRegistryId, particleSpawnCount);
+					if (spawnTrails)
+						m_trailRegistry.addReferenceCount(particleEmitterInstance.trailRegistryId.value(), particleSpawnCount);
 				}
 
 				++i;
@@ -208,6 +217,9 @@ namespace cft
 		for (ParticleEmitterInstance& particleEmitterInstance : pendingParticleEmitterInstances)
 		{
 			m_particleRegistry.addReferenceCount(particleEmitterInstance.particleRegistryId, 1);
+			if (particleEmitterInstance.trailRegistryId.has_value())
+				m_trailRegistry.addReferenceCount(particleEmitterInstance.trailRegistryId.value(), 1);
+
 			m_particleEmitterInstances.push_back(std::move(particleEmitterInstance));
 		}
 
@@ -235,7 +247,6 @@ namespace cft
 		// Particles update
 		for (auto& [poolId, particlePool] : m_particlePools)
 		{
-			// const
 			std::vector<glm::vec4>& color = particlePool.getColor();
 			std::vector<glm::vec4>& initialColor = particlePool.getInitialColor();
 			std::vector<glm::vec3>& position = particlePool.getPosition();
@@ -266,6 +277,8 @@ namespace cft
 						{
 							ParticleEmitterInstance deathParticleEmitterInstance = createParticleEmitter(spawnTriggerValue.deathEmitter.value(), Transform{ position[i], velocity[i], rotation[i], angularVelocity[i] }, entry.recursionDepth + 1, elapsedTime);
 							m_particleRegistry.addReferenceCount(deathParticleEmitterInstance.particleRegistryId, 1);
+							if (deathParticleEmitterInstance.trailRegistryId)
+								m_trailRegistry.addReferenceCount(deathParticleEmitterInstance.trailRegistryId.value(), 1);
 							m_particleEmitterInstances.push_back(std::move(deathParticleEmitterInstance));
 						}
 					}
@@ -279,6 +292,8 @@ namespace cft
 					{
 						ParticleEmitterInstance periodicParticleEmitterInstance = createParticleEmitter(entry.spawnTrigger.value().periodicEmitter.value().emitter, Transform{position[i], velocity[i], rotation[i], angularVelocity[i]}, entry.recursionDepth + 1, elapsedTime);
 						m_particleRegistry.addReferenceCount(periodicParticleEmitterInstance.particleRegistryId, 1);
+						if (periodicParticleEmitterInstance.trailRegistryId)
+							m_trailRegistry.addReferenceCount(periodicParticleEmitterInstance.trailRegistryId.value(), 1);
 						m_particleEmitterInstances.push_back(std::move(periodicParticleEmitterInstance));
 					}
 
@@ -310,7 +325,6 @@ namespace cft
 		// Trails update
 		for (auto& [poolId, trailPool] : m_trailPools)
 		{
-			// const
 			std::vector<unsigned int>& trailRegistryId = trailPool.getTrailRegistryId();
 			std::vector<unsigned int>& particleId = trailPool.getParticleId();
 			std::vector<float>& particleDeathTime = trailPool.getParticleDeathTime();
@@ -338,7 +352,7 @@ namespace cft
 						{
 							trailPoints[i].push_back(TrailPoint{ glm::vec4(0.0f), particlePosition, 0.0f, elapsedTime });
 
-							if (trailRegistryEntry.trailConfiguration.maximumSegmentCount.value() > trailPoints[i].size())
+							if (trailRegistryEntry.trailConfiguration.maximumSegmentCount.has_value() && trailRegistryEntry.trailConfiguration.maximumSegmentCount.value() > trailPoints[i].size())
 							{
 								while (trailPoints[i].size() > trailRegistryEntry.trailConfiguration.maximumSegmentCount.value())
 									trailPoints[i].pop_front();

@@ -47,6 +47,7 @@ namespace cft
 		ParticleSimulation(AssetRegistry& assetRegistry, RandomNumberGenerator& randomNumberGenerator);
 
 		const std::unordered_map<unsigned int, ParticlePool>& getParticlePools() const;
+		const std::unordered_map<unsigned int, TrailPool>& getTrailPools() const;
 		const ParticleRegistry& getParticleRegistry() const;
 
 		void addParticleEffect(float elapsedTime, unsigned int id);

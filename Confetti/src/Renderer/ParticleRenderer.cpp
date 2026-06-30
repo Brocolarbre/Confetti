@@ -13,7 +13,8 @@ namespace cft
 		m_bloom(width, height, 5),
 		m_toneMapping(width, height, 0.25f, 2.2f),
 		m_billboardParticleRenderer(),
-		m_meshParticleRenderer()
+		m_meshParticleRenderer(),
+		m_trailRenderer()
 	{
 		constexpr unsigned int SAMPLES = 4;
 
@@ -67,10 +68,11 @@ namespace cft
 		m_toneMapping.resize(width, height);
 	}
 
-	void ParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
+	void ParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, TrailPool>& trailPools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry, const View& view)
 	{
 		m_billboardParticleRenderer.update(particlePools, particleRegistry, assetRegistry);
 		m_meshParticleRenderer.update(particlePools, particleRegistry);
+		m_trailRenderer.update(trailPools, view);
 	}
 
 	void ParticleRenderer::render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
@@ -87,6 +89,7 @@ namespace cft
 
 		m_billboardParticleRenderer.render(view, elapsedTime);
 		m_meshParticleRenderer.render(view);
+		m_trailRenderer.render(view);
 		
 		m_framebuffer.copy(m_resolvedFramebuffer, GL_COLOR_BUFFER_BIT, 0, 0);
 
