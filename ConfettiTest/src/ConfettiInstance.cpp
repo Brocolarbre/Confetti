@@ -49,7 +49,8 @@ void ConfettiInstance::restartSimulation()
 
 void ConfettiInstance::updateSimulation(float elapsedTime, float deltaTime)
 {
-    m_particleSimulation.update(elapsedTime, deltaTime);
+    float speedMultiplier = 1.0f;
+    m_particleSimulation.update(elapsedTime * speedMultiplier, deltaTime * speedMultiplier);
 }
 
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window) :
@@ -184,10 +185,25 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
 
     m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, std::nullopt, cft::SpawnTrigger{ 1, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, cft::PeriodicSpawnTrigger{ cft::ParticleEmitterDescriptor{ 1, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, 0.1f } }, cft::RenderDescriptor{cft::RenderType::Mesh, cft::MeshRenderDescriptor{ 0, 1 } }, { 4 }, {}, {} });
     //m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, std::nullopt, std::nullopt, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 }}, { 0 }, {}, { 2, 4 } });
-    m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, cft::TrailConfiguration{ 1.0f, 0.2f, 0.05f, std::nullopt, 2.5f, std::nullopt, std::nullopt, { glm::vec4(1.0f) }, cft::TrailThicknessEvolution::Constant }, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{1}}, {0}, {}, {2, 4}});
+    m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, cft::TrailConfiguration{ 1.0f, 0.2f, 0.05f, std::nullopt, 1.2f, std::nullopt, std::nullopt, {glm::vec4(0.05f, 0.2f, 0.9f, 1.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)}, cft::TrailThicknessEvolution::Constant}, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{1}}, {0}, {}, {2, 4} });
     m_assetRegistry.addParticleEmitter(2, cft::ParticleEmitter{ 2, 2, 2, std::nullopt, cft::SpawnTrigger{ 4, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, std::nullopt }, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 } }, { 5 }, {}, { 9 } });
     
     m_assetRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 0, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}}});
+    
+    /*m_assetRegistry.addSpawnPolicy(3, std::make_unique<cft::FixedSpawnPolicy>(1000, 0, 1));
+    m_assetRegistry.addParticleSpawner(4, std::make_unique<cft::ParticleSpawner>(
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Position>>(glm::vec3(0.0f)),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Velocity>>(glm::vec3(0.0f)),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Rotation>>(glm::vec3(0.0f)),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::AngularVelocity>>(glm::vec3(0.0f)),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Scale>>(glm::vec3(2.0f)),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Color>>(glm::vec4(1.0f)),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Phase>>(0.0f),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Lifetime>>(100.0f),
+        100.0f
+    ));
+    m_assetRegistry.addParticleEmitter(3, cft::ParticleEmitter{ 3, 4, 3, std::nullopt, std::nullopt, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ std::nullopt } }, {}, {}, {} });
+    m_assetRegistry.addParticleEffect(1, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 3, cft::TimeRange{ 0.0f, 100.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}}});*/
 
     restartSimulation();
 }

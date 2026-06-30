@@ -83,7 +83,9 @@ namespace cft
 		if (m_first.empty())
 			return;
 
+		glDisable(GL_CULL_FACE);
 		glBindVertexArray(m_vertexArray);
 		glMultiDrawArrays(GL_TRIANGLE_STRIP, m_first.data(), m_count.data(), static_cast<int>(m_first.size()));
+		glEnable(GL_CULL_FACE);
 	}
 }

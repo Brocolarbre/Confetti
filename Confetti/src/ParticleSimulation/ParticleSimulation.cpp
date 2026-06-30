@@ -91,6 +91,8 @@ namespace cft
 		m_particleEmitterInstances.clear();
 		m_particlePools.clear();
 		m_particleRegistry.clear();
+		m_trailPools.clear();
+		m_trailRegistry.clear();
 	}
 
 	void ParticleSimulation::update(float elapsedTime, float deltaTime)
@@ -352,7 +354,7 @@ namespace cft
 						{
 							trailPoints[i].push_back(TrailPoint{ glm::vec4(0.0f), particlePosition, 0.0f, elapsedTime });
 
-							if (trailRegistryEntry.trailConfiguration.maximumSegmentCount.has_value() && trailRegistryEntry.trailConfiguration.maximumSegmentCount.value() > trailPoints[i].size())
+							if (trailRegistryEntry.trailConfiguration.maximumSegmentCount.has_value() && trailPoints[i].size() > trailRegistryEntry.trailConfiguration.maximumSegmentCount.value())
 							{
 								while (trailPoints[i].size() > trailRegistryEntry.trailConfiguration.maximumSegmentCount.value())
 									trailPoints[i].pop_front();
@@ -373,15 +375,15 @@ namespace cft
 
 					for (unsigned int pointIndex = 0; pointIndex < trail.size(); ++pointIndex)
 					{
-						float t = static_cast<float>(pointIndex) / static_cast<float>(trailSize - 1);
+						float t = trailSize > 1 ? static_cast<float>(pointIndex) / static_cast<float>(trailSize - 1) : 0.0f;
 
 						switch (trailRegistryEntry.trailConfiguration.thicknessEvolution)
 						{
 						case TrailThicknessEvolution::Constant: trail[pointIndex].thickness = trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::LinearDecreasing: trail[pointIndex].thickness = (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::QuadraticDecreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::LinearIncreasing: trail[pointIndex].thickness = t * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::QuadraticIncreasing: trail[pointIndex].thickness = t * t * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::LinearDecreasing: trail[pointIndex].thickness = t * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::QuadraticDecreasing: trail[pointIndex].thickness = t * t * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::LinearIncreasing: trail[pointIndex].thickness = (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::QuadraticIncreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
 						}
 
 						unsigned int gradientSize = static_cast<unsigned int>(trailRegistryEntry.trailConfiguration.colorGradient.size());

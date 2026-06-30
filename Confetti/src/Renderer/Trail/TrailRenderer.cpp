@@ -1,6 +1,23 @@
 #include "Confetti/Renderer/Trail/TrailRenderer.hpp"
 #include "Confetti/Renderer/ShaderSource/TrailShaderSource.hpp"
 
+
+//
+#include <iostream>
+
+namespace
+{
+	glm::vec3 safeNormalize(const glm::vec3& v)
+	{
+		float l2 = glm::dot(v, v);
+
+		if (l2 < 1e-12f)
+			return glm::vec3(0.0f);
+
+		return v / std::sqrt(l2);
+	}
+}
+
 namespace cft
 {
 	TrailRenderer::TrailRenderer() :
@@ -39,9 +56,6 @@ namespace cft
 
 		for (const auto& [id, pool] : trailPools)
 		{
-			//const std::vector<unsigned int> trailRegistryId = pool.getTrailRegistryId();
-			//const std::vector<unsigned int> particleId = pool.getParticleId();
-			//const std::vector<float> particleDeathTime = pool.getParticleDeathTime();
 			const std::vector<std::deque<TrailPoint>>& trailPoints = pool.getTrailPoints();
 			unsigned int poolCount = pool.getCount();
 
@@ -71,43 +85,59 @@ namespace cft
 
 					if (pointIndex == 0)
 					{
-						tangent = glm::normalize(nextPoint.position - currentPoint.position);
+						tangent = safeNormalize(nextPoint.position - currentPoint.position);
 					}
 					else if (pointIndex == trail.size() - 1)
 					{
-						tangent = glm::normalize(currentPoint.position - previousPoint.position);
+						tangent = safeNormalize(currentPoint.position - previousPoint.position);
 					}
 					else
 					{
-						glm::vec3 tangentA = glm::normalize(currentPoint.position - previousPoint.position);
-						glm::vec3 tangentB = glm::normalize(nextPoint.position - currentPoint.position);
+						glm::vec3 tangentA = safeNormalize(currentPoint.position - previousPoint.position);
+						glm::vec3 tangentB = safeNormalize(nextPoint.position - currentPoint.position);
 
 						tangent = tangentA + tangentB;
 
 						if (tangent.x * tangent.x + tangent.y * tangent.y + tangent.z * tangent.z < 1e-6f)
 							tangent = tangentB;
 
-						tangent = glm::normalize(tangent);
+						tangent = safeNormalize(tangent);
 					}
 
-					glm::vec3 normal = glm::normalize(glm::cross(tangent, view.forward));
+					glm::vec3 cameraDirection = safeNormalize(view.position - currentPoint.position);
+					//glm::vec3 normal = safeNormalize(glm::cross(tangent, cameraDirection));
 
-					if (normal.x * normal.x + normal.y * normal.y + normal.z * normal.z < 1e-6f)
+					glm::vec3 normal = glm::cross(tangent, cameraDirection);
+
+					if (glm::dot(normal, normal) < 1e-8f)
 					{
-						normal = glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), tangent);
+						normal = glm::cross(tangent, glm::vec3(0, 1, 0));
 
-						if (normal.x * normal.x + normal.y * normal.y + normal.z * normal.z < 1e-6f)
-							normal = glm::cross(glm::vec3(1.0f, 0.0f, 0.0f), tangent);
+						if (glm::dot(normal, normal) < 1e-8f)
+							normal = glm::cross(tangent, glm::vec3(1, 0, 0));
 					}
 
 					normal = glm::normalize(normal);
+
+
+					//
+					/*glm::vec3 normal = glm::cross(tangent, cameraDirection);
+
+					if (glm::dot(normal, normal) < 1e-8f)
+					{
+						glm::vec3 up = std::abs(tangent.y) < 0.99f ? glm::vec3(0.0f, 1.0f, 0.0f) : glm::vec3(1.0f, 0.0f, 0.0f);
+						normal = glm::cross(tangent, up);
+					}
+
+					normal = glm::normalize(normal);*/
+					//
 
 					float halfWidth = currentPoint.thickness * 0.5f;
 
 					TrailMesh::Vertex vertexA;
 					TrailMesh::Vertex vertexB;
 
-					vertexA.position = currentPoint.position + normal * halfWidth;
+					vertexA.position = currentPoint.position + normal * halfWidth; // (elapsedTime - currentPoint.spawnTime) * 
 					vertexB.position = currentPoint.position - normal * halfWidth;
 
 					vertexA.color = currentPoint.color;
@@ -116,7 +146,7 @@ namespace cft
 					if (pointIndex > 0)
 						accumulated += glm::distance(previousPoint.position, currentPoint.position);
 
-					float u = accumulated / totalLength;
+					float u = totalLength > 0.0f ? accumulated / totalLength : 0.0f;
 
 					vertexA.textureCoordinates = glm::vec2(u, 0.0f);
 					vertexB.textureCoordinates = glm::vec2(u, 1.0f);
@@ -133,6 +163,9 @@ namespace cft
 	void TrailRenderer::render(const View& view) const
 	{
 		m_shader.use();
+		m_shader.setUniform("uView", view.viewMatrix);
+		m_shader.setUniform("uProjection", view.projectionMatrix);
+
 		m_trailMesh.multiDrawArrays();
 	}
 }

@@ -216,30 +216,39 @@ namespace cft
 		m_id[newIndex] = particle.id;
 		m_particleRegistryId[newIndex] = particle.particleRegistryId;
 
-		m_idIndexMapping[newIndex] = particle.id;
+		m_idIndexMapping[particle.id] = newIndex;
 
 		--m_reservedCapacity;
 	}
 
 	void ParticlePool::remove(unsigned int index)
 	{
-		unsigned int lastIndex = --m_count;
+		unsigned int lastIndex = m_count - 1;
 
-		m_color[index] = m_color[lastIndex];
-		m_initialColor[index] = m_initialColor[lastIndex];
-		m_position[index] = m_position[lastIndex];
-		m_velocity[index] = m_velocity[lastIndex];
-		m_rotation[index] = m_rotation[lastIndex];
-		m_angularVelocity[index] = m_angularVelocity[lastIndex];
-		m_scale[index] = m_scale[lastIndex];
-		m_initialScale[index] = m_initialScale[lastIndex];
-		m_phase[index] = m_phase[lastIndex];
-		m_lifetime[index] = m_lifetime[lastIndex];
-		m_spawnTime[index] = m_spawnTime[lastIndex];
-		m_id[index] = m_id[lastIndex];
-		m_particleRegistryId[index] = m_particleRegistryId[lastIndex];
+		unsigned int removedId = m_id[index];
+		unsigned int movedId = m_id[lastIndex];
 
-		m_idIndexMapping[m_id[index]] = index;
-		m_idIndexMapping.erase(m_id[lastIndex]);
+		if (index != lastIndex)
+		{
+			m_color[index] = m_color[lastIndex];
+			m_initialColor[index] = m_initialColor[lastIndex];
+			m_position[index] = m_position[lastIndex];
+			m_velocity[index] = m_velocity[lastIndex];
+			m_rotation[index] = m_rotation[lastIndex];
+			m_angularVelocity[index] = m_angularVelocity[lastIndex];
+			m_scale[index] = m_scale[lastIndex];
+			m_initialScale[index] = m_initialScale[lastIndex];
+			m_phase[index] = m_phase[lastIndex];
+			m_lifetime[index] = m_lifetime[lastIndex];
+			m_spawnTime[index] = m_spawnTime[lastIndex];
+			m_id[index] = movedId;
+			m_particleRegistryId[index] = m_particleRegistryId[lastIndex];
+
+			m_idIndexMapping[movedId] = index;
+		}
+
+		m_idIndexMapping.erase(removedId);
+
+		--m_count;
 	}
 }
