@@ -1,10 +1,6 @@
 #include "Confetti/Renderer/Trail/TrailRenderer.hpp"
 #include "Confetti/Renderer/ShaderSource/TrailShaderSource.hpp"
 
-
-//
-#include <iostream>
-
 namespace
 {
 	glm::vec3 safeNormalize(const glm::vec3& v)
@@ -105,8 +101,6 @@ namespace cft
 					}
 
 					glm::vec3 cameraDirection = safeNormalize(view.position - currentPoint.position);
-					//glm::vec3 normal = safeNormalize(glm::cross(tangent, cameraDirection));
-
 					glm::vec3 normal = glm::cross(tangent, cameraDirection);
 
 					if (glm::dot(normal, normal) < 1e-8f)
@@ -118,19 +112,6 @@ namespace cft
 					}
 
 					normal = glm::normalize(normal);
-
-
-					//
-					/*glm::vec3 normal = glm::cross(tangent, cameraDirection);
-
-					if (glm::dot(normal, normal) < 1e-8f)
-					{
-						glm::vec3 up = std::abs(tangent.y) < 0.99f ? glm::vec3(0.0f, 1.0f, 0.0f) : glm::vec3(1.0f, 0.0f, 0.0f);
-						normal = glm::cross(tangent, up);
-					}
-
-					normal = glm::normalize(normal);*/
-					//
 
 					float halfWidth = currentPoint.thickness * 0.5f;
 

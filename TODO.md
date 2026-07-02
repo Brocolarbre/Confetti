@@ -10,7 +10,6 @@ Code cleanup :
 - Consistent naming for structure attributes involved with id (emitterId / emitter)
 
 Features :
-- Trail particle
 - Ribbon particle
 - Spline motion behavior
 - Lens flare

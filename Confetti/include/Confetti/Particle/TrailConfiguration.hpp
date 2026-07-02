@@ -21,6 +21,12 @@ namespace cft
 		float end;
 	};
 
+	enum class TrailColorInterpolation
+	{
+		Constant,
+		Linear
+	};
+
 	struct TrailConfiguration
 	{
 		float presistenceLifetime;
@@ -32,7 +38,10 @@ namespace cft
 		std::optional<LifetimeFade> lifetimeFade;
 		std::optional<unsigned int> maximumSegmentCount;
 
+		bool appendParticleColor;
 		std::vector<glm::vec4> colorGradient;
+		std::optional<std::vector<float>> colorStart;
+		TrailColorInterpolation colorInterpolation;
 		TrailThicknessEvolution thicknessEvolution;
 	};
 }

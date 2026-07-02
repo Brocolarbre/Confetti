@@ -3,8 +3,9 @@
 #include <Confetti/ForceField/AttractionForceField.hpp>
 #include <Confetti/ForceField/DirectionalForceField.hpp>
 #include <Confetti/ForceField/DragForceField.hpp>
-#include <Confetti/ForceField/TurbulenceForceField.hpp>
+#include <Confetti/ForceField/OrbitForceField.hpp>
 #include <Confetti/ForceField/RepulsionForceField.hpp>
+#include <Confetti/ForceField/TurbulenceForceField.hpp>
 #include <Confetti/ForceField/VortexForceField.hpp>
 #include <Confetti/ParticleBehavior/ColorShiftParticleBehavior.hpp>
 #include <Confetti/ParticleBehavior/FadeInParticleBehavior.hpp>
@@ -41,7 +42,8 @@ void ConfettiInstance::restartSimulation()
     cft::ParticleSpawner::resetNextId();
 
     m_particleSimulation.clear();
-    m_particleSimulation.addParticleEffect(0.0f, 0);
+    //m_particleSimulation.addParticleEffect(0.0f, 0);
+    m_particleSimulation.addParticleEffect(0.0f, 2);
 
     m_elapsedTimeChronometer.start();
     m_deltaTimeChronometer.start();
@@ -78,19 +80,25 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     cft::Image circleImage;
     circleImage.loadFromFile("res/images/circle.png");
 
+    cft::Image diamondImage;
+    diamondImage.loadFromFile("res/images/diamond.png");
+
     //m_assetRegistry.addImage(0, std::move(bubbleImage));
     m_assetRegistry.addImage(1, std::move(rockImage));
     m_assetRegistry.addImage(2, std::move(circleImage));
+    m_assetRegistry.addImage(3, std::move(diamondImage));
 
     //m_assetRegistry.addSpriteSheet(0, cft::SpriteSheet{ 0, 64, 8, 512, 512, 18.0f });
-    m_assetRegistry.addSpriteSheet(1, cft::SpriteSheet{ 2, 1, 1, 600, 600, 0.0f });
+    //m_assetRegistry.addSpriteSheet(1, cft::SpriteSheet{ 2, 1, 1, 600, 600, 0.0f });
+    m_assetRegistry.addSpriteSheet(2, cft::SpriteSheet{ 3, 1, 1, 626, 626, 0.0f });
 
     cft::Model pebbleModel;
     pebbleModel.loadFromFile("res/models/pebble.obj");
 
     m_assetRegistry.addModel(0, std::move(pebbleModel));
 
-    m_particleRenderer.loadBillboardRendererTextures(m_assetRegistry, { 2 }, 600, 600);
+    //m_particleRenderer.loadBillboardRendererTextures(m_assetRegistry, { 2 }, 600, 600);
+    m_particleRenderer.loadBillboardRendererTextures(m_assetRegistry, { 3 }, 626, 626);
     m_particleRenderer.loadMeshRendererTextures(m_assetRegistry, { 1 });
     m_particleRenderer.loadMeshRendererMeshes(m_assetRegistry, { 0 });
 
@@ -100,6 +108,9 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_assetRegistry.addForceField(3, std::make_unique<cft::DragForceField>(0.01f));
     m_assetRegistry.addForceField(4, std::make_unique<cft::DirectionalForceField>(glm::vec3(0.0f, 1.0f, 0.0f), 8.0f));
     m_assetRegistry.addForceField(5, std::make_unique<cft::DirectionalForceField>(glm::vec3(0.0f, -1.0f, 0.0f), 5.0f));
+    //m_assetRegistry.addForceField(6, std::make_unique<cft::OrbitForceField>(cft::SpatialInfluence(glm::vec3(0.0f, 0.0f, 0.0f), 10.0f, cft::Falloff::Constant), glm::vec3(0.0f, 1.0f, 0.0f), 5.0f, 10.0f, 0.5f));
+    m_assetRegistry.addForceField(6, std::make_unique<cft::VortexForceField>(cft::SpatialInfluence(glm::vec3(0.0f, 0.0f, 0.0f), 100.0f, cft::Falloff::Constant), glm::vec3(0.0f, 1.0f, 0.0f), 20.0f, 3.0f));
+    m_assetRegistry.addForceField(7, std::make_unique<cft::TurbulenceForceField>(10.0f, m_randomNumberGenerator));
 
     m_assetRegistry.addParticleBehavior(1, std::make_unique<cft::FadeOutParticleBehavior>(0.8f));
     m_assetRegistry.addParticleBehavior(2, std::make_unique<cft::ShrinkOutParticleBehavior>(0.8f));
@@ -114,7 +125,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     m_assetRegistry.addMotionBehavior(0, std::make_unique<cft::RandomMotionBehavior>());
     m_assetRegistry.addMotionBehavior(1, std::make_unique<cft::VibrationMotionBehavior>());
 
-    float strength = 3.0f;
+    float strength = 2.0f;
 
     m_assetRegistry.addParticleSpawner(0, std::make_unique<cft::ParticleSpawner>(
         std::make_unique<cft::RandomAttributeGenerator<cft::Position>>(glm::vec3(-6.0f, -12.0f, -6.0f), glm::vec3(6.0f, -10.5f, 6.0f), m_randomNumberGenerator),
@@ -185,7 +196,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
 
     m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, std::nullopt, cft::SpawnTrigger{ 1, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, cft::PeriodicSpawnTrigger{ cft::ParticleEmitterDescriptor{ 1, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, 0.1f } }, cft::RenderDescriptor{cft::RenderType::Mesh, cft::MeshRenderDescriptor{ 0, 1 } }, { 4 }, {}, {} });
     //m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, std::nullopt, std::nullopt, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 }}, { 0 }, {}, { 2, 4 } });
-    m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, cft::TrailConfiguration{ 1.0f, 0.2f, 0.05f, std::nullopt, 1.2f, std::nullopt, std::nullopt, {glm::vec4(0.05f, 0.2f, 0.9f, 1.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)}, cft::TrailThicknessEvolution::Constant}, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{1}}, {0}, {}, {2, 4} });
+    m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, cft::TrailConfiguration{ 1.0f, 0.08f, 0.05f, std::nullopt, 1.5f, std::nullopt, 15, false, { glm::vec4(1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.1f, 0.2f, 0.9f, 1.0f) }, std::nullopt, cft::TrailColorInterpolation::Linear, cft::TrailThicknessEvolution::Constant }, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{1}}, {0}, {}, {2, 4}});
     m_assetRegistry.addParticleEmitter(2, cft::ParticleEmitter{ 2, 2, 2, std::nullopt, cft::SpawnTrigger{ 4, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, std::nullopt }, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 } }, { 5 }, {}, { 9 } });
     
     m_assetRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 0, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}}});
@@ -204,6 +215,46 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, dove
     ));
     m_assetRegistry.addParticleEmitter(3, cft::ParticleEmitter{ 3, 4, 3, std::nullopt, std::nullopt, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ std::nullopt } }, {}, {}, {} });
     m_assetRegistry.addParticleEffect(1, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 3, cft::TimeRange{ 0.0f, 100.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}}});*/
+
+    m_assetRegistry.addSpawnPolicy(4, std::make_unique<cft::FixedSpawnPolicy>(100, 0, 1));
+    m_assetRegistry.addParticleSpawner(5, std::make_unique<cft::ParticleSpawner>(
+        std::make_unique<cft::SphereSpawnShape>(10.0f),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Velocity>>(glm::vec3(0.0f)),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Rotation>>(glm::vec3(0.0f)),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::AngularVelocity>>(glm::vec3(0.0f)),
+        std::make_unique<cft::RandomAttributeGenerator<cft::Scale>>(glm::vec3(0.3f), glm::vec3(0.4f), m_randomNumberGenerator),
+        std::make_unique<cft::SmoothRandomSetAttributeGenerator<cft::Color>>(std::vector<glm::vec4>{
+            strength * glm::vec4(1.00f, 0.00f, 0.00f, 1.0f),
+            strength * glm::vec4(1.00f, 0.25f, 0.00f, 1.0f),
+            strength * glm::vec4(1.00f, 0.50f, 0.00f, 1.0f),
+            strength * glm::vec4(1.00f, 0.75f, 0.00f, 1.0f),
+            strength * glm::vec4(1.00f, 1.00f, 0.00f, 1.0f),
+            strength * glm::vec4(0.75f, 1.00f, 0.00f, 1.0f),
+            strength * glm::vec4(0.50f, 1.00f, 0.00f, 1.0f),
+            strength * glm::vec4(0.25f, 1.00f, 0.00f, 1.0f),
+            strength * glm::vec4(0.00f, 1.00f, 0.00f, 1.0f),
+            strength * glm::vec4(0.00f, 1.00f, 0.25f, 1.0f),
+            strength * glm::vec4(0.00f, 1.00f, 0.50f, 1.0f),
+            strength * glm::vec4(0.00f, 1.00f, 0.75f, 1.0f),
+            strength * glm::vec4(0.00f, 1.00f, 1.00f, 1.0f),
+            strength * glm::vec4(0.00f, 0.75f, 1.00f, 1.0f),
+            strength * glm::vec4(0.00f, 0.50f, 1.00f, 1.0f),
+            strength * glm::vec4(0.00f, 0.25f, 1.00f, 1.0f),
+            strength * glm::vec4(0.00f, 0.00f, 1.00f, 1.0f),
+            strength * glm::vec4(0.25f, 0.00f, 1.00f, 1.0f),
+            strength * glm::vec4(0.50f, 0.00f, 1.00f, 1.0f),
+            strength * glm::vec4(0.75f, 0.00f, 1.00f, 1.0f),
+            strength * glm::vec4(1.00f, 0.00f, 1.00f, 1.0f),
+            strength * glm::vec4(1.00f, 0.00f, 0.75f, 1.0f),
+            strength * glm::vec4(1.00f, 0.00f, 0.50f, 1.0f),
+            strength * glm::vec4(1.00f, 0.00f, 0.25f, 1.0f),
+            strength * glm::vec4(1.00f, 0.00f, 0.00f, 1.0f) }, m_randomNumberGenerator),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Phase>>(0.0f),
+        std::make_unique<cft::ConstantAttributeGenerator<cft::Lifetime>>(15.0f),
+        15.0f
+    ));
+    m_assetRegistry.addParticleEmitter(4, cft::ParticleEmitter{ 4, 5, 4, cft::TrailConfiguration{ 0.0f, 0.12f, 0.05f, std::nullopt, 2.0f, std::nullopt, std::nullopt, true, { strength * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), strength * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), strength * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), strength * glm::vec4(1.0f, 1.0f, 0.0f, 1.0f) }, std::vector<float>{ 1.5f, 2.0f, 2.8f, 5.0f }, cft::TrailColorInterpolation::Linear, cft::TrailThicknessEvolution::LinearDecreasing}, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{2}}, {6, 7}, {}, {} });
+    m_assetRegistry.addParticleEffect(2, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 4, cft::TimeRange{ 0.0f, 100.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}} });
 
     restartSimulation();
 }

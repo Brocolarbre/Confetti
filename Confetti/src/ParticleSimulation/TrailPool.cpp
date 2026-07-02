@@ -7,6 +7,7 @@ namespace cft
 		m_trailRegistryId.resize(capacity);
 		m_particleId.resize(capacity);
 		m_particleDeathTime.resize(capacity);
+		m_particleColor.resize(capacity);
 		m_trailPoints.resize(capacity);
 
 		m_capacity = capacity;
@@ -18,6 +19,7 @@ namespace cft
 		m_trailRegistryId(),
 		m_particleId(),
 		m_particleDeathTime(),
+		m_particleColor(),
 		m_trailPoints(),
 		m_capacity(0),
 		m_reservedCapacity(0),
@@ -41,6 +43,11 @@ namespace cft
 		return m_particleDeathTime;
 	}
 
+	const std::vector<glm::vec4>& TrailPool::getParticleColor() const
+	{
+		return m_particleColor;
+	}
+
 	const std::vector<std::deque<TrailPoint>>& TrailPool::getTrailPoints() const
 	{
 		return m_trailPoints;
@@ -59,6 +66,11 @@ namespace cft
 	std::vector<float>& TrailPool::getParticleDeathTime()
 	{
 		return m_particleDeathTime;
+	}
+
+	std::vector<glm::vec4>& TrailPool::getParticleColor()
+	{
+		return m_particleColor;
 	}
 
 	std::vector<std::deque<TrailPoint>>& TrailPool::getTrailPoints()
@@ -86,6 +98,7 @@ namespace cft
 		m_trailRegistryId[newIndex] = trail.trailRegistryId;
 		m_particleId[newIndex] = trail.particleId;
 		m_particleDeathTime[newIndex] = trail.particleDeathTime;
+		m_particleColor[newIndex] = trail.particleColor;
 		m_trailPoints[newIndex] = trail.points;
 
 		--m_reservedCapacity;
@@ -98,6 +111,7 @@ namespace cft
 		m_trailRegistryId[index] = m_trailRegistryId[lastIndex];
 		m_particleId[index] = m_particleId[lastIndex];
 		m_particleDeathTime[index] = m_particleDeathTime[lastIndex];
+		m_particleColor[index] = m_particleColor[lastIndex];
 		m_trailPoints[index] = m_trailPoints[lastIndex];
 	}
 }

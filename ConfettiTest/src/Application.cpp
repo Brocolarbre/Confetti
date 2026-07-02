@@ -25,7 +25,7 @@ Application::Application() :
 	windowSettings.openGLVersionMinor = 6;
 	windowSettings.samples = 4;
 
-	m_window.open("Confetti", 2160, 1440, windowSettings);
+	m_window.open("Confetti", 1280, 720, windowSettings);
 
 	m_window.captureContext();
 	if (!RenderContext::initialize(dove::Window::getProcAddress))

@@ -198,7 +198,7 @@ namespace cft
 						particlePool.insert(particle);
 
 						if (spawnTrails)
-							trailPool.value()->insert(Trail{ particleEmitterInstance.trailRegistryId.value(), particle.id, -1.0f, {} });
+							trailPool.value()->insert(Trail{ particleEmitterInstance.trailRegistryId.value(), particle.id, -1.0f, particle.color, {} });
 
 						if (spawnSpawnTrigger)
 						{
@@ -330,6 +330,7 @@ namespace cft
 			std::vector<unsigned int>& trailRegistryId = trailPool.getTrailRegistryId();
 			std::vector<unsigned int>& particleId = trailPool.getParticleId();
 			std::vector<float>& particleDeathTime = trailPool.getParticleDeathTime();
+			std::vector<glm::vec4>& particleColor = trailPool.getParticleColor();
 			std::vector<std::deque<TrailPoint>>& trailPoints = trailPool.getTrailPoints();
 
 			std::unordered_map<unsigned int, unsigned int> removedTrailCount;
@@ -349,10 +350,15 @@ namespace cft
 					}
 					else
 					{
+						particleColor[i] = particlePool.getColor()[ownerParticleIndex.value()];
 						glm::vec3 particlePosition = particlePool.getPosition()[ownerParticleIndex.value()];
 						if (trailPoints[i].empty() || glm::distance(particlePosition, trailPoints[i].back().position) > trailRegistryEntry.trailConfiguration.minimumSpawnDistance || (trailRegistryEntry.trailConfiguration.maximumSpawnTime.has_value() && elapsedTime - trailPoints[i].back().spawnTime > trailRegistryEntry.trailConfiguration.maximumSpawnTime.value()))
 						{
-							trailPoints[i].push_back(TrailPoint{ glm::vec4(0.0f), particlePosition, 0.0f, elapsedTime });
+							float distanceOnTrail = 0.0f;
+							if (!trailPoints[i].empty())
+								distanceOnTrail = trailPoints[i].back().distanceOnTrail + glm::distance(trailPoints[i].back().position, particlePosition);
+
+							trailPoints[i].push_back(TrailPoint{ glm::vec4(1.0f), particlePosition, 1.0f, distanceOnTrail, elapsedTime });
 
 							if (trailRegistryEntry.trailConfiguration.maximumSegmentCount.has_value() && trailPoints[i].size() > trailRegistryEntry.trailConfiguration.maximumSegmentCount.value())
 							{
@@ -375,25 +381,100 @@ namespace cft
 
 					for (unsigned int pointIndex = 0; pointIndex < trail.size(); ++pointIndex)
 					{
-						float t = trailSize > 1 ? static_cast<float>(pointIndex) / static_cast<float>(trailSize - 1) : 0.0f;
+						float t = 1.0f - (trailSize > 1 ? static_cast<float>(pointIndex) / static_cast<float>(trailSize - 1) : 0.0f);
 
 						switch (trailRegistryEntry.trailConfiguration.thicknessEvolution)
 						{
 						case TrailThicknessEvolution::Constant: trail[pointIndex].thickness = trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::LinearDecreasing: trail[pointIndex].thickness = t * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::QuadraticDecreasing: trail[pointIndex].thickness = t * t * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::LinearIncreasing: trail[pointIndex].thickness = (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::QuadraticIncreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::LinearDecreasing: trail[pointIndex].thickness = (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::QuadraticDecreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::LinearIncreasing: trail[pointIndex].thickness = t * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessEvolution::QuadraticIncreasing: trail[pointIndex].thickness = t * t * trailRegistryEntry.trailConfiguration.thickness; break;
 						}
 
-						unsigned int gradientSize = static_cast<unsigned int>(trailRegistryEntry.trailConfiguration.colorGradient.size());
-						float integralPart;
-						float colorT = std::modf(t * static_cast<float>(gradientSize - 1), &integralPart);
-						
-						unsigned int colorIndexA = static_cast<unsigned int>(integralPart);
-						unsigned int colorIndexB = glm::min(colorIndexA + 1, gradientSize - 1);
-						trail[pointIndex].color = (1.0f - colorT) * trailRegistryEntry.trailConfiguration.colorGradient[colorIndexA] + colorT * trailRegistryEntry.trailConfiguration.colorGradient[colorIndexB];
+						unsigned int colorGradientSize = static_cast<unsigned int>(trailRegistryEntry.trailConfiguration.colorGradient.size()) + (trailRegistryEntry.trailConfiguration.appendParticleColor ? 1 : 0);
+						std::vector<glm::vec4> colorGradient;
+						colorGradient.reserve(colorGradientSize);
+						if (trailRegistryEntry.trailConfiguration.appendParticleColor)
+							colorGradient.push_back(particleColor[i]);
+						colorGradient.insert(colorGradient.end(), trailRegistryEntry.trailConfiguration.colorGradient.begin(), trailRegistryEntry.trailConfiguration.colorGradient.end());
 
+						switch (trailRegistryEntry.trailConfiguration.colorInterpolation)
+						{
+						case TrailColorInterpolation::Constant:
+						{
+							if (trailRegistryEntry.trailConfiguration.colorStart.has_value())
+							{
+								const std::vector<float>& colorStart = trailRegistryEntry.trailConfiguration.colorStart.value();
+								float distanceFromHead = trail.back().distanceOnTrail - trail[pointIndex].distanceOnTrail;
+
+								size_t count = std::min(colorGradient.size(), colorStart.size());
+								unsigned int colorIndex = colorGradientSize - 1;
+								for (unsigned int j = 0; j < count; ++j)
+								{
+									if (distanceFromHead <= colorStart[j])
+									{
+										colorIndex = j;
+										break;
+									}
+								}
+
+								trail[pointIndex].color = colorGradient[colorIndex];
+							}
+							else
+							{
+								unsigned int colorIndex = glm::min(static_cast<unsigned int>(t * colorGradientSize), colorGradientSize - 1);
+								trail[pointIndex].color = colorGradient[colorIndex];
+							}
+							break;
+						}
+						case TrailColorInterpolation::Linear:
+						{
+							if (trailRegistryEntry.trailConfiguration.colorStart.has_value())
+							{
+								const std::vector<float>& colorStart = trailRegistryEntry.trailConfiguration.colorStart.value();
+								float distanceFromHead = trail.back().distanceOnTrail - trail[pointIndex].distanceOnTrail;
+
+								size_t intervalCount = std::min(colorStart.size(), colorGradient.size() > 0 ? colorGradient.size() - 1 : 0);
+								if (intervalCount == 0)
+									break;
+
+								if (distanceFromHead >= colorStart.back())
+								{
+									trail[pointIndex].color = colorGradient.back();
+								}
+								else
+								{
+									for (size_t j = 0; j < intervalCount; ++j)
+									{
+										float start = (j == 0) ? 0.0f : colorStart[j - 1];
+										float end = colorStart[j];
+
+										if (distanceFromHead <= end)
+										{
+											float t = (distanceFromHead - start) / (end - start);
+											t = glm::clamp(t, 0.0f, 1.0f);
+
+											trail[pointIndex].color = (1.0f - t) * colorGradient[j] + t * colorGradient[j + 1];
+
+											break;
+										}
+									}
+								}
+							}
+							else
+							{
+								float integralPart;
+								float colorT = std::modf(t * static_cast<float>(colorGradientSize - 1), &integralPart);
+
+								unsigned int colorIndexA = static_cast<unsigned int>(integralPart);
+								unsigned int colorIndexB = glm::min(colorIndexA + 1, colorGradientSize - 1);
+								trail[pointIndex].color = (1.0f - colorT) * colorGradient[colorIndexA] + colorT * colorGradient[colorIndexB];
+							}
+							break;
+						}
+						}
+						
 						if (trailRegistryEntry.trailConfiguration.lifetimeFade.has_value())
 						{
 							float start = trailRegistryEntry.trailConfiguration.lifetimeFade.value().start;

@@ -87,9 +87,9 @@ namespace cft
 		glViewport(0, 0, m_width, m_height);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		m_trailRenderer.render(view);
 		m_billboardParticleRenderer.render(view, elapsedTime);
 		m_meshParticleRenderer.render(view);
-		m_trailRenderer.render(view);
 		
 		m_framebuffer.copy(m_resolvedFramebuffer, GL_COLOR_BUFFER_BIT, 0, 0);
 
