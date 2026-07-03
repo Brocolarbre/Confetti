@@ -15,7 +15,7 @@ namespace cft
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, sourceTexture);
 
-		for (const Texture& mip : m_bloomFramebuffer.getMips())
+		for (const Texture& mip : mips)
 		{
 			glViewport(0, 0, mip.getWidth(), mip.getHeight());
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mip.getId(), 0);

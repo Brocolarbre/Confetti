@@ -126,7 +126,6 @@ namespace cft
 			glTexImage2D(m_target, 0, m_internalFormat, m_width, m_height, 0, m_format, m_type, data);
 		}
 
-
 		if (mipmaps)
 			glGenerateMipmap(m_target);
 
