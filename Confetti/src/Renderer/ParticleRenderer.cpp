@@ -1,7 +1,6 @@
 #include "Confetti/Renderer/ParticleRenderer.hpp"
 
 #include <glad/glad.h>
-#include <iostream>
 
 namespace cft
 {
