@@ -57,55 +57,21 @@ namespace cft
 		glDisable(GL_BLEND);
 	}
 
-	void Bloom::applyBloom(unsigned int sourceTexture)
-	{
-		Texture::setActiveSlot(0);
-		glBindTexture(GL_TEXTURE_2D, sourceTexture);
-
-		Texture::setActiveSlot(1);
-		m_bloomFramebuffer.getMips()[0].bind();
-
-		m_framebuffer.bind();
-		m_framebuffer.setViewport();
-		glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		m_bloomShader.use();
-		m_bloomShader.setUniform("uBloomStrength", 0.04f);
-
-		glBindVertexArray(m_vertexArray);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	}
-
-	Bloom::Bloom(unsigned int width, unsigned int height, unsigned int mipCount) :
+	Bloom::Bloom(unsigned int width, unsigned int height, unsigned int mipCount, float filterRadius) :
 		m_bloomFramebuffer(width, height, mipCount),
-		m_framebuffer(width, height),
 		m_downsampleShader(),
 		m_upsampleShader(),
-		m_bloomShader(),
-		m_mipCount(mipCount),
-		m_viewportSize(width, height),
-		m_vertexArray(0)
+		m_vertexArray(0),
+		m_filterRadius(filterRadius)
 	{
-		Texture colorAttachment(GL_TEXTURE_2D, GL_RGB16F, GL_RGB, GL_FLOAT);
-		colorAttachment.load(nullptr, width, height, GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
-
-		m_framebuffer.setColorAttachment(0, std::move(colorAttachment));
-		m_framebuffer.build();
-
 		m_downsampleShader.loadFromMemory(FULLSCREEN_VERTEX_SHADER_SOURCE, DOWNSAMPLE_FRAGMENT_SHADER_SOURCE);
 		m_upsampleShader.loadFromMemory(FULLSCREEN_VERTEX_SHADER_SOURCE, UPSAMPLE_FRAGMENT_SHADER_SOURCE);
-		m_bloomShader.loadFromMemory(FULLSCREEN_VERTEX_SHADER_SOURCE, BLOOM_FRAGMENT_SHADER_SOURCE);
 
 		m_downsampleShader.use();
 		m_downsampleShader.setUniform("uSourceTexture", 0);
 
 		m_upsampleShader.use();
 		m_upsampleShader.setUniform("uSourceTexture", 0);
-
-		m_bloomShader.use();
-		m_bloomShader.setUniform("uSourceTexture", 0);
-		m_bloomShader.setUniform("uBloomTexture", 1);
 
 		glGenVertexArrays(1, &m_vertexArray);
 	}
@@ -115,19 +81,22 @@ namespace cft
 		glDeleteVertexArrays(1, &m_vertexArray);
 	}
 
-	const Texture& Bloom::getBloomTexture() const
+	unsigned int Bloom::getOutputTexture() const
 	{
-		return std::get<Texture>(m_framebuffer.getColorAttachment(0));
+		return m_bloomFramebuffer.getMips()[0].getId();
+	}
+
+	void Bloom::setFilterRadius(float filterRadius)
+	{
+		m_filterRadius = filterRadius;
 	}
 
 	void Bloom::resize(unsigned int width, unsigned int height)
 	{
 		m_bloomFramebuffer.resize(width, height);
-		m_framebuffer.resize(width, height);
-		m_viewportSize = glm::uvec2(width, height);
 	}
 
-	void Bloom::render(unsigned int sourceTexture, float filterRadius)
+	void Bloom::render(unsigned int sourceTexture)
 	{
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
@@ -135,10 +104,6 @@ namespace cft
 		m_bloomFramebuffer.bind();
 
 		renderDownsamples(sourceTexture);
-		renderUpsamples(filterRadius);
-		applyBloom(sourceTexture);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
+		renderUpsamples(m_filterRadius);
 	}
 }

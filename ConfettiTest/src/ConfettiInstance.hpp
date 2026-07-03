@@ -32,7 +32,7 @@ private:
 	void updateSimulation(float elapsedTime, float deltaTime);
 
 public:
-	ConfettiInstance(unsigned int width, unsigned int height, dove::Window& window);
+	ConfettiInstance(unsigned int width, unsigned int height, unsigned int samples, dove::Window& window);
 
 	void onKeyPressed(dove::KeyEvent keyEvent) override;
 	void onWindowResized(unsigned int width, unsigned int height) override;

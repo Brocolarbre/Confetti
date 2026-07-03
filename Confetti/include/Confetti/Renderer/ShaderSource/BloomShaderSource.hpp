@@ -76,25 +76,4 @@ namespace cft
             upsample *= 1.0 / 16.0;
         }
 	)";
-
-    constexpr const char* BLOOM_FRAGMENT_SHADER_SOURCE = R"(
-        #version 460 core
-        
-        uniform sampler2D uSourceTexture;
-        uniform sampler2D uBloomTexture;
-        uniform float uBloomStrength;
-        
-        in vec2 fTextureCoordinates;
-        
-        out vec4 color;
-        
-        void main()
-        {
-            vec3 sourceColor = texture(uSourceTexture, fTextureCoordinates).rgb;
-            vec3 bloomColor = texture(uBloomTexture, fTextureCoordinates).rgb;
-            
-            //color = vec4(mix(sourceColor, bloomColor, uBloomStrength), 1.0);
-            color = vec4(sourceColor + bloomColor * uBloomStrength, 1.0);
-        }
-    )";
 }

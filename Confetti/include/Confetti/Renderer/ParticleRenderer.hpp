@@ -4,6 +4,8 @@
 #include "Mesh/MeshParticleRenderer.hpp"
 #include "Trail/TrailRenderer.hpp"
 #include "Confetti/Renderer/PostProcessing/Bloom.hpp"
+#include "Confetti/Renderer/PostProcessing/Flare.hpp"
+#include "Confetti/Renderer/PostProcessing/HdrComposite.hpp"
 #include "Confetti/Renderer/PostProcessing/ToneMapping.hpp"
 #include "Confetti/Renderer/Tools/Framebuffer.hpp"
 
@@ -19,6 +21,8 @@ namespace cft
 		Framebuffer m_resolvedFramebuffer;
 		
 		Bloom m_bloom;
+		Flare m_flare;
+		HdrComposite m_hdrComposite;
 		ToneMapping m_toneMapping;
 
 		BillboardParticleRenderer m_billboardParticleRenderer;
@@ -26,7 +30,7 @@ namespace cft
 		TrailRenderer m_trailRenderer;
 
 	public:
-		ParticleRenderer(unsigned int width, unsigned int height);
+		ParticleRenderer(unsigned int width, unsigned int height, unsigned int samples);
 
 		unsigned int getOutputTextureId() const;
 

@@ -53,10 +53,10 @@ namespace cft
 
 	void ToneMapping::render(unsigned int texture)
 	{
-		m_framebuffer.bind();
-
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
+
+		m_framebuffer.bind();
 
 		m_shader.use();
 		m_shader.setUniform("uExposure", m_exposure);

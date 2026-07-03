@@ -9,28 +9,25 @@ namespace cft
 	class Bloom
 	{
 	private:
-		BloomFramebuffer m_bloomFramebuffer;
-		Framebuffer m_framebuffer;
+		BloomFramebuffer m_bloomFramebuffer; // Second framebuffer for upsampling ?
 		Shader m_downsampleShader;
 		Shader m_upsampleShader;
-		Shader m_bloomShader;
-
-		unsigned int m_mipCount;
-		glm::uvec2 m_viewportSize;
-
 		unsigned int m_vertexArray;
+
+		float m_filterRadius;
 
 		void renderDownsamples(unsigned int sourceTexture);
 		void renderUpsamples(float filterRadius);
-		void applyBloom(unsigned int sourceTexture);
 
 	public:
-		Bloom(unsigned int width, unsigned int height, unsigned int mipCount);
+		Bloom(unsigned int width, unsigned int height, unsigned int mipCount, float filterRadius);
 		~Bloom();
 
-		const Texture& getBloomTexture() const;
+		unsigned int getOutputTexture() const;
+
+		void setFilterRadius(float filterRadius);
 
 		void resize(unsigned int width, unsigned int height);
-		void render(unsigned int sourceTexture, float filterRadius);
+		void render(unsigned int sourceTexture);
 	};
 }
