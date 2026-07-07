@@ -16,11 +16,8 @@ namespace cft
 	{
 		m_upsampleShader.use();
 		m_upsampleShader.setUniform("uDirection", m_direction);
-		//m_upsampleShader.setUniform("uRadius", m_radius * std::pow(2.0f, static_cast<float>(mipLevel) * 0.5f));
-		//m_upsampleShader.setUniform("uRadius", m_radius * std::pow(1.5f, static_cast<float>(mipLevel)));
-		m_upsampleShader.setUniform("uRadius", m_radius * (1.0f + mipLevel));
+		m_upsampleShader.setUniform("uRadius", m_radius * static_cast<float>((1 << static_cast<int>(mipLevel))));
 		m_upsampleShader.setUniform("uChromaticAberrationStrength", m_chromaticAberrationStrength);
-
 	}
 
 	Flare::Flare(unsigned int width, unsigned int height, unsigned int mipCount, const glm::vec2& direction, float radius, float chromaticAberrationStrength) :
