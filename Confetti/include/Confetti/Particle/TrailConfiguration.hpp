@@ -43,5 +43,6 @@ namespace cft
 		std::optional<std::vector<float>> colorStart;
 		TrailColorInterpolation colorInterpolation;
 		TrailThicknessEvolution thicknessEvolution;
+		// Thickness progress
 	};
 }

@@ -10,7 +10,8 @@ namespace cft
 		m_framebuffer(width, height),
 		m_resolvedFramebuffer(width, height),
 		m_bloom(width, height, 5, 0.005f),
-		m_flare(width, height, 2.0f, glm::vec2(1.0f, 0.0f), 50, 0.02f),
+		m_brightPass(width, height, 2.0f),
+		m_flare(width, height, 5, glm::vec2(1.0f, 0.5f), 2.0f, 0.02f),
 		m_hdrComposite(width, height, 0.04f, 0.5f),
 		m_toneMapping(width, height, 0.25f, 2.2f),
 		m_billboardParticleRenderer(),
@@ -64,6 +65,7 @@ namespace cft
 		m_resolvedFramebuffer.resize(width, height);
 
 		m_bloom.resize(width, height);
+		m_brightPass.resize(width, height);
 		m_flare.resize(width, height);
 		m_hdrComposite.resize(width, height);
 		m_toneMapping.resize(width, height);
@@ -95,13 +97,16 @@ namespace cft
 		m_framebuffer.copy(m_resolvedFramebuffer, GL_COLOR_BUFFER_BIT, 0, 0);
 
 		unsigned int hdrSceneTexture = std::get<Texture>(m_resolvedFramebuffer.getColorAttachment(0)).getId();
+
+		glDisable(GL_BLEND);
 		
 		m_bloom.render(hdrSceneTexture);
-		
-		m_flare.render(hdrSceneTexture);
+		glViewport(0, 0, m_width, m_height);
+		m_brightPass.render(hdrSceneTexture);
+		m_flare.render(m_brightPass.getOutputTexture());
+		glViewport(0, 0, m_width, m_height);
 
 		m_hdrComposite.render(hdrSceneTexture, m_bloom.getOutputTexture(), m_flare.getOutputTexture());
-
 		m_toneMapping.render(m_hdrComposite.getOutputTexture());
 	}
 }

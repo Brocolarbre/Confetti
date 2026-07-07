@@ -9,10 +9,10 @@ namespace cft
 	{
 	protected:
 		MipChainFramebuffer m_framebuffer;
-		Shader m_downsampleShader;
 		unsigned int m_vertexArray;
 
-		virtual void setupUpsampleShader() const = 0;
+		virtual void setupDownsampleShader(unsigned int mipLevel) const = 0;
+		virtual void setupUpsampleShader(unsigned int mipLevel) const = 0;
 
 		void renderDownsamples(unsigned int sourceTexture) const;
 		void renderUpsamples() const;

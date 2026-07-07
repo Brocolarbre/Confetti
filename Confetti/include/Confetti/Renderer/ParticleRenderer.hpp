@@ -4,6 +4,7 @@
 #include "Mesh/MeshParticleRenderer.hpp"
 #include "Trail/TrailRenderer.hpp"
 #include "Confetti/Renderer/PostProcessing/Bloom.hpp"
+#include "Confetti/Renderer/PostProcessing/BrightPass.hpp"
 #include "Confetti/Renderer/PostProcessing/Flare.hpp"
 #include "Confetti/Renderer/PostProcessing/HdrComposite.hpp"
 #include "Confetti/Renderer/PostProcessing/ToneMapping.hpp"
@@ -21,6 +22,7 @@ namespace cft
 		Framebuffer m_resolvedFramebuffer;
 		
 		Bloom m_bloom;
+		BrightPass m_brightPass;
 		Flare m_flare;
 		HdrComposite m_hdrComposite;
 		ToneMapping m_toneMapping;

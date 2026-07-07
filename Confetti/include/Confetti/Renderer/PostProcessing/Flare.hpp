@@ -1,36 +1,27 @@
 #pragma once
 
-#include "Confetti/Renderer/Tools/Framebuffer.hpp"
-#include "Confetti/Renderer/Tools/Shader.hpp"
+#include "MipChainEffect.hpp"
 
 namespace cft
 {
-	class Flare
+	class Flare : public MipChainEffect
 	{
 	private:
-		Framebuffer m_brightPassFramebuffer;
-		Framebuffer m_flareFramebuffer;
-		Shader m_brightPassShader;
-		Shader m_flareShader;
-		unsigned int m_vertexArray;
+		Shader m_downsampleShader;
+		Shader m_upsampleShader;
 
-		float m_threshold;
 		glm::vec2 m_direction;
-		int m_radius;
-		float m_chromaticSeparationStrength;
+		float m_radius;
+		float m_chromaticAberrationStrength;
+
+		void setupDownsampleShader(unsigned int mipLevel) const override;
+		void setupUpsampleShader(unsigned int mipLevel) const override;
 
 	public:
-		Flare(unsigned int width, unsigned int height, float threshold, const glm::vec2& direction, int radius, float chromaticSeparationStrength);
-		~Flare();
+		Flare(unsigned int width, unsigned int height, unsigned int mipCount, const glm::vec2& direction, float radius, float chromaticAberrationStrength);
 
-		unsigned int getOutputTexture() const;
-
-		void setThreshold(float threshold);
 		void setDirection(const glm::vec2& direction);
-		void setRadius(int radius);
-		void setChromaticSeparationStength(float chromaticSeparationStrength);
-
-		void resize(unsigned int width, unsigned int height);
-		void render(unsigned int texture);
+		void setRadius(float radius);
+		void setChromaticAberrationStength(float chromaticAberrationStrength);
 	};
 }
