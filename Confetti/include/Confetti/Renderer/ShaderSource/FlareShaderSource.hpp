@@ -18,7 +18,7 @@ namespace cft
             vec2 texelSize = 1.0 / textureSize(uTexture, 0);
             downsample = vec3(0.0);
 
-            float weights[9] = float[](0.02, 0.04, 0.07, 0.12, 0.50, 0.12, 0.07, 0.04, 0.02);
+            float weights[9] = float[](0.015, 0.035, 0.075, 0.15, 0.45, 0.15, 0.075, 0.035, 0.015);
 
             for(int i = -4; i <= 4; ++i)
             {
