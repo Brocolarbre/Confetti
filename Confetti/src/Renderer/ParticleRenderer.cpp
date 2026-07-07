@@ -11,7 +11,7 @@ namespace cft
 		m_resolvedFramebuffer(width, height),
 		m_bloom(width, height, 5, 0.005f),
 		m_brightPass(width, height, 2.0f),
-		m_flare(width, height, 5, glm::vec2(1.0f, 0.5f), 2.0f, 0.02f),
+		m_flare(width, height, 5, glm::vec2(1.0f, 0.5f), 0.6f, 0.02f),
 		m_hdrComposite(width, height, 0.04f, 0.5f),
 		m_toneMapping(width, height, 0.25f, 2.2f),
 		m_billboardParticleRenderer(),

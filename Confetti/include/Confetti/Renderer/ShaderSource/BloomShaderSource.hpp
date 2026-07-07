@@ -9,7 +9,7 @@ namespace cft
 
         in vec2 fTextureCoordinates;
 
-        out vec4 downsample;
+        out vec3 downsample;
 
         void main()
         {
@@ -17,22 +17,22 @@ namespace cft
             float x = texelSize.x;
             float y = texelSize.y;
 
-            vec4 a = texture(uTexture, vec2(fTextureCoordinates.x - 2 * x, fTextureCoordinates.y + 2 * y)).rgba;
-            vec4 b = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y + 2 * y)).rgba;
-            vec4 c = texture(uTexture, vec2(fTextureCoordinates.x + 2 * x, fTextureCoordinates.y + 2 * y)).rgba;
+            vec3 a = texture(uTexture, vec2(fTextureCoordinates.x - 2 * x, fTextureCoordinates.y + 2 * y)).rgb;
+            vec3 b = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y + 2 * y)).rgb;
+            vec3 c = texture(uTexture, vec2(fTextureCoordinates.x + 2 * x, fTextureCoordinates.y + 2 * y)).rgb;
 
-            vec4 d = texture(uTexture, vec2(fTextureCoordinates.x - 2 * x, fTextureCoordinates.y)).rgba;
-            vec4 e = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y)).rgba;
-            vec4 f = texture(uTexture, vec2(fTextureCoordinates.x + 2 * x, fTextureCoordinates.y)).rgba;
+            vec3 d = texture(uTexture, vec2(fTextureCoordinates.x - 2 * x, fTextureCoordinates.y)).rgb;
+            vec3 e = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y)).rgb;
+            vec3 f = texture(uTexture, vec2(fTextureCoordinates.x + 2 * x, fTextureCoordinates.y)).rgb;
 
-            vec4 g = texture(uTexture, vec2(fTextureCoordinates.x - 2 * x, fTextureCoordinates.y - 2 * y)).rgba;
-            vec4 h = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y - 2 * y)).rgba;
-            vec4 i = texture(uTexture, vec2(fTextureCoordinates.x + 2 * x, fTextureCoordinates.y - 2 * y)).rgba;
+            vec3 g = texture(uTexture, vec2(fTextureCoordinates.x - 2 * x, fTextureCoordinates.y - 2 * y)).rgb;
+            vec3 h = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y - 2 * y)).rgb;
+            vec3 i = texture(uTexture, vec2(fTextureCoordinates.x + 2 * x, fTextureCoordinates.y - 2 * y)).rgb;
 
-            vec4 j = texture(uTexture, vec2(fTextureCoordinates.x - x, fTextureCoordinates.y + y)).rgba;
-            vec4 k = texture(uTexture, vec2(fTextureCoordinates.x + x, fTextureCoordinates.y + y)).rgba;
-            vec4 l = texture(uTexture, vec2(fTextureCoordinates.x - x, fTextureCoordinates.y - y)).rgba;
-            vec4 m = texture(uTexture, vec2(fTextureCoordinates.x + x, fTextureCoordinates.y - y)).rgba;
+            vec3 j = texture(uTexture, vec2(fTextureCoordinates.x - x, fTextureCoordinates.y + y)).rgb;
+            vec3 k = texture(uTexture, vec2(fTextureCoordinates.x + x, fTextureCoordinates.y + y)).rgb;
+            vec3 l = texture(uTexture, vec2(fTextureCoordinates.x - x, fTextureCoordinates.y - y)).rgb;
+            vec3 m = texture(uTexture, vec2(fTextureCoordinates.x + x, fTextureCoordinates.y - y)).rgb;
 
             downsample = e * 0.125;
             downsample += (a + c + g + i) * 0.03125;
@@ -49,7 +49,7 @@ namespace cft
 
         in vec2 fTextureCoordinates;
 
-        out vec4 upsample;
+        out vec3 upsample;
 
         void main()
         {
@@ -58,17 +58,17 @@ namespace cft
             float x = uFilterRadius * float(size.y) / float(size.x);
             float y = uFilterRadius;
 
-            vec4 a = texture(uTexture, vec2(fTextureCoordinates.x - x, fTextureCoordinates.y + y)).rgba;
-            vec4 b = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y + y)).rgba;
-            vec4 c = texture(uTexture, vec2(fTextureCoordinates.x + x, fTextureCoordinates.y + y)).rgba;
+            vec3 a = texture(uTexture, vec2(fTextureCoordinates.x - x, fTextureCoordinates.y + y)).rgb;
+            vec3 b = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y + y)).rgb;
+            vec3 c = texture(uTexture, vec2(fTextureCoordinates.x + x, fTextureCoordinates.y + y)).rgb;
 
-            vec4 d = texture(uTexture, vec2(fTextureCoordinates.x - x, fTextureCoordinates.y)).rgba;
-            vec4 e = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y)).rgba;
-            vec4 f = texture(uTexture, vec2(fTextureCoordinates.x + x, fTextureCoordinates.y)).rgba;
+            vec3 d = texture(uTexture, vec2(fTextureCoordinates.x - x, fTextureCoordinates.y)).rgb;
+            vec3 e = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y)).rgb;
+            vec3 f = texture(uTexture, vec2(fTextureCoordinates.x + x, fTextureCoordinates.y)).rgb;
 
-            vec4 g = texture(uTexture, vec2(fTextureCoordinates.x - x, fTextureCoordinates.y - y)).rgba;
-            vec4 h = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y - y)).rgba;
-            vec4 i = texture(uTexture, vec2(fTextureCoordinates.x + x, fTextureCoordinates.y - y)).rgba;
+            vec3 g = texture(uTexture, vec2(fTextureCoordinates.x - x, fTextureCoordinates.y - y)).rgb;
+            vec3 h = texture(uTexture, vec2(fTextureCoordinates.x, fTextureCoordinates.y - y)).rgb;
+            vec3 i = texture(uTexture, vec2(fTextureCoordinates.x + x, fTextureCoordinates.y - y)).rgb;
 
             upsample = e * 4.0;
             upsample += (b + d + f + h) * 2.0;
