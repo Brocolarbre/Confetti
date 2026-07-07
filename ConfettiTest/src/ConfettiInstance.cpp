@@ -51,7 +51,7 @@ void ConfettiInstance::restartSimulation()
 
 void ConfettiInstance::updateSimulation(float elapsedTime, float deltaTime)
 {
-    float speedMultiplier = 1.0f;
+    float speedMultiplier = 0.5f;
     m_particleSimulation.update(elapsedTime * speedMultiplier, deltaTime * speedMultiplier);
 }
 
@@ -120,7 +120,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
     m_assetRegistry.addParticleBehavior(6, std::make_unique<cft::SquashStretchParticleBehavior>(glm::vec2(0.35f), 8.0f));
     m_assetRegistry.addParticleBehavior(7, std::make_unique<cft::ColorShiftParticleBehavior>(std::vector<glm::vec4>{ glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f) }, 1.5f, true));
     m_assetRegistry.addParticleBehavior(8, std::make_unique<cft::SmoothColorShiftParticleBehavior>(std::vector<glm::vec4>{ glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f) }, 1.5f, true));
-    m_assetRegistry.addParticleBehavior(9, std::make_unique<cft::FlickerParticleBehavior>(0.8f, 2.0f, 20.0f));
+    m_assetRegistry.addParticleBehavior(9, std::make_unique<cft::FlickerParticleBehavior>(0.4f, 2.0f, 10.0f));
 
     m_assetRegistry.addMotionBehavior(0, std::make_unique<cft::RandomMotionBehavior>());
     m_assetRegistry.addMotionBehavior(1, std::make_unique<cft::VibrationMotionBehavior>());
@@ -129,7 +129,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
 
     m_assetRegistry.addParticleSpawner(0, std::make_unique<cft::ParticleSpawner>(
         std::make_unique<cft::RandomAttributeGenerator<cft::Position>>(glm::vec3(-6.0f, -12.0f, -6.0f), glm::vec3(6.0f, -10.5f, 6.0f), m_randomNumberGenerator),
-        std::make_unique<cft::RandomAttributeGenerator<cft::Velocity>>(glm::vec3(-2.0f, 0.8f, -2.0f), glm::vec3(2.0f, 1.5f, 2.0f), m_randomNumberGenerator),
+        std::make_unique<cft::RandomAttributeGenerator<cft::Velocity>>(glm::vec3(-1.0f, 0.8f, -1.0f), glm::vec3(1.0f, 1.5f, 1.0f), m_randomNumberGenerator),
         std::make_unique<cft::ConstantAttributeGenerator<cft::Rotation>>(glm::quat(1.0f, 0.0f, 0.0f, 0.0f)),
         std::make_unique<cft::ConstantAttributeGenerator<cft::AngularVelocity>>(glm::vec3(0.0f, 0.0f, 0.0f)),
         std::make_unique<cft::RandomAttributeGenerator<cft::Scale>>(glm::vec3(0.5f), glm::vec3(0.6f), m_randomNumberGenerator),

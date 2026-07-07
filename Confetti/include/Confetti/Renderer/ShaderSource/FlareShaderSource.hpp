@@ -7,6 +7,8 @@ namespace cft
 
         uniform sampler2D uTexture;
         uniform vec2 uDirection;
+        uniform float uRadius;
+        uniform uint uMipLevel;
 
         in vec2 fTextureCoordinates;
 
@@ -14,15 +16,15 @@ namespace cft
 
         void main()
         {
-            vec2 direction = normalize(uDirection);
             vec2 texelSize = 1.0 / textureSize(uTexture, 0);
             downsample = vec3(0.0);
 
+            float stretch = 1.0 + uRadius * exp2(float(uMipLevel)) * 1.5;
             float weights[9] = float[](0.015, 0.035, 0.075, 0.15, 0.45, 0.15, 0.075, 0.035, 0.015);
 
             for(int i = -4; i <= 4; ++i)
             {
-                vec2 offset = direction * texelSize * float(i) * 2.0;
+                vec2 offset = uDirection * texelSize * float(i) * 2.0 * stretch;
                 downsample += texture(uTexture, fTextureCoordinates + offset).rgb * weights[i + 4];
             }
         }
@@ -44,10 +46,7 @@ namespace cft
         void main()
         {
             vec2 texelSize = 1.0 / textureSize(uTexture, 0);
-            vec2 direction = normalize(uDirection);
-            vec2 step = direction * texelSize * uRadius * exp2(float(uMipLevel));
-
-            vec2 chromaticAberration = direction * texelSize * uChromaticAberrationStrength;
+            vec2 step = uDirection * texelSize * uRadius * exp2(float(uMipLevel));
 
             upsample = vec3(0.0);
 
@@ -55,6 +54,7 @@ namespace cft
 
             for (int i = -3; i <= 3; i++)
             {
+                vec2 chromaticAberration = uDirection * texelSize * uChromaticAberrationStrength * abs(float(i));
                 vec2 offset = step * float(i);
 
                 float r = texture(uTexture, fTextureCoordinates + offset + chromaticAberration).r;
