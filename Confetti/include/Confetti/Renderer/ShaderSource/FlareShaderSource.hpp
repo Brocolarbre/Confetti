@@ -35,6 +35,7 @@ namespace cft
         uniform vec2 uDirection;
         uniform float uRadius;
         uniform float uChromaticAberrationStrength;
+        uniform uint uMipLevel;
         
         in vec2 fTextureCoordinates;
 
@@ -44,13 +45,13 @@ namespace cft
         {
             vec2 texelSize = 1.0 / textureSize(uTexture, 0);
             vec2 direction = normalize(uDirection);
-            vec2 step = direction * texelSize * uRadius;
+            vec2 step = direction * texelSize * uRadius * exp2(float(uMipLevel));
 
             vec2 chromaticAberration = direction * texelSize * uChromaticAberrationStrength;
 
             upsample = vec3(0.0);
 
-            float weights[7] = float[](0.05, 0.15, 0.25, 0.30, 0.25, 0.15, 0.05);
+            float weights[7] = float[](0.035, 0.10, 0.22, 0.29, 0.22, 0.10, 0.035);
 
             for (int i = -3; i <= 3; i++)
             {
