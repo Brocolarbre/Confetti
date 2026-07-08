@@ -8,7 +8,7 @@ namespace cft
 		m_count(std::max(count, 1u)),
 		m_interval(std::max(interval, 1u)),
 		m_spawnCount(std::max(spawnCount, 1u)),
-		m_frameCounter(0),
+		m_frameCounter(m_interval - 1),
 		m_spawnRate(static_cast<float>(m_count) / static_cast<float>(m_interval))
 	{
 

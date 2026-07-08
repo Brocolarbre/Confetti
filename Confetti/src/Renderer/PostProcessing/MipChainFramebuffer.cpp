@@ -89,7 +89,10 @@ namespace cft
 			mipSize.y = std::max(1u, mipSize.y / 2);
 
 			Texture mip(GL_TEXTURE_2D, m_internalFormat, m_format, m_type);
-			mip.load(nullptr, mipSize.x, mipSize.y, GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
+			//mip.load(nullptr, mipSize.x, mipSize.y, GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
+			float borderColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+			mip.load(nullptr, mipSize.x, mipSize.y, GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_BORDER, false);
 
 			m_mips.push_back(std::move(mip));
 		}

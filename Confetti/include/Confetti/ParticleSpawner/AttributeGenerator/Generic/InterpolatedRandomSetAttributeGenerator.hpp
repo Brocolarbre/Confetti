@@ -6,7 +6,7 @@
 namespace cft
 {
 	template <typename T>
-	class SmoothRandomSetAttributeGenerator : public AttributeGenerator<T>
+	class InterpolatedRandomSetAttributeGenerator : public AttributeGenerator<T>
 	{
 	private:
 		std::vector<T> m_values;
@@ -15,13 +15,13 @@ namespace cft
 		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const override;
 
 	public:
-		SmoothRandomSetAttributeGenerator(const std::vector<T>& values, RandomNumberGenerator& randomNumberGenerator);
+		InterpolatedRandomSetAttributeGenerator(const std::vector<T>& values, RandomNumberGenerator& randomNumberGenerator);
 
 		std::unique_ptr<AttributeGenerator<T>> clone() const override;
 	};
 
 	template<typename T>
-	inline T SmoothRandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
+	inline T InterpolatedRandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
 	{
 		if (m_values.empty())
 			return T(0.0f);
@@ -37,7 +37,7 @@ namespace cft
 	}
 
 	template<typename T>
-	inline SmoothRandomSetAttributeGenerator<T>::SmoothRandomSetAttributeGenerator(const std::vector<T>& values, RandomNumberGenerator& randomNumberGenerator) :
+	inline InterpolatedRandomSetAttributeGenerator<T>::InterpolatedRandomSetAttributeGenerator(const std::vector<T>& values, RandomNumberGenerator& randomNumberGenerator) :
 		m_values(values),
 		m_randomNumberGenerator(randomNumberGenerator)
 	{
@@ -45,8 +45,8 @@ namespace cft
 	}
 
 	template<typename T>
-	inline std::unique_ptr<AttributeGenerator<T>> SmoothRandomSetAttributeGenerator<T>::clone() const
+	inline std::unique_ptr<AttributeGenerator<T>> InterpolatedRandomSetAttributeGenerator<T>::clone() const
 	{
-		return std::make_unique<SmoothRandomSetAttributeGenerator<T>>(*this);
+		return std::make_unique<InterpolatedRandomSetAttributeGenerator<T>>(*this);
 	}
 }

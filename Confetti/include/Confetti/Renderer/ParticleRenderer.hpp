@@ -1,4 +1,3 @@
-#pragma once
 
 #include "Billboard/BillboardParticleRenderer.hpp"
 #include "Mesh/MeshParticleRenderer.hpp"
