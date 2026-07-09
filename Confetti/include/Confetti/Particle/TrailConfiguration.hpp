@@ -6,13 +6,19 @@
 
 namespace cft
 {
-	enum class TrailThicknessEvolution
+	enum class TrailThicknessDistribution
 	{
 		Constant,
 		LinearDecreasing,
 		QuadraticDecreasing,
 		LinearIncreasing,
 		QuadraticIncreasing
+	};
+
+	struct TrailThicknessEvolution
+	{
+		TrailThicknessDistribution distribution;
+		float speed;
 	};
 
 	struct LifetimeFade
@@ -42,7 +48,7 @@ namespace cft
 		std::vector<glm::vec4> colorGradient;
 		std::optional<std::vector<float>> colorStart;
 		TrailColorInterpolation colorInterpolation;
-		TrailThicknessEvolution thicknessEvolution;
-		// Thickness progress
+		TrailThicknessDistribution thicknessDistribution;
+		std::optional<TrailThicknessEvolution> thicknessEvolution;
 	};
 }

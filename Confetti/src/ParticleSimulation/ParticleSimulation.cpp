@@ -386,13 +386,28 @@ namespace cft
 					{
 						float t = 1.0f - (trailSize > 1 ? static_cast<float>(pointIndex) / static_cast<float>(trailSize - 1) : 0.0f);
 
-						switch (trailRegistryEntry.trailConfiguration.thicknessEvolution)
+						switch (trailRegistryEntry.trailConfiguration.thicknessDistribution)
 						{
-						case TrailThicknessEvolution::Constant: trail[pointIndex].thickness = trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::LinearDecreasing: trail[pointIndex].thickness = (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::QuadraticDecreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::LinearIncreasing: trail[pointIndex].thickness = t * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessEvolution::QuadraticIncreasing: trail[pointIndex].thickness = t * t * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessDistribution::Constant: trail[pointIndex].thickness = trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness = (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness = t * trailRegistryEntry.trailConfiguration.thickness; break;
+						case TrailThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness = t * t * trailRegistryEntry.trailConfiguration.thickness; break;
+						}
+
+						if (trailRegistryEntry.trailConfiguration.thicknessEvolution.has_value())
+						{
+							const TrailThicknessEvolution& trailThicknessEvolution = trailRegistryEntry.trailConfiguration.thicknessEvolution.value();
+							float pointAge = (elapsedTime - trail[pointIndex].spawnTime);
+
+							switch (trailThicknessEvolution.distribution)
+							{
+							case TrailThicknessDistribution::Constant: trail[pointIndex].thickness += pointAge * trailThicknessEvolution.speed; break;
+							case TrailThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness += (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
+							case TrailThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness += (1.0f - t) * (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
+							case TrailThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness += t * pointAge * trailThicknessEvolution.speed; break;
+							case TrailThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness += t * t * pointAge * trailThicknessEvolution.speed; break;
+							}
 						}
 
 						switch (trailRegistryEntry.trailConfiguration.colorInterpolation)

@@ -118,7 +118,7 @@ namespace cft
 					TrailMesh::Vertex vertexA;
 					TrailMesh::Vertex vertexB;
 
-					vertexA.position = currentPoint.position + normal * halfWidth; // (elapsedTime - currentPoint.spawnTime) * 
+					vertexA.position = currentPoint.position + normal * halfWidth;
 					vertexB.position = currentPoint.position - normal * halfWidth;
 
 					vertexA.color = currentPoint.color;
