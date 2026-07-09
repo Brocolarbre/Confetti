@@ -250,18 +250,18 @@ namespace cft
 		for (auto& [poolId, particlePool] : m_particlePools)
 		{
 			std::vector<glm::vec4>& color = particlePool.getColor();
-			std::vector<glm::vec4>& initialColor = particlePool.getInitialColor();
+			const std::vector<glm::vec4>& initialColor = particlePool.getInitialColor();
 			std::vector<glm::vec3>& position = particlePool.getPosition();
 			std::vector<glm::vec3>& velocity = particlePool.getVelocity();
 			std::vector<glm::quat>& rotation = particlePool.getRotation();
 			std::vector<glm::vec3>& angularVelocity = particlePool.getAngularVelocity();
 			std::vector<glm::vec3>& scale = particlePool.getScale();
-			std::vector<glm::vec3>& initialScale = particlePool.getInitialScale();
-			std::vector<float>& phase = particlePool.getPhase();
-			std::vector<float>& lifetime = particlePool.getLifetime();
-			std::vector<float>& spawnTime = particlePool.getSpawnTime();
-			std::vector<unsigned int>& id = particlePool.getId();
-			std::vector<unsigned int>& particleRegistryId = particlePool.getParticleRegistryId();
+			const std::vector<glm::vec3>& initialScale = particlePool.getInitialScale();
+			const std::vector<float>& phase = particlePool.getPhase();
+			const std::vector<float>& lifetime = particlePool.getLifetime();
+			const std::vector<float>& spawnTime = particlePool.getSpawnTime();
+			const std::vector<unsigned int>& id = particlePool.getId();
+			const std::vector<unsigned int>& particleRegistryId = particlePool.getParticleRegistryId();
 
 			std::unordered_map<unsigned int, unsigned int> removedParticleCount;
 
@@ -327,8 +327,8 @@ namespace cft
 		// Trails update
 		for (auto& [poolId, trailPool] : m_trailPools)
 		{
-			std::vector<unsigned int>& trailRegistryId = trailPool.getTrailRegistryId();
-			std::vector<unsigned int>& particleId = trailPool.getParticleId();
+			const std::vector<unsigned int>& trailRegistryId = trailPool.getTrailRegistryId();
+			const std::vector<unsigned int>& particleId = trailPool.getParticleId();
 			std::vector<float>& particleDeathTime = trailPool.getParticleDeathTime();
 			std::vector<glm::vec4>& particleColor = trailPool.getParticleColor();
 			std::vector<std::deque<TrailPoint>>& trailPoints = trailPool.getTrailPoints();
@@ -379,6 +379,13 @@ namespace cft
 					std::deque<TrailPoint>& trail = trailPoints[i];
 					unsigned int trailSize = static_cast<unsigned int>(trail.size());
 
+					unsigned int colorGradientSize = static_cast<unsigned int>(trailRegistryEntry.trailConfiguration.colorGradient.size()) + (trailRegistryEntry.trailConfiguration.appendParticleColor ? 1 : 0);
+						std::vector<glm::vec4> colorGradient;
+						colorGradient.reserve(colorGradientSize);
+						if (trailRegistryEntry.trailConfiguration.appendParticleColor)
+							colorGradient.push_back(particleColor[i]);
+						colorGradient.insert(colorGradient.end(), trailRegistryEntry.trailConfiguration.colorGradient.begin(), trailRegistryEntry.trailConfiguration.colorGradient.end());
+
 					for (unsigned int pointIndex = 0; pointIndex < trail.size(); ++pointIndex)
 					{
 						float t = 1.0f - (trailSize > 1 ? static_cast<float>(pointIndex) / static_cast<float>(trailSize - 1) : 0.0f);
@@ -391,13 +398,6 @@ namespace cft
 						case TrailThicknessEvolution::LinearIncreasing: trail[pointIndex].thickness = t * trailRegistryEntry.trailConfiguration.thickness; break;
 						case TrailThicknessEvolution::QuadraticIncreasing: trail[pointIndex].thickness = t * t * trailRegistryEntry.trailConfiguration.thickness; break;
 						}
-
-						unsigned int colorGradientSize = static_cast<unsigned int>(trailRegistryEntry.trailConfiguration.colorGradient.size()) + (trailRegistryEntry.trailConfiguration.appendParticleColor ? 1 : 0);
-						std::vector<glm::vec4> colorGradient;
-						colorGradient.reserve(colorGradientSize);
-						if (trailRegistryEntry.trailConfiguration.appendParticleColor)
-							colorGradient.push_back(particleColor[i]);
-						colorGradient.insert(colorGradient.end(), trailRegistryEntry.trailConfiguration.colorGradient.begin(), trailRegistryEntry.trailConfiguration.colorGradient.end());
 
 						switch (trailRegistryEntry.trailConfiguration.colorInterpolation)
 						{
@@ -455,7 +455,7 @@ namespace cft
 											float t = (distanceFromHead - start) / (end - start);
 											t = glm::clamp(t, 0.0f, 1.0f);
 
-											trail[pointIndex].color = (1.0f - t) * colorGradient[j] + t * colorGradient[j + 1];
+											trail[pointIndex].color = glm::mix(colorGradient[j], colorGradient[j + 1], t);
 
 											break;
 										}
@@ -469,7 +469,7 @@ namespace cft
 
 								unsigned int colorIndexA = static_cast<unsigned int>(integralPart);
 								unsigned int colorIndexB = glm::min(colorIndexA + 1, colorGradientSize - 1);
-								trail[pointIndex].color = (1.0f - colorT) * colorGradient[colorIndexA] + colorT * colorGradient[colorIndexB];
+								trail[pointIndex].color = glm::mix(colorGradient[colorIndexA], colorGradient[colorIndexB], colorT);
 							}
 							break;
 						}
@@ -483,7 +483,7 @@ namespace cft
 							float age = elapsedTime - trail[pointIndex].spawnTime;
 							float trailFadeT = end > start ? (glm::clamp(age, start, end) - start) / (end - start) : 1.0f;
 
-							trail[pointIndex].color.a *= (1.0f - trailFadeT) * 1.0f + trailFadeT * 0.0f;
+							trail[pointIndex].color.a *= 1.0f - trailFadeT;
 						}
 					}
 
