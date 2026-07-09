@@ -31,7 +31,7 @@ namespace cft
 		particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitter.pool, recursionDepth, particleEmitter.spawnTrigger, particleEmitter.renderDescriptor, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
 		particleEmitterInstance.trailRegistryId = particleEmitter.trailConfiguration.has_value() ? std::make_optional<unsigned int>(m_trailRegistry.createEntry(particleEmitter.trailConfiguration.value())) : std::nullopt;
 		particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitter.particleSpawner).clone();
-		particleEmitterInstance.spawnPolicy = m_assetRegistry.getSpawnPolicy(particleEmitter.spawnPolicy).clone();
+		particleEmitterInstance.emissionPattern = m_assetRegistry.getEmissionPattern(particleEmitter.emissionPattern).clone();
 
 		particleEmitterInstance.inheritedForceFields.reserve(descriptor.forceFields.size());
 		for (unsigned int forceField : descriptor.forceFields)
@@ -41,7 +41,7 @@ namespace cft
 		for (unsigned int motionBehavior : descriptor.motionBehaviors)
 			particleEmitterInstance.inheritedMotionBehaviors.push_back(m_assetRegistry.getMotionBehavior(motionBehavior).clone());
 
-		unsigned int maximumParticleCount = static_cast<unsigned int>(particleEmitterInstance.spawnPolicy->getSpawnRate() * particleEmitterInstance.particleSpawner->getMaxiumParticleLifetime());
+		unsigned int maximumParticleCount = particleEmitterInstance.emissionPattern->getMaximumSimultaneousParticleCount(particleEmitterInstance.particleSpawner->getMaxiumParticleLifetime());
 		m_particlePools[particleEmitter.pool].reserve(maximumParticleCount);
 		m_trailPools[particleEmitter.pool].reserve(maximumParticleCount);
 		
@@ -164,7 +164,7 @@ namespace cft
 				
 				particleEmitterInstance.transform.position += particleEmitterInstance.transform.velocity * deltaTime;
 
-				unsigned int particleSpawnCount = particleEmitterInstance.spawnPolicy->getSpawnCount(elapsedTime, deltaTime);
+				unsigned int particleSpawnCount = particleEmitterInstance.emissionPattern->emit(deltaTime);
 				if (particleSpawnCount > 0)
 				{
 					std::vector<Particle> particles = particleEmitterInstance.particleSpawner->spawn(particleSpawnCount, elapsedTime, deltaTime, particleEmitterInstance.particleRegistryId);

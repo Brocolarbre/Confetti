@@ -12,7 +12,8 @@ Code cleanup :
 Features :
 - Ribbon particle
 - Spline motion behavior
-- Lens flare
+- Increasing / decreasing emission patterns
+- Absolute / normalized particle behavior time
 
 Application :
 - Save system (JSON)

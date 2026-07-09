@@ -22,7 +22,7 @@ namespace cft
 		unsigned int particleRegistryId;
 		std::optional<unsigned int> trailRegistryId;
 		std::unique_ptr<ParticleSpawner> particleSpawner;
-		std::unique_ptr<SpawnPolicy> spawnPolicy;
+		std::unique_ptr<EmissionPattern> emissionPattern;
 		std::vector<std::unique_ptr<ForceField>> inheritedForceFields;
 		std::vector<std::unique_ptr<MotionBehavior>> inheritedMotionBehaviors;
 	};

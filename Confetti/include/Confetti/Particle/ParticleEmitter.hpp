@@ -10,7 +10,7 @@ namespace cft
 	{
 		unsigned int pool;
 		unsigned int particleSpawner;
-		unsigned int spawnPolicy;
+		unsigned int emissionPattern;
 		std::optional<TrailConfiguration> trailConfiguration;
 		std::optional<SpawnTrigger> spawnTrigger;
 		RenderDescriptor renderDescriptor;

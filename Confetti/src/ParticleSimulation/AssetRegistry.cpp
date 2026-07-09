@@ -22,9 +22,9 @@ namespace cft
 		m_particleSpawners[id] = std::move(particleSpawner);
 	}
 
-	void AssetRegistry::addSpawnPolicy(unsigned int id, std::unique_ptr<SpawnPolicy> spawnPolicy)
+	void AssetRegistry::addEmissionPattern(unsigned int id, std::unique_ptr<EmissionPattern> emissionPattern)
 	{
-		m_spawnPolicies[id] = std::move(spawnPolicy);
+		m_emissionPatterns[id] = std::move(emissionPattern);
 	}
 
 	void AssetRegistry::addImage(unsigned int id, Image image)
@@ -72,9 +72,9 @@ namespace cft
 		m_particleSpawners.erase(id);
 	}
 
-	void AssetRegistry::removeSpawnPolicy(unsigned int id)
+	void AssetRegistry::removeEmissionPattern(unsigned int id)
 	{
-		m_spawnPolicies.erase(id);
+		m_emissionPatterns.erase(id);
 	}
 
 	void AssetRegistry::removeImage(unsigned int id)
@@ -122,9 +122,9 @@ namespace cft
 		return *m_particleSpawners.at(id);
 	}
 
-	const SpawnPolicy& AssetRegistry::getSpawnPolicy(unsigned int id) const
+	const EmissionPattern& AssetRegistry::getEmissionPattern(unsigned int id) const
 	{
-		return *m_spawnPolicies.at(id);
+		return *m_emissionPatterns.at(id);
 	}
 
 	const Image& AssetRegistry::getImage(unsigned int id) const
@@ -172,9 +172,9 @@ namespace cft
 		return *m_particleSpawners.at(id);
 	}
 
-	SpawnPolicy& AssetRegistry::getSpawnPolicy(unsigned int id)
+	EmissionPattern& AssetRegistry::getEmissionPattern(unsigned int id)
 	{
-		return *m_spawnPolicies.at(id);
+		return *m_emissionPatterns.at(id);
 	}
 
 	Image& AssetRegistry::getImage(unsigned int id)
@@ -222,9 +222,9 @@ namespace cft
 		return m_particleSpawners;
 	}
 
-	const std::unordered_map<unsigned int, std::unique_ptr<SpawnPolicy>>& AssetRegistry::getSpawnPolicies() const
+	const std::unordered_map<unsigned int, std::unique_ptr<EmissionPattern>>& AssetRegistry::getEmissionPatterns() const
 	{
-		return m_spawnPolicies;
+		return m_emissionPatterns;
 	}
 
 	const std::unordered_map<unsigned int, Image>& AssetRegistry::getImages() const
