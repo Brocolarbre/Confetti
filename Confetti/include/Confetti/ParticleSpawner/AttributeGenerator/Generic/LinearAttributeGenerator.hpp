@@ -23,7 +23,7 @@ namespace cft
 	inline T LinearAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
 	{
 		float t = static_cast<float>(index) / static_cast<float>(count - 1);
-		return (1.0f - t) * m_from + t * m_to;
+		return glm::mix(m_from, m_to, t);
 	}
 
 	template<typename T>

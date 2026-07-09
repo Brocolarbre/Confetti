@@ -18,6 +18,9 @@ namespace cft
 	void FlickerParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
 	{
 		float t = glm::sin(elapsedTime * m_speed + particle.phase) * 0.5f + 0.5f;
-		particle.color = (1.0f - t) * particle.initialColor * glm::vec4(glm::vec3(m_minimumBrightness), 1.0f) + t * particle.initialColor * glm::vec4(glm::vec3(m_maximumBrightness), 1.0f);
+
+		glm::vec4 colorA = particle.initialColor * glm::vec4(glm::vec3(m_minimumBrightness), 1.0f);
+		glm::vec4 colorB = particle.initialColor * glm::vec4(glm::vec3(m_maximumBrightness), 1.0f);
+		particle.color = glm::mix(colorA, colorB, t);
 	}
 }

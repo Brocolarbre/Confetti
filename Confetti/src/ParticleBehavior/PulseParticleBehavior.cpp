@@ -18,6 +18,6 @@ namespace cft
 	void PulseParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
 	{
 		float t = glm::sin(elapsedTime * m_speed + particle.phase) * 0.5f + 0.5f;
-		particle.color = (1.0f - t) * m_colorA + t * m_colorB;
+		particle.color = glm::mix(m_colorA, m_colorB, t);
 	}
 }

@@ -48,6 +48,6 @@ namespace cft
 		if (i == m_colors.size() - 2)
 		unsigned int j = i + 1;
 
-		particle.color = (1.0f - t) * m_colors[i] + t * m_colors[j];
+		particle.color = glm::mix(m_colors[i], m_colors[j], t);
 	}
 }

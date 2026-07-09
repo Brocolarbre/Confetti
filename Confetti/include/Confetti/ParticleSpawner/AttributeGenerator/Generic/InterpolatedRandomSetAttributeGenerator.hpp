@@ -33,7 +33,7 @@ namespace cft
 		unsigned int j = i + 1;
 
 		float t = m_randomNumberGenerator.generate(0.0f, 1.0f);
-		return (1.0f - t) * m_values[i] + t * m_values[j];
+		return glm::mix(m_values[i], m_values[j], t);
 	}
 
 	template<typename T>
