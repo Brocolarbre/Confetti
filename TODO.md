@@ -12,7 +12,6 @@ Code cleanup :
 Features :
 - Ribbon particle
 - Spline motion behavior
-- Absolute / normalized particle behavior time
 
 Application :
 - Save system (JSON)

@@ -2,8 +2,8 @@
 
 namespace cft
 {
-	DimOutParticleBehavior::DimOutParticleBehavior(float start) :
-		m_start(start)
+	DimOutParticleBehavior::DimOutParticleBehavior(ParticleTime duration) :
+		m_duration(duration)
 	{
 
 	}
@@ -15,10 +15,13 @@ namespace cft
 
 	void DimOutParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
 	{
-		if (progress < m_start)
+		float duration = m_duration.normalize(particle.lifetime);
+		float start = 1.0f - duration;
+
+		if (progress < start)
 			return;
 
-		float t = glm::max(progress - m_start, 0.0f) / (1.0f - m_start);
+		float t = (progress - start) / duration;
 		float alpha = particle.color.a;
 		particle.color = (1.0f - t) * particle.initialColor;
 		particle.color.a = alpha;

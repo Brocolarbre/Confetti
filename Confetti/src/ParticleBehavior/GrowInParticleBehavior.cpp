@@ -2,8 +2,8 @@
 
 namespace cft
 {
-	GrowInParticleBehavior::GrowInParticleBehavior(float end) :
-		m_end(end)
+	GrowInParticleBehavior::GrowInParticleBehavior(ParticleTime duration) :
+		m_duration(duration)
 	{
 
 	}
@@ -15,10 +15,12 @@ namespace cft
 
 	void GrowInParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
 	{
-		if (progress > m_end)
+		float end = m_duration.normalize(particle.lifetime);
+
+		if (progress > end)
 			return;
 
-		float t = glm::min(progress / m_end, 1.0f);
+		float t = glm::min(progress / end, 1.0f);
 		particle.scale = t * particle.initialScale;
 	}
 }
