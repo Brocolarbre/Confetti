@@ -37,6 +37,7 @@
 #include <Confetti/ParticleSpawner/SpawnShape/SphereVolumeSpawnShape.hpp>
 #include <Confetti/EmissionPattern/ConstantRateEmissionPattern.hpp>
 #include <Confetti/EmissionPattern/FixedBurstEmissionPattern.hpp>
+#include <Confetti/EmissionPattern/LinearRateEmissionPattern.hpp>
 #include <Confetti/EmissionPattern/PeriodicBurstEmissionPattern.hpp>
 #include <Confetti/EmissionPattern/RandomRateEmissionPattern.hpp>
 #include <Confetti/EmissionPattern/SingleBurstEmissionPattern.hpp>
@@ -288,7 +289,8 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
         6.0f
     ));
     //m_assetRegistry.addEmissionPattern(20, std::make_unique<cft::ConstantRateEmissionPattern>(6.0f));
-    m_assetRegistry.addEmissionPattern(20, std::make_unique < cft::PeriodicBurstEmissionPattern>(30, 1.8f));
+    //m_assetRegistry.addEmissionPattern(20, std::make_unique<cft::PeriodicBurstEmissionPattern>(30, 1.8f));
+    m_assetRegistry.addEmissionPattern(20, std::make_unique<cft::LinearRateEmissionPattern>(1000.0f, 10.0f, 5.0f));
     m_assetRegistry.addParticleEmitter(20, cft::ParticleEmitter{ 20, 20, 20, std::nullopt, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 20 } }, { 20 }, {}, { 20, 21, 22, 23 } });
     m_assetRegistry.addParticleEffect(20, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 20, cft::TimeRange{ 0.0f, 60.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}} });
 

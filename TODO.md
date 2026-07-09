@@ -12,7 +12,6 @@ Code cleanup :
 Features :
 - Ribbon particle
 - Spline motion behavior
-- Increasing / decreasing emission patterns
 - Absolute / normalized particle behavior time
 
 Application :

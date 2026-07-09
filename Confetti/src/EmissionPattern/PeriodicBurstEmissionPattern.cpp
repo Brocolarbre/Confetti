@@ -24,9 +24,15 @@ namespace cft
 		if (m_accumulator < m_interval)
 			return 0;
 
-		m_accumulator -= m_interval;
+		unsigned int bursts = 0;
 
-		return m_count;
+		while (m_accumulator >= m_interval)
+		{
+			++bursts;
+			m_accumulator -= m_interval;
+		}
+
+		return bursts * m_count;
 	}
 
 	std::unique_ptr<EmissionPattern> PeriodicBurstEmissionPattern::clone() const

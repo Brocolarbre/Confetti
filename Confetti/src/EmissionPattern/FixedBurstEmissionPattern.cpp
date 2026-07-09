@@ -33,6 +33,21 @@ namespace cft
 		m_accumulator -= m_interval;
 
 		return m_count;
+
+
+
+		m_accumulator += deltaTime;
+
+		unsigned int bursts = 0;
+
+		while (m_accumulator >= m_interval && m_burstAccumulator < m_burstCount)
+		{
+			m_accumulator -= m_interval;
+			++m_burstAccumulator;
+			++bursts;
+		}
+
+		return bursts * m_count;
 	}
 
 	std::unique_ptr<EmissionPattern> FixedBurstEmissionPattern::clone() const
