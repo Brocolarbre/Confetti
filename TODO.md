@@ -7,7 +7,6 @@ Optimizations :
 
 Code cleanup :
 - Use export macro CONFETTI_EXPORT across the entire engine API
-- Consistent naming for structure attributes involved with id (emitterId / emitter)
 
 Features :
 - Ribbon particle

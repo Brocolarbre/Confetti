@@ -8,14 +8,14 @@ namespace cft
 {
 	struct ParticleEmitter
 	{
-		unsigned int pool;
-		unsigned int particleSpawner;
-		unsigned int emissionPattern;
+		unsigned int poolId;
+		unsigned int particleSpawnerId;
+		unsigned int emissionPatternId;
 		std::optional<TrailConfiguration> trailConfiguration;
 		std::optional<SpawnTrigger> spawnTrigger;
 		RenderDescriptor renderDescriptor;
-		std::vector<unsigned int> forceFields;
-		std::vector<unsigned int> motionBehaviors;
-		std::vector<unsigned int> particleBehaviors;
+		std::vector<unsigned int> forceFieldIds;
+		std::vector<unsigned int> motionBehaviorIds;
+		std::vector<unsigned int> particleBehaviorIds;
 	};
 }

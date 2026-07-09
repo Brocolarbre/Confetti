@@ -7,7 +7,7 @@ namespace cft
 {
 	struct ParticleEmitterDescriptor
 	{
-		unsigned int emitter;
+		unsigned int emitterId;
 		TimeRange timeRange;
 		Transform transform;
 		std::vector<unsigned int> forceFields;

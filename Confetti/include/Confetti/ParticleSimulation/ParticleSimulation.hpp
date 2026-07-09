@@ -12,7 +12,7 @@ namespace cft
 	struct ParticleEffectInstance
 	{
 		float spawnTime;
-		std::vector<ParticleEmitterDescriptor> emitters;
+		std::vector<ParticleEmitterDescriptor> emitterDescriptors;
 	};
 
 	struct ParticleEmitterInstance

@@ -6,44 +6,44 @@ namespace cft
 {
 	ParticleEmitterInstance ParticleSimulation::createParticleEmitter(const ParticleEmitterDescriptor& descriptor, const Transform& parentTransform, unsigned int recursionDepth, float elapsedTime)
 	{
-		const ParticleEmitter& particleEmitter = m_assetRegistry.getParticleEmitter(descriptor.emitter);
+		const ParticleEmitter& particleEmitter = m_assetRegistry.getParticleEmitter(descriptor.emitterId);
 
 		std::vector<std::unique_ptr<ForceField>> forceFields;
-		forceFields.reserve(particleEmitter.forceFields.size());
-		for (unsigned int forceField : particleEmitter.forceFields)
-			forceFields.push_back(m_assetRegistry.getForceField(forceField).clone());
+		forceFields.reserve(particleEmitter.forceFieldIds.size());
+		for (unsigned int forceFieldId : particleEmitter.forceFieldIds)
+			forceFields.push_back(m_assetRegistry.getForceField(forceFieldId).clone());
 
 		std::vector<std::unique_ptr<MotionBehavior>> motionBehaviors;
-		motionBehaviors.reserve(particleEmitter.motionBehaviors.size());
-		for (unsigned int motionBehavior : particleEmitter.motionBehaviors)
-			motionBehaviors.push_back(m_assetRegistry.getMotionBehavior(motionBehavior).clone());
+		motionBehaviors.reserve(particleEmitter.motionBehaviorIds.size());
+		for (unsigned int motionBehaviorId : particleEmitter.motionBehaviorIds)
+			motionBehaviors.push_back(m_assetRegistry.getMotionBehavior(motionBehaviorId).clone());
 
 		std::vector<std::unique_ptr<ParticleBehavior>> particleBehaviors;
-		particleBehaviors.reserve(particleEmitter.particleBehaviors.size());
-		for (unsigned int particleBehavior : particleEmitter.particleBehaviors)
-			particleBehaviors.push_back(m_assetRegistry.getParticleBehavior(particleBehavior).clone());
+		particleBehaviors.reserve(particleEmitter.particleBehaviorIds.size());
+		for (unsigned int particleBehaviorId : particleEmitter.particleBehaviorIds)
+			particleBehaviors.push_back(m_assetRegistry.getParticleBehavior(particleBehaviorId).clone());
 
 		ParticleEmitterInstance particleEmitterInstance;
 
 		particleEmitterInstance.timeRange = descriptor.timeRange;
 		particleEmitterInstance.timeRange.spawnTime += elapsedTime;
 		particleEmitterInstance.transform = Transform{ parentTransform.position + descriptor.transform.position, parentTransform.velocity + descriptor.transform.velocity, parentTransform.rotation + descriptor.transform.rotation, parentTransform.angularVelocity + descriptor.transform.angularVelocity };
-		particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitter.pool, recursionDepth, particleEmitter.spawnTrigger, particleEmitter.renderDescriptor, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
+		particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitter.poolId, recursionDepth, particleEmitter.spawnTrigger, particleEmitter.renderDescriptor, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
 		particleEmitterInstance.trailRegistryId = particleEmitter.trailConfiguration.has_value() ? std::make_optional<unsigned int>(m_trailRegistry.createEntry(particleEmitter.trailConfiguration.value())) : std::nullopt;
-		particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitter.particleSpawner).clone();
-		particleEmitterInstance.emissionPattern = m_assetRegistry.getEmissionPattern(particleEmitter.emissionPattern).clone();
+		particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitter.particleSpawnerId).clone();
+		particleEmitterInstance.emissionPattern = m_assetRegistry.getEmissionPattern(particleEmitter.emissionPatternId).clone();
 
 		particleEmitterInstance.inheritedForceFields.reserve(descriptor.forceFields.size());
-		for (unsigned int forceField : descriptor.forceFields)
-			particleEmitterInstance.inheritedForceFields.push_back(m_assetRegistry.getForceField(forceField).clone());
+		for (unsigned int forceFieldId : descriptor.forceFields)
+			particleEmitterInstance.inheritedForceFields.push_back(m_assetRegistry.getForceField(forceFieldId).clone());
 
 		particleEmitterInstance.inheritedMotionBehaviors.reserve(descriptor.motionBehaviors.size());
-		for (unsigned int motionBehavior : descriptor.motionBehaviors)
-			particleEmitterInstance.inheritedMotionBehaviors.push_back(m_assetRegistry.getMotionBehavior(motionBehavior).clone());
+		for (unsigned int motionBehaviorId : descriptor.motionBehaviors)
+			particleEmitterInstance.inheritedMotionBehaviors.push_back(m_assetRegistry.getMotionBehavior(motionBehaviorId).clone());
 
 		unsigned int maximumParticleCount = particleEmitterInstance.emissionPattern->getMaximumSimultaneousParticleCount(particleEmitterInstance.particleSpawner->getMaxiumParticleLifetime());
-		m_particlePools[particleEmitter.pool].reserve(maximumParticleCount);
-		m_trailPools[particleEmitter.pool].reserve(maximumParticleCount);
+		m_particlePools[particleEmitter.poolId].reserve(maximumParticleCount);
+		m_trailPools[particleEmitter.poolId].reserve(maximumParticleCount);
 		
 		return particleEmitterInstance;
 	}
@@ -78,11 +78,7 @@ namespace cft
 
 	void ParticleSimulation::addParticleEffect(float elapsedTime, unsigned int id)
 	{
-		const ParticleEffect& particleEffect = m_assetRegistry.getParticleEffect(id);
-		m_particleEffectInstances.push_back(ParticleEffectInstance{
-			elapsedTime,
-			particleEffect.emitters
-		});
+		m_particleEffectInstances.push_back(ParticleEffectInstance{ elapsedTime, m_assetRegistry.getParticleEffect(id).emitters });
 	}
 
 	void ParticleSimulation::clear()
@@ -102,9 +98,9 @@ namespace cft
 		{
 			ParticleEffectInstance& particleEffectInstance = m_particleEffectInstances[i];
 
-			for (unsigned int j = 0; j < particleEffectInstance.emitters.size();)
+			for (unsigned int j = 0; j < particleEffectInstance.emitterDescriptors.size();)
 			{
-				const ParticleEmitterDescriptor& particleEmitterDescriptor = particleEffectInstance.emitters[j];
+				const ParticleEmitterDescriptor& particleEmitterDescriptor = particleEffectInstance.emitterDescriptors[j];
 				if (elapsedTime >= particleEffectInstance.spawnTime + particleEmitterDescriptor.timeRange.spawnTime)
 				{
 					ParticleEmitterInstance particleEmitterInstance = createParticleEmitter(particleEmitterDescriptor, Transform{}, 0, elapsedTime);
@@ -116,8 +112,8 @@ namespace cft
 
 					m_particleEmitterInstances.push_back(std::move(particleEmitterInstance));
 
-					particleEffectInstance.emitters[j] = std::move(particleEffectInstance.emitters.back());
-					particleEffectInstance.emitters.pop_back();
+					particleEffectInstance.emitterDescriptors[j] = std::move(particleEffectInstance.emitterDescriptors.back());
+					particleEffectInstance.emitterDescriptors.pop_back();
 				}
 				else
 				{
@@ -125,7 +121,7 @@ namespace cft
 				}
 			}
 
-			if (particleEffectInstance.emitters.empty())
+			if (particleEffectInstance.emitterDescriptors.empty())
 			{
 				m_particleEffectInstances[i] = std::move(m_particleEffectInstances.back());
 				m_particleEffectInstances.pop_back();
@@ -178,9 +174,9 @@ namespace cft
 					if (particleRegistryEntry.spawnTrigger.has_value())
 					{
 						const SpawnTrigger& spawnTriggerValue = particleRegistryEntry.spawnTrigger.value();
-						spawnSpawnTrigger = particleRegistryEntry.recursionDepth < spawnTriggerValue.maximumRecursionDepth && spawnTriggerValue.spawnEmitter.has_value();
+						spawnSpawnTrigger = particleRegistryEntry.recursionDepth < spawnTriggerValue.maximumRecursionDepth && spawnTriggerValue.spawnEmitterDescriptor.has_value();
 						if (spawnSpawnTrigger)
-							spawnParticleEmitterDescriptor = spawnTriggerValue.spawnEmitter.value();
+							spawnParticleEmitterDescriptor = spawnTriggerValue.spawnEmitterDescriptor.value();
 					}
 
 					bool spawnTrails = particleEmitterInstance.trailRegistryId.has_value();
@@ -229,12 +225,12 @@ namespace cft
 
 		for (auto& [id, entry] : m_particleRegistry.getEntries())
 		{
-			if (entry.spawnTrigger.has_value() && entry.spawnTrigger.value().periodicEmitter.has_value())
+			if (entry.spawnTrigger.has_value() && entry.spawnTrigger.value().periodicEmitterDescriptor.has_value())
 			{
 				SpawnTrigger& spawnTrigger = entry.spawnTrigger.value();
-				if (spawnTrigger.periodicEmitter.has_value())
+				if (spawnTrigger.periodicEmitterDescriptor.has_value())
 				{
-					PeriodicSpawnTrigger& periodicSpawnTrigger = spawnTrigger.periodicEmitter.value();
+					PeriodicSpawnTrigger& periodicSpawnTrigger = spawnTrigger.periodicEmitterDescriptor.value();
 					entry.periodicTriggerAccumulator += deltaTime;
 
 					if (entry.recursionDepth < spawnTrigger.maximumRecursionDepth && entry.periodicTriggerAccumulator >= periodicSpawnTrigger.interval)
@@ -275,9 +271,9 @@ namespace cft
 					if (entry.spawnTrigger.has_value())
 					{
 						const SpawnTrigger& spawnTriggerValue = entry.spawnTrigger.value();
-						if (entry.recursionDepth < spawnTriggerValue.maximumRecursionDepth && spawnTriggerValue.deathEmitter.has_value())
+						if (entry.recursionDepth < spawnTriggerValue.maximumRecursionDepth && spawnTriggerValue.deathEmitterDescriptor.has_value())
 						{
-							ParticleEmitterInstance deathParticleEmitterInstance = createParticleEmitter(spawnTriggerValue.deathEmitter.value(), Transform{ position[i], velocity[i], rotation[i], angularVelocity[i] }, entry.recursionDepth + 1, elapsedTime);
+							ParticleEmitterInstance deathParticleEmitterInstance = createParticleEmitter(spawnTriggerValue.deathEmitterDescriptor.value(), Transform{ position[i], velocity[i], rotation[i], angularVelocity[i] }, entry.recursionDepth + 1, elapsedTime);
 							m_particleRegistry.addReferenceCount(deathParticleEmitterInstance.particleRegistryId, 1);
 							if (deathParticleEmitterInstance.trailRegistryId)
 								m_trailRegistry.addReferenceCount(deathParticleEmitterInstance.trailRegistryId.value(), 1);
@@ -292,7 +288,7 @@ namespace cft
 				{
 					if (triggeredPeriodicSpawnTriggers.find(particleRegistryId[i]) != triggeredPeriodicSpawnTriggers.end())
 					{
-						ParticleEmitterInstance periodicParticleEmitterInstance = createParticleEmitter(entry.spawnTrigger.value().periodicEmitter.value().emitter, Transform{position[i], velocity[i], rotation[i], angularVelocity[i]}, entry.recursionDepth + 1, elapsedTime);
+						ParticleEmitterInstance periodicParticleEmitterInstance = createParticleEmitter(entry.spawnTrigger.value().periodicEmitterDescriptor.value().emitterDescriptor, Transform{position[i], velocity[i], rotation[i], angularVelocity[i]}, entry.recursionDepth + 1, elapsedTime);
 						m_particleRegistry.addReferenceCount(periodicParticleEmitterInstance.particleRegistryId, 1);
 						if (periodicParticleEmitterInstance.trailRegistryId)
 							m_trailRegistry.addReferenceCount(periodicParticleEmitterInstance.trailRegistryId.value(), 1);
