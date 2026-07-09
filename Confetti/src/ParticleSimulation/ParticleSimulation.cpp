@@ -33,12 +33,12 @@ namespace cft
 		particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitter.particleSpawnerId).clone();
 		particleEmitterInstance.emissionPattern = m_assetRegistry.getEmissionPattern(particleEmitter.emissionPatternId).clone();
 
-		particleEmitterInstance.inheritedForceFields.reserve(descriptor.forceFields.size());
-		for (unsigned int forceFieldId : descriptor.forceFields)
+		particleEmitterInstance.inheritedForceFields.reserve(descriptor.forceFieldIds.size());
+		for (unsigned int forceFieldId : descriptor.forceFieldIds)
 			particleEmitterInstance.inheritedForceFields.push_back(m_assetRegistry.getForceField(forceFieldId).clone());
 
-		particleEmitterInstance.inheritedMotionBehaviors.reserve(descriptor.motionBehaviors.size());
-		for (unsigned int motionBehaviorId : descriptor.motionBehaviors)
+		particleEmitterInstance.inheritedMotionBehaviors.reserve(descriptor.motionBehaviorIds.size());
+		for (unsigned int motionBehaviorId : descriptor.motionBehaviorIds)
 			particleEmitterInstance.inheritedMotionBehaviors.push_back(m_assetRegistry.getMotionBehavior(motionBehaviorId).clone());
 
 		unsigned int maximumParticleCount = particleEmitterInstance.emissionPattern->getMaximumSimultaneousParticleCount(particleEmitterInstance.particleSpawner->getMaxiumParticleLifetime());
@@ -78,7 +78,7 @@ namespace cft
 
 	void ParticleSimulation::addParticleEffect(float elapsedTime, unsigned int id)
 	{
-		m_particleEffectInstances.push_back(ParticleEffectInstance{ elapsedTime, m_assetRegistry.getParticleEffect(id).emitters });
+		m_particleEffectInstances.push_back(ParticleEffectInstance{ elapsedTime, m_assetRegistry.getParticleEffect(id).emitterDescriptors });
 	}
 
 	void ParticleSimulation::clear()

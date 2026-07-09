@@ -10,12 +10,12 @@ namespace cft
 		unsigned int emitterId;
 		TimeRange timeRange;
 		Transform transform;
-		std::vector<unsigned int> forceFields;
-		std::vector<unsigned int> motionBehaviors;
+		std::vector<unsigned int> forceFieldIds;
+		std::vector<unsigned int> motionBehaviorIds;
 	};
 
 	struct ParticleEffect
 	{
-		std::vector<ParticleEmitterDescriptor> emitters;
+		std::vector<ParticleEmitterDescriptor> emitterDescriptors;
 	};
 }
