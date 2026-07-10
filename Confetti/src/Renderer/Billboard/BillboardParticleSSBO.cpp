@@ -37,7 +37,7 @@ namespace cft
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_id);
 	}
 
-	void BillboardParticleSSBO::setData(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, unsigned int>& imageTextureIdMapping, const std::unordered_map<unsigned int, unsigned int>& spriteSheetSpriteSheetIdMapping, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
+	void BillboardParticleSSBO::setData(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, unsigned int>& imageIdToTextureIndex, const std::unordered_map<unsigned int, unsigned int>& spriteSheetIdToSpriteSheetSsboIndexMapping, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
 	{
 		std::vector<std::reference_wrapper<const cft::ParticlePool>> pools;
 		pools.reserve(particlePools.size());
@@ -68,20 +68,20 @@ namespace cft
 
 			for (unsigned int i = 0; i < particleCount; ++i)
 			{
-				float spriteSheetId = -1.0f;
-				float textureId = -1.0f;
+				float spriteSheetSsboIndex = -1.0f;
+				float textureIndex = -1.0f;
 
 				std::optional<unsigned int> spriteSheet = std::get<BillboardRenderDescriptor>(particleRegistry.getEntry(id[i]).renderDescriptor.descriptorData).spriteSheetId;
 				if (spriteSheet.has_value())
 				{
-					spriteSheetId = static_cast<float>(spriteSheetSpriteSheetIdMapping.at(spriteSheet.value()));
+					spriteSheetSsboIndex = static_cast<float>(spriteSheetIdToSpriteSheetSsboIndexMapping.at(spriteSheet.value()));
 					unsigned int imageId = assetRegistry.getSpriteSheet(spriteSheet.value()).imageId;
-					textureId = static_cast<float>(imageTextureIdMapping.at(imageId));
+					textureIndex = static_cast<float>(imageIdToTextureIndex.at(imageId));
 				}
 
 				float angle = 2.0f * std::atan2(rotation[i].z, rotation[i].w);
 
-				ParticleData particleData{ color[i], glm::vec4(position[i], phase[i]), glm::vec4(scale[i].x, scale[i].y, spriteSheetId, textureId), glm::vec4(angle, 0.0f, 0.0f, 0.0f) };
+				ParticleData particleData{ color[i], glm::vec4(position[i], phase[i]), glm::vec4(scale[i].x, scale[i].y, spriteSheetSsboIndex, textureIndex), glm::vec4(angle, 0.0f, 0.0f, 0.0f) };
 				particlesData.push_back(particleData);
 			}
 

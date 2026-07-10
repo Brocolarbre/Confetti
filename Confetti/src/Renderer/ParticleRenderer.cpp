@@ -41,19 +41,19 @@ namespace cft
 		return m_toneMapping.getOutputTexture();
 	}
 
-	void ParticleRenderer::loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images, unsigned int width, unsigned int height)
+	void ParticleRenderer::loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
 	{
-		m_billboardParticleRenderer.loadTextures(assetRegistry, images, width, height);
+		m_billboardParticleRenderer.loadTextures(assetRegistry, imageIds, width, height);
 	}
 
-	void ParticleRenderer::loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images)
+	void ParticleRenderer::loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds)
 	{
-		m_meshParticleRenderer.loadTextures(assetRegistry, images);
+		m_meshParticleRenderer.loadTextures(assetRegistry, imageIds);
 	}
 
-	void ParticleRenderer::loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& models)
+	void ParticleRenderer::loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds)
 	{
-		m_meshParticleRenderer.loadMeshes(assetRegistry, models);
+		m_meshParticleRenderer.loadMeshes(assetRegistry, modelIds);
 	}
 
 	void ParticleRenderer::loadTrailRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)

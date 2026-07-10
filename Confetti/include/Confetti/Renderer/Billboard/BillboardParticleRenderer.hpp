@@ -12,8 +12,8 @@ namespace cft
 	class BillboardParticleRenderer
 	{
 	private:
-		std::unordered_map<unsigned int, unsigned int> m_imageIdToTextureId;
-		std::unordered_map<unsigned int, unsigned int> m_spriteSheetIdToSpriteSheetSsboIdMapping;
+		std::unordered_map<unsigned int, unsigned int> m_imageIdToTextureIndex;
+		std::unordered_map<unsigned int, unsigned int> m_spriteSheetIdToSpriteSheetSsboIndexMapping;
 		TextureArray m_textureArray;
 		SpriteSheetSSBO m_spriteSheetSsbo;
 		BillboardParticleSSBO m_particleSsbo;
@@ -25,7 +25,7 @@ namespace cft
 	public:
 		BillboardParticleRenderer();
 
-		void loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images, unsigned int width, unsigned int height);
+		void loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
 
 		void update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
 		void render(const View& view, float elapsedTime) const;

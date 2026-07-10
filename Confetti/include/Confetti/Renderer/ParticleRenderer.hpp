@@ -35,9 +35,9 @@ namespace cft
 
 		unsigned int getOutputTextureId() const;
 
-		void loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images, unsigned int width, unsigned int height);
-		void loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images);
-		void loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& models);
+		void loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
+		void loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds);
+		void loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds);
 		void loadTrailRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
 
 		void resize(unsigned int width, unsigned int height);

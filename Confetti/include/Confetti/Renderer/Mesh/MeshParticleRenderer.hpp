@@ -22,8 +22,8 @@ namespace cft
 	public:
 		MeshParticleRenderer();
 
-		void loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images);
-		void loadMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& models);
+		void loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds);
+		void loadMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds);
 
 		void update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry);
 		void render(const View& view) const;

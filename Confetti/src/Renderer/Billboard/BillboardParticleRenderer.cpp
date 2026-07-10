@@ -8,7 +8,7 @@ namespace cft
 {
 	void BillboardParticleRenderer::loadSpriteSheets(AssetRegistry& assetRegistry)
 	{
-		m_spriteSheetIdToSpriteSheetSsboIdMapping.clear();
+		m_spriteSheetIdToSpriteSheetSsboIndexMapping.clear();
 		const std::unordered_map<unsigned int, SpriteSheet>& spriteSheets = assetRegistry.getSpriteSheets();
 
 		unsigned int spriteSheetCounter = 0;
@@ -17,7 +17,7 @@ namespace cft
 
 		for (const std::pair<unsigned int, SpriteSheet>& spriteSheet : spriteSheets)
 		{
-			m_spriteSheetIdToSpriteSheetSsboIdMapping[spriteSheet.first] = spriteSheetCounter++;
+			m_spriteSheetIdToSpriteSheetSsboIndexMapping[spriteSheet.first] = spriteSheetCounter++;
 			spriteSheetData.push_back(std::ref(spriteSheet.second));
 		}
 
@@ -26,8 +26,8 @@ namespace cft
 	}
 
 	BillboardParticleRenderer::BillboardParticleRenderer() :
-		m_imageIdToTextureId(),
-		m_spriteSheetIdToSpriteSheetSsboIdMapping(),
+		m_imageIdToTextureIndex(),
+		m_spriteSheetIdToSpriteSheetSsboIndexMapping(),
 		m_textureArray(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE),
 		m_spriteSheetSsbo(),
 		m_particleSsbo(),
@@ -39,17 +39,17 @@ namespace cft
 		m_shader.setUniform("uTexture", 0);
 	}
 
-	void BillboardParticleRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images, unsigned int width, unsigned int height)
+	void BillboardParticleRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
 	{
-		m_imageIdToTextureId.clear();
+		m_imageIdToTextureIndex.clear();
 
 		std::vector<std::vector<std::byte>> imageData;
-		imageData.reserve(images.size());
+		imageData.reserve(imageIds.size());
 
-		for (unsigned int imageId : images)
+		for (unsigned int imageId : imageIds)
 		{
 			const Image& image = assetRegistry.getImage(imageId);
-			m_imageIdToTextureId[imageId] = static_cast<unsigned int>(imageData.size());
+			m_imageIdToTextureIndex[imageId] = static_cast<unsigned int>(imageData.size());
 			imageData.push_back(image.getData());
 
 			unsigned int imageWidth = image.getWidth();
@@ -73,7 +73,7 @@ namespace cft
 	void BillboardParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
 	{
 		m_particleSsbo.bind();
-		m_particleSsbo.setData(particlePools, m_imageIdToTextureId, m_spriteSheetIdToSpriteSheetSsboIdMapping, particleRegistry, assetRegistry);
+		m_particleSsbo.setData(particlePools, m_imageIdToTextureIndex, m_spriteSheetIdToSpriteSheetSsboIndexMapping, particleRegistry, assetRegistry);
 	}
 
 	void BillboardParticleRenderer::render(const View& view, float elapsedTime) const

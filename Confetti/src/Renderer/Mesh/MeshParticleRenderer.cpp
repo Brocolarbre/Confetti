@@ -17,11 +17,11 @@ namespace cft
 		m_shader.setUniform("uTexture", 0);
 	}
 
-	void MeshParticleRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& images)
+	void MeshParticleRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds)
 	{
 		m_textures.clear();
 
-		for (unsigned int imageId : images)
+		for (unsigned int imageId : imageIds)
 		{
 			const Image& image = assetRegistry.getImage(imageId);
 			unsigned int channelCount = image.getChannelCount();
@@ -31,11 +31,11 @@ namespace cft
 		}
 	}
 
-	void MeshParticleRenderer::loadMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& models)
+	void MeshParticleRenderer::loadMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds)
 	{
 		m_meshes.clear();
 
-		for (unsigned int modelId : models)
+		for (unsigned int modelId : modelIds)
 		{
 			const Model& model = assetRegistry.getModel(modelId);
 			MeshParticleMesh mesh;

@@ -31,6 +31,6 @@ namespace cft
 		unsigned int getParticleCount() const;
 
 		void bind() const;
-		void setData(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, unsigned int>& imageTextureIdMapping, const std::unordered_map<unsigned int, unsigned int>& spriteSheetSpriteSheetIdMapping, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
+		void setData(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, unsigned int>& imageIdToTextureIndex, const std::unordered_map<unsigned int, unsigned int>& spriteSheetIdToSpriteSheetSsboIndexMapping, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
 	};
 }

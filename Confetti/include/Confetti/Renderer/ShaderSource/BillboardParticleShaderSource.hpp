@@ -9,7 +9,7 @@ namespace cft
 		{
 			vec4 color;
 			vec4 positionPhase;
-			vec4 scaleSpriteSheetIdTextureId;
+			vec4 scaleSpriteSheetIndexTextureIndex;
 			vec4 rotation;
 		};
 
@@ -42,7 +42,7 @@ namespace cft
 
 		out vec4 fColor;
 		out vec2 fTextureCoordinates;
-		flat out float fTextureId;
+		flat out float fTextureIndex;
 
 		void main()
 		{
@@ -51,10 +51,10 @@ namespace cft
 
 			vec4 color = particleData.particle[gl_InstanceID].color;
 			vec3 position = particleData.particle[gl_InstanceID].positionPhase.xyz;
-			vec2 scale = particleData.particle[gl_InstanceID].scaleSpriteSheetIdTextureId.xy;
+			vec2 scale = particleData.particle[gl_InstanceID].scaleSpriteSheetIndexTextureIndex.xy;
 			float phase = particleData.particle[gl_InstanceID].positionPhase.w;
-			float spriteSheetId = particleData.particle[gl_InstanceID].scaleSpriteSheetIdTextureId.z;
-			float textureId = particleData.particle[gl_InstanceID].scaleSpriteSheetIdTextureId.w;
+			float spriteSheetIndex = particleData.particle[gl_InstanceID].scaleSpriteSheetIndexTextureIndex.z;
+			float textureIndex = particleData.particle[gl_InstanceID].scaleSpriteSheetIndexTextureIndex.w;
 
 			float angle = particleData.particle[gl_InstanceID].rotation.x;
 			float c = cos(angle);
@@ -66,14 +66,14 @@ namespace cft
 			gl_Position = uProjection * uView * vec4(vertexPosition, 1.0);
 			fColor = color;
 
-			if (spriteSheetId < 0.0)
+			if (spriteSheetIndex < 0.0)
 			{
 				fTextureCoordinates = vTextureCoordinates;
-				fTextureId = -1.0;
+				fTextureIndex = -1.0;
 			}
 			else
 			{
-				SpriteSheet spriteSheet = spriteSheetData.spriteSheet[uint(spriteSheetId)];
+				SpriteSheet spriteSheet = spriteSheetData.spriteSheet[uint(spriteSheetIndex)];
 				float animationTime = uTime * spriteSheet.animationSpeed + phase;
 				uint frame = uint(animationTime) % spriteSheet.frameCount;
 				uint column = frame % spriteSheet.rowFrameCount;
@@ -83,7 +83,7 @@ namespace cft
 				vec2 frameOffset = vec2(column, row) * vec2(spriteSheet.frameSize);
 
 				fTextureCoordinates = (frameOffset + vTextureCoordinates * vec2(spriteSheet.frameSize)) / vec2(textureSize(uTexture, 0).xy);
-				fTextureId = textureId;
+				fTextureIndex = textureIndex;
 			}
 		}
 	)";
@@ -95,16 +95,16 @@ namespace cft
 
 		in vec4 fColor;
 		in vec2 fTextureCoordinates;
-		flat in float fTextureId;
+		flat in float fTextureIndex;
 
 		out vec4 color;
 
 		void main()
 		{
-			if (fTextureId < 0.0)
+			if (fTextureIndex < 0.0)
 				color = fColor;
 			else
-				color = texture(uTexture, vec3(fTextureCoordinates, fTextureId)) * fColor;
+				color = texture(uTexture, vec3(fTextureCoordinates, fTextureIndex)) * fColor;
 		}
 	)";
 }
