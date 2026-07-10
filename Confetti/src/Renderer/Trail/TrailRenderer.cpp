@@ -1,6 +1,9 @@
 #include "Confetti/Renderer/Trail/TrailRenderer.hpp"
 #include "Confetti/Renderer/ShaderSource/TrailShaderSource.hpp"
 
+#include <glad/glad.h>
+#include <iostream>
+
 namespace
 {
 	glm::vec3 safeNormalize(const glm::vec3& v)
@@ -17,13 +20,44 @@ namespace
 namespace cft
 {
 	TrailRenderer::TrailRenderer() :
+		m_imageIdToTextureIndex(),
+		m_textureArray(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE),
 		m_trailMesh(),
 		m_shader()
 	{
 		m_shader.loadFromMemory(std::string(TRAIL_VERTEX_SHADER_SOURCE), std::string(TRAIL_FRAGMENT_SHADER_SOURCE));
 	}
 
-	void TrailRenderer::update(const std::unordered_map<unsigned int, TrailPool>& trailPools, const View& view)
+	void TrailRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
+	{
+		m_imageIdToTextureIndex.clear();
+
+		std::vector<std::vector<std::byte>> imageData;
+		imageData.reserve(imageIds.size());
+
+		for (unsigned int imageId : imageIds)
+		{
+			const Image& image = assetRegistry.getImage(imageId);
+			m_imageIdToTextureIndex[imageId] = static_cast<unsigned int>(imageData.size());
+			imageData.push_back(image.getData());
+
+			unsigned int imageWidth = image.getWidth();
+			unsigned int imageHeight = image.getHeight();
+
+			if (imageWidth != width || imageHeight != height)
+				std::cerr << "Trail renderer texture loading error : size mismatch for image at id " << imageId << " : " << imageWidth << "x" << imageHeight << " instead of " << width << "x" << height << std::endl;
+		}
+
+		std::vector<const void*> textureData;
+		textureData.reserve(imageData.size());
+
+		for (const std::vector<std::byte>& data : imageData)
+			textureData.push_back(data.data());
+
+		m_textureArray.load(textureData, width, height, GL_NEAREST, GL_CLAMP_TO_EDGE);
+	}
+
+	void TrailRenderer::update(const std::unordered_map<unsigned int, TrailPool>& trailPools, const TrailRegistry& trailRegistry, const View& view)
 	{
 		size_t totalVertices = 0;
 		size_t totalTrails = 0;
@@ -52,6 +86,7 @@ namespace cft
 
 		for (const auto& [id, pool] : trailPools)
 		{
+			const std::vector<unsigned int>& trailRegistryId = pool.getTrailRegistryId();
 			const std::vector<std::deque<TrailPoint>>& trailPoints = pool.getTrailPoints();
 			unsigned int poolCount = pool.getCount();
 
@@ -127,10 +162,18 @@ namespace cft
 					if (pointIndex > 0)
 						accumulated += glm::distance(previousPoint.position, currentPoint.position);
 
-					float u = totalLength > 0.0f ? accumulated / totalLength : 0.0f;
+					float v = totalLength > 0.0f ? accumulated / totalLength : 0.0f;
 
-					vertexA.textureCoordinates = glm::vec2(u, 0.0f);
-					vertexB.textureCoordinates = glm::vec2(u, 1.0f);
+					vertexA.textureCoordinates = glm::vec2(0.0f, v);
+					vertexB.textureCoordinates = glm::vec2(1.0f, v);
+
+					const TrailRegistryEntry& trailRegistryEntry = trailRegistry.getEntry(trailRegistryId[i]);
+					int textureIndex = -1;
+					if (trailRegistryEntry.trailConfiguration.imageId.has_value())
+						textureIndex = static_cast<int>(m_imageIdToTextureIndex.at(trailRegistryEntry.trailConfiguration.imageId.value()));
+
+					vertexA.textureIndex = textureIndex;
+					vertexB.textureIndex = textureIndex;
 
 					vertexData.push_back(vertexA);
 					vertexData.push_back(vertexB);
@@ -143,6 +186,9 @@ namespace cft
 
 	void TrailRenderer::render(const View& view) const
 	{
+		TextureArray::setActiveSlot(0);
+		m_textureArray.bind();
+
 		m_shader.use();
 		m_shader.setUniform("uView", view.viewMatrix);
 		m_shader.setUniform("uProjection", view.projectionMatrix);

@@ -94,10 +94,14 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
     cft::Image roundedDiamondImage;
     roundedDiamondImage.loadFromFile("res/images/rounded_diamond.png");
 
+    cft::Image triangleImage;
+    triangleImage.loadFromFile("res/images/triangle.png");
+
     //m_assetRegistry.addImage(0, std::move(bubbleImage));
     m_assetRegistry.addImage(1, std::move(rockImage));
     m_assetRegistry.addImage(2, std::move(circleImage));
     m_assetRegistry.addImage(3, std::move(diamondImage));
+    m_assetRegistry.addImage(4, std::move(triangleImage));
     m_assetRegistry.addImage(20, std::move(roundedDiamondImage));
 
     //m_assetRegistry.addSpriteSheet(0, cft::SpriteSheet{ 0, 64, 8, 512, 512, 18.0f });
@@ -115,6 +119,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
     //m_particleRenderer.loadBillboardRendererTextures(m_assetRegistry, { 3 }, 626, 626);
     //m_particleRenderer.loadMeshRendererTextures(m_assetRegistry, { 1 });
     m_particleRenderer.loadMeshRendererMeshes(m_assetRegistry, { 0 });
+    m_particleRenderer.loadTrailRendererTextures(m_assetRegistry, { 4 }, 200, 200);
 
     m_assetRegistry.addForceField(0, std::make_unique<cft::DirectionalForceField>(glm::vec3(0.0f, -1.0f, 0.0f), 9.81f));
     m_assetRegistry.addForceField(1, std::make_unique<cft::AttractionForceField>(cft::SpatialInfluence(glm::vec3(0.0f, 0.0f, 0.0f), 10.0f, cft::Falloff::Constant), 5.0f));
@@ -210,7 +215,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
 
     m_assetRegistry.addParticleEmitter(0, cft::ParticleEmitter{ 0, 0, 0, std::nullopt, cft::SpawnTrigger{ 1, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, cft::PeriodicSpawnTrigger{ cft::ParticleEmitterDescriptor{ 1, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, 0.1f } }, cft::RenderDescriptor{cft::RenderType::Mesh, cft::MeshRenderDescriptor{ 0, 1 } }, { 4 }, {}, {} });
     m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, std::nullopt, std::nullopt, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 1 }}, { 0 }, {}, { 2, 4 } });
-    //m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, cft::TrailConfiguration{ 1.0f, 0.08f, 0.05f, std::nullopt, 1.5f, std::nullopt, 15, false, { glm::vec4(1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.1f, 0.2f, 0.9f, 1.0f) }, std::nullopt, cft::TrailColorInterpolation::Linear, cft::TrailThicknessEvolution::Constant, std::nullopt }, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{1}}, {0}, {}, {2, 4}});
+    //m_assetRegistry.addParticleEmitter(1, cft::ParticleEmitter{ 1, 1, 1, cft::TrailConfiguration{ 1.0f, 0.08f, 0.05f, std::nullopt, 1.5f, std::nullopt, 15, false, { glm::vec4(1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.1f, 0.2f, 0.9f, 1.0f) }, std::nullopt, cft::TrailColorInterpolation::Linear, cft::TrailThicknessEvolution::Constant, std::nullopt, std::nullopt }, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{1}}, {0}, {}, {2, 4}});
     m_assetRegistry.addParticleEmitter(2, cft::ParticleEmitter{ 2, 2, 2, std::nullopt, cft::SpawnTrigger{ 4, std::nullopt, cft::ParticleEmitterDescriptor{ 2, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {} }, std::nullopt }, cft::RenderDescriptor{ cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ /*1*/ std::nullopt}}, {5}, {}, {9}});
     
     m_assetRegistry.addParticleEffect(0, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 0, cft::TimeRange{ 0.0f, 1.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}}});
@@ -267,7 +272,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
         std::make_unique<cft::ConstantAttributeGenerator<cft::Lifetime>>(15.0f),
         15.0f
     ));
-    m_assetRegistry.addParticleEmitter(4, cft::ParticleEmitter{ 4, 5, 4, cft::TrailConfiguration{ 0.0f, 0.12f, 0.05f, std::nullopt, 2.0f, std::nullopt, std::nullopt, true, { strength * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), strength * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), strength * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), strength * glm::vec4(1.0f, 1.0f, 0.0f, 1.0f) }, std::vector<float>{ 1.5f, 2.0f, 2.8f, 5.0f }, cft::TrailColorInterpolation::Linear, cft::TrailThicknessDistribution::LinearDecreasing, std::nullopt }, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{2}}, {6, 7}, {}, {} });
+    m_assetRegistry.addParticleEmitter(4, cft::ParticleEmitter{ 4, 5, 4, cft::TrailConfiguration{ 0.0f, 0.12f, 0.05f, std::nullopt, 2.0f, std::nullopt, std::nullopt, true, { strength * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), strength * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), strength * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), strength * glm::vec4(1.0f, 1.0f, 0.0f, 1.0f) }, std::vector<float>{ 1.5f, 2.0f, 2.8f, 5.0f }, cft::TrailColorInterpolation::Linear, cft::TrailThicknessDistribution::LinearDecreasing, std::nullopt, std::nullopt }, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{2}}, {6, 7}, {}, {} });
     m_assetRegistry.addParticleEffect(2, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 4, cft::TimeRange{ 0.0f, 100.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}} });
 
     // Flare showcase
@@ -294,7 +299,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
     m_assetRegistry.addEmissionPattern(20, std::make_unique<cft::PeriodicBurstEmissionPattern>(4, 1.8f));
     //m_assetRegistry.addEmissionPattern(20, std::make_unique<cft::LinearRateEmissionPattern>(1000.0f, 10.0f, 5.0f));
     //m_assetRegistry.addParticleEmitter(20, cft::ParticleEmitter{ 20, 20, 20, std::nullopt, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 20 } }, { 20 }, {}, { 20, 21, 22, 23 } });
-    m_assetRegistry.addParticleEmitter(20, cft::ParticleEmitter{ 20, 20, 20, cft::TrailConfiguration{ 0.0f, 0.1f, 0.05f, std::nullopt, 5.0f, std::nullopt, std::nullopt, false, { glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) }, std::nullopt, cft::TrailColorInterpolation::Linear, cft::TrailThicknessDistribution::Constant, cft::TrailThicknessEvolution{ cft::TrailThicknessDistribution::LinearIncreasing, 0.3f } }, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 20 } }, { /*20*/ }, {}, { 20, 21, 22, 23 } });
+    m_assetRegistry.addParticleEmitter(20, cft::ParticleEmitter{ 20, 20, 20, cft::TrailConfiguration{ 0.0f, 0.1f, 0.05f, std::nullopt, 5.0f, std::nullopt, std::nullopt, false, { glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) }, std::nullopt, cft::TrailColorInterpolation::Linear, cft::TrailThicknessDistribution::Constant, std::nullopt, 4 }, std::nullopt, cft::RenderDescriptor{cft::RenderType::Billboard, cft::BillboardRenderDescriptor{ 20 } }, { /*20*/ }, {}, { 20, 21, 22, 23 } });
     m_assetRegistry.addParticleEffect(20, cft::ParticleEffect{ { cft::ParticleEmitterDescriptor{ 20, cft::TimeRange{ 0.0f, 60.0f }, cft::Transform{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}} });
 
     restartSimulation();
@@ -326,7 +331,7 @@ void ConfettiInstance::update()
     while (m_timeAccumulator > m_timeStep)
     {
         updateSimulation(static_cast<float>(m_elapsedTime), static_cast<float>(m_timeStep));
-        m_particleRenderer.update(m_particleSimulation.getParticlePools(), m_particleSimulation.getTrailPools(), m_particleSimulation.getParticleRegistry(), m_assetRegistry, m_camera.getView());
+        m_particleRenderer.update(m_particleSimulation.getParticlePools(), m_particleSimulation.getTrailPools(), m_particleSimulation.getParticleRegistry(), m_particleSimulation.getTrailRegistry(), m_assetRegistry, m_camera.getView());
         m_timeAccumulator -= m_timeStep;
     }
 }

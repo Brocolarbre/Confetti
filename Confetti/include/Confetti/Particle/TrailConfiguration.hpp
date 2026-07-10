@@ -50,5 +50,6 @@ namespace cft
 		TrailColorInterpolation colorInterpolation;
 		TrailThicknessDistribution thicknessDistribution;
 		std::optional<TrailThicknessEvolution> thicknessEvolution;
+		std::optional<unsigned int> imageId;
 	};
 }

@@ -25,6 +25,9 @@ namespace cft
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, textureCoordinates)));
 
+		glEnableVertexAttribArray(3);
+		glVertexAttribIPointer(3, 1, GL_INT, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, textureIndex)));
+
 		glBindVertexArray(0);
 	}
 
@@ -72,7 +75,7 @@ namespace cft
 	void TrailMesh::setVertexData(const std::vector<Vertex>& vertexData, std::vector<int> first, std::vector<int> count)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, static_cast<int>(vertexData.size() * sizeof(Vertex)), vertexData.data(), GL_STREAM_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(Vertex), vertexData.data(), GL_STREAM_DRAW);
 
 		m_first = std::move(first);
 		m_count = std::move(count);

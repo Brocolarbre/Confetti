@@ -49,6 +49,7 @@ namespace cft
 		const std::unordered_map<unsigned int, ParticlePool>& getParticlePools() const;
 		const std::unordered_map<unsigned int, TrailPool>& getTrailPools() const;
 		const ParticleRegistry& getParticleRegistry() const;
+		const TrailRegistry& getTrailRegistry() const;
 
 		void addParticleEffect(float elapsedTime, unsigned int id);
 

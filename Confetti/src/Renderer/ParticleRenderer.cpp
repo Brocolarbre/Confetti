@@ -56,6 +56,11 @@ namespace cft
 		m_meshParticleRenderer.loadMeshes(assetRegistry, models);
 	}
 
+	void ParticleRenderer::loadTrailRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
+	{
+		m_trailRenderer.loadTextures(assetRegistry, imageIds, width, height);
+	}
+
 	void ParticleRenderer::resize(unsigned int width, unsigned int height)
 	{
 		m_width = width;
@@ -71,11 +76,11 @@ namespace cft
 		m_toneMapping.resize(width, height);
 	}
 
-	void ParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, TrailPool>& trailPools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry, const View& view)
+	void ParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, TrailPool>& trailPools, const ParticleRegistry& particleRegistry, const TrailRegistry& trailRegistry, const AssetRegistry& assetRegistry, const View& view)
 	{
 		m_billboardParticleRenderer.update(particlePools, particleRegistry, assetRegistry);
 		m_meshParticleRenderer.update(particlePools, particleRegistry);
-		m_trailRenderer.update(trailPools, view);
+		m_trailRenderer.update(trailPools, trailRegistry, view);
 	}
 
 	void ParticleRenderer::render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)

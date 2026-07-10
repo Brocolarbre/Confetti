@@ -76,6 +76,11 @@ namespace cft
 		return m_particleRegistry;
 	}
 
+	const TrailRegistry& ParticleSimulation::getTrailRegistry() const
+	{
+		return m_trailRegistry;
+	}
+
 	void ParticleSimulation::addParticleEffect(float elapsedTime, unsigned int id)
 	{
 		m_particleEffectInstances.push_back(ParticleEffectInstance{ elapsedTime, m_assetRegistry.getParticleEffect(id).emitterDescriptors });
