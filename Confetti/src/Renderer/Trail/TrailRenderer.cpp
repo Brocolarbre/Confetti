@@ -54,7 +54,8 @@ namespace cft
 		for (const std::vector<std::byte>& data : imageData)
 			textureData.push_back(data.data());
 
-		m_textureArray.load(textureData, width, height, GL_NEAREST, GL_CLAMP_TO_EDGE);
+		//m_textureArray.load(textureData, width, height, GL_NEAREST, GL_CLAMP_TO_EDGE);
+		m_textureArray.load(textureData, width, height, GL_NEAREST, GL_REPEAT);
 	}
 
 	void TrailRenderer::update(const std::unordered_map<unsigned int, TrailPool>& trailPools, const TrailRegistry& trailRegistry, const View& view)
@@ -162,15 +163,30 @@ namespace cft
 					if (pointIndex > 0)
 						accumulated += glm::distance(previousPoint.position, currentPoint.position);
 
-					float v = totalLength > 0.0f ? accumulated / totalLength : 0.0f;
-
-					vertexA.textureCoordinates = glm::vec2(0.0f, v);
-					vertexB.textureCoordinates = glm::vec2(1.0f, v);
+					int textureIndex = -1;
 
 					const TrailRegistryEntry& trailRegistryEntry = trailRegistry.getEntry(trailRegistryId[i]);
-					int textureIndex = -1;
-					if (trailRegistryEntry.trailConfiguration.imageId.has_value())
-						textureIndex = static_cast<int>(m_imageIdToTextureIndex.at(trailRegistryEntry.trailConfiguration.imageId.value()));
+					if (trailRegistryEntry.trailConfiguration.image.has_value())
+					{
+						const TrailImage& trailImage = trailRegistryEntry.trailConfiguration.image.value();
+						
+						float v = 0.0f;
+
+						if (trailImage.repeatStretch.has_value())
+							v = accumulated / (currentPoint.thickness * trailImage.repeatStretch.value());
+						else
+							v = totalLength > 0.0f ? accumulated / totalLength : 0.0f;
+
+						vertexA.textureCoordinates = glm::vec2(0.0f, v);
+						vertexB.textureCoordinates = glm::vec2(1.0f, v);
+
+						textureIndex = static_cast<int>(m_imageIdToTextureIndex.at(trailImage.imageId));
+					}
+					else
+					{
+						vertexA.textureCoordinates = glm::vec2(0.0f);
+						vertexB.textureCoordinates = glm::vec2(0.0f);
+					}
 
 					vertexA.textureIndex = textureIndex;
 					vertexB.textureIndex = textureIndex;

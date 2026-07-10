@@ -33,6 +33,12 @@ namespace cft
 		Linear
 	};
 
+	struct TrailImage
+	{
+		unsigned int imageId;
+		std::optional<float> repeatStretch;
+	};
+
 	struct TrailConfiguration
 	{
 		float presistenceLifetime;
@@ -50,6 +56,6 @@ namespace cft
 		TrailColorInterpolation colorInterpolation;
 		TrailThicknessDistribution thicknessDistribution;
 		std::optional<TrailThicknessEvolution> thicknessEvolution;
-		std::optional<unsigned int> imageId;
+		std::optional<TrailImage> image;
 	};
 }
