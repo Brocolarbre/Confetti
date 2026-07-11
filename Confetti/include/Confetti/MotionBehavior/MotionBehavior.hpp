@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Confetti/Particle/Transform.hpp"
+#include "Confetti/Particle/MotionState.hpp"
 
 #include <memory>
 
@@ -12,6 +12,6 @@ namespace cft
 		virtual ~MotionBehavior() = default;
 
 		virtual std::unique_ptr<MotionBehavior> clone() const = 0;
-		virtual void update(float elapsedTime, float deltaTime, Transform& transform) = 0;
+		virtual glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) = 0;
 	};
 }

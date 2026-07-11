@@ -17,22 +17,22 @@ namespace cft
 		return std::make_unique<ShockWaveForceField>(*this);
 	}
 
-	glm::vec3 ShockWaveForceField::apply(float elapsedTime, const Transform& transform) const
+	MotionAcceleration ShockWaveForceField::evaluate(const MotionState& motionState) const
 	{
-		float spatialFactor = m_spatialInfluence.getStrengthFactor(transform.position);
+		float spatialFactor = m_spatialInfluence.getStrengthFactor(motionState.position);
 
 		if (spatialFactor == 0.0f)
-			return glm::vec3(0.0f);
+			return MotionAcceleration{ glm::vec3(0.0f), glm::vec3(0.0f) };
 
-		float waveRadius = m_speed * elapsedTime;
+		float waveRadius = m_speed;
 
-		glm::vec3 offset = transform.position - m_spatialInfluence.getOrigin();
+		glm::vec3 offset = motionState.position - m_spatialInfluence.getOrigin();
 		glm::vec3 radial = offset - m_axis * glm::dot(offset, m_axis);
 
 		float radialLengthSquared = glm::dot(radial, radial);
 
 		if (radialLengthSquared < 0.000001f)
-			return glm::vec3(0.0f);
+			return MotionAcceleration{ glm::vec3(0.0f), glm::vec3(0.0f) };
 
 		float radialDistance = glm::sqrt(radialLengthSquared);
 
@@ -42,6 +42,6 @@ namespace cft
 		float sigma = m_thickness;
 		float gaussian = glm::exp(-(distanceToWave * distanceToWave) / (2.0f * sigma * sigma));
 
-		return radialDirection * m_strength * gaussian * spatialFactor;
+		return MotionAcceleration{ radialDirection * m_strength * gaussian * spatialFactor, glm::vec3(0.0f) };
 	}
 }

@@ -19,11 +19,11 @@ namespace cft
 		return std::make_unique<CircleMotionBehavior>(*this);
 	}
 
-	void CircleMotionBehavior::update(float elapsedTime, float deltaTime, Transform& transform)
+	glm::vec3 CircleMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = elapsedTime * m_speed;
 
 		glm::vec3 localPosition(std::cos(t) * m_radius, 0.0f, glm::sin(t) * m_radius);
-		transform.position = m_tangent * localPosition.x + m_axis * localPosition.y + m_bitangent * localPosition.z;
+		return m_tangent * localPosition.x + m_axis * localPosition.y + m_bitangent * localPosition.z;
 	}
 }

@@ -16,19 +16,19 @@ namespace cft
 		return std::make_unique<VortexForceField>(*this);
 	}
 
-	glm::vec3 VortexForceField::apply(float elapsedTime, const Transform& transform) const
+	MotionAcceleration VortexForceField::evaluate(const MotionState& motionState) const
 	{
-		float strengthFactor = m_spatialInfluence.getStrengthFactor(transform.position);
+		float strengthFactor = m_spatialInfluence.getStrengthFactor(motionState.position);
 
 		if (strengthFactor == 0.0f)
-			return glm::vec3(0.0f);
+			return MotionAcceleration{ glm::vec3(0.0f), glm::vec3(0.0f) };
 
-		glm::vec3 offset = transform.position - m_spatialInfluence.getOrigin();
+		glm::vec3 offset = motionState.position - m_spatialInfluence.getOrigin();
 		glm::vec3 radial = offset - m_axis * glm::dot(offset, m_axis);
 
 		float radialLengthSquared = glm::dot(radial, radial);
 		if (radialLengthSquared < 0.000001f)
-			return glm::vec3(0.0f);
+			return MotionAcceleration{ glm::vec3(0.0f), glm::vec3(0.0f) };
 
 		glm::vec3 radialDirection = glm::normalize(radial);
 		glm::vec3 tangent = glm::cross(m_axis, radialDirection);
@@ -37,6 +37,6 @@ namespace cft
 		float spinFactor = 1.0f / glm::max(radialDistance, 0.1f);
 		glm::vec3 inward = -radialDirection;
 
-		return (tangent * m_strength + inward * m_pullStrength) * strengthFactor * spinFactor;
+		return MotionAcceleration{ (tangent * m_strength + inward * m_pullStrength) * strengthFactor * spinFactor, glm::vec3(0.0f) };
 	}
 }

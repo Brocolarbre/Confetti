@@ -18,7 +18,8 @@ namespace cft
 	struct ParticleEmitterInstance
 	{
 		TimeRange timeRange;
-		Transform transform;
+		MotionState motionState;
+		glm::vec3 postBehaviorPosition;
 		unsigned int particleRegistryId;
 		std::optional<unsigned int> trailRegistryId;
 		std::unique_ptr<ParticleSpawner> particleSpawner;
@@ -41,7 +42,7 @@ namespace cft
 		ParticleRegistry m_particleRegistry;
 		TrailRegistry m_trailRegistry;
 
-		ParticleEmitterInstance createParticleEmitter(const ParticleEmitterDescriptor& descriptor, const Transform& parentTransform, unsigned int recursionDepth, float elapsedTime);
+		ParticleEmitterInstance createParticleEmitter(const ParticleEmitterDescriptor& descriptor, const MotionState& parentMotionState, unsigned int recursionDepth, float elapsedTime);
 
 	public:
 		ParticleSimulation(AssetRegistry& assetRegistry, RandomNumberGenerator& randomNumberGenerator);

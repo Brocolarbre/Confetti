@@ -13,15 +13,15 @@ namespace cft
 		return std::make_unique<FadeOutParticleBehavior>(*this);
 	}
 
-	void FadeOutParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
+	void FadeOutParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		float duration = m_duration.normalize(particle.lifetime);
 		float start = 1.0f - duration;
 
-		if (progress < start)
+		if (particleNormalizedAge < start)
 			return;
 
-		float t = (progress - start) / duration;
+		float t = (particleNormalizedAge - start) / duration;
 		particle.color.a = (1.0f - t) * particle.initialColor.a;
 	}
 }

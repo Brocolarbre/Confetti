@@ -15,6 +15,6 @@ namespace cft
 		SegmentMotionBehavior(const glm::vec3& from, const glm::vec3& to, float speed);
 
 		std::unique_ptr<MotionBehavior> clone() const override;
-		void update(float elapsedTime, float deltaTime, Transform& transform) override;
+		glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) override;
 	};
 }

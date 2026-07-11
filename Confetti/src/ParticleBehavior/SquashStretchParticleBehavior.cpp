@@ -14,7 +14,7 @@ namespace cft
 		return std::make_unique<SquashStretchParticleBehavior>(*this);
 	}
 
-	void SquashStretchParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
+	void SquashStretchParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		float stretch = std::sin(elapsedTime * m_speed + particle.phase);
 

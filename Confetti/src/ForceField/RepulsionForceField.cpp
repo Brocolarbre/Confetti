@@ -14,12 +14,12 @@ namespace cft
 		return std::make_unique<RepulsionForceField>(*this);
 	}
 
-	glm::vec3 RepulsionForceField::apply(float elapsedTime, const Transform& transform) const
+	MotionAcceleration RepulsionForceField::evaluate(const MotionState& motionState) const
 	{
-		float strengthFactor = m_spatialInfluence.getStrengthFactor(transform.position);
-		glm::vec3 offset = transform.position - m_spatialInfluence.getOrigin();
+		float strengthFactor = m_spatialInfluence.getStrengthFactor(motionState.position);
+		glm::vec3 offset = motionState.position - m_spatialInfluence.getOrigin();
 
 		glm::vec3 direction = glm::normalize(offset);
-		return direction * m_strength * strengthFactor;
+		return MotionAcceleration{ direction * m_strength * strengthFactor, glm::vec3(0.0f) };
 	}
 }

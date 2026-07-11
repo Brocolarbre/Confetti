@@ -13,14 +13,14 @@ namespace cft
 		return std::make_unique<GrowInParticleBehavior>(*this);
 	}
 
-	void GrowInParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
+	void GrowInParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		float end = m_duration.normalize(particle.lifetime);
 
-		if (progress > end)
+		if (particleNormalizedAge > end)
 			return;
 
-		float t = glm::min(progress / end, 1.0f);
+		float t = glm::min(particleNormalizedAge / end, 1.0f);
 		particle.scale = t * particle.initialScale;
 	}
 }

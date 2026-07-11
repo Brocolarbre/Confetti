@@ -8,13 +8,14 @@ namespace cft
 	struct Particle
 	{
 		glm::vec4 color;
-		glm::vec4 initialColor;
 		glm::vec3 position;
-		glm::vec3 velocity;
 		glm::quat rotation;
-		glm::vec3 angularVelocity;
 		glm::vec3 scale;
+		glm::vec3 linearVelocity;
+		glm::vec3 angularVelocity;
+		glm::vec4 initialColor;
 		glm::vec3 initialScale;
+		glm::vec3 postBehaviorPosition;
 		float phase;
 		float lifetime;
 		float spawnTime;
@@ -25,13 +26,14 @@ namespace cft
 	struct ParticleView
 	{
 		glm::vec4& color;
-		const glm::vec4& initialColor;
-		glm::vec3& position;
-		glm::vec3& velocity;
-		glm::quat& rotation;
-		glm::vec3& angularVelocity;
+		const glm::vec3& position;
+		const glm::quat& rotation;
 		glm::vec3& scale;
+		const glm::vec3& linearVelocity;
+		const glm::vec3& angularVelocity;
+		const glm::vec4& initialColor;
 		const glm::vec3& initialScale;
+		const glm::vec3& postBehaviorPosition;
 		const float& phase;
 		const float& lifetime;
 		const float& spawnTime;

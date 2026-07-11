@@ -15,6 +15,6 @@ namespace cft
 		PulseParticleBehavior(const glm::vec4& colorA, const glm::vec4& colorB, float speed);
 
 		std::unique_ptr<ParticleBehavior> clone() const override;
-		void update(float elapsedTime, float deltaTime, float progress, ParticleView& particle) override;
+		void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) override;
 	};
 }

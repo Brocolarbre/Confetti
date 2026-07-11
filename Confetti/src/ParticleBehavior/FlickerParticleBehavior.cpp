@@ -15,7 +15,7 @@ namespace cft
 		return std::make_unique<FlickerParticleBehavior>(*this);
 	}
 
-	void FlickerParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
+	void FlickerParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		float t = glm::sin(elapsedTime * m_speed + particle.phase) * 0.5f + 0.5f;
 

@@ -13,15 +13,15 @@ namespace cft
 		return std::make_unique<DimOutParticleBehavior>(*this);
 	}
 
-	void DimOutParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
+	void DimOutParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		float duration = m_duration.normalize(particle.lifetime);
 		float start = 1.0f - duration;
 
-		if (progress < start)
+		if (particleNormalizedAge < start)
 			return;
 
-		float t = (progress - start) / duration;
+		float t = (particleNormalizedAge - start) / duration;
 		float alpha = particle.color.a;
 		particle.color = (1.0f - t) * particle.initialColor;
 		particle.color.a = alpha;

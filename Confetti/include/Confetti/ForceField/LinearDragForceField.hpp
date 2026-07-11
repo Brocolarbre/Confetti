@@ -1,18 +1,16 @@
 #pragma once
 
 #include "ForceField.hpp"
-#include "Confetti/Tools/RandomNumberGenerator.hpp"
 
 namespace cft
 {
-	class TurbulenceForceField : public ForceField
+	class LinearDragForceField : public ForceField
 	{
 	private:
 		float m_strength;
-		RandomNumberGenerator& m_randomNumberGenerator;
 
 	public:
-		TurbulenceForceField(float strength, RandomNumberGenerator& randomNumberGenerator);
+		LinearDragForceField(float strength);
 
 		std::unique_ptr<ForceField> clone() const override;
 		MotionAcceleration evaluate(const MotionState& motionState) const override;

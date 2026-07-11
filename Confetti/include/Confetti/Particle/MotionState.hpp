@@ -5,10 +5,10 @@
 
 namespace cft
 {
-	struct Transform
+	struct MotionState
 	{
 		glm::vec3 position;
-		glm::vec3 velocity;
+		glm::vec3 linearVelocity;
 		glm::quat rotation;
 		glm::vec3 angularVelocity;
 	};

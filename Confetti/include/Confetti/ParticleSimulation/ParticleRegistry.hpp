@@ -15,7 +15,7 @@ namespace cft
 	struct ParticleRegistryEntry
 	{
 		int count;
-		unsigned int pool;
+		unsigned int poolId;
 		unsigned int recursionDepth;
 		float periodicTriggerAccumulator;
 		std::optional<SpawnTrigger> spawnTrigger;
@@ -41,7 +41,7 @@ namespace cft
 		const ParticleRegistryEntry& getEntry(unsigned int id) const;
 		ParticleRegistryEntry& getEntry(unsigned int id);
 
-		unsigned int createEntry(unsigned int pool, unsigned int recursionDepth, const std::optional<SpawnTrigger>& spawnTrigger, const RenderDescriptor& renderDescriptor, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<ParticleBehavior>>& particleBehaviors);
+		unsigned int createEntry(unsigned int poolId, unsigned int recursionDepth, const std::optional<SpawnTrigger>& spawnTrigger, const RenderDescriptor& renderDescriptor, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<ParticleBehavior>>& particleBehaviors);
 		void addReferenceCount(unsigned int id, int referenceCount);
 	};
 }

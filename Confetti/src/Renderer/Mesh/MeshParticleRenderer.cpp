@@ -60,7 +60,7 @@ namespace cft
 		for (const auto& [id, pool] : particlePools)
 		{
 			const std::vector<glm::vec4>& color = pool.getColor();
-			const std::vector<glm::vec3>& position = pool.getPosition();
+			const std::vector<glm::vec3>& position = pool.getPostBehaviorPosition();
 			const std::vector<glm::quat>& rotation = pool.getRotation();
 			const std::vector<glm::vec3>& scale = pool.getScale();
 			const std::vector<unsigned int>& id = pool.getParticleRegistryId();

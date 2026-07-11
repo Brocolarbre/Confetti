@@ -15,7 +15,7 @@ namespace cft
 		return std::make_unique<ColorShiftParticleBehavior>(*this);
 	}
 
-	void ColorShiftParticleBehavior::update(float elapsedTime, float deltaTime, float progress, ParticleView& particle)
+	void ColorShiftParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		if (m_colors.empty())
 			return;

@@ -12,6 +12,6 @@ namespace cft
 		virtual ~ParticleBehavior() = default;
 
 		virtual std::unique_ptr<ParticleBehavior> clone() const = 0;
-		virtual void update(float elapsedTime, float deltaTime, float progress, ParticleView& particle) = 0;
+		virtual void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) = 0;
 	};
 }

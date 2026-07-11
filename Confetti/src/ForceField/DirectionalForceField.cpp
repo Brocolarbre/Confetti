@@ -3,7 +3,7 @@
 namespace cft
 {
 	DirectionalForceField::DirectionalForceField(const glm::vec3& direction, float strength) :
-		m_direction(direction),
+		m_direction(glm::normalize(direction)),
 		m_strength(strength)
 	{
 
@@ -14,8 +14,8 @@ namespace cft
 		return std::make_unique<DirectionalForceField>(*this);
 	}
 
-	glm::vec3 DirectionalForceField::apply(float elapsedTime, const Transform& transform) const
+	MotionAcceleration DirectionalForceField::evaluate(const MotionState& motionState) const
 	{
-		return m_direction * m_strength;
+		return MotionAcceleration{ m_direction * m_strength, glm::vec3(0.0f) };
 	}
 }

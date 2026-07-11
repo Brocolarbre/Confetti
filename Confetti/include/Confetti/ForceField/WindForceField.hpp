@@ -4,14 +4,14 @@
 
 namespace cft
 {
-	class DirectionalForceField : public ForceField
+	class WindForceField : public ForceField
 	{
 	private:
-		glm::vec3 m_direction;
-		float m_strength;
+		glm::vec3 m_velocity;
+		float m_drag;
 
 	public:
-		DirectionalForceField(const glm::vec3& direction, float strength);
+		WindForceField(const glm::vec3& direction, float strength, float drag);
 
 		std::unique_ptr<ForceField> clone() const override;
 		MotionAcceleration evaluate(const MotionState& motionState) const override;

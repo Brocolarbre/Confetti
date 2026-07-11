@@ -19,11 +19,11 @@ namespace cft
 		return std::make_unique<FigureEightMotionBehavior>(*this);
 	}
 
-	void FigureEightMotionBehavior::update(float elapsedTime, float deltaTime, Transform& transform)
+	glm::vec3 FigureEightMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = elapsedTime * m_speed;
 
 		glm::vec3 localPosition(m_radius * std::sin(t), 0.0f, m_radius * std::sin(t) * std::cos(t) * 0.5f);
-		transform.position = m_tangent * localPosition.x + m_axis * localPosition.y + m_bitangent * localPosition.z;
+		return m_tangent * localPosition.x + m_axis * localPosition.y + m_bitangent * localPosition.z;
 	}
 }

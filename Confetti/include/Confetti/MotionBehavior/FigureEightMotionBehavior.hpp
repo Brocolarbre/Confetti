@@ -18,6 +18,6 @@ namespace cft
 		FigureEightMotionBehavior(const glm::vec3& axis, float radius, float speed);
 
 		std::unique_ptr<MotionBehavior> clone() const override;
-		void update(float elapsedTime, float deltaTime, Transform& transform) override;
+		glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) override;
 	};
 }

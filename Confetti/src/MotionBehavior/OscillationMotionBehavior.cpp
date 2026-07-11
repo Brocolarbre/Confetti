@@ -15,10 +15,10 @@ namespace cft
 		return std::make_unique<OscillationMotionBehavior>(*this);
 	}
 
-	void OscillationMotionBehavior::update(float elapsedTime, float deltaTime, Transform& transform)
+	glm::vec3 OscillationMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = elapsedTime * m_speed;
 
-		transform.position = glm::mix(m_from, m_to, (1.0f - std::cos(t)) * 0.5f);
+		return glm::mix(m_from, m_to, (1.0f - std::cos(t)) * 0.5f);
 	}
 }

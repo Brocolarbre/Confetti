@@ -17,19 +17,19 @@ namespace cft
 		return std::make_unique<OrbitForceField>(*this);
 	}
 
-	glm::vec3 OrbitForceField::apply(float elapsedTime, const Transform& transform) const
+	MotionAcceleration OrbitForceField::evaluate(const MotionState& motionState) const
 	{
-		float strengthFactor = m_spatialInfluence.getStrengthFactor(transform.position);
+		float strengthFactor = m_spatialInfluence.getStrengthFactor(motionState.position);
 
 		if (strengthFactor == 0.0f)
-			return glm::vec3(0.0f);
+			return MotionAcceleration{ glm::vec3(0.0f), glm::vec3(0.0f) };
 
-		glm::vec3 offset = transform.position - m_spatialInfluence.getOrigin();
+		glm::vec3 offset = motionState.position - m_spatialInfluence.getOrigin();
 		glm::vec3 radial = offset - m_axis * glm::dot(offset, m_axis);
 
 		float radialLengthSquared = glm::dot(radial, radial);
 		if (radialLengthSquared < 0.000001f)
-			return glm::vec3(0.0f);
+			return MotionAcceleration{ glm::vec3(0.0f), glm::vec3(0.0f) };
 
 		glm::vec3 radialDirection = glm::normalize(radial);
 		glm::vec3 tangent = glm::cross(m_axis, radialDirection);
@@ -38,6 +38,6 @@ namespace cft
 		float radiusError = m_radius - currentRadius;
 		glm::vec3 correction = radialDirection + radiusError * m_radialCorrectionStrength;
 
-		return (tangent * m_strength + correction) * strengthFactor;
+		return MotionAcceleration{ (tangent * m_strength + correction) * strengthFactor, glm::vec3(0.0f) };
 	}
 }

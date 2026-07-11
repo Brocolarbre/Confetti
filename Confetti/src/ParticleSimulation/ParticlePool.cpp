@@ -5,13 +5,14 @@ namespace cft
 	void ParticlePool::resize(unsigned int capacity)
 	{
 		m_color.resize(capacity);
-		m_initialColor.resize(capacity);
 		m_position.resize(capacity);
-		m_velocity.resize(capacity);
 		m_rotation.resize(capacity);
-		m_angularVelocity.resize(capacity);
 		m_scale.resize(capacity);
+		m_linearVelocity.resize(capacity);
+		m_angularVelocity.resize(capacity);
+		m_initialColor.resize(capacity);
 		m_initialScale.resize(capacity);
+		m_postBehaviorPosition.resize(capacity);
 		m_phase.resize(capacity);
 		m_lifetime.resize(capacity);
 		m_spawnTime.resize(capacity);
@@ -25,13 +26,14 @@ namespace cft
 
 	ParticlePool::ParticlePool() :
 		m_color(),
-		m_initialColor(),
 		m_position(),
-		m_velocity(),
 		m_rotation(),
-		m_angularVelocity(),
 		m_scale(),
+		m_linearVelocity(),
+		m_angularVelocity(),
+		m_initialColor(),
 		m_initialScale(),
+		m_postBehaviorPosition(),
 		m_phase(),
 		m_lifetime(),
 		m_spawnTime(),
@@ -50,19 +52,9 @@ namespace cft
 		return m_color;
 	}
 
-	const std::vector<glm::vec4>& ParticlePool::getInitialColor() const
-	{
-		return m_initialColor;
-	}
-
 	const std::vector<glm::vec3>& ParticlePool::getPosition() const
 	{
 		return m_position;
-	}
-
-	const std::vector<glm::vec3>& ParticlePool::getVelocity() const
-	{
-		return m_velocity;
 	}
 
 	const std::vector<glm::quat>& ParticlePool::getRotation() const
@@ -70,19 +62,34 @@ namespace cft
 		return m_rotation;
 	}
 
-	const std::vector<glm::vec3>& ParticlePool::getAngularVelocity() const
-	{
-		return m_angularVelocity;
-	}
-
 	const std::vector<glm::vec3>& ParticlePool::getScale() const
 	{
 		return m_scale;
 	}
 
+	const std::vector<glm::vec3>& ParticlePool::getLinearVelocity() const
+	{
+		return m_linearVelocity;
+	}
+
+	const std::vector<glm::vec3>& ParticlePool::getAngularVelocity() const
+	{
+		return m_angularVelocity;
+	}
+
+	const std::vector<glm::vec4>& ParticlePool::getInitialColor() const
+	{
+		return m_initialColor;
+	}
+
 	const std::vector<glm::vec3>& ParticlePool::getInitialScale() const
 	{
 		return m_initialScale;
+	}
+
+	const std::vector<glm::vec3>& ParticlePool::getPostBehaviorPosition() const
+	{
+		return m_postBehaviorPosition;
 	}
 
 	const std::vector<float>& ParticlePool::getPhase() const
@@ -115,19 +122,9 @@ namespace cft
 		return m_color;
 	}
 
-	std::vector<glm::vec4>& ParticlePool::getInitialColor()
-	{
-		return m_initialColor;
-	}
-
 	std::vector<glm::vec3>& ParticlePool::getPosition()
 	{
 		return m_position;
-	}
-
-	std::vector<glm::vec3>& ParticlePool::getVelocity()
-	{
-		return m_velocity;
 	}
 
 	std::vector<glm::quat>& ParticlePool::getRotation()
@@ -135,19 +132,34 @@ namespace cft
 		return m_rotation;
 	}
 
-	std::vector<glm::vec3>& ParticlePool::getAngularVelocity()
-	{
-		return m_angularVelocity;
-	}
-
 	std::vector<glm::vec3>& ParticlePool::getScale()
 	{
 		return m_scale;
 	}
 
+	std::vector<glm::vec3>& ParticlePool::getLinearVelocity()
+	{
+		return m_linearVelocity;
+	}
+
+	std::vector<glm::vec3>& ParticlePool::getAngularVelocity()
+	{
+		return m_angularVelocity;
+	}
+
+	std::vector<glm::vec4>& ParticlePool::getInitialColor()
+	{
+		return m_initialColor;
+	}
+
 	std::vector<glm::vec3>& ParticlePool::getInitialScale()
 	{
 		return m_initialScale;
+	}
+
+	std::vector<glm::vec3>& ParticlePool::getPostBehaviorPosition()
+	{
+		return m_postBehaviorPosition;
 	}
 
 	std::vector<float>& ParticlePool::getPhase()
@@ -203,13 +215,14 @@ namespace cft
 		unsigned int newIndex = m_count++;
 
 		m_color[newIndex] = particle.color;
-		m_initialColor[newIndex] = particle.initialColor;
 		m_position[newIndex] = particle.position;
-		m_velocity[newIndex] = particle.velocity;
 		m_rotation[newIndex] = particle.rotation;
-		m_angularVelocity[newIndex] = particle.angularVelocity;
 		m_scale[newIndex] = particle.scale;
+		m_linearVelocity[newIndex] = particle.linearVelocity;
+		m_angularVelocity[newIndex] = particle.angularVelocity;
+		m_initialColor[newIndex] = particle.initialColor;
 		m_initialScale[newIndex] = particle.initialScale;
+		m_postBehaviorPosition[newIndex] = particle.postBehaviorPosition;
 		m_phase[newIndex] = particle.phase;
 		m_lifetime[newIndex] = particle.lifetime;
 		m_spawnTime[newIndex] = particle.spawnTime;
@@ -231,13 +244,14 @@ namespace cft
 		if (index != lastIndex)
 		{
 			m_color[index] = m_color[lastIndex];
-			m_initialColor[index] = m_initialColor[lastIndex];
 			m_position[index] = m_position[lastIndex];
-			m_velocity[index] = m_velocity[lastIndex];
 			m_rotation[index] = m_rotation[lastIndex];
-			m_angularVelocity[index] = m_angularVelocity[lastIndex];
 			m_scale[index] = m_scale[lastIndex];
+			m_linearVelocity[index] = m_linearVelocity[lastIndex];
+			m_angularVelocity[index] = m_angularVelocity[lastIndex];
+			m_initialColor[index] = m_initialColor[lastIndex];
 			m_initialScale[index] = m_initialScale[lastIndex];
+			m_postBehaviorPosition[index] = m_postBehaviorPosition[lastIndex];
 			m_phase[index] = m_phase[lastIndex];
 			m_lifetime[index] = m_lifetime[lastIndex];
 			m_spawnTime[index] = m_spawnTime[lastIndex];

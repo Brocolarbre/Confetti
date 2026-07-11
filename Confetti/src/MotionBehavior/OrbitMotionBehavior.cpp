@@ -20,11 +20,11 @@ namespace cft
 		return std::make_unique<OrbitMotionBehavior>(*this);
 	}
 
-	void OrbitMotionBehavior::update(float elapsedTime, float deltaTime, Transform& transform)
+	glm::vec3 OrbitMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = elapsedTime * m_speed;
 
 		glm::vec3 offset = std::cos(t) * m_tangent * m_radius + std::sin(t) * m_bitangent * m_radius;
-		transform.position = m_origin + offset;
+		return m_origin + offset;
 	}
 }

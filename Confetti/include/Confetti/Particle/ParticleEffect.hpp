@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TimeRange.hpp"
-#include "Transform.hpp"
+#include "MotionState.hpp"
 
 namespace cft
 {
@@ -9,7 +9,7 @@ namespace cft
 	{
 		unsigned int emitterId;
 		TimeRange timeRange;
-		Transform transform;
+		MotionState motionState;
 		std::vector<unsigned int> forceFieldIds;
 		std::vector<unsigned int> motionBehaviorIds;
 	};

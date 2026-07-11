@@ -14,8 +14,8 @@ namespace cft
 		return std::make_unique<JitterMotionBehavior>(*this);
 	}
 
-	void JitterMotionBehavior::update(float elapsedTime, float deltaTime, Transform& transform)
+	glm::vec3 JitterMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
-		transform.position += m_randomNumberGenerator.generate(-m_strength, m_strength) * deltaTime;
+		return m_randomNumberGenerator.generate(glm::vec3(-m_strength), glm::vec3(m_strength));
 	}
 }

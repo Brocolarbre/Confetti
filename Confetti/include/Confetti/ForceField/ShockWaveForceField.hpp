@@ -18,6 +18,6 @@ namespace cft
 		ShockWaveForceField(const SpatialInfluence& spatialInfluence, const glm::vec3& axis, float speed, float strength, float thickness);
 
 		std::unique_ptr<ForceField> clone() const override;
-		glm::vec3 apply(float elapsedTime, const Transform& transform) const override;
+		MotionAcceleration evaluate(const MotionState& motionState) const override;
 	};
 }

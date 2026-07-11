@@ -14,10 +14,10 @@ namespace cft
 		return std::make_unique<TurbulenceForceField>(*this);
 	}
 
-	glm::vec3 TurbulenceForceField::apply(float elapsedTime, const Transform& transform) const
+	MotionAcceleration TurbulenceForceField::evaluate(const MotionState& motionState) const
 	{
 		glm::vec3 direction = glm::normalize(m_randomNumberGenerator.generate(glm::vec3(-1.0f), glm::vec3(1.0f)));
 
-		return direction * m_strength;
+		return MotionAcceleration{ direction * m_strength, glm::vec3(0.0f) };
 	}
 }

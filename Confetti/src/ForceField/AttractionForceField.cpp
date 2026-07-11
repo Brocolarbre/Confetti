@@ -14,12 +14,12 @@ namespace cft
 		return std::make_unique<AttractionForceField>(*this);
 	}
 
-	glm::vec3 AttractionForceField::apply(float elapsedTime, const Transform& transform) const
+	MotionAcceleration AttractionForceField::evaluate(const MotionState& motionState) const
 	{
-		float strengthFactor = m_spatialInfluence.getStrengthFactor(transform.position);
-		glm::vec3 offset = m_spatialInfluence.getOrigin() - transform.position;
+		float strengthFactor = m_spatialInfluence.getStrengthFactor(motionState.position);
+		glm::vec3 offset = m_spatialInfluence.getOrigin() - motionState.position;
 
 		glm::vec3 direction = glm::normalize(offset);
-		return direction * m_strength * strengthFactor;
+		return MotionAcceleration{ direction * m_strength * strengthFactor, glm::vec3(0.0f) };
 	}
 }

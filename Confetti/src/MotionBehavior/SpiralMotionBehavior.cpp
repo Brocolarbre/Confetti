@@ -22,12 +22,12 @@ namespace cft
 		return std::make_unique<SpiralMotionBehavior>(*this);
 	}
 
-	void SpiralMotionBehavior::update(float elapsedTime, float deltaTime, Transform& transform)
+	glm::vec3 SpiralMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = elapsedTime * m_speed;
 		float radius = m_startRadius + m_growth * elapsedTime;
 
 		glm::vec3 offset = m_tangent * (std::cos(t) * radius) + m_bitangent * (std::sin(t) * radius) + m_axis * (m_rise * t);
-		transform.position = m_origin + offset;
+		return m_origin + offset;
 	}
 }

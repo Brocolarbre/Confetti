@@ -15,10 +15,10 @@ namespace cft
 		return std::make_unique<SegmentMotionBehavior>(*this);
 	}
 
-	void SegmentMotionBehavior::update(float elapsedTime, float deltaTime, Transform& transform)
+	glm::vec3 SegmentMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = elapsedTime * m_speed;
 
-		transform.position = glm::mix(m_from, m_to, t);
+		return glm::mix(m_from, m_to, t);
 	}
 }

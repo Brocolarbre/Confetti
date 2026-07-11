@@ -17,6 +17,6 @@ namespace cft
 		VortexForceField(const SpatialInfluence& spatialInfluence, const glm::vec3& axis, float strength, float pullStrength);
 
 		std::unique_ptr<ForceField> clone() const override;
-		glm::vec3 apply(float elapsedTime, const Transform& transform) const override;
+		MotionAcceleration evaluate(const MotionState& motionState) const override;
 	};
 }
