@@ -372,7 +372,7 @@ namespace cft
 					else
 					{
 						particleColor[i] = particlePool.getColor()[ownerParticleIndex.value()];
-						glm::vec3 particlePosition = particlePool.getPosition()[ownerParticleIndex.value()];
+						glm::vec3 particlePosition = particlePool.getPostBehaviorPosition()[ownerParticleIndex.value()];
 						if (trailPoints[i].empty() || glm::distance(particlePosition, trailPoints[i].back().position) > trailRegistryEntry.trailConfiguration.minimumSpawnDistance || (trailRegistryEntry.trailConfiguration.maximumSpawnTime.has_value() && elapsedTime - trailPoints[i].back().spawnTime > trailRegistryEntry.trailConfiguration.maximumSpawnTime.value()))
 						{
 							float distanceOnTrail = 0.0f;
