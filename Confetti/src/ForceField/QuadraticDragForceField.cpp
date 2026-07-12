@@ -8,11 +8,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ForceField> QuadraticDragForceField::clone() const
-	{
-		return std::make_unique<QuadraticDragForceField>(*this);
-	}
-
 	MotionAcceleration QuadraticDragForceField::evaluate(const MotionState& motionState) const
 	{
 		return MotionAcceleration{ -m_strength * motionState.linearVelocity * glm::length(motionState.linearVelocity), glm::vec3(0.0f) };

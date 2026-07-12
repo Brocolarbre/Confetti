@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class FlickerParticleBehavior : public ParticleBehavior
+	class FlickerParticleBehavior : public CloneableParticleBehavior<FlickerParticleBehavior>
 	{
 	private:
 		float m_minimumBrightness;
@@ -14,7 +14,6 @@ namespace cft
 	public:
 		FlickerParticleBehavior(float minimumBrightness, float maximumBrightness, float speed);
 
-		std::unique_ptr<ParticleBehavior> clone() const override;
 		void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) override;
 	};
 }

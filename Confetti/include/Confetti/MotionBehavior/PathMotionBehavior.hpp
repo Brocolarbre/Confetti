@@ -8,7 +8,7 @@
 
 namespace cft
 {
-	class PathMotionBehavior : public MotionBehavior
+	class PathMotionBehavior : public CloneableMotionBehavior<PathMotionBehavior>
 	{
 	private:
 		lw::Curve m_path;
@@ -20,7 +20,6 @@ namespace cft
 		PathMotionBehavior(lw::Curve path, std::unique_ptr<lw::Interpolator> interpolator, std::unique_ptr<lw::Easing> easing, float speed);
 		PathMotionBehavior(const PathMotionBehavior& pathMotionBehavior);
 
-		std::unique_ptr<MotionBehavior> clone() const override;
 		glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) override;
 	};
 }

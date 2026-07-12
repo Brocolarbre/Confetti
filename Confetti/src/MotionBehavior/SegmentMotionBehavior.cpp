@@ -10,11 +10,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<MotionBehavior> SegmentMotionBehavior::clone() const
-	{
-		return std::make_unique<SegmentMotionBehavior>(*this);
-	}
-
 	glm::vec3 SegmentMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = elapsedTime * m_speed;

@@ -21,21 +21,6 @@ namespace cft
 
 	unsigned int FixedBurstEmissionPattern::emit(float deltaTime)
 	{
-		if (m_burstAccumulator == m_burstCount)
-			return 0;
-
-		m_accumulator += deltaTime;
-
-		if (m_accumulator < m_interval)
-			return 0;
-
-		++m_burstAccumulator;
-		m_accumulator -= m_interval;
-
-		return m_count;
-
-
-
 		m_accumulator += deltaTime;
 
 		unsigned int bursts = 0;
@@ -48,10 +33,5 @@ namespace cft
 		}
 
 		return bursts * m_count;
-	}
-
-	std::unique_ptr<EmissionPattern> FixedBurstEmissionPattern::clone() const
-	{
-		return std::make_unique<FixedBurstEmissionPattern>(*this);
 	}
 }

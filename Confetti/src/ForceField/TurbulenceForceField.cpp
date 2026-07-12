@@ -9,11 +9,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ForceField> TurbulenceForceField::clone() const
-	{
-		return std::make_unique<TurbulenceForceField>(*this);
-	}
-
 	MotionAcceleration TurbulenceForceField::evaluate(const MotionState& motionState) const
 	{
 		glm::vec3 direction = glm::normalize(m_randomNumberGenerator.generate(glm::vec3(-1.0f), glm::vec3(1.0f)));

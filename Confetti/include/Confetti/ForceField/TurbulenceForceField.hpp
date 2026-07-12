@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class TurbulenceForceField : public ForceField
+	class TurbulenceForceField : public CloneableForceField<TurbulenceForceField>
 	{
 	private:
 		float m_strength;
@@ -14,7 +14,6 @@ namespace cft
 	public:
 		TurbulenceForceField(float strength, RandomNumberGenerator& randomNumberGenerator);
 
-		std::unique_ptr<ForceField> clone() const override;
 		MotionAcceleration evaluate(const MotionState& motionState) const override;
 	};
 }

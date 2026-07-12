@@ -9,11 +9,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ForceField> WindForceField::clone() const
-	{
-		return std::make_unique<WindForceField>(*this);
-	}
-
 	MotionAcceleration WindForceField::evaluate(const MotionState& motionState) const
 	{
 		glm::vec3 relativeVelocity = motionState.linearVelocity - m_velocity;

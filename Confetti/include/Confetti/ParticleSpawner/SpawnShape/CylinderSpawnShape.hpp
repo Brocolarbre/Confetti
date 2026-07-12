@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class CylinderSpawnShape : public SpawnShape
+	class CylinderSpawnShape : public CloneableSpawnShape<CylinderSpawnShape>
 	{
 	private:
 		float m_height;
@@ -15,7 +15,5 @@ namespace cft
 
 	public:
 		CylinderSpawnShape(float height, float radius, const glm::vec3& axis);
-
-		virtual std::unique_ptr<SpawnShape> clone() const override;
 	};
 }

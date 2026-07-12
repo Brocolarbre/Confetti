@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SphereVolumeSpawnShape : public SpawnShape
+	class SphereVolumeSpawnShape : public CloneableSpawnShape<SphereVolumeSpawnShape>
 	{
 	private:
 		float m_radius;
@@ -13,7 +13,5 @@ namespace cft
 
 	public:
 		SphereVolumeSpawnShape(float radius);
-
-		virtual std::unique_ptr<SpawnShape> clone() const override;
 	};
 }

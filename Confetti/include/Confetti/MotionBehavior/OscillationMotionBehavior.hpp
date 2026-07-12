@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class OscillationMotionBehavior : public MotionBehavior
+	class OscillationMotionBehavior : public CloneableMotionBehavior<OscillationMotionBehavior>
 	{
 	private:
 		glm::vec3 m_from;
@@ -14,7 +14,6 @@ namespace cft
 	public:
 		OscillationMotionBehavior(const glm::vec3& from, const glm::vec3& to, float speed);
 
-		std::unique_ptr<MotionBehavior> clone() const override;
 		glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) override;
 	};
 }

@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class PulseParticleBehavior : public ParticleBehavior
+	class PulseParticleBehavior : public CloneableParticleBehavior<PulseParticleBehavior>
 	{
 	private:
 		glm::vec4 m_colorA;
@@ -14,7 +14,6 @@ namespace cft
 	public:
 		PulseParticleBehavior(const glm::vec4& colorA, const glm::vec4& colorB, float speed);
 
-		std::unique_ptr<ParticleBehavior> clone() const override;
 		void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) override;
 	};
 }

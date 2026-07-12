@@ -42,9 +42,4 @@ namespace cft
 
 		return m_count;
 	}
-
-	std::unique_ptr<EmissionPattern> LinearBurstEmissionPattern::clone() const
-	{
-		return std::make_unique<LinearBurstEmissionPattern>(*this);
-	}
 }

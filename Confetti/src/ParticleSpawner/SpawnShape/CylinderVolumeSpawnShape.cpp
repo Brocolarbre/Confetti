@@ -32,9 +32,4 @@ namespace cft
 	{
 
 	}
-
-	std::unique_ptr<SpawnShape> CylinderVolumeSpawnShape::clone() const
-	{
-		return std::make_unique<CylinderVolumeSpawnShape>(*this);
-	}
 }

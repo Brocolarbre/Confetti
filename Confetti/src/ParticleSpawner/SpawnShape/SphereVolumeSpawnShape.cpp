@@ -23,9 +23,4 @@ namespace cft
 	{
 
 	}
-
-	std::unique_ptr<SpawnShape> SphereVolumeSpawnShape::clone() const
-	{
-		return std::make_unique<SphereVolumeSpawnShape>(*this);
-	}
 }

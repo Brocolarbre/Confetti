@@ -25,9 +25,4 @@ namespace cft
 	{
 
 	}
-
-	std::unique_ptr<SpawnShape> CircleSpawnShape::clone() const
-	{
-		return std::make_unique<CircleSpawnShape>(*this);
-	}
 }

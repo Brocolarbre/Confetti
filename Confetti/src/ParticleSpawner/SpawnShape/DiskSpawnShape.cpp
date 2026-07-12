@@ -29,9 +29,4 @@ namespace cft
 	{
 
 	}
-
-	std::unique_ptr<SpawnShape> DiskSpawnShape::clone() const
-	{
-		return std::make_unique<DiskSpawnShape>(*this);
-	}
 }

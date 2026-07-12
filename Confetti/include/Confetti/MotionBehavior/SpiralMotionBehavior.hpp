@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SpiralMotionBehavior : public MotionBehavior
+	class SpiralMotionBehavior : public CloneableMotionBehavior<SpiralMotionBehavior>
 	{
 	private:
 		glm::vec3 m_origin;
@@ -20,7 +20,6 @@ namespace cft
 	public:
 		SpiralMotionBehavior(const glm::vec3& origin, const glm::vec3& axis, float startRadius, float growth, float speed, float rise);
 
-		std::unique_ptr<MotionBehavior> clone() const override;
 		glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) override;
 	};
 }

@@ -9,11 +9,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ForceField> RepulsionForceField::clone() const
-	{
-		return std::make_unique<RepulsionForceField>(*this);
-	}
-
 	MotionAcceleration RepulsionForceField::evaluate(const MotionState& motionState) const
 	{
 		float strengthFactor = m_spatialInfluence.getStrengthFactor(motionState.position);

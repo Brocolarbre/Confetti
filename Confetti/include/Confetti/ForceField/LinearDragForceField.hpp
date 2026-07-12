@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class LinearDragForceField : public ForceField
+	class LinearDragForceField : public CloneableForceField<LinearDragForceField>
 	{
 	private:
 		float m_strength;
@@ -12,7 +12,6 @@ namespace cft
 	public:
 		LinearDragForceField(float strength);
 
-		std::unique_ptr<ForceField> clone() const override;
 		MotionAcceleration evaluate(const MotionState& motionState) const override;
 	};
 }

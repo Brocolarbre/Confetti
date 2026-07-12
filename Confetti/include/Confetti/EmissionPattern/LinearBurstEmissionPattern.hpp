@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class LinearBurstEmissionPattern : public EmissionPattern
+	class LinearBurstEmissionPattern : public CloneableEmissionPattern<LinearBurstEmissionPattern>
 	{
 	private:
 		unsigned int m_count;
@@ -19,6 +19,5 @@ namespace cft
 
 		unsigned int getMaximumSimultaneousParticleCount(float maximumParticleLifetime) const override;
 		unsigned int emit(float deltaTime) override;
-		std::unique_ptr<EmissionPattern> clone() const override;
 	};
 }

@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class CircleSpawnShape : public SpawnShape
+	class CircleSpawnShape : public CloneableSpawnShape<CircleSpawnShape>
 	{
 	private:
 		float m_radius;
@@ -14,7 +14,5 @@ namespace cft
 
 	public:
 		CircleSpawnShape(float radius, const glm::vec3& axis);
-
-		virtual std::unique_ptr<SpawnShape> clone() const override;
 	};
 }

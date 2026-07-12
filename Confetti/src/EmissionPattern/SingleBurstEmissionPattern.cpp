@@ -22,9 +22,4 @@ namespace cft
 		m_hasEmitted = true;
 		return m_count;
 	}
-
-	std::unique_ptr<EmissionPattern> SingleBurstEmissionPattern::clone() const
-	{
-		return std::make_unique<SingleBurstEmissionPattern>(*this);
-	}
 }

@@ -28,9 +28,4 @@ namespace cft
 
 		return emissionCount;
 	}
-
-	std::unique_ptr<EmissionPattern> RandomRateEmissionPattern::clone() const
-	{
-		return std::make_unique<RandomRateEmissionPattern>(*this);
-	}
 }

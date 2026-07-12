@@ -9,11 +9,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ForceField> DirectionalForceField::clone() const
-	{
-		return std::make_unique<DirectionalForceField>(*this);
-	}
-
 	MotionAcceleration DirectionalForceField::evaluate(const MotionState& motionState) const
 	{
 		return MotionAcceleration{ m_direction * m_strength, glm::vec3(0.0f) };

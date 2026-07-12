@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SmoothColorShiftParticleBehavior : public ParticleBehavior
+	class SmoothColorShiftParticleBehavior : public CloneableParticleBehavior<SmoothColorShiftParticleBehavior>
 	{
 	private:
 		std::vector<glm::vec4> m_colors;
@@ -14,7 +14,6 @@ namespace cft
 	public:
 		SmoothColorShiftParticleBehavior(const std::vector<glm::vec4>& colors, float speed, bool cyclic);
 
-		std::unique_ptr<ParticleBehavior> clone() const override;
 		void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) override;
 	};
 }

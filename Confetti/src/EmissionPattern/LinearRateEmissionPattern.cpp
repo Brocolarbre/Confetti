@@ -33,9 +33,4 @@ namespace cft
 
 		return emissionCount;
 	}
-
-	std::unique_ptr<EmissionPattern> LinearRateEmissionPattern::clone() const
-	{
-		return std::make_unique<LinearRateEmissionPattern>(*this);
-	}
 }

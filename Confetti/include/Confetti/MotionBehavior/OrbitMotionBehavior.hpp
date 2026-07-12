@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class OrbitMotionBehavior : public MotionBehavior
+	class OrbitMotionBehavior : public CloneableMotionBehavior<OrbitMotionBehavior>
 	{
 	private:
 		glm::vec3 m_origin;
@@ -18,7 +18,6 @@ namespace cft
 	public:
 		OrbitMotionBehavior(const glm::vec3& origin, const glm::vec3& axis, float radius, float speed);
 
-		std::unique_ptr<MotionBehavior> clone() const override;
 		glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) override;
 	};
 }

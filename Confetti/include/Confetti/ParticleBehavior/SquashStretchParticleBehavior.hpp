@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SquashStretchParticleBehavior : public ParticleBehavior
+	class SquashStretchParticleBehavior : public CloneableParticleBehavior<SquashStretchParticleBehavior>
 	{
 	private:
 		glm::vec2 m_strength;
@@ -13,7 +13,6 @@ namespace cft
 	public:
 		SquashStretchParticleBehavior(const glm::vec2& strength, float speed);
 
-		std::unique_ptr<ParticleBehavior> clone() const override;
 		void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) override;
 	};
 }

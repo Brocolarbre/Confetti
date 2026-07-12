@@ -9,11 +9,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ParticleBehavior> SquashStretchParticleBehavior::clone() const
-	{
-		return std::make_unique<SquashStretchParticleBehavior>(*this);
-	}
-
 	void SquashStretchParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		float stretch = std::sin(elapsedTime * m_speed + particle.phase);

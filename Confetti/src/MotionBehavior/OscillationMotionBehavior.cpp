@@ -10,11 +10,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<MotionBehavior> OscillationMotionBehavior::clone() const
-	{
-		return std::make_unique<OscillationMotionBehavior>(*this);
-	}
-
 	glm::vec3 OscillationMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = elapsedTime * m_speed;

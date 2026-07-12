@@ -11,11 +11,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ForceField> VortexForceField::clone() const
-	{
-		return std::make_unique<VortexForceField>(*this);
-	}
-
 	MotionAcceleration VortexForceField::evaluate(const MotionState& motionState) const
 	{
 		float strengthFactor = m_spatialInfluence.getStrengthFactor(motionState.position);

@@ -8,11 +8,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ParticleBehavior> FadeInParticleBehavior::clone() const
-	{
-		return std::make_unique<FadeInParticleBehavior>(*this);
-	}
-
 	void FadeInParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		float end = m_duration.normalize(particle.lifetime);

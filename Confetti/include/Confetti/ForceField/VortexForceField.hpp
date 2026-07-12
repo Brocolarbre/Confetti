@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class VortexForceField : public ForceField
+	class VortexForceField : public CloneableForceField<VortexForceField>
 	{
 	private:
 		SpatialInfluence m_spatialInfluence;
@@ -16,7 +16,6 @@ namespace cft
 	public:
 		VortexForceField(const SpatialInfluence& spatialInfluence, const glm::vec3& axis, float strength, float pullStrength);
 
-		std::unique_ptr<ForceField> clone() const override;
 		MotionAcceleration evaluate(const MotionState& motionState) const override;
 	};
 }

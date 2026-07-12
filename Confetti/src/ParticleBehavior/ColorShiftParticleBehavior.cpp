@@ -10,11 +10,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ParticleBehavior> ColorShiftParticleBehavior::clone() const
-	{
-		return std::make_unique<ColorShiftParticleBehavior>(*this);
-	}
-
 	void ColorShiftParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		if (m_colors.empty())

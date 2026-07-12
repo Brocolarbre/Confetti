@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class GrowInParticleBehavior : public ParticleBehavior
+	class GrowInParticleBehavior : public CloneableParticleBehavior<GrowInParticleBehavior>
 	{
 	private:
 		ParticleTime m_duration;
@@ -13,7 +13,6 @@ namespace cft
 	public:
 		GrowInParticleBehavior(ParticleTime duration);
 
-		std::unique_ptr<ParticleBehavior> clone() const override;
 		void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) override;
 	};
 }

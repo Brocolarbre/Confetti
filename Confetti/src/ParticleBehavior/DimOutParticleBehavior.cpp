@@ -8,11 +8,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ParticleBehavior> DimOutParticleBehavior::clone() const
-	{
-		return std::make_unique<DimOutParticleBehavior>(*this);
-	}
-
 	void DimOutParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		float duration = m_duration.normalize(particle.lifetime);

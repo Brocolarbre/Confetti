@@ -17,11 +17,6 @@ namespace cft
 		m_bitangent = glm::cross(m_axis, m_tangent);
 	}
 
-	std::unique_ptr<MotionBehavior> SpiralMotionBehavior::clone() const
-	{
-		return std::make_unique<SpiralMotionBehavior>(*this);
-	}
-
 	glm::vec3 SpiralMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = elapsedTime * m_speed;

@@ -9,11 +9,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ForceField> AttractionForceField::clone() const
-	{
-		return std::make_unique<AttractionForceField>(*this);
-	}
-
 	MotionAcceleration AttractionForceField::evaluate(const MotionState& motionState) const
 	{
 		float strengthFactor = m_spatialInfluence.getStrengthFactor(motionState.position);

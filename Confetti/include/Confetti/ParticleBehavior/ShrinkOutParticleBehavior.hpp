@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class ShrinkOutParticleBehavior : public ParticleBehavior
+	class ShrinkOutParticleBehavior : public CloneableParticleBehavior<ShrinkOutParticleBehavior>
 	{
 	private:
 		ParticleTime m_duration;
@@ -13,7 +13,6 @@ namespace cft
 	public:
 		ShrinkOutParticleBehavior(ParticleTime duration);
 
-		std::unique_ptr<ParticleBehavior> clone() const override;
 		void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) override;
 	};
 }

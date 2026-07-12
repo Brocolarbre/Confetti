@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class CircleMotionBehavior : public MotionBehavior
+	class CircleMotionBehavior : public CloneableMotionBehavior<CircleMotionBehavior>
 	{
 	private:
 		glm::vec3 m_axis;
@@ -17,7 +17,6 @@ namespace cft
 	public:
 		CircleMotionBehavior(const glm::vec3& axis, float radius, float speed);
 
-		std::unique_ptr<MotionBehavior> clone() const override;
 		glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) override;
 	};
 }

@@ -10,11 +10,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ParticleBehavior> FlickerParticleBehavior::clone() const
-	{
-		return std::make_unique<FlickerParticleBehavior>(*this);
-	}
-
 	void FlickerParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		float t = glm::sin(elapsedTime * m_speed + particle.phase) * 0.5f + 0.5f;

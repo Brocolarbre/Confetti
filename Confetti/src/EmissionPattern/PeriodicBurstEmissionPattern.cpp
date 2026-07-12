@@ -34,9 +34,4 @@ namespace cft
 
 		return bursts * m_count;
 	}
-
-	std::unique_ptr<EmissionPattern> PeriodicBurstEmissionPattern::clone() const
-	{
-		return std::make_unique<PeriodicBurstEmissionPattern>(*this);
-	}
 }

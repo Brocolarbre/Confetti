@@ -14,11 +14,6 @@ namespace cft
 		m_bitangent = glm::cross(m_axis, m_tangent);
 	}
 
-	std::unique_ptr<MotionBehavior> FigureEightMotionBehavior::clone() const
-	{
-		return std::make_unique<FigureEightMotionBehavior>(*this);
-	}
-
 	glm::vec3 FigureEightMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = elapsedTime * m_speed;

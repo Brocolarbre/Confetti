@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class OrbitForceField : public ForceField
+	class OrbitForceField : public CloneableForceField<OrbitForceField>
 	{
 	private:
 		SpatialInfluence m_spatialInfluence;
@@ -17,7 +17,6 @@ namespace cft
 	public:
 		OrbitForceField(const SpatialInfluence& spatialInfluence, const glm::vec3& axis, float strength, float radius, float radialCorrectionStrength);
 
-		std::unique_ptr<ForceField> clone() const override;
 		MotionAcceleration evaluate(const MotionState& motionState) const override;
 	};
 }

@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class WindForceField : public ForceField
+	class WindForceField : public CloneableForceField<WindForceField>
 	{
 	private:
 		glm::vec3 m_velocity;
@@ -13,7 +13,6 @@ namespace cft
 	public:
 		WindForceField(const glm::vec3& direction, float strength, float drag);
 
-		std::unique_ptr<ForceField> clone() const override;
 		MotionAcceleration evaluate(const MotionState& motionState) const override;
 	};
 }

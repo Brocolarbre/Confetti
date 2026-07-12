@@ -15,11 +15,6 @@ namespace cft
 		m_bitangent = glm::cross(m_axis, m_tangent);
 	}
 
-	std::unique_ptr<MotionBehavior> OrbitMotionBehavior::clone() const
-	{
-		return std::make_unique<OrbitMotionBehavior>(*this);
-	}
-
 	glm::vec3 OrbitMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = elapsedTime * m_speed;

@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class DiskSpawnShape : public SpawnShape
+	class DiskSpawnShape : public CloneableSpawnShape<DiskSpawnShape>
 	{
 	private:
 		float m_radius;
@@ -14,7 +14,5 @@ namespace cft
 
 	public:
 		DiskSpawnShape(float radius, const glm::vec3& axis);
-
-		virtual std::unique_ptr<SpawnShape> clone() const override;
 	};
 }

@@ -12,11 +12,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ForceField> OrbitForceField::clone() const
-	{
-		return std::make_unique<OrbitForceField>(*this);
-	}
-
 	MotionAcceleration OrbitForceField::evaluate(const MotionState& motionState) const
 	{
 		float strengthFactor = m_spatialInfluence.getStrengthFactor(motionState.position);

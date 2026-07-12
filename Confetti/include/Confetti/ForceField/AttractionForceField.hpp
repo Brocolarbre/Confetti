@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class AttractionForceField : public ForceField
+	class AttractionForceField : public CloneableForceField<AttractionForceField>
 	{
 	private:
 		SpatialInfluence m_spatialInfluence;
@@ -14,7 +14,6 @@ namespace cft
 	public:
 		AttractionForceField(const SpatialInfluence& spatialInfluence, float strength);
 
-		std::unique_ptr<ForceField> clone() const override;
 		MotionAcceleration evaluate(const MotionState& motionState) const override;
 	};
 }

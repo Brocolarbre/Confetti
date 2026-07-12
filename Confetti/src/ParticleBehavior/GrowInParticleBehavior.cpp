@@ -8,11 +8,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ParticleBehavior> GrowInParticleBehavior::clone() const
-	{
-		return std::make_unique<GrowInParticleBehavior>(*this);
-	}
-
 	void GrowInParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
 	{
 		float end = m_duration.normalize(particle.lifetime);

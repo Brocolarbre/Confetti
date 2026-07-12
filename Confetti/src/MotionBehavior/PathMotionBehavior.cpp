@@ -20,11 +20,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<MotionBehavior> PathMotionBehavior::clone() const
-	{
-		return std::make_unique<PathMotionBehavior>(*this);
-	}
-
 	glm::vec3 PathMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
 	{
 		float t = m_easing ? m_easing->operator()(elapsedTime * m_speed) : elapsedTime * m_speed;

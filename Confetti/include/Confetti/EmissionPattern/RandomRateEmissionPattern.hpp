@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class RandomRateEmissionPattern : public EmissionPattern
+	class RandomRateEmissionPattern : public CloneableEmissionPattern<RandomRateEmissionPattern>
 	{
 	private:
 		float m_minimumRate;
@@ -18,6 +18,5 @@ namespace cft
 
 		unsigned int getMaximumSimultaneousParticleCount(float maximumParticleLifetime) const;
 		unsigned int emit(float deltaTime) override;
-		std::unique_ptr<EmissionPattern> clone() const override;
 	};
 }

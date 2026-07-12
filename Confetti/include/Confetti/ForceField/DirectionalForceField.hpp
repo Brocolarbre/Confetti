@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class DirectionalForceField : public ForceField
+	class DirectionalForceField : public CloneableForceField<DirectionalForceField>
 	{
 	private:
 		glm::vec3 m_direction;
@@ -13,7 +13,6 @@ namespace cft
 	public:
 		DirectionalForceField(const glm::vec3& direction, float strength);
 
-		std::unique_ptr<ForceField> clone() const override;
 		MotionAcceleration evaluate(const MotionState& motionState) const override;
 	};
 }

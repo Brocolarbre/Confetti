@@ -12,11 +12,6 @@ namespace cft
 
 	}
 
-	std::unique_ptr<ForceField> ShockWaveForceField::clone() const
-	{
-		return std::make_unique<ShockWaveForceField>(*this);
-	}
-
 	MotionAcceleration ShockWaveForceField::evaluate(const MotionState& motionState) const
 	{
 		float spatialFactor = m_spatialInfluence.getStrengthFactor(motionState.position);
