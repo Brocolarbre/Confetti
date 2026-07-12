@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class DiskSpawnShape : public CloneableSpawnShape<DiskSpawnShape>
+	class DiskSpawnShape : public Cloneable<DiskSpawnShape, SpawnShape>
 	{
 	private:
 		float m_radius;

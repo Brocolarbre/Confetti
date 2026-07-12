@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class JitterMotionBehavior : public CloneableMotionBehavior<JitterMotionBehavior>
+	class JitterMotionBehavior : public Cloneable<JitterMotionBehavior, MotionBehavior>
 	{
 	private:
 		float m_strength;

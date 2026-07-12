@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class GrowInParticleBehavior : public CloneableParticleBehavior<GrowInParticleBehavior>
+	class GrowInParticleBehavior : public Cloneable<GrowInParticleBehavior, ParticleBehavior>
 	{
 	private:
 		ParticleTime m_duration;

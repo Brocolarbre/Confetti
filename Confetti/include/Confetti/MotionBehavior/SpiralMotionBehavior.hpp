@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SpiralMotionBehavior : public CloneableMotionBehavior<SpiralMotionBehavior>
+	class SpiralMotionBehavior : public Cloneable<SpiralMotionBehavior, MotionBehavior>
 	{
 	private:
 		glm::vec3 m_origin;

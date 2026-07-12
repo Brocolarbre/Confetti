@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class OrbitForceField : public CloneableForceField<OrbitForceField>
+	class OrbitForceField : public Cloneable<OrbitForceField, ForceField>
 	{
 	private:
 		SpatialInfluence m_spatialInfluence;

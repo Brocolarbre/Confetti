@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class DimOutParticleBehavior : public CloneableParticleBehavior<DimOutParticleBehavior>
+	class DimOutParticleBehavior : public Cloneable<DimOutParticleBehavior, ParticleBehavior>
 	{
 	private:
 		ParticleTime m_duration;

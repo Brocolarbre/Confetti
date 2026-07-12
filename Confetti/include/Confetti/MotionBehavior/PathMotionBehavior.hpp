@@ -8,7 +8,7 @@
 
 namespace cft
 {
-	class PathMotionBehavior : public CloneableMotionBehavior<PathMotionBehavior>
+	class PathMotionBehavior : public Cloneable<PathMotionBehavior, MotionBehavior>
 	{
 	private:
 		lw::Curve m_path;

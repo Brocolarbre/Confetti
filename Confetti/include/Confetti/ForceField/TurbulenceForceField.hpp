@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class TurbulenceForceField : public CloneableForceField<TurbulenceForceField>
+	class TurbulenceForceField : public Cloneable<TurbulenceForceField, ForceField>
 	{
 	private:
 		float m_strength;

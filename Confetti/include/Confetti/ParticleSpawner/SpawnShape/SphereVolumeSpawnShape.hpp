@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SphereVolumeSpawnShape : public CloneableSpawnShape<SphereVolumeSpawnShape>
+	class SphereVolumeSpawnShape : public Cloneable<SphereVolumeSpawnShape, SpawnShape>
 	{
 	private:
 		float m_radius;

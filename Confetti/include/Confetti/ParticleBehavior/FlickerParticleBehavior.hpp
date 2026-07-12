@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class FlickerParticleBehavior : public CloneableParticleBehavior<FlickerParticleBehavior>
+	class FlickerParticleBehavior : public Cloneable<FlickerParticleBehavior, ParticleBehavior>
 	{
 	private:
 		float m_minimumBrightness;

@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class PeriodicBurstEmissionPattern : public CloneableEmissionPattern<PeriodicBurstEmissionPattern>
+	class PeriodicBurstEmissionPattern : public Cloneable<PeriodicBurstEmissionPattern, EmissionPattern>
 	{
 	private:
 		unsigned int m_count;

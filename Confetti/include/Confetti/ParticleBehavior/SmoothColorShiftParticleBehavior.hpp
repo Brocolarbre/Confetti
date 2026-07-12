@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SmoothColorShiftParticleBehavior : public CloneableParticleBehavior<SmoothColorShiftParticleBehavior>
+	class SmoothColorShiftParticleBehavior : public Cloneable<SmoothColorShiftParticleBehavior, ParticleBehavior>
 	{
 	private:
 		std::vector<glm::vec4> m_colors;

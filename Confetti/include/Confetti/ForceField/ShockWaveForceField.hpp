@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class ShockWaveForceField : public CloneableForceField<ShockWaveForceField>
+	class ShockWaveForceField : public Cloneable<ShockWaveForceField, ForceField>
 	{
 	private:
 		SpatialInfluence m_spatialInfluence;

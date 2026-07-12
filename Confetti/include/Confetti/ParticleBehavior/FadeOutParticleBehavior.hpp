@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class FadeOutParticleBehavior : public CloneableParticleBehavior<FadeOutParticleBehavior>
+	class FadeOutParticleBehavior : public Cloneable<FadeOutParticleBehavior, ParticleBehavior>
 	{
 	private:
 		ParticleTime m_duration;

@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class CylinderVolumeSpawnShape : public CloneableSpawnShape<CylinderVolumeSpawnShape>
+	class CylinderVolumeSpawnShape : public Cloneable<CylinderVolumeSpawnShape, SpawnShape>
 	{
 	private:
 		float m_height;

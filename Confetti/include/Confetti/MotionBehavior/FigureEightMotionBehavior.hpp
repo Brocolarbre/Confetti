@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class FigureEightMotionBehavior : public CloneableMotionBehavior<FigureEightMotionBehavior>
+	class FigureEightMotionBehavior : public Cloneable<FigureEightMotionBehavior, MotionBehavior>
 	{
 	private:
 		glm::vec3 m_axis;

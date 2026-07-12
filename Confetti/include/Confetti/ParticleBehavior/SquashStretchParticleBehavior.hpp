@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SquashStretchParticleBehavior : public CloneableParticleBehavior<SquashStretchParticleBehavior>
+	class SquashStretchParticleBehavior : public Cloneable<SquashStretchParticleBehavior, ParticleBehavior>
 	{
 	private:
 		glm::vec2 m_strength;

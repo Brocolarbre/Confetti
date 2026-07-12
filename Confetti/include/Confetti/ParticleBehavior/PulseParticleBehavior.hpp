@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class PulseParticleBehavior : public CloneableParticleBehavior<PulseParticleBehavior>
+	class PulseParticleBehavior : public Cloneable<PulseParticleBehavior, ParticleBehavior>
 	{
 	private:
 		glm::vec4 m_colorA;

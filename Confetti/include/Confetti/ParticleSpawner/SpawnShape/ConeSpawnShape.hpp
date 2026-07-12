@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class ConeSpawnShape : public CloneableSpawnShape<ConeSpawnShape>
+	class ConeSpawnShape : public Cloneable<ConeSpawnShape, SpawnShape>
 	{
 	private:
 		float m_height;

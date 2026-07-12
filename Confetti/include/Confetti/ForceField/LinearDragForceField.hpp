@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class LinearDragForceField : public CloneableForceField<LinearDragForceField>
+	class LinearDragForceField : public Cloneable<LinearDragForceField, ForceField>
 	{
 	private:
 		float m_strength;

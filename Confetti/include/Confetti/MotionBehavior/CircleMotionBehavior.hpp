@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class CircleMotionBehavior : public CloneableMotionBehavior<CircleMotionBehavior>
+	class CircleMotionBehavior : public Cloneable<CircleMotionBehavior, MotionBehavior>
 	{
 	private:
 		glm::vec3 m_axis;

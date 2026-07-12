@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class VortexForceField : public CloneableForceField<VortexForceField>
+	class VortexForceField : public Cloneable<VortexForceField, ForceField>
 	{
 	private:
 		SpatialInfluence m_spatialInfluence;

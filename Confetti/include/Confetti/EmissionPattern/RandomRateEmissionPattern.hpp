@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class RandomRateEmissionPattern : public CloneableEmissionPattern<RandomRateEmissionPattern>
+	class RandomRateEmissionPattern : public Cloneable<RandomRateEmissionPattern, EmissionPattern>
 	{
 	private:
 		float m_minimumRate;

@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class OrbitMotionBehavior : public CloneableMotionBehavior<OrbitMotionBehavior>
+	class OrbitMotionBehavior : public Cloneable<OrbitMotionBehavior, MotionBehavior>
 	{
 	private:
 		glm::vec3 m_origin;

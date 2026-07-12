@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class LinearRateEmissionPattern : public CloneableEmissionPattern<LinearRateEmissionPattern>
+	class LinearRateEmissionPattern : public Cloneable<LinearRateEmissionPattern, EmissionPattern>
 	{
 	private:
 		float m_initialRate;

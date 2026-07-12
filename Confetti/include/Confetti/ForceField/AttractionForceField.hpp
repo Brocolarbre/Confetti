@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class AttractionForceField : public CloneableForceField<AttractionForceField>
+	class AttractionForceField : public Cloneable<AttractionForceField, ForceField>
 	{
 	private:
 		SpatialInfluence m_spatialInfluence;
