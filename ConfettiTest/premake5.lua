@@ -35,6 +35,7 @@ project "ConfettiTest"
 	filter {}
 	
 	defines {
+		"LINEWEAVER_STATIC",
 		"WINDOVE_STATIC"
 	}
 	

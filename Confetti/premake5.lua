@@ -42,7 +42,7 @@ project "Confetti"
 	}
 	
 	defines {
-
+		"LINEWEAVER_STATIC"
 	}
 
 	files {
