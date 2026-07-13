@@ -18,6 +18,6 @@ namespace cft
 	public:
 		OrbitMotionBehavior(const glm::vec3& origin, const glm::vec3& axis, float radius, float speed);
 
-		glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) override;
+		glm::vec3 evaluate(float age, const MotionState& motionState) override;
 	};
 }

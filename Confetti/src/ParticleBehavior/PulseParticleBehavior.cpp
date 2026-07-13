@@ -10,7 +10,7 @@ namespace cft
 
 	}
 
-	void PulseParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
+	void PulseParticleBehavior::evaluate(float elapsedTime, float normalizedAge, ParticleView& particle)
 	{
 		float t = glm::sin(elapsedTime * m_speed + particle.phase) * 0.5f + 0.5f;
 		particle.color = glm::mix(m_colorA, m_colorB, t);

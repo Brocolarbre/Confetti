@@ -172,7 +172,7 @@ namespace cft
 				particleEmitterInstance.postBehaviorPosition = particleEmitterInstance.motionState.position;
 
 				for (const std::unique_ptr<MotionBehavior>& motionBehavior : particleEmitterInstance.inheritedMotionBehaviors)
-					particleEmitterInstance.postBehaviorPosition += motionBehavior->evaluate(elapsedTime, particleEmitterInstance.motionState);
+					particleEmitterInstance.postBehaviorPosition += motionBehavior->evaluate(elapsedTime - particleEmitterInstance.timeRange.spawnTime, particleEmitterInstance.motionState);
 
 				unsigned int particleSpawnCount = particleEmitterInstance.emissionPattern->emit(deltaTime);
 				if (particleSpawnCount > 0)
@@ -329,10 +329,12 @@ namespace cft
 
 					postBehaviorPosition[i] = motionState.position;
 
-					for (const std::unique_ptr<MotionBehavior>& motionBehavior : entry.motionBehaviors)
-						postBehaviorPosition[i] += motionBehavior->evaluate(elapsedTime, motionState);
+					float particleAge = elapsedTime - spawnTime[i];
 
-					float particleNormalizedAge = (elapsedTime - spawnTime[i]) / lifetime[i];
+					for (const std::unique_ptr<MotionBehavior>& motionBehavior : entry.motionBehaviors)
+						postBehaviorPosition[i] += motionBehavior->evaluate(particleAge, motionState);
+
+					float particleNormalizedAge = particleAge / lifetime[i];
 
 					for (const std::unique_ptr<ParticleBehavior>& particleBehavior : entry.particleBehaviors)
 						particleBehavior->evaluate(elapsedTime, particleNormalizedAge, ParticleView{ color[i], position[i], rotation[i], scale[i], linearVelocity[i], angularVelocity[i], initialColor[i], initialScale[i], postBehaviorPosition[i], phase[i], lifetime[i], spawnTime[i], particleRegistryId[i], id[i] });

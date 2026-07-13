@@ -13,6 +13,6 @@ namespace cft
 	public:
 		ShrinkOutParticleBehavior(ParticleTime duration);
 
-		void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) override;
+		void evaluate(float elapsedTime, float normalizedAge, ParticleView& particle) override;
 	};
 }

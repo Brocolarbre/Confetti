@@ -9,7 +9,7 @@ namespace cft
 
 	}
 
-	void SquashStretchParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
+	void SquashStretchParticleBehavior::evaluate(float elapsedTime, float normalizedAge, ParticleView& particle)
 	{
 		float stretch = std::sin(elapsedTime * m_speed + particle.phase);
 

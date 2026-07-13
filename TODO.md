@@ -10,7 +10,6 @@ Code cleanup :
 
 Features :
 - Ribbon particle
-- Spline motion behavior
 
 Application :
 - Save system (JSON)

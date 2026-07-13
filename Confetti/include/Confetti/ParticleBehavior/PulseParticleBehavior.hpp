@@ -14,6 +14,6 @@ namespace cft
 	public:
 		PulseParticleBehavior(const glm::vec4& colorA, const glm::vec4& colorB, float speed);
 
-		void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) override;
+		void evaluate(float elapsedTime, float normalizedAge, ParticleView& particle) override;
 	};
 }

@@ -14,6 +14,6 @@ namespace cft
 	public:
 		OscillationMotionBehavior(const glm::vec3& from, const glm::vec3& to, float speed);
 
-		glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) override;
+		glm::vec3 evaluate(float age, const MotionState& motionState) override;
 	};
 }

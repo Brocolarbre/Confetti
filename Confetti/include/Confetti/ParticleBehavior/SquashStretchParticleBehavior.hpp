@@ -13,6 +13,6 @@ namespace cft
 	public:
 		SquashStretchParticleBehavior(const glm::vec2& strength, float speed);
 
-		void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) override;
+		void evaluate(float elapsedTime, float normalizedAge, ParticleView& particle) override;
 	};
 }

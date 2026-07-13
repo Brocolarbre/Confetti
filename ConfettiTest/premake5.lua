@@ -25,7 +25,8 @@ project "ConfettiTest"
 		filter "not options:shared-library"
 		
 		links {
-			"glad"
+			"glad",
+			"LineWeaver"
 		}
 		
 		defines {

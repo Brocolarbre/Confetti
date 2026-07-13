@@ -17,10 +17,10 @@ namespace cft
 		m_bitangent = glm::cross(m_axis, m_tangent);
 	}
 
-	glm::vec3 SpiralMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
+	glm::vec3 SpiralMotionBehavior::evaluate(float age, const MotionState& motionState)
 	{
-		float t = elapsedTime * m_speed;
-		float radius = m_startRadius + m_growth * elapsedTime;
+		float t = age * m_speed;
+		float radius = m_startRadius + m_growth * age;
 
 		glm::vec3 offset = m_tangent * (std::cos(t) * radius) + m_bitangent * (std::sin(t) * radius) + m_axis * (m_rise * t);
 		return m_origin + offset;

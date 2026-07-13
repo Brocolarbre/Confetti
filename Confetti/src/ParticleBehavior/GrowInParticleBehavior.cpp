@@ -8,14 +8,14 @@ namespace cft
 
 	}
 
-	void GrowInParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
+	void GrowInParticleBehavior::evaluate(float elapsedTime, float normalizedAge, ParticleView& particle)
 	{
 		float end = m_duration.normalize(particle.lifetime);
 
-		if (particleNormalizedAge > end)
+		if (normalizedAge > end)
 			return;
 
-		float t = glm::min(particleNormalizedAge / end, 1.0f);
+		float t = glm::min(normalizedAge / end, 1.0f);
 		particle.scale = t * particle.initialScale;
 	}
 }

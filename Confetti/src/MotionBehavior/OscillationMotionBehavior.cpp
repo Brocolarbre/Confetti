@@ -10,9 +10,9 @@ namespace cft
 
 	}
 
-	glm::vec3 OscillationMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
+	glm::vec3 OscillationMotionBehavior::evaluate(float age, const MotionState& motionState)
 	{
-		float t = elapsedTime * m_speed;
+		float t = age * m_speed;
 
 		return glm::mix(m_from, m_to, (1.0f - std::cos(t)) * 0.5f);
 	}

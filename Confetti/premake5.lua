@@ -21,7 +21,8 @@ project "Confetti"
 		filter "options:shared-library"
 		
 		links {
-			"glad"
+			"glad",
+			"LineWeaver"
 		}
 		
 		defines	{

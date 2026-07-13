@@ -15,9 +15,9 @@ namespace cft
 		m_bitangent = glm::cross(m_axis, m_tangent);
 	}
 
-	glm::vec3 OrbitMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
+	glm::vec3 OrbitMotionBehavior::evaluate(float age, const MotionState& motionState)
 	{
-		float t = elapsedTime * m_speed;
+		float t = age * m_speed;
 
 		glm::vec3 offset = std::cos(t) * m_tangent * m_radius + std::sin(t) * m_bitangent * m_radius;
 		return m_origin + offset;

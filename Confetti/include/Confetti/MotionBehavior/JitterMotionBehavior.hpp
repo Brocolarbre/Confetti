@@ -14,6 +14,6 @@ namespace cft
 	public:
 		JitterMotionBehavior(float strength, RandomNumberGenerator& randomNumberGenerator);
 
-		glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) override;
+		glm::vec3 evaluate(float age, const MotionState& motionState) override;
 	};
 }

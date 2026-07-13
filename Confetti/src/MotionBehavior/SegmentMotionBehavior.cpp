@@ -10,9 +10,9 @@ namespace cft
 
 	}
 
-	glm::vec3 SegmentMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
+	glm::vec3 SegmentMotionBehavior::evaluate(float age, const MotionState& motionState)
 	{
-		float t = elapsedTime * m_speed;
+		float t = age * m_speed;
 
 		return glm::mix(m_from, m_to, t);
 	}

@@ -14,6 +14,6 @@ namespace cft
 	public:
 		ColorShiftParticleBehavior(const std::vector<glm::vec4>& colors, float speed, bool cyclic);
 
-		void evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle) override;
+		void evaluate(float elapsedTime, float normalizedAge, ParticleView& particle) override;
 	};
 }

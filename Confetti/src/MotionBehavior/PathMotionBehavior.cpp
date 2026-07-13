@@ -14,15 +14,15 @@ namespace cft
 	PathMotionBehavior::PathMotionBehavior(const PathMotionBehavior& pathMotionBehavior) :
 		m_path(pathMotionBehavior.m_path),
 		m_interpolator(pathMotionBehavior.m_interpolator->clone()),
-		m_easing(pathMotionBehavior.m_easing->clone()),
+		m_easing(pathMotionBehavior.m_easing ? pathMotionBehavior.m_easing->clone() : nullptr),
 		m_speed(pathMotionBehavior.m_speed)
 	{
 
 	}
 
-	glm::vec3 PathMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
+	glm::vec3 PathMotionBehavior::evaluate(float age, const MotionState& motionState)
 	{
-		float t = m_easing ? m_easing->operator()(elapsedTime * m_speed) : elapsedTime * m_speed;
+		float t = m_easing ? m_easing->operator()(age * m_speed) : age * m_speed;
 		lw::Point point = m_interpolator->operator()(m_path, t);
 		return glm::vec3(point.x, point.y, point.z);
 	}

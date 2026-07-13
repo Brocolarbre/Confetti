@@ -20,6 +20,6 @@ namespace cft
 	public:
 		SpiralMotionBehavior(const glm::vec3& origin, const glm::vec3& axis, float startRadius, float growth, float speed, float rise);
 
-		glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) override;
+		glm::vec3 evaluate(float age, const MotionState& motionState) override;
 	};
 }

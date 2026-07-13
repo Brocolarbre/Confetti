@@ -10,7 +10,7 @@ namespace cft
 
 	}
 
-	void ColorShiftParticleBehavior::evaluate(float elapsedTime, float particleNormalizedAge, ParticleView& particle)
+	void ColorShiftParticleBehavior::evaluate(float elapsedTime, float normalizedAge, ParticleView& particle)
 	{
 		if (m_colors.empty())
 			return;

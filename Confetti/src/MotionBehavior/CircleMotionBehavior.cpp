@@ -14,9 +14,9 @@ namespace cft
 		m_bitangent = glm::cross(m_axis, m_tangent);
 	}
 
-	glm::vec3 CircleMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
+	glm::vec3 CircleMotionBehavior::evaluate(float age, const MotionState& motionState)
 	{
-		float t = elapsedTime * m_speed;
+		float t = age * m_speed;
 
 		glm::vec3 localPosition(std::cos(t) * m_radius, 0.0f, glm::sin(t) * m_radius);
 		return m_tangent * localPosition.x + m_axis * localPosition.y + m_bitangent * localPosition.z;

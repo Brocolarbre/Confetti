@@ -11,6 +11,6 @@ namespace cft
 		virtual ~MotionBehavior() = default;
 
 		virtual std::unique_ptr<MotionBehavior> clone() const = 0;
-		virtual glm::vec3 evaluate(float elapsedTime, const MotionState& motionState) = 0;
+		virtual glm::vec3 evaluate(float age, const MotionState& motionState) = 0;
 	};
 }

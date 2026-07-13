@@ -9,7 +9,7 @@ namespace cft
 
 	}
 
-	glm::vec3 JitterMotionBehavior::evaluate(float elapsedTime, const MotionState& motionState)
+	glm::vec3 JitterMotionBehavior::evaluate(float age, const MotionState& motionState)
 	{
 		return m_randomNumberGenerator.generate(glm::vec3(-m_strength), glm::vec3(m_strength));
 	}
