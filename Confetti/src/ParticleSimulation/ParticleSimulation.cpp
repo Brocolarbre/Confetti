@@ -56,6 +56,7 @@ namespace cft
 		m_particleEmitterInstances(),
 		m_particlePools(),
 		m_trailPools(),
+		m_ribbonPools(),
 		m_particleRegistry(),
 		m_trailRegistry()
 	{
@@ -70,6 +71,11 @@ namespace cft
 	const std::unordered_map<unsigned int, TrailPool>& ParticleSimulation::getTrailPools() const
 	{
 		return m_trailPools;
+	}
+
+	const std::unordered_map<unsigned int, RibbonPool>& ParticleSimulation::getRibbonPools() const
+	{
+		return m_ribbonPools;
 	}
 
 	const ParticleRegistry& ParticleSimulation::getParticleRegistry() const
@@ -92,9 +98,10 @@ namespace cft
 		m_particleEffectInstances.clear();
 		m_particleEmitterInstances.clear();
 		m_particlePools.clear();
-		m_particleRegistry.clear();
 		m_trailPools.clear();
+		m_ribbonPools.clear();
 		m_trailRegistry.clear();
+		m_particleRegistry.clear();
 	}
 
 	void ParticleSimulation::update(float elapsedTime, float deltaTime)

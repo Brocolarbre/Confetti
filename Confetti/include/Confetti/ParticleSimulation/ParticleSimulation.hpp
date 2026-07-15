@@ -3,6 +3,7 @@
 #include "AssetRegistry.hpp"
 #include "ParticleRegistry.hpp"
 #include "ParticlePool.hpp"
+#include "RibbonPool.hpp"
 #include "TrailPool.hpp"
 #include "TrailRegistry.hpp"
 #include "Confetti/Tools/RandomNumberGenerator.hpp"
@@ -39,6 +40,7 @@ namespace cft
 
 		std::unordered_map<unsigned int, ParticlePool> m_particlePools;
 		std::unordered_map<unsigned int, TrailPool> m_trailPools;
+		std::unordered_map<unsigned int, RibbonPool> m_ribbonPools;
 		ParticleRegistry m_particleRegistry;
 		TrailRegistry m_trailRegistry;
 
@@ -49,6 +51,7 @@ namespace cft
 
 		const std::unordered_map<unsigned int, ParticlePool>& getParticlePools() const;
 		const std::unordered_map<unsigned int, TrailPool>& getTrailPools() const;
+		const std::unordered_map<unsigned int, RibbonPool>& getRibbonPools() const;
 		const ParticleRegistry& getParticleRegistry() const;
 		const TrailRegistry& getTrailRegistry() const;
 

@@ -7,6 +7,10 @@ Optimizations :
 
 Code cleanup :
 - Use export macro CONFETTI_EXPORT across the entire engine API
+- Folder structure
+- Pool base class
+- Pools : std::min instead of glm::min
+- Organize ParticleSimulation.cpp (ex: TrailUpdater)
 
 Features :
 - Ribbon particle

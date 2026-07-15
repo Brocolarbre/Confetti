@@ -40,4 +40,22 @@ namespace cft
 		const unsigned int& id;
 		const unsigned int& particleRegistryId;
 	};
+
+	struct ConstantParticleView
+	{
+		const glm::vec4& color;
+		const glm::vec3& position;
+		const glm::quat& rotation;
+		const glm::vec3& scale;
+		const glm::vec3& linearVelocity;
+		const glm::vec3& angularVelocity;
+		const glm::vec4& initialColor;
+		const glm::vec3& initialScale;
+		const glm::vec3& postBehaviorPosition;
+		const float& phase;
+		const float& lifetime;
+		const float& spawnTime;
+		const unsigned int& id;
+		const unsigned int& particleRegistryId;
+	};
 }
