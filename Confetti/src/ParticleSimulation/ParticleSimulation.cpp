@@ -31,7 +31,7 @@ namespace cft
 		particleEmitterInstance.postBehaviorPosition = glm::vec3(0.0f);
 		particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitter.poolId, recursionDepth, particleEmitter.spawnTrigger, particleEmitter.renderDescriptor, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
 		particleEmitterInstance.trailRegistryId = particleEmitter.trailConfiguration.has_value() ? std::make_optional<unsigned int>(m_trailRegistry.createEntry(particleEmitter.trailConfiguration.value())) : std::nullopt;
-		particleEmitterInstance.ribbonRegistryId = particleEmitter.ribbonConfiguration.has_value() ? std::make_optional<unsigned int>(m_ribbonRegistry.createEntry(particleEmitter.poolId, particleEmitter.ribbonConfiguration.value())) : std::nullopt;
+		particleEmitterInstance.ribbonRegistryId = particleEmitter.ribbonConfiguration.has_value() ? std::make_optional<unsigned int>(m_ribbonRegistry.createEntry(particleEmitter.poolId, particleEmitter.ribbonConfiguration.value(), m_assetRegistry.getParticleConnector(particleEmitter.ribbonConfiguration.value().ribbonGeneratorId).clone())) : std::nullopt;
 		particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitter.particleSpawnerId).clone();
 		particleEmitterInstance.emissionPattern = m_assetRegistry.getEmissionPattern(particleEmitter.emissionPatternId).clone();
 
@@ -574,7 +574,10 @@ namespace cft
 			{
 				RibbonRegistryEntry& ribbonRegistryEntry = m_ribbonRegistry.getEntry(ribbonRegistryId[i]);
 
-				ribbonRegistryEntry.ribbonGenerator->update(ribbonPool, m_particlePools[ribbonRegistryEntry.poolId]);
+				RibbonUpdate ribbonUpdate = ribbonRegistryEntry.particleConnector->update(ribbonPool, m_particlePools[ribbonRegistryEntry.poolId]);
+
+				int ribbonAddedCount = static_cast<int>(ribbonUpdate.createdCount) - static_cast<int>(ribbonUpdate.removedCount);
+				m_ribbonRegistry.addReferenceCount(ribbonRegistryId[i], ribbonAddedCount);
 			}
 		}
 	}

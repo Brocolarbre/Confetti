@@ -1,8 +1,8 @@
-#include "Confetti/RibbonGenerator/RibbonGenerator.hpp"
+#include "Confetti/ParticleConnector/ParticleConnector.hpp"
 
 namespace cft
 {
-	void RibbonGenerator::update(RibbonPool& ribbonPool, const ParticlePool& particlePool)
+	RibbonUpdate ParticleConnector::update(RibbonPool& ribbonPool, const ParticlePool& particlePool)
 	{
 		const std::vector<glm::vec4>& color = particlePool.getColor();
 		const std::vector<glm::vec3>& position = particlePool.getPosition();
@@ -23,6 +23,8 @@ namespace cft
 		const std::vector<unsigned int>& fromParticleId = ribbonPool.getFromParticleId();
 		const std::vector<unsigned int>& toParticleId = ribbonPool.getToParticleId();
 
+		RibbonUpdate ribbonUpdate{ 0, 0 };
+
 		for (unsigned int i = 0; i < ribbonPool.getCount();)
 		{
 			std::optional<unsigned int> fromParticleIndex = particlePool.getIndex(fromParticleId[i]);
@@ -31,10 +33,11 @@ namespace cft
 			if (!fromParticleIndex.has_value() || !toParticleIndex.has_value())
 			{
 				ribbonPool.remove(i);
+				++ribbonUpdate.removedCount;
 			}
 			else
 			{
-				RibbonView ribbon{ ribbonRegistryId[i], fromParticleId[i], toParticleId[i] };
+				Ribbon ribbon{ ribbonRegistryId[i], fromParticleId[i], toParticleId[i] };
 
 				unsigned int fromParticleIndexValue = fromParticleIndex.value();
 				unsigned int toParticleIndexValue = toParticleIndex.value();
@@ -54,6 +57,8 @@ namespace cft
 			}
 		}
 
-		createRibbons(ribbonPool, particlePool);
+		ribbonUpdate.createdCount += createRibbons(ribbonPool, particlePool);
+
+		return ribbonUpdate;
 	}
 }

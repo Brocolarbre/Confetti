@@ -25,10 +25,10 @@ namespace cft
 		return m_entries.at(id);
 	}
 
-	unsigned int RibbonRegistry::createEntry(unsigned int poolId, const RibbonConfiguration& ribbonConfiguration)
+	unsigned int RibbonRegistry::createEntry(unsigned int poolId, const RibbonConfiguration& ribbonConfiguration, std::unique_ptr<ParticleConnector> particleConnector)
 	{
 		unsigned int id = m_nextId++;
-		m_entries.insert({ id, RibbonRegistryEntry{ 0, poolId, ribbonConfiguration } });
+		m_entries.insert({ id, RibbonRegistryEntry{ 0, poolId, ribbonConfiguration, std::move(particleConnector) } });
 
 		return id;
 	}

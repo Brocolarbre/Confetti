@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Confetti/Particle/RibbonConfiguration.hpp"
-#include "Confetti/RibbonGenerator/RibbonGenerator.hpp"
+#include "Confetti/ParticleConnector/ParticleConnector.hpp"
 
 #include <memory>
 #include <unordered_map>
@@ -13,7 +13,7 @@ namespace cft
 		int count; // unsigned int ?
 		unsigned int poolId;
 		RibbonConfiguration ribbonConfiguration;
-		std::unique_ptr<RibbonGenerator> ribbonGenerator;
+		std::unique_ptr<ParticleConnector> particleConnector;
 	};
 
 	class RibbonRegistry
@@ -30,7 +30,7 @@ namespace cft
 		const RibbonRegistryEntry& getEntry(unsigned int id) const;
 		RibbonRegistryEntry& getEntry(unsigned int id);
 
-		unsigned int createEntry(unsigned int poolId, const RibbonConfiguration& ribbonConfiguration);
+		unsigned int createEntry(unsigned int poolId, const RibbonConfiguration& ribbonConfiguration, std::unique_ptr<ParticleConnector> particleConnector);
 		void addReferenceCount(unsigned int id, int referenceCount);
 	};
 }

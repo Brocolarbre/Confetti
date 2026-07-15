@@ -27,6 +27,11 @@ namespace cft
 		m_emissionPatterns[id] = std::move(emissionPattern);
 	}
 
+	void AssetRegistry::addParticleConnector(unsigned int id, std::unique_ptr<ParticleConnector> particleConnector)
+	{
+		m_particleConnectors[id] = std::move(particleConnector);
+	}
+
 	void AssetRegistry::addImage(unsigned int id, Image image)
 	{
 		m_images[id] = std::move(image);
@@ -75,6 +80,11 @@ namespace cft
 	void AssetRegistry::removeEmissionPattern(unsigned int id)
 	{
 		m_emissionPatterns.erase(id);
+	}
+
+	void AssetRegistry::removeParticleConnector(unsigned int id)
+	{
+		m_particleConnectors.erase(id);
 	}
 
 	void AssetRegistry::removeImage(unsigned int id)
@@ -127,6 +137,11 @@ namespace cft
 		return *m_emissionPatterns.at(id);
 	}
 
+	const ParticleConnector& AssetRegistry::getParticleConnector(unsigned int id) const
+	{
+		return *m_particleConnectors.at(id);
+	}
+
 	const Image& AssetRegistry::getImage(unsigned int id) const
 	{
 		return m_images.at(id);
@@ -177,6 +192,11 @@ namespace cft
 		return *m_emissionPatterns.at(id);
 	}
 
+	ParticleConnector& AssetRegistry::getParticleConnector(unsigned int id)
+	{
+		return *m_particleConnectors.at(id);
+	}
+
 	Image& AssetRegistry::getImage(unsigned int id)
 	{
 		return m_images.at(id);
@@ -225,6 +245,11 @@ namespace cft
 	const std::unordered_map<unsigned int, std::unique_ptr<EmissionPattern>>& AssetRegistry::getEmissionPatterns() const
 	{
 		return m_emissionPatterns;
+	}
+
+	const std::unordered_map<unsigned int, std::unique_ptr<ParticleConnector>>& AssetRegistry::getParticleConnectors() const
+	{
+		return m_particleConnectors;
 	}
 
 	const std::unordered_map<unsigned int, Image>& AssetRegistry::getImages() const

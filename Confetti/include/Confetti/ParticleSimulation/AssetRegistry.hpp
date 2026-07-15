@@ -9,6 +9,7 @@
 #include "Confetti/Particle/ParticleEmitter.hpp"
 #include "Confetti/Particle/SpriteSheet.hpp"
 #include "Confetti/ParticleBehavior/ParticleBehavior.hpp"
+#include "Confetti/ParticleConnector/ParticleConnector.hpp"
 #include "Confetti/ParticleSpawner/ParticleSpawner.hpp"
 
 #include <unordered_map>
@@ -23,6 +24,7 @@ namespace cft
 		std::unordered_map<unsigned int, std::unique_ptr<ParticleBehavior>> m_particleBehaviors;
 		std::unordered_map<unsigned int, std::unique_ptr<ParticleSpawner>> m_particleSpawners;
 		std::unordered_map<unsigned int, std::unique_ptr<EmissionPattern>> m_emissionPatterns;
+		std::unordered_map<unsigned int, std::unique_ptr<ParticleConnector>> m_particleConnectors;
 		std::unordered_map<unsigned int, Image> m_images;
 		std::unordered_map<unsigned int, Model> m_models;
 		std::unordered_map<unsigned int, SpriteSheet> m_spriteSheets;
@@ -35,6 +37,7 @@ namespace cft
 		void addParticleBehavior(unsigned int id, std::unique_ptr<ParticleBehavior> particleBehavior);
 		void addParticleSpawner(unsigned int id, std::unique_ptr<ParticleSpawner> particleSpawner);
 		void addEmissionPattern(unsigned int id, std::unique_ptr<EmissionPattern> emissionPattern);
+		void addParticleConnector(unsigned int id, std::unique_ptr<ParticleConnector> particleConnector);
 		void addImage(unsigned int id, Image image);
 		void addModel(unsigned int id, Model model);
 		void addSpriteSheet(unsigned int id, SpriteSheet spriteSheet);
@@ -46,6 +49,7 @@ namespace cft
 		void removeParticleBehavior(unsigned int id);
 		void removeParticleSpawner(unsigned int id);
 		void removeEmissionPattern(unsigned int id);
+		void removeParticleConnector(unsigned int id);
 		void removeImage(unsigned int id);
 		void removeModel(unsigned int id);
 		void removeSpriteSheet(unsigned int id);
@@ -57,6 +61,7 @@ namespace cft
 		const ParticleBehavior& getParticleBehavior(unsigned int id) const;
 		const ParticleSpawner& getParticleSpawner(unsigned int id) const;
 		const EmissionPattern& getEmissionPattern(unsigned int id) const;
+		const ParticleConnector& getParticleConnector(unsigned int id) const;
 		const Image& getImage(unsigned int id) const;
 		const Model& getModel(unsigned int id) const;
 		const SpriteSheet& getSpriteSheet(unsigned int id) const;
@@ -68,6 +73,7 @@ namespace cft
 		ParticleBehavior& getParticleBehavior(unsigned int id);
 		ParticleSpawner& getParticleSpawner(unsigned int id);
 		EmissionPattern& getEmissionPattern(unsigned int id);
+		ParticleConnector& getParticleConnector(unsigned int id);
 		Image& getImage(unsigned int id);
 		Model& getModel(unsigned int id);
 		SpriteSheet& getSpriteSheet(unsigned int id);
@@ -79,6 +85,7 @@ namespace cft
 		const std::unordered_map<unsigned int, std::unique_ptr<ParticleBehavior>>& getParticleBehaviors() const;
 		const std::unordered_map<unsigned int, std::unique_ptr<ParticleSpawner>>& getParticleSpawners() const;
 		const std::unordered_map<unsigned int, std::unique_ptr<EmissionPattern>>& getEmissionPatterns() const;
+		const std::unordered_map<unsigned int, std::unique_ptr<ParticleConnector>>& getParticleConnectors() const;
 		const std::unordered_map<unsigned int, Image>& getImages() const;
 		const std::unordered_map<unsigned int, Model>& getModels() const;
 		const std::unordered_map<unsigned int, SpriteSheet>& getSpriteSheets() const;
