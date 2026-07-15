@@ -409,48 +409,48 @@ namespace cft
 					std::deque<TrailPoint>& trail = trailPoints[i];
 					unsigned int trailSize = static_cast<unsigned int>(trail.size());
 
-					unsigned int colorGradientSize = static_cast<unsigned int>(trailRegistryEntry.trailConfiguration.colorGradient.size()) + (trailRegistryEntry.trailConfiguration.appendParticleColor ? 1 : 0);
+					unsigned int colorGradientSize = static_cast<unsigned int>(trailRegistryEntry.trailConfiguration.pathConfiguration.colorGradient.size()) + (trailRegistryEntry.trailConfiguration.pathConfiguration.appendParticleColor ? 1 : 0);
 						std::vector<glm::vec4> colorGradient;
 						colorGradient.reserve(colorGradientSize);
-						if (trailRegistryEntry.trailConfiguration.appendParticleColor)
+						if (trailRegistryEntry.trailConfiguration.pathConfiguration.appendParticleColor)
 							colorGradient.push_back(particleColor[i]);
-						colorGradient.insert(colorGradient.end(), trailRegistryEntry.trailConfiguration.colorGradient.begin(), trailRegistryEntry.trailConfiguration.colorGradient.end());
+						colorGradient.insert(colorGradient.end(), trailRegistryEntry.trailConfiguration.pathConfiguration.colorGradient.begin(), trailRegistryEntry.trailConfiguration.pathConfiguration.colorGradient.end());
 
 					for (unsigned int pointIndex = 0; pointIndex < trail.size(); ++pointIndex)
 					{
 						float t = 1.0f - (trailSize > 1 ? static_cast<float>(pointIndex) / static_cast<float>(trailSize - 1) : 0.0f);
 
-						switch (trailRegistryEntry.trailConfiguration.thicknessDistribution)
+						switch (trailRegistryEntry.trailConfiguration.pathConfiguration.thicknessDistribution)
 						{
-						case TrailThicknessDistribution::Constant: trail[pointIndex].thickness = trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness = (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness = t * trailRegistryEntry.trailConfiguration.thickness; break;
-						case TrailThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness = t * t * trailRegistryEntry.trailConfiguration.thickness; break;
+						case ThicknessDistribution::Constant: trail[pointIndex].thickness = trailRegistryEntry.trailConfiguration.pathConfiguration.thickness; break;
+						case ThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness = (1.0f - t) * trailRegistryEntry.trailConfiguration.pathConfiguration.thickness; break;
+						case ThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * trailRegistryEntry.trailConfiguration.pathConfiguration.thickness; break;
+						case ThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness = t * trailRegistryEntry.trailConfiguration.pathConfiguration.thickness; break;
+						case ThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness = t * t * trailRegistryEntry.trailConfiguration.pathConfiguration.thickness; break;
 						}
 
-						if (trailRegistryEntry.trailConfiguration.thicknessEvolution.has_value())
+						if (trailRegistryEntry.trailConfiguration.pathConfiguration.thicknessEvolution.has_value())
 						{
-							const TrailThicknessEvolution& trailThicknessEvolution = trailRegistryEntry.trailConfiguration.thicknessEvolution.value();
+							const ThicknessEvolution& trailThicknessEvolution = trailRegistryEntry.trailConfiguration.pathConfiguration.thicknessEvolution.value();
 							float pointAge = (elapsedTime - trail[pointIndex].spawnTime);
 
 							switch (trailThicknessEvolution.distribution)
 							{
-							case TrailThicknessDistribution::Constant: trail[pointIndex].thickness += pointAge * trailThicknessEvolution.speed; break;
-							case TrailThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness += (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
-							case TrailThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness += (1.0f - t) * (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
-							case TrailThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness += t * pointAge * trailThicknessEvolution.speed; break;
-							case TrailThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness += t * t * pointAge * trailThicknessEvolution.speed; break;
+							case ThicknessDistribution::Constant: trail[pointIndex].thickness += pointAge * trailThicknessEvolution.speed; break;
+							case ThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness += (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
+							case ThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness += (1.0f - t) * (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
+							case ThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness += t * pointAge * trailThicknessEvolution.speed; break;
+							case ThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness += t * t * pointAge * trailThicknessEvolution.speed; break;
 							}
 						}
 
-						switch (trailRegistryEntry.trailConfiguration.colorInterpolation)
+						switch (trailRegistryEntry.trailConfiguration.pathConfiguration.colorInterpolation)
 						{
-						case TrailColorInterpolation::Constant:
+						case ColorInterpolation::Constant:
 						{
-							if (trailRegistryEntry.trailConfiguration.colorStart.has_value())
+							if (trailRegistryEntry.trailConfiguration.pathConfiguration.colorStart.has_value())
 							{
-								const std::vector<float>& colorStart = trailRegistryEntry.trailConfiguration.colorStart.value();
+								const std::vector<float>& colorStart = trailRegistryEntry.trailConfiguration.pathConfiguration.colorStart.value();
 								float distanceFromHead = trail.back().distanceOnTrail - trail[pointIndex].distanceOnTrail;
 
 								size_t count = std::min(colorGradient.size(), colorStart.size());
@@ -473,11 +473,11 @@ namespace cft
 							}
 							break;
 						}
-						case TrailColorInterpolation::Linear:
+						case ColorInterpolation::Linear:
 						{
-							if (trailRegistryEntry.trailConfiguration.colorStart.has_value())
+							if (trailRegistryEntry.trailConfiguration.pathConfiguration.colorStart.has_value())
 							{
-								const std::vector<float>& colorStart = trailRegistryEntry.trailConfiguration.colorStart.value();
+								const std::vector<float>& colorStart = trailRegistryEntry.trailConfiguration.pathConfiguration.colorStart.value();
 								float distanceFromHead = trail.back().distanceOnTrail - trail[pointIndex].distanceOnTrail;
 
 								size_t intervalCount = std::min(colorStart.size(), colorGradient.size() > 0 ? colorGradient.size() - 1 : 0);
@@ -520,10 +520,10 @@ namespace cft
 						}
 						}
 						
-						if (trailRegistryEntry.trailConfiguration.lifetimeFade.has_value())
+						if (trailRegistryEntry.trailConfiguration.pathConfiguration.lifetimeFade.has_value())
 						{
-							float start = trailRegistryEntry.trailConfiguration.lifetimeFade.value().start;
-							float end = trailRegistryEntry.trailConfiguration.lifetimeFade.value().end;
+							float start = trailRegistryEntry.trailConfiguration.pathConfiguration.lifetimeFade.value().start;
+							float end = trailRegistryEntry.trailConfiguration.pathConfiguration.lifetimeFade.value().end;
 	
 							float age = elapsedTime - trail[pointIndex].spawnTime;
 							float trailFadeT = end > start ? (glm::clamp(age, start, end) - start) / (end - start) : 1.0f;
@@ -532,9 +532,9 @@ namespace cft
 						}
 					}
 
-					if (trailRegistryEntry.trailConfiguration.pointLifetime.has_value())
+					if (trailRegistryEntry.trailConfiguration.pathConfiguration.lifetime.has_value())
 					{
-						while (!trail.empty() && elapsedTime >= trail.front().spawnTime + trailRegistryEntry.trailConfiguration.pointLifetime.value())
+						while (!trail.empty() && elapsedTime >= trail.front().spawnTime + trailRegistryEntry.trailConfiguration.pathConfiguration.lifetime.value())
 							trail.pop_front();
 					}
 

@@ -11,8 +11,8 @@ namespace cft
 		m_trailPoints.resize(capacity);
 
 		m_capacity = capacity;
-		m_reservedCapacity = glm::min(m_reservedCapacity, m_capacity);
-		m_count = glm::min(m_count, m_capacity);
+		m_reservedCapacity = std::min(m_reservedCapacity, m_capacity);
+		m_count = std::min(m_count, m_capacity);
 	}
 
 	TrailPool::TrailPool() :

@@ -166,21 +166,21 @@ namespace cft
 					int textureIndex = -1;
 
 					const TrailRegistryEntry& trailRegistryEntry = trailRegistry.getEntry(trailRegistryId[i]);
-					if (trailRegistryEntry.trailConfiguration.image.has_value())
+					if (trailRegistryEntry.trailConfiguration.pathConfiguration.image.has_value())
 					{
-						const TrailImage& trailImage = trailRegistryEntry.trailConfiguration.image.value();
+						const PathImage& pathImage = trailRegistryEntry.trailConfiguration.pathConfiguration.image.value();
 						
 						float v = 0.0f;
 
-						if (trailImage.repeatStretch.has_value())
-							v = accumulated / (currentPoint.thickness * trailImage.repeatStretch.value());
+						if (pathImage.repeatStretch.has_value())
+							v = accumulated / (currentPoint.thickness * pathImage.repeatStretch.value());
 						else
 							v = totalLength > 0.0f ? accumulated / totalLength : 0.0f;
 
 						vertexA.textureCoordinates = glm::vec2(0.0f, v);
 						vertexB.textureCoordinates = glm::vec2(1.0f, v);
 
-						textureIndex = static_cast<int>(m_imageIdToTextureIndex.at(trailImage.imageId));
+						textureIndex = static_cast<int>(m_imageIdToTextureIndex.at(pathImage.imageId));
 					}
 					else
 					{
