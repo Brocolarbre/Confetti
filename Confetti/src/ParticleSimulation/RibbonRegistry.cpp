@@ -1,0 +1,47 @@
+#include "Confetti/ParticleSimulation/RibbonRegistry.hpp"
+
+namespace cft
+{
+	RibbonRegistry::RibbonRegistry() :
+		m_entries(),
+		m_nextId(0)
+	{
+
+	}
+
+	void RibbonRegistry::clear()
+	{
+		m_entries.clear();
+		m_nextId = 0;
+	}
+
+	const RibbonRegistryEntry& RibbonRegistry::getEntry(unsigned int id) const
+	{
+		return m_entries.at(id);
+	}
+
+	RibbonRegistryEntry& RibbonRegistry::getEntry(unsigned int id)
+	{
+		return m_entries.at(id);
+	}
+
+	unsigned int RibbonRegistry::createEntry(unsigned int poolId, const RibbonConfiguration& ribbonConfiguration)
+	{
+		unsigned int id = m_nextId++;
+		m_entries.insert({ id, RibbonRegistryEntry{ 0, poolId, ribbonConfiguration } });
+
+		return id;
+	}
+
+	void RibbonRegistry::addReferenceCount(unsigned int id, int referenceCount)
+	{
+		auto entry = m_entries.find(id);
+		if (entry == m_entries.end())
+			return;
+
+		entry->second.count += referenceCount;
+
+		if (entry->second.count <= 0)
+			m_entries.erase(id);
+	}
+}

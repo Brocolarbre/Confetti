@@ -4,6 +4,7 @@ namespace cft
 {
 	void RibbonPool::resize(unsigned int capacity)
 	{
+		m_ribbonRegistryId.resize(capacity);
 		m_fromParticleId.resize(capacity);
 		m_toParticleId.resize(capacity);
 
@@ -13,6 +14,7 @@ namespace cft
 	}
 
 	RibbonPool::RibbonPool() :
+		m_ribbonRegistryId(),
 		m_fromParticleId(),
 		m_toParticleId(),
 		m_capacity(0),
@@ -20,6 +22,11 @@ namespace cft
 		m_count(0)
 	{
 
+	}
+
+	const std::vector<unsigned int>& RibbonPool::getRibbonRegistryId() const
+	{
+		return m_ribbonRegistryId;
 	}
 
 	const std::vector<unsigned int>& RibbonPool::getFromParticleId() const
@@ -30,6 +37,11 @@ namespace cft
 	const std::vector<unsigned int>& RibbonPool::getToParticleId() const
 	{
 		return m_toParticleId;
+	}
+
+	std::vector<unsigned int>& RibbonPool::getRibbonRegistryId()
+	{
+		return m_ribbonRegistryId;
 	}
 
 	std::vector<unsigned int>& RibbonPool::getFromParticleId()
@@ -59,6 +71,7 @@ namespace cft
 	{
 		unsigned int newIndex = m_count++;
 
+		m_ribbonRegistryId[newIndex] = ribbon.ribbonRegistryId;
 		m_fromParticleId[newIndex] = ribbon.fromParticleId;
 		m_toParticleId[newIndex] = ribbon.toParticleId;
 
@@ -69,6 +82,7 @@ namespace cft
 	{
 		unsigned int lastIndex = --m_count;
 
+		m_ribbonRegistryId[index] = m_ribbonRegistryId[lastIndex];
 		m_fromParticleId[index] = m_fromParticleId[lastIndex];
 		m_toParticleId[index] = m_toParticleId[lastIndex];
 	}

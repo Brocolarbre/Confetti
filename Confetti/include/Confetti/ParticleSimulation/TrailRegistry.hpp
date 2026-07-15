@@ -2,7 +2,6 @@
 
 #include "Confetti/Particle/TrailConfiguration.hpp"
 
-#include <deque>
 #include <unordered_map>
 
 namespace cft

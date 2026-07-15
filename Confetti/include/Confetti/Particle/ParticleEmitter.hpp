@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RenderDescriptor.hpp"
+#include "RibbonConfiguration.hpp"
 #include "SpawnTrigger.hpp"
 #include "TrailConfiguration.hpp"
 
@@ -12,6 +13,7 @@ namespace cft
 		unsigned int particleSpawnerId;
 		unsigned int emissionPatternId;
 		std::optional<TrailConfiguration> trailConfiguration;
+		std::optional<RibbonConfiguration> ribbonConfiguration;
 		std::optional<SpawnTrigger> spawnTrigger;
 		RenderDescriptor renderDescriptor;
 		std::vector<unsigned int> forceFieldIds;

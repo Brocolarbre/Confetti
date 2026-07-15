@@ -31,6 +31,7 @@ namespace cft
 		particleEmitterInstance.postBehaviorPosition = glm::vec3(0.0f);
 		particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitter.poolId, recursionDepth, particleEmitter.spawnTrigger, particleEmitter.renderDescriptor, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
 		particleEmitterInstance.trailRegistryId = particleEmitter.trailConfiguration.has_value() ? std::make_optional<unsigned int>(m_trailRegistry.createEntry(particleEmitter.trailConfiguration.value())) : std::nullopt;
+		particleEmitterInstance.ribbonRegistryId = particleEmitter.ribbonConfiguration.has_value() ? std::make_optional<unsigned int>(m_ribbonRegistry.createEntry(particleEmitter.poolId, particleEmitter.ribbonConfiguration.value())) : std::nullopt;
 		particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitter.particleSpawnerId).clone();
 		particleEmitterInstance.emissionPattern = m_assetRegistry.getEmissionPattern(particleEmitter.emissionPatternId).clone();
 
@@ -45,6 +46,7 @@ namespace cft
 		unsigned int maximumParticleCount = particleEmitterInstance.emissionPattern->getMaximumSimultaneousParticleCount(particleEmitterInstance.particleSpawner->getMaxiumParticleLifetime());
 		m_particlePools[particleEmitter.poolId].reserve(maximumParticleCount);
 		m_trailPools[particleEmitter.poolId].reserve(maximumParticleCount);
+		// Reserve correct amount for m_ribbonPools
 		
 		return particleEmitterInstance;
 	}
@@ -58,7 +60,8 @@ namespace cft
 		m_trailPools(),
 		m_ribbonPools(),
 		m_particleRegistry(),
-		m_trailRegistry()
+		m_trailRegistry(),
+		m_ribbonRegistry()
 	{
 
 	}
@@ -88,6 +91,11 @@ namespace cft
 		return m_trailRegistry;
 	}
 
+	const RibbonRegistry& ParticleSimulation::getRibbonRegistry() const
+	{
+		return m_ribbonRegistry;
+	}
+
 	void ParticleSimulation::addParticleEffect(float elapsedTime, unsigned int id)
 	{
 		m_particleEffectInstances.push_back(ParticleEffectInstance{ elapsedTime, m_assetRegistry.getParticleEffect(id).emitterDescriptors });
@@ -97,11 +105,14 @@ namespace cft
 	{
 		m_particleEffectInstances.clear();
 		m_particleEmitterInstances.clear();
+
 		m_particlePools.clear();
 		m_trailPools.clear();
 		m_ribbonPools.clear();
-		m_trailRegistry.clear();
+
 		m_particleRegistry.clear();
+		m_trailRegistry.clear();
+		m_ribbonRegistry.clear();
 	}
 
 	void ParticleSimulation::update(float elapsedTime, float deltaTime)
@@ -122,6 +133,9 @@ namespace cft
 
 					if (particleEmitterInstance.trailRegistryId.has_value())
 						m_trailRegistry.addReferenceCount(particleEmitterInstance.trailRegistryId.value(), 1);
+
+					if (particleEmitterInstance.ribbonRegistryId.has_value())
+						m_ribbonRegistry.addReferenceCount(particleEmitterInstance.ribbonRegistryId.value(), 1);
 
 					m_particleEmitterInstances.push_back(std::move(particleEmitterInstance));
 
@@ -159,6 +173,9 @@ namespace cft
 
 				if (particleEmitterInstance.trailRegistryId.has_value())
 					m_trailRegistry.addReferenceCount(particleEmitterInstance.trailRegistryId.value(), -1);
+
+				if (particleEmitterInstance.ribbonRegistryId.has_value())
+					m_ribbonRegistry.addReferenceCount(particleEmitterInstance.ribbonRegistryId.value(), -1);
 
 				m_particleEmitterInstances[i] = std::move(m_particleEmitterInstances.back());
 				m_particleEmitterInstances.pop_back();
@@ -297,7 +314,7 @@ namespace cft
 						{
 							ParticleEmitterInstance deathParticleEmitterInstance = createParticleEmitter(spawnTriggerValue.deathEmitterDescriptor.value(), MotionState{ position[i], linearVelocity[i], rotation[i], angularVelocity[i] }, entry.recursionDepth + 1, elapsedTime);
 							m_particleRegistry.addReferenceCount(deathParticleEmitterInstance.particleRegistryId, 1);
-							if (deathParticleEmitterInstance.trailRegistryId)
+							if (deathParticleEmitterInstance.trailRegistryId.has_value())
 								m_trailRegistry.addReferenceCount(deathParticleEmitterInstance.trailRegistryId.value(), 1);
 							m_particleEmitterInstances.push_back(std::move(deathParticleEmitterInstance));
 						}
@@ -312,7 +329,7 @@ namespace cft
 					{
 						ParticleEmitterInstance periodicParticleEmitterInstance = createParticleEmitter(entry.spawnTrigger.value().periodicEmitterDescriptor.value().emitterDescriptor, MotionState{ position[i], linearVelocity[i], rotation[i], angularVelocity[i] }, entry.recursionDepth + 1, elapsedTime);
 						m_particleRegistry.addReferenceCount(periodicParticleEmitterInstance.particleRegistryId, 1);
-						if (periodicParticleEmitterInstance.trailRegistryId)
+						if (periodicParticleEmitterInstance.trailRegistryId.has_value())
 							m_trailRegistry.addReferenceCount(periodicParticleEmitterInstance.trailRegistryId.value(), 1);
 						m_particleEmitterInstances.push_back(std::move(periodicParticleEmitterInstance));
 					}
@@ -544,6 +561,21 @@ namespace cft
 
 			for (auto& [trailRegistry, count] : removedTrailCount)
 				m_trailRegistry.addReferenceCount(trailRegistry, -static_cast<int>(count));
+		}
+
+		// Ribbons update
+		for (auto& [poolId, ribbonPool] : m_ribbonPools)
+		{
+			const std::vector<unsigned int>& ribbonRegistryId = ribbonPool.getRibbonRegistryId();
+			const std::vector<unsigned int>& fromParticleId = ribbonPool.getFromParticleId();
+			const std::vector<unsigned int>& toParticleId = ribbonPool.getToParticleId();
+
+			for (unsigned int i = 0; i < ribbonPool.getCount();)
+			{
+				RibbonRegistryEntry& ribbonRegistryEntry = m_ribbonRegistry.getEntry(ribbonRegistryId[i]);
+
+				ribbonRegistryEntry.ribbonGenerator->update(ribbonPool, m_particlePools[ribbonRegistryEntry.poolId]);
+			}
 		}
 	}
 }

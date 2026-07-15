@@ -9,6 +9,7 @@ namespace cft
 	class RibbonPool
 	{
 	private:
+		std::vector<unsigned int> m_ribbonRegistryId;
 		std::vector<unsigned int> m_fromParticleId;
 		std::vector<unsigned int> m_toParticleId;
 
@@ -21,9 +22,11 @@ namespace cft
 	public:
 		RibbonPool();
 		
+		const std::vector<unsigned int>& getRibbonRegistryId() const;
 		const std::vector<unsigned int>& getFromParticleId() const;
 		const std::vector<unsigned int>& getToParticleId() const;
 
+		std::vector<unsigned int>& getRibbonRegistryId();
 		std::vector<unsigned int>& getFromParticleId();
 		std::vector<unsigned int>& getToParticleId();
 

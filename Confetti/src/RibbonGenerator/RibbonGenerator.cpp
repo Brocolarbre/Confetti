@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	void RibbonGenerator::update(const ParticlePool& particlePool, RibbonPool& ribbonPool)
+	void RibbonGenerator::update(RibbonPool& ribbonPool, const ParticlePool& particlePool)
 	{
 		const std::vector<glm::vec4>& color = particlePool.getColor();
 		const std::vector<glm::vec3>& position = particlePool.getPosition();
@@ -19,6 +19,7 @@ namespace cft
 		const std::vector<unsigned int>& id = particlePool.getId();
 		const std::vector<unsigned int>& particleRegistryId = particlePool.getParticleRegistryId();
 
+		const std::vector<unsigned int>& ribbonRegistryId = ribbonPool.getRibbonRegistryId();
 		const std::vector<unsigned int>& fromParticleId = ribbonPool.getFromParticleId();
 		const std::vector<unsigned int>& toParticleId = ribbonPool.getToParticleId();
 
@@ -33,7 +34,7 @@ namespace cft
 			}
 			else
 			{
-				RibbonView ribbon{ fromParticleId[i], toParticleId[i] };
+				RibbonView ribbon{ ribbonRegistryId[i], fromParticleId[i], toParticleId[i] };
 
 				unsigned int fromParticleIndexValue = fromParticleIndex.value();
 				unsigned int toParticleIndexValue = toParticleIndex.value();
@@ -53,6 +54,6 @@ namespace cft
 			}
 		}
 
-		createRibbons(particlePool, ribbonPool);
+		createRibbons(ribbonPool, particlePool);
 	}
 }

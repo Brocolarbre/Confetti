@@ -6,7 +6,7 @@ namespace cft
 {
 	struct RibbonConfiguration
 	{
-		unsigned int ribbonGeneratorId;
 		PathConfiguration pathConfiguration;
+		unsigned int ribbonGeneratorId;
 	};
 }

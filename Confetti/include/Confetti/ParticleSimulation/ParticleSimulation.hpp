@@ -1,9 +1,10 @@
 #pragma once
 
 #include "AssetRegistry.hpp"
-#include "ParticleRegistry.hpp"
 #include "ParticlePool.hpp"
+#include "ParticleRegistry.hpp"
 #include "RibbonPool.hpp"
+#include "RibbonRegistry.hpp"
 #include "TrailPool.hpp"
 #include "TrailRegistry.hpp"
 #include "Confetti/Tools/RandomNumberGenerator.hpp"
@@ -23,6 +24,7 @@ namespace cft
 		glm::vec3 postBehaviorPosition;
 		unsigned int particleRegistryId;
 		std::optional<unsigned int> trailRegistryId;
+		std::optional<unsigned int> ribbonRegistryId;
 		std::unique_ptr<ParticleSpawner> particleSpawner;
 		std::unique_ptr<EmissionPattern> emissionPattern;
 		std::vector<std::unique_ptr<ForceField>> inheritedForceFields;
@@ -41,8 +43,10 @@ namespace cft
 		std::unordered_map<unsigned int, ParticlePool> m_particlePools;
 		std::unordered_map<unsigned int, TrailPool> m_trailPools;
 		std::unordered_map<unsigned int, RibbonPool> m_ribbonPools;
+
 		ParticleRegistry m_particleRegistry;
 		TrailRegistry m_trailRegistry;
+		RibbonRegistry m_ribbonRegistry;
 
 		ParticleEmitterInstance createParticleEmitter(const ParticleEmitterDescriptor& descriptor, const MotionState& parentMotionState, unsigned int recursionDepth, float elapsedTime);
 
@@ -52,8 +56,10 @@ namespace cft
 		const std::unordered_map<unsigned int, ParticlePool>& getParticlePools() const;
 		const std::unordered_map<unsigned int, TrailPool>& getTrailPools() const;
 		const std::unordered_map<unsigned int, RibbonPool>& getRibbonPools() const;
+
 		const ParticleRegistry& getParticleRegistry() const;
 		const TrailRegistry& getTrailRegistry() const;
+		const RibbonRegistry& getRibbonRegistry() const;
 
 		void addParticleEffect(float elapsedTime, unsigned int id);
 
