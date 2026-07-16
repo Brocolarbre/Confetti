@@ -7,23 +7,15 @@
 
 namespace cft
 {
-	struct RibbonUpdate
-	{
-		unsigned int createdCount;
-		unsigned int removedCount;
-	};
-
 	class ParticleConnector
 	{
-	private:
-		virtual bool isRibbonValid(const Ribbon& ribbon, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) const = 0;
-		virtual void updateRibbon(Ribbon& ribbon) = 0;
-		virtual unsigned int createRibbons(RibbonPool& ribbonPool, const ParticlePool& particlePool) = 0;
-
 	public:
 		virtual ~ParticleConnector() = default;
 
 		virtual std::unique_ptr<ParticleConnector> clone() const = 0;
-		virtual RibbonUpdate update(RibbonPool& ribbonPool, const ParticlePool& particlePool);
+
+		virtual unsigned int createRibbons(RibbonPool& ribbonPool, const ParticlePool& particlePool) = 0;
+		virtual bool isRibbonValid(const ConstantRibbonView& ribbon, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) const = 0;
+		virtual void updateRibbon(RibbonView& ribbon) = 0;
 	};
 }

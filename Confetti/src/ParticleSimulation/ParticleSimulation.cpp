@@ -427,11 +427,11 @@ namespace cft
 					unsigned int trailSize = static_cast<unsigned int>(trail.size());
 
 					unsigned int colorGradientSize = static_cast<unsigned int>(trailRegistryEntry.trailConfiguration.pathConfiguration.colorGradient.size()) + (trailRegistryEntry.trailConfiguration.pathConfiguration.appendParticleColor ? 1 : 0);
-						std::vector<glm::vec4> colorGradient;
-						colorGradient.reserve(colorGradientSize);
-						if (trailRegistryEntry.trailConfiguration.pathConfiguration.appendParticleColor)
-							colorGradient.push_back(particleColor[i]);
-						colorGradient.insert(colorGradient.end(), trailRegistryEntry.trailConfiguration.pathConfiguration.colorGradient.begin(), trailRegistryEntry.trailConfiguration.pathConfiguration.colorGradient.end());
+					std::vector<glm::vec4> colorGradient;
+					colorGradient.reserve(colorGradientSize);
+					if (trailRegistryEntry.trailConfiguration.pathConfiguration.appendParticleColor)
+						colorGradient.push_back(particleColor[i]);
+					colorGradient.insert(colorGradient.end(), trailRegistryEntry.trailConfiguration.pathConfiguration.colorGradient.begin(), trailRegistryEntry.trailConfiguration.pathConfiguration.colorGradient.end());
 
 					for (unsigned int pointIndex = 0; pointIndex < trail.size(); ++pointIndex)
 					{
@@ -564,21 +564,83 @@ namespace cft
 		}
 
 		// Ribbons update
+		for (auto& [ribbonRegistryId, ribbonRegistryEntry] : m_ribbonRegistry.getEntries())
+		{
+			unsigned int createdRibbonsCount = ribbonRegistryEntry.particleConnector->createRibbons(m_ribbonPools[ribbonRegistryEntry.poolId], m_particlePools[ribbonRegistryEntry.poolId]);
+			m_ribbonRegistry.addReferenceCount(ribbonRegistryId, createdRibbonsCount);
+		}
+
 		for (auto& [poolId, ribbonPool] : m_ribbonPools)
 		{
 			const std::vector<unsigned int>& ribbonRegistryId = ribbonPool.getRibbonRegistryId();
 			const std::vector<unsigned int>& fromParticleId = ribbonPool.getFromParticleId();
 			const std::vector<unsigned int>& toParticleId = ribbonPool.getToParticleId();
+			std::vector<glm::vec4>& fromParticleColor = ribbonPool.getFromParticleColor();
+			std::vector<glm::vec4>& toParticleColor = ribbonPool.getToParticleColor();
+			std::vector<glm::vec4>& fromColor = ribbonPool.getFromColor();
+			std::vector<glm::vec4>& toColor = ribbonPool.getToColor();
+			std::vector<glm::vec3>& fromPosition = ribbonPool.getFromPosition();
+			std::vector<glm::vec3>& toPosition = ribbonPool.getToPosition();
+			std::vector<float>& fromThickness = ribbonPool.getFromThickness();
+			std::vector<float>& toThickness = ribbonPool.getToThickness();
+			const std::vector<float>& spawnTime = ribbonPool.getSpawnTime();
+
+			std::unordered_map<unsigned int, unsigned int> removedRibbonCount;
 
 			for (unsigned int i = 0; i < ribbonPool.getCount();)
 			{
 				RibbonRegistryEntry& ribbonRegistryEntry = m_ribbonRegistry.getEntry(ribbonRegistryId[i]);
+				const ParticlePool& particlePool = m_particlePools[ribbonRegistryEntry.poolId];
 
-				RibbonUpdate ribbonUpdate = ribbonRegistryEntry.particleConnector->update(ribbonPool, m_particlePools[ribbonRegistryEntry.poolId]);
+				const std::vector<glm::vec4>& color = particlePool.getColor();
+				const std::vector<glm::vec3>& position = particlePool.getPosition();
+				const std::vector<glm::quat>& rotation = particlePool.getRotation();
+				const std::vector<glm::vec3>& scale = particlePool.getScale();
+				const std::vector<glm::vec3>& linearVelocity = particlePool.getLinearVelocity();
+				const std::vector<glm::vec3>& angularVelocity = particlePool.getAngularVelocity();
+				const std::vector<glm::vec4>& initialColor = particlePool.getInitialColor();
+				const std::vector<glm::vec3>& initialScale = particlePool.getInitialScale();
+				const std::vector<glm::vec3>& postBehaviorPosition = particlePool.getPostBehaviorPosition();
+				const std::vector<float>& phase = particlePool.getPhase();
+				const std::vector<float>& lifetime = particlePool.getLifetime();
+				const std::vector<float>& spawnTime = particlePool.getSpawnTime();
+				const std::vector<unsigned int>& id = particlePool.getId();
+				const std::vector<unsigned int>& particleRegistryId = particlePool.getParticleRegistryId();
 
-				int ribbonAddedCount = static_cast<int>(ribbonUpdate.createdCount) - static_cast<int>(ribbonUpdate.removedCount);
-				m_ribbonRegistry.addReferenceCount(ribbonRegistryId[i], ribbonAddedCount);
+				std::optional<unsigned int> fromParticleIndex = particlePool.getIndex(fromParticleId[i]);
+				std::optional<unsigned int> toParticleIndex = particlePool.getIndex(fromParticleId[i]);
+
+				if (!fromParticleIndex.has_value() || !toParticleIndex.has_value())
+				{
+					ribbonPool.remove(i);
+					++removedRibbonCount[ribbonRegistryId[i]];
+				}
+				else
+				{
+					RibbonView ribbonView{ ribbonRegistryId[i], fromParticleId[i], toParticleId[i], fromParticleColor[i], toParticleColor[i], fromColor[i], toColor[i], fromPosition[i], toPosition[i], fromThickness[i], toThickness[i], spawnTime[i] };
+					ConstantRibbonView constantRibbonView{ ribbonView.ribbonRegistryId, ribbonView.fromParticleId, ribbonView.toParticleId, ribbonView.fromParticleColor, ribbonView.toParticleColor, ribbonView.fromColor, ribbonView.toColor, ribbonView.fromPosition, ribbonView.toPosition, ribbonView.fromThickness, ribbonView.toThickness, ribbonView.spawnTime };
+
+					unsigned int fromParticleIndexValue = fromParticleIndex.value();
+					unsigned int toParticleIndexValue = toParticleIndex.value();
+
+					ConstantParticleView fromParticle{ color[fromParticleIndexValue], position[fromParticleIndexValue], rotation[fromParticleIndexValue], scale[fromParticleIndexValue], linearVelocity[fromParticleIndexValue], angularVelocity[fromParticleIndexValue], initialColor[fromParticleIndexValue], initialScale[fromParticleIndexValue], postBehaviorPosition[fromParticleIndexValue], phase[fromParticleIndexValue], lifetime[fromParticleIndexValue], spawnTime[fromParticleIndexValue], particleRegistryId[fromParticleIndexValue], id[fromParticleIndexValue] };
+					ConstantParticleView toParticle{ color[toParticleIndexValue], position[toParticleIndexValue], rotation[toParticleIndexValue], scale[toParticleIndexValue], linearVelocity[toParticleIndexValue], angularVelocity[toParticleIndexValue], initialColor[toParticleIndexValue], initialScale[toParticleIndexValue], postBehaviorPosition[toParticleIndexValue], phase[toParticleIndexValue], lifetime[toParticleIndexValue], spawnTime[toParticleIndexValue], particleRegistryId[toParticleIndexValue], id[toParticleIndexValue] };
+
+					if (ribbonRegistryEntry.particleConnector->isRibbonValid(constantRibbonView, fromParticle, toParticle))
+					{
+						ribbonRegistryEntry.particleConnector->updateRibbon(ribbonView);
+						++i;
+					}
+					else
+					{
+						ribbonPool.remove(i);
+						++removedRibbonCount[ribbonRegistryId[i]];
+					}
+				}
 			}
+
+			for (auto& [ribbonRegistry, count] : removedRibbonCount)
+				m_ribbonRegistry.addReferenceCount(ribbonRegistry, -static_cast<int>(count));
 		}
 	}
 }

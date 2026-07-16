@@ -36,10 +36,10 @@ namespace cft
 
 		std::unordered_map<unsigned int, ParticleRegistryEntry>& getEntries();
 
-		void clear();
-
 		const ParticleRegistryEntry& getEntry(unsigned int id) const;
 		ParticleRegistryEntry& getEntry(unsigned int id);
+
+		void clear();
 
 		unsigned int createEntry(unsigned int poolId, unsigned int recursionDepth, const std::optional<SpawnTrigger>& spawnTrigger, const RenderDescriptor& renderDescriptor, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<ParticleBehavior>>& particleBehaviors);
 		void addReferenceCount(unsigned int id, int referenceCount);

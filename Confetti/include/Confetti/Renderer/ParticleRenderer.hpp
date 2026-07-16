@@ -8,6 +8,7 @@
 #include "Confetti/Renderer/PostProcessing/HdrComposite.hpp"
 #include "Confetti/Renderer/PostProcessing/ToneMapping.hpp"
 #include "Confetti/Renderer/Tools/Framebuffer.hpp"
+#include "Confetti/ParticleSimulation/ParticleSimulation.hpp"
 
 namespace cft
 {
@@ -41,7 +42,7 @@ namespace cft
 		void loadTrailRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
 
 		void resize(unsigned int width, unsigned int height);
-		void update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, TrailPool>& trailPools, const ParticleRegistry& particleRegistry, const TrailRegistry& trailRegistry, const AssetRegistry& assetRegistry, const View& view);
+		void update(const ParticleSimulation& particleSimulation, const AssetRegistry& assetRegistry, const View& view);
 		void render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
 	};
 }

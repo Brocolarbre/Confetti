@@ -354,7 +354,7 @@ void ConfettiInstance::update()
     while (m_timeAccumulator > m_timeStep)
     {
         updateSimulation(static_cast<float>(m_elapsedTime), static_cast<float>(m_timeStep));
-        m_particleRenderer.update(m_particleSimulation.getParticlePools(), m_particleSimulation.getTrailPools(), m_particleSimulation.getParticleRegistry(), m_particleSimulation.getTrailRegistry(), m_assetRegistry, m_camera.getView());
+        m_particleRenderer.update(m_particleSimulation, m_assetRegistry, m_camera.getView());
         m_timeAccumulator -= m_timeStep;
     }
 }

@@ -14,12 +14,6 @@ namespace cft
 		return m_entries;
 	}
 
-	void ParticleRegistry::clear()
-	{
-		m_entries.clear();
-		m_nextId = 0;
-	}
-
 	const ParticleRegistryEntry& ParticleRegistry::getEntry(unsigned int id) const
 	{
 		return m_entries.at(id);
@@ -28,6 +22,12 @@ namespace cft
 	ParticleRegistryEntry& ParticleRegistry::getEntry(unsigned int id)
 	{
 		return m_entries.at(id);
+	}
+
+	void ParticleRegistry::clear()
+	{
+		m_entries.clear();
+		m_nextId = 0;
 	}
 
 	unsigned int ParticleRegistry::createEntry(unsigned int poolId, unsigned int recursionDepth, const std::optional<SpawnTrigger>& spawnTrigger, const RenderDescriptor& renderDescriptor, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<ParticleBehavior>>& particleBehaviors)

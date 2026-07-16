@@ -76,11 +76,11 @@ namespace cft
 		m_toneMapping.resize(width, height);
 	}
 
-	void ParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, TrailPool>& trailPools, const ParticleRegistry& particleRegistry, const TrailRegistry& trailRegistry, const AssetRegistry& assetRegistry, const View& view)
+	void ParticleRenderer::update(const ParticleSimulation& particleSimulation, const AssetRegistry& assetRegistry, const View& view)
 	{
-		m_billboardParticleRenderer.update(particlePools, particleRegistry, assetRegistry);
-		m_meshParticleRenderer.update(particlePools, particleRegistry);
-		m_trailRenderer.update(trailPools, trailRegistry, view);
+		m_billboardParticleRenderer.update(particleSimulation.getParticlePools(), particleSimulation.getParticleRegistry(), assetRegistry);
+		m_meshParticleRenderer.update(particleSimulation.getParticlePools(), particleSimulation.getParticleRegistry());
+		m_trailRenderer.update(particleSimulation.getTrailPools(), particleSimulation.getTrailRegistry(), view);
 	}
 
 	void ParticleRenderer::render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)

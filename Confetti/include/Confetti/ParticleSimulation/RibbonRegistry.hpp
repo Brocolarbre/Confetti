@@ -25,10 +25,12 @@ namespace cft
 	public:
 		RibbonRegistry();
 
-		void clear();
+		std::unordered_map<unsigned int, RibbonRegistryEntry>& getEntries();
 
 		const RibbonRegistryEntry& getEntry(unsigned int id) const;
 		RibbonRegistryEntry& getEntry(unsigned int id);
+
+		void clear();
 
 		unsigned int createEntry(unsigned int poolId, const RibbonConfiguration& ribbonConfiguration, std::unique_ptr<ParticleConnector> particleConnector);
 		void addReferenceCount(unsigned int id, int referenceCount);

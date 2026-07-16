@@ -9,10 +9,9 @@ namespace cft
 
 	}
 
-	void RibbonRegistry::clear()
+	std::unordered_map<unsigned int, RibbonRegistryEntry>& RibbonRegistry::getEntries()
 	{
-		m_entries.clear();
-		m_nextId = 0;
+		return m_entries;
 	}
 
 	const RibbonRegistryEntry& RibbonRegistry::getEntry(unsigned int id) const
@@ -23,6 +22,12 @@ namespace cft
 	RibbonRegistryEntry& RibbonRegistry::getEntry(unsigned int id)
 	{
 		return m_entries.at(id);
+	}
+
+	void RibbonRegistry::clear()
+	{
+		m_entries.clear();
+		m_nextId = 0;
 	}
 
 	unsigned int RibbonRegistry::createEntry(unsigned int poolId, const RibbonConfiguration& ribbonConfiguration, std::unique_ptr<ParticleConnector> particleConnector)
