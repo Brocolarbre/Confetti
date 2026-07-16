@@ -80,7 +80,7 @@ namespace cft
 	{
 		m_billboardParticleRenderer.update(particleSimulation.getParticlePools(), particleSimulation.getParticleRegistry(), assetRegistry);
 		m_meshParticleRenderer.update(particleSimulation.getParticlePools(), particleSimulation.getParticleRegistry());
-		m_trailRenderer.update(particleSimulation.getTrailPools(), particleSimulation.getTrailRegistry(), view);
+		m_trailRenderer.update(particleSimulation.getTrailPools(), particleSimulation.getTrailRegistry(), particleSimulation.getRibbonPools(), particleSimulation.getRibbonRegistry(), view);
 	}
 
 	void ParticleRenderer::render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)

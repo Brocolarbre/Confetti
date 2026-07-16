@@ -51,6 +51,134 @@ namespace cft
 		return particleEmitterInstance;
 	}
 
+	void ParticleSimulation::updateTrail(std::deque<TrailPoint>& trail, const PathConfiguration& pathConfiguration, const std::vector<glm::vec4>& colorGradient, float elapsedTime) const
+	{
+		unsigned int trailSize = static_cast<unsigned int>(trail.size());
+		unsigned int colorGradientSize = static_cast<unsigned int>(colorGradient.size());
+
+		for (unsigned int pointIndex = 0; pointIndex < trail.size(); ++pointIndex)
+		{
+			float t = 1.0f - (trailSize > 1 ? static_cast<float>(pointIndex) / static_cast<float>(trailSize - 1) : 0.0f);
+
+			switch (pathConfiguration.thicknessDistribution)
+			{
+			case ThicknessDistribution::Constant: trail[pointIndex].thickness = pathConfiguration.thickness; break;
+			case ThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness = (1.0f - t) * pathConfiguration.thickness; break;
+			case ThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * pathConfiguration.thickness; break;
+			case ThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness = t * pathConfiguration.thickness; break;
+			case ThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness = t * t * pathConfiguration.thickness; break;
+			}
+
+			if (pathConfiguration.thicknessEvolution.has_value())
+			{
+				const ThicknessEvolution& trailThicknessEvolution = pathConfiguration.thicknessEvolution.value();
+				float pointAge = (elapsedTime - trail[pointIndex].spawnTime);
+
+				switch (trailThicknessEvolution.distribution)
+				{
+				case ThicknessDistribution::Constant: trail[pointIndex].thickness += pointAge * trailThicknessEvolution.speed; break;
+				case ThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness += (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
+				case ThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness += (1.0f - t) * (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
+				case ThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness += t * pointAge * trailThicknessEvolution.speed; break;
+				case ThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness += t * t * pointAge * trailThicknessEvolution.speed; break;
+				}
+			}
+
+			switch (pathConfiguration.colorInterpolation)
+			{
+			case ColorInterpolation::Constant:
+			{
+				if (pathConfiguration.colorStart.has_value())
+				{
+					const std::vector<float>& colorStart = pathConfiguration.colorStart.value();
+					float distanceFromHead = trail.back().distanceOnTrail - trail[pointIndex].distanceOnTrail;
+
+					size_t count = std::min(colorGradient.size(), colorStart.size());
+					unsigned int colorIndex = colorGradientSize - 1;
+					for (unsigned int j = 0; j < count; ++j)
+					{
+						if (distanceFromHead <= colorStart[j])
+						{
+							colorIndex = j;
+							break;
+						}
+					}
+
+					trail[pointIndex].color = colorGradient[colorIndex];
+				}
+				else
+				{
+					unsigned int colorIndex = glm::min(static_cast<unsigned int>(t * colorGradientSize), colorGradientSize - 1);
+					trail[pointIndex].color = colorGradient[colorIndex];
+				}
+				break;
+			}
+			case ColorInterpolation::Linear:
+			{
+				if (pathConfiguration.colorStart.has_value())
+				{
+					const std::vector<float>& colorStart = pathConfiguration.colorStart.value();
+					float distanceFromHead = trail.back().distanceOnTrail - trail[pointIndex].distanceOnTrail;
+
+					size_t intervalCount = std::min(colorStart.size(), colorGradient.size() > 0 ? colorGradient.size() - 1 : 0);
+					if (intervalCount == 0)
+						break;
+
+					if (distanceFromHead >= colorStart.back())
+					{
+						trail[pointIndex].color = colorGradient.back();
+					}
+					else
+					{
+						for (size_t j = 0; j < intervalCount; ++j)
+						{
+							float start = (j == 0) ? 0.0f : colorStart[j - 1];
+							float end = colorStart[j];
+
+							if (distanceFromHead <= end)
+							{
+								float t = (distanceFromHead - start) / (end - start);
+								t = glm::clamp(t, 0.0f, 1.0f);
+
+								trail[pointIndex].color = glm::mix(colorGradient[j], colorGradient[j + 1], t);
+
+								break;
+							}
+						}
+					}
+				}
+				else
+				{
+					float integralPart;
+					float colorT = std::modf(t * static_cast<float>(colorGradientSize - 1), &integralPart);
+
+					unsigned int colorIndexA = static_cast<unsigned int>(integralPart);
+					unsigned int colorIndexB = glm::min(colorIndexA + 1, colorGradientSize - 1);
+					trail[pointIndex].color = glm::mix(colorGradient[colorIndexA], colorGradient[colorIndexB], colorT);
+				}
+				break;
+			}
+			}
+
+			if (pathConfiguration.lifetimeFade.has_value())
+			{
+				float start = pathConfiguration.lifetimeFade.value().start;
+				float end = pathConfiguration.lifetimeFade.value().end;
+
+				float age = elapsedTime - trail[pointIndex].spawnTime;
+				float trailFadeT = end > start ? (glm::clamp(age, start, end) - start) / (end - start) : 1.0f;
+
+				trail[pointIndex].color.a *= 1.0f - trailFadeT;
+			}
+		}
+
+		if (pathConfiguration.lifetime.has_value())
+		{
+			while (!trail.empty() && elapsedTime >= trail.front().spawnTime + pathConfiguration.lifetime.value())
+				trail.pop_front();
+		}
+	}
+
 	ParticleSimulation::ParticleSimulation(AssetRegistry& assetRegistry, RandomNumberGenerator& randomNumberGenerator) :
 		m_assetRegistry(assetRegistry),
 		m_randomNumberGenerator(randomNumberGenerator),
@@ -423,137 +551,14 @@ namespace cft
 				}
 				else
 				{
-					std::deque<TrailPoint>& trail = trailPoints[i];
-					unsigned int trailSize = static_cast<unsigned int>(trail.size());
-
 					unsigned int colorGradientSize = static_cast<unsigned int>(trailRegistryEntry.trailConfiguration.pathConfiguration.colorGradient.size()) + (trailRegistryEntry.trailConfiguration.pathConfiguration.appendParticleColor ? 1 : 0);
 					std::vector<glm::vec4> colorGradient;
 					colorGradient.reserve(colorGradientSize);
 					if (trailRegistryEntry.trailConfiguration.pathConfiguration.appendParticleColor)
 						colorGradient.push_back(particleColor[i]);
 					colorGradient.insert(colorGradient.end(), trailRegistryEntry.trailConfiguration.pathConfiguration.colorGradient.begin(), trailRegistryEntry.trailConfiguration.pathConfiguration.colorGradient.end());
-
-					for (unsigned int pointIndex = 0; pointIndex < trail.size(); ++pointIndex)
-					{
-						float t = 1.0f - (trailSize > 1 ? static_cast<float>(pointIndex) / static_cast<float>(trailSize - 1) : 0.0f);
-
-						switch (trailRegistryEntry.trailConfiguration.pathConfiguration.thicknessDistribution)
-						{
-						case ThicknessDistribution::Constant: trail[pointIndex].thickness = trailRegistryEntry.trailConfiguration.pathConfiguration.thickness; break;
-						case ThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness = (1.0f - t) * trailRegistryEntry.trailConfiguration.pathConfiguration.thickness; break;
-						case ThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * trailRegistryEntry.trailConfiguration.pathConfiguration.thickness; break;
-						case ThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness = t * trailRegistryEntry.trailConfiguration.pathConfiguration.thickness; break;
-						case ThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness = t * t * trailRegistryEntry.trailConfiguration.pathConfiguration.thickness; break;
-						}
-
-						if (trailRegistryEntry.trailConfiguration.pathConfiguration.thicknessEvolution.has_value())
-						{
-							const ThicknessEvolution& trailThicknessEvolution = trailRegistryEntry.trailConfiguration.pathConfiguration.thicknessEvolution.value();
-							float pointAge = (elapsedTime - trail[pointIndex].spawnTime);
-
-							switch (trailThicknessEvolution.distribution)
-							{
-							case ThicknessDistribution::Constant: trail[pointIndex].thickness += pointAge * trailThicknessEvolution.speed; break;
-							case ThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness += (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
-							case ThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness += (1.0f - t) * (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
-							case ThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness += t * pointAge * trailThicknessEvolution.speed; break;
-							case ThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness += t * t * pointAge * trailThicknessEvolution.speed; break;
-							}
-						}
-
-						switch (trailRegistryEntry.trailConfiguration.pathConfiguration.colorInterpolation)
-						{
-						case ColorInterpolation::Constant:
-						{
-							if (trailRegistryEntry.trailConfiguration.pathConfiguration.colorStart.has_value())
-							{
-								const std::vector<float>& colorStart = trailRegistryEntry.trailConfiguration.pathConfiguration.colorStart.value();
-								float distanceFromHead = trail.back().distanceOnTrail - trail[pointIndex].distanceOnTrail;
-
-								size_t count = std::min(colorGradient.size(), colorStart.size());
-								unsigned int colorIndex = colorGradientSize - 1;
-								for (unsigned int j = 0; j < count; ++j)
-								{
-									if (distanceFromHead <= colorStart[j])
-									{
-										colorIndex = j;
-										break;
-									}
-								}
-
-								trail[pointIndex].color = colorGradient[colorIndex];
-							}
-							else
-							{
-								unsigned int colorIndex = glm::min(static_cast<unsigned int>(t * colorGradientSize), colorGradientSize - 1);
-								trail[pointIndex].color = colorGradient[colorIndex];
-							}
-							break;
-						}
-						case ColorInterpolation::Linear:
-						{
-							if (trailRegistryEntry.trailConfiguration.pathConfiguration.colorStart.has_value())
-							{
-								const std::vector<float>& colorStart = trailRegistryEntry.trailConfiguration.pathConfiguration.colorStart.value();
-								float distanceFromHead = trail.back().distanceOnTrail - trail[pointIndex].distanceOnTrail;
-
-								size_t intervalCount = std::min(colorStart.size(), colorGradient.size() > 0 ? colorGradient.size() - 1 : 0);
-								if (intervalCount == 0)
-									break;
-
-								if (distanceFromHead >= colorStart.back())
-								{
-									trail[pointIndex].color = colorGradient.back();
-								}
-								else
-								{
-									for (size_t j = 0; j < intervalCount; ++j)
-									{
-										float start = (j == 0) ? 0.0f : colorStart[j - 1];
-										float end = colorStart[j];
-
-										if (distanceFromHead <= end)
-										{
-											float t = (distanceFromHead - start) / (end - start);
-											t = glm::clamp(t, 0.0f, 1.0f);
-
-											trail[pointIndex].color = glm::mix(colorGradient[j], colorGradient[j + 1], t);
-
-											break;
-										}
-									}
-								}
-							}
-							else
-							{
-								float integralPart;
-								float colorT = std::modf(t * static_cast<float>(colorGradientSize - 1), &integralPart);
-
-								unsigned int colorIndexA = static_cast<unsigned int>(integralPart);
-								unsigned int colorIndexB = glm::min(colorIndexA + 1, colorGradientSize - 1);
-								trail[pointIndex].color = glm::mix(colorGradient[colorIndexA], colorGradient[colorIndexB], colorT);
-							}
-							break;
-						}
-						}
-						
-						if (trailRegistryEntry.trailConfiguration.pathConfiguration.lifetimeFade.has_value())
-						{
-							float start = trailRegistryEntry.trailConfiguration.pathConfiguration.lifetimeFade.value().start;
-							float end = trailRegistryEntry.trailConfiguration.pathConfiguration.lifetimeFade.value().end;
-	
-							float age = elapsedTime - trail[pointIndex].spawnTime;
-							float trailFadeT = end > start ? (glm::clamp(age, start, end) - start) / (end - start) : 1.0f;
-
-							trail[pointIndex].color.a *= 1.0f - trailFadeT;
-						}
-					}
-
-					if (trailRegistryEntry.trailConfiguration.pathConfiguration.lifetime.has_value())
-					{
-						while (!trail.empty() && elapsedTime >= trail.front().spawnTime + trailRegistryEntry.trailConfiguration.pathConfiguration.lifetime.value())
-							trail.pop_front();
-					}
+					
+					updateTrail(trailPoints[i], trailRegistryEntry.trailConfiguration.pathConfiguration, colorGradient, elapsedTime);
 
 					++i;
 				}
@@ -575,15 +580,8 @@ namespace cft
 			const std::vector<unsigned int>& ribbonRegistryId = ribbonPool.getRibbonRegistryId();
 			const std::vector<unsigned int>& fromParticleId = ribbonPool.getFromParticleId();
 			const std::vector<unsigned int>& toParticleId = ribbonPool.getToParticleId();
-			std::vector<glm::vec4>& fromParticleColor = ribbonPool.getFromParticleColor();
-			std::vector<glm::vec4>& toParticleColor = ribbonPool.getToParticleColor();
-			std::vector<glm::vec4>& fromColor = ribbonPool.getFromColor();
-			std::vector<glm::vec4>& toColor = ribbonPool.getToColor();
-			std::vector<glm::vec3>& fromPosition = ribbonPool.getFromPosition();
-			std::vector<glm::vec3>& toPosition = ribbonPool.getToPosition();
-			std::vector<float>& fromThickness = ribbonPool.getFromThickness();
-			std::vector<float>& toThickness = ribbonPool.getToThickness();
 			const std::vector<float>& spawnTime = ribbonPool.getSpawnTime();
+			std::vector<std::deque<TrailPoint>>& ribbonPoints = ribbonPool.getRibbonPoints();
 
 			std::unordered_map<unsigned int, unsigned int> removedRibbonCount;
 
@@ -592,43 +590,51 @@ namespace cft
 				RibbonRegistryEntry& ribbonRegistryEntry = m_ribbonRegistry.getEntry(ribbonRegistryId[i]);
 				const ParticlePool& particlePool = m_particlePools[ribbonRegistryEntry.poolId];
 
-				const std::vector<glm::vec4>& color = particlePool.getColor();
-				const std::vector<glm::vec3>& position = particlePool.getPosition();
-				const std::vector<glm::quat>& rotation = particlePool.getRotation();
-				const std::vector<glm::vec3>& scale = particlePool.getScale();
-				const std::vector<glm::vec3>& linearVelocity = particlePool.getLinearVelocity();
-				const std::vector<glm::vec3>& angularVelocity = particlePool.getAngularVelocity();
-				const std::vector<glm::vec4>& initialColor = particlePool.getInitialColor();
-				const std::vector<glm::vec3>& initialScale = particlePool.getInitialScale();
-				const std::vector<glm::vec3>& postBehaviorPosition = particlePool.getPostBehaviorPosition();
-				const std::vector<float>& phase = particlePool.getPhase();
-				const std::vector<float>& lifetime = particlePool.getLifetime();
-				const std::vector<float>& spawnTime = particlePool.getSpawnTime();
-				const std::vector<unsigned int>& id = particlePool.getId();
-				const std::vector<unsigned int>& particleRegistryId = particlePool.getParticleRegistryId();
+				const std::vector<glm::vec4>& particleColor = particlePool.getColor();
+				const std::vector<glm::vec3>& particlePosition = particlePool.getPosition();
+				const std::vector<glm::quat>& particleRotation = particlePool.getRotation();
+				const std::vector<glm::vec3>& particleScale = particlePool.getScale();
+				const std::vector<glm::vec3>& particleLinearVelocity = particlePool.getLinearVelocity();
+				const std::vector<glm::vec3>& particleAngularVelocity = particlePool.getAngularVelocity();
+				const std::vector<glm::vec4>& particleInitialColor = particlePool.getInitialColor();
+				const std::vector<glm::vec3>& particleInitialScale = particlePool.getInitialScale();
+				const std::vector<glm::vec3>& particlePostBehaviorPosition = particlePool.getPostBehaviorPosition();
+				const std::vector<float>& particlePhase = particlePool.getPhase();
+				const std::vector<float>& particleLifetime = particlePool.getLifetime();
+				const std::vector<float>& particleSpawnTime = particlePool.getSpawnTime();
+				const std::vector<unsigned int>& particleId = particlePool.getId();
+				const std::vector<unsigned int>& particleParticleRegistryId = particlePool.getParticleRegistryId();
 
 				std::optional<unsigned int> fromParticleIndex = particlePool.getIndex(fromParticleId[i]);
 				std::optional<unsigned int> toParticleIndex = particlePool.getIndex(fromParticleId[i]);
 
-				if (!fromParticleIndex.has_value() || !toParticleIndex.has_value())
+				if (!fromParticleIndex.has_value() || !toParticleIndex.has_value() || elapsedTime - spawnTime[i] > ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.lifetime)
 				{
 					ribbonPool.remove(i);
 					++removedRibbonCount[ribbonRegistryId[i]];
 				}
 				else
 				{
-					RibbonView ribbonView{ ribbonRegistryId[i], fromParticleId[i], toParticleId[i], fromParticleColor[i], toParticleColor[i], fromColor[i], toColor[i], fromPosition[i], toPosition[i], fromThickness[i], toThickness[i], spawnTime[i] };
-					ConstantRibbonView constantRibbonView{ ribbonView.ribbonRegistryId, ribbonView.fromParticleId, ribbonView.toParticleId, ribbonView.fromParticleColor, ribbonView.toParticleColor, ribbonView.fromColor, ribbonView.toColor, ribbonView.fromPosition, ribbonView.toPosition, ribbonView.fromThickness, ribbonView.toThickness, ribbonView.spawnTime };
-
 					unsigned int fromParticleIndexValue = fromParticleIndex.value();
 					unsigned int toParticleIndexValue = toParticleIndex.value();
 
-					ConstantParticleView fromParticle{ color[fromParticleIndexValue], position[fromParticleIndexValue], rotation[fromParticleIndexValue], scale[fromParticleIndexValue], linearVelocity[fromParticleIndexValue], angularVelocity[fromParticleIndexValue], initialColor[fromParticleIndexValue], initialScale[fromParticleIndexValue], postBehaviorPosition[fromParticleIndexValue], phase[fromParticleIndexValue], lifetime[fromParticleIndexValue], spawnTime[fromParticleIndexValue], particleRegistryId[fromParticleIndexValue], id[fromParticleIndexValue] };
-					ConstantParticleView toParticle{ color[toParticleIndexValue], position[toParticleIndexValue], rotation[toParticleIndexValue], scale[toParticleIndexValue], linearVelocity[toParticleIndexValue], angularVelocity[toParticleIndexValue], initialColor[toParticleIndexValue], initialScale[toParticleIndexValue], postBehaviorPosition[toParticleIndexValue], phase[toParticleIndexValue], lifetime[toParticleIndexValue], spawnTime[toParticleIndexValue], particleRegistryId[toParticleIndexValue], id[toParticleIndexValue] };
+					ConstantParticleView fromParticle{ particleColor[fromParticleIndexValue], particlePosition[fromParticleIndexValue], particleRotation[fromParticleIndexValue], particleScale[fromParticleIndexValue], particleLinearVelocity[fromParticleIndexValue], particleAngularVelocity[fromParticleIndexValue], particleInitialColor[fromParticleIndexValue], particleInitialScale[fromParticleIndexValue], particlePostBehaviorPosition[fromParticleIndexValue], particlePhase[fromParticleIndexValue], particleLifetime[fromParticleIndexValue], particleSpawnTime[fromParticleIndexValue], particleParticleRegistryId[fromParticleIndexValue], particleId[fromParticleIndexValue] };
+					ConstantParticleView toParticle{ particleColor[toParticleIndexValue], particlePosition[toParticleIndexValue], particleRotation[toParticleIndexValue], particleScale[toParticleIndexValue], particleLinearVelocity[toParticleIndexValue], particleAngularVelocity[toParticleIndexValue], particleInitialColor[toParticleIndexValue], particleInitialScale[toParticleIndexValue], particlePostBehaviorPosition[toParticleIndexValue], particlePhase[toParticleIndexValue], particleLifetime[toParticleIndexValue], particleSpawnTime[toParticleIndexValue], particleParticleRegistryId[toParticleIndexValue], particleId[toParticleIndexValue] };
 
-					if (ribbonRegistryEntry.particleConnector->isRibbonValid(constantRibbonView, fromParticle, toParticle))
+					if (ribbonRegistryEntry.particleConnector->isRibbonValid(fromParticle, toParticle))
 					{
-						ribbonRegistryEntry.particleConnector->updateRibbon(ribbonView);
+						unsigned int colorGradientSize = static_cast<unsigned int>(ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.colorGradient.size()) + (ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.appendParticleColor ? 2 : 0);
+						std::vector<glm::vec4> colorGradient;
+						colorGradient.reserve(colorGradientSize);
+						if (ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.appendParticleColor)
+							colorGradient.push_back(fromParticle.color);
+						colorGradient.insert(colorGradient.end(), ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.colorGradient.begin(), ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.colorGradient.end());
+						if (ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.appendParticleColor)
+							colorGradient.push_back(toParticle.color);
+
+						ribbonRegistryEntry.particleConnector->updateRibbon(RibbonView{ ribbonRegistryId[i], fromParticleId[i], toParticleId[i], spawnTime[i], ribbonPoints[i] }, fromParticle, toParticle);
+						updateTrail(ribbonPoints[i], ribbonRegistryEntry.ribbonConfiguration.pathConfiguration, colorGradient, elapsedTime);
+
 						++i;
 					}
 					else

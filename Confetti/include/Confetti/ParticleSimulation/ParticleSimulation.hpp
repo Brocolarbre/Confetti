@@ -49,6 +49,7 @@ namespace cft
 		RibbonRegistry m_ribbonRegistry;
 
 		ParticleEmitterInstance createParticleEmitter(const ParticleEmitterDescriptor& descriptor, const MotionState& parentMotionState, unsigned int recursionDepth, float elapsedTime);
+		void updateTrail(std::deque<TrailPoint>& trail, const PathConfiguration& pathConfiguration, const std::vector<glm::vec4>& colorGradient, float elapsedTime) const;
 
 	public:
 		ParticleSimulation(AssetRegistry& assetRegistry, RandomNumberGenerator& randomNumberGenerator);
