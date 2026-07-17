@@ -38,7 +38,7 @@ namespace cft
 		return createdRibbonsCount;
 	}
 
-	void RandomParticleConnector::updateRibbon(RibbonView& ribbon, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle)
+	void RandomParticleConnector::updateRibbon(RibbonView& ribbon, const PathConfiguration& pathConfiguration, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle)
 	{
 		if (ribbon.points.empty())
 		{
@@ -49,6 +49,8 @@ namespace cft
 		{
 			ribbon.points[0] = TrailPoint{ fromParticle.color, fromParticle.position, 0.2f, 0.0f, 0.0f };
 			ribbon.points[1] = TrailPoint{ toParticle.color, toParticle.position, 0.2f, 1.0f, 0.0f };
+
+			//ribbon.points[0].
 		}
 	}
 

@@ -16,7 +16,7 @@ namespace cft
 		RandomParticleConnector(float maximumDistance, unsigned int connexionsCount, RandomNumberGenerator& randomNumberGenerator);
 
 		unsigned int createRibbons(RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int ribbonRegistryId, float elapsedTime);
-		void updateRibbon(RibbonView& ribbon, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle);
+		void updateRibbon(RibbonView& ribbon, const PathConfiguration& pathConfiguration, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle);
 		bool isRibbonValid(const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) const;
 	};
 }

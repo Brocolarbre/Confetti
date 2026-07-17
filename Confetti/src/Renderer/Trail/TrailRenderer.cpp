@@ -257,6 +257,11 @@ namespace cft
 		TrailGeometry trailGeometry = generateTrailGeometry(trailPools, trailRegistry, view);
 		TrailGeometry ribbonGeometry = generateRibbonGeometry(ribbonPools, ribbonRegistry, view);
 
+		int vertexDataOffset = static_cast<int>(trailGeometry.vertexData.size());
+
+		for (int& first : ribbonGeometry.first)
+			first += vertexDataOffset;
+
 		trailGeometry.vertexData.insert(trailGeometry.vertexData.end(), ribbonGeometry.vertexData.begin(), ribbonGeometry.vertexData.end());
 		trailGeometry.first.insert(trailGeometry.first.end(), ribbonGeometry.first.begin(), ribbonGeometry.first.end());
 		trailGeometry.count.insert(trailGeometry.count.end(), ribbonGeometry.count.begin(), ribbonGeometry.count.end());

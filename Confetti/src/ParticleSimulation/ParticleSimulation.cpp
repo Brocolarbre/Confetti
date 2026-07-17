@@ -636,7 +636,7 @@ namespace cft
 						if (ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.appendParticleColor)
 							colorGradient.push_back(toParticle.color);
 
-						ribbonRegistryEntry.particleConnector->updateRibbon(RibbonView{ ribbonRegistryId[i], fromParticleId[i], toParticleId[i], spawnTime[i], ribbonPoints[i] }, fromParticle, toParticle);
+						ribbonRegistryEntry.particleConnector->updateRibbon(RibbonView{ ribbonRegistryId[i], fromParticleId[i], toParticleId[i], spawnTime[i], ribbonPoints[i] }, ribbonRegistryEntry.ribbonConfiguration.pathConfiguration, fromParticle, toParticle);
 						updateTrail(ribbonPoints[i], ribbonRegistryEntry.ribbonConfiguration.pathConfiguration, colorGradient, elapsedTime);
 
 						++i;
