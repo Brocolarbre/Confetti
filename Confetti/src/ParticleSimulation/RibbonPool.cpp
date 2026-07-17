@@ -21,6 +21,7 @@ namespace cft
 		m_toParticleId(),
 		m_spawnTime(),
 		m_ribbonPoints(),
+		m_pointConnexions(),
 		m_capacity(0),
 		m_reservedCapacity(0),
 		m_count(0)
@@ -78,6 +79,11 @@ namespace cft
 		return m_ribbonPoints;
 	}
 
+	std::unordered_set<unsigned int>& RibbonPool::getPointConnexions(unsigned int particleId)
+	{
+		return m_pointConnexions[particleId];
+	}
+
 	unsigned int RibbonPool::getCount() const
 	{
 		return m_count;
@@ -102,10 +108,14 @@ namespace cft
 		m_ribbonPoints[newIndex] = ribbon.points;
 
 		--m_reservedCapacity;
+
+		m_pointConnexions[ribbon.fromParticleId].insert(ribbon.toParticleId);
 	}
 
 	void RibbonPool::remove(unsigned int index)
 	{
+		m_pointConnexions[m_fromParticleId[index]].erase(m_toParticleId[index]);
+
 		unsigned int lastIndex = --m_count;
 
 		m_ribbonRegistryId[index] = m_ribbonRegistryId[lastIndex];

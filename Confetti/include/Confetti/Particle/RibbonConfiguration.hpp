@@ -7,6 +7,6 @@ namespace cft
 	struct RibbonConfiguration
 	{
 		PathConfiguration pathConfiguration;
-		unsigned int ribbonGeneratorId;
+		unsigned int particleConnectorId;
 	};
 }

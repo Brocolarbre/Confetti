@@ -2,6 +2,9 @@
 
 #include <unordered_set>
 
+//
+#include <iostream>
+
 namespace cft
 {
 	ParticleEmitterInstance ParticleSimulation::createParticleEmitter(const ParticleEmitterDescriptor& descriptor, const MotionState& parentMotionState, unsigned int recursionDepth, float elapsedTime)
@@ -31,7 +34,7 @@ namespace cft
 		particleEmitterInstance.postBehaviorPosition = glm::vec3(0.0f);
 		particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitter.poolId, recursionDepth, particleEmitter.spawnTrigger, particleEmitter.renderDescriptor, std::move(forceFields), std::move(motionBehaviors), std::move(particleBehaviors));
 		particleEmitterInstance.trailRegistryId = particleEmitter.trailConfiguration.has_value() ? std::make_optional<unsigned int>(m_trailRegistry.createEntry(particleEmitter.trailConfiguration.value())) : std::nullopt;
-		particleEmitterInstance.ribbonRegistryId = particleEmitter.ribbonConfiguration.has_value() ? std::make_optional<unsigned int>(m_ribbonRegistry.createEntry(particleEmitter.poolId, particleEmitter.ribbonConfiguration.value(), m_assetRegistry.getParticleConnector(particleEmitter.ribbonConfiguration.value().ribbonGeneratorId).clone())) : std::nullopt;
+		particleEmitterInstance.ribbonRegistryId = particleEmitter.ribbonConfiguration.has_value() ? std::make_optional<unsigned int>(m_ribbonRegistry.createEntry(particleEmitter.poolId, particleEmitter.ribbonConfiguration.value(), m_assetRegistry.getParticleConnector(particleEmitter.ribbonConfiguration.value().particleConnectorId).clone())) : std::nullopt;
 		particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitter.particleSpawnerId).clone();
 		particleEmitterInstance.emissionPattern = m_assetRegistry.getEmissionPattern(particleEmitter.emissionPatternId).clone();
 
@@ -47,6 +50,7 @@ namespace cft
 		m_particlePools[particleEmitter.poolId].reserve(maximumParticleCount);
 		m_trailPools[particleEmitter.poolId].reserve(maximumParticleCount);
 		// Reserve correct amount for m_ribbonPools
+		m_ribbonPools[particleEmitter.poolId].reserve(maximumParticleCount * maximumParticleCount);
 		
 		return particleEmitterInstance;
 	}
@@ -571,7 +575,7 @@ namespace cft
 		// Ribbons update
 		for (auto& [ribbonRegistryId, ribbonRegistryEntry] : m_ribbonRegistry.getEntries())
 		{
-			unsigned int createdRibbonsCount = ribbonRegistryEntry.particleConnector->createRibbons(m_ribbonPools[ribbonRegistryEntry.poolId], m_particlePools[ribbonRegistryEntry.poolId]);
+			unsigned int createdRibbonsCount = ribbonRegistryEntry.particleConnector->createRibbons(m_ribbonPools[ribbonRegistryEntry.poolId], m_particlePools[ribbonRegistryEntry.poolId], ribbonRegistryId, elapsedTime);
 			m_ribbonRegistry.addReferenceCount(ribbonRegistryId, createdRibbonsCount);
 		}
 
@@ -606,9 +610,9 @@ namespace cft
 				const std::vector<unsigned int>& particleParticleRegistryId = particlePool.getParticleRegistryId();
 
 				std::optional<unsigned int> fromParticleIndex = particlePool.getIndex(fromParticleId[i]);
-				std::optional<unsigned int> toParticleIndex = particlePool.getIndex(fromParticleId[i]);
+				std::optional<unsigned int> toParticleIndex = particlePool.getIndex(toParticleId[i]);
 
-				if (!fromParticleIndex.has_value() || !toParticleIndex.has_value() || elapsedTime - spawnTime[i] > ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.lifetime)
+				if (!fromParticleIndex.has_value() || !toParticleIndex.has_value() || (ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.lifetime.has_value() && (elapsedTime - spawnTime[i]) > ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.lifetime.value()))
 				{
 					ribbonPool.remove(i);
 					++removedRibbonCount[ribbonRegistryId[i]];
