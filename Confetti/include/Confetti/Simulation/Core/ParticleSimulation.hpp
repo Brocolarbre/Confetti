@@ -33,8 +33,13 @@ namespace cft
 		TrailRegistry m_trailRegistry;
 		RibbonRegistry m_ribbonRegistry;
 
+		void updateParticleEffects(float elapsedTime, float deltaTime);
+		void updateParticleEmitters(float elapsedTime, float deltaTime);
+		void updateParticles(float elapsedTime, float deltaTime);
+		void updateTrails(float elapsedTime, float deltaTime);
+		void updateRibbons(float elapsedTime, float deltaTime);
+
 		ParticleEmitterInstance createParticleEmitter(const ParticleEmitterSpawnContext& emitterSpawnContext, const MotionState& parentMotionState, unsigned int recursionDepth, float elapsedTime);
-		void updateTrail(std::deque<PathPoint>& trail, const PathConfiguration& pathConfiguration, const std::vector<glm::vec4>& colorGradient, float elapsedTime) const;
 
 	public:
 		ParticleSimulation(AssetRegistry& assetRegistry, RandomNumberGenerator& randomNumberGenerator);

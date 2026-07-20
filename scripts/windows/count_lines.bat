@@ -47,5 +47,4 @@ echo   .h: %hCount%
 echo -----------------------------
 echo Lines: %totalLines%
 echo -----------------------------
-
-pause
+endlocal

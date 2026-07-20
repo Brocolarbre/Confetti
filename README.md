@@ -4,7 +4,7 @@
 
 ## Setup
 
-The project follows the (Nest)[https://github.com/Brocolarbre/Nest/] structure.
+The project follows the [Nest](https://github.com/Brocolarbre/Nest/) structure.
 To build the project :
 - Open a terminal in the **root folder** of the project
 - Run the following command :
