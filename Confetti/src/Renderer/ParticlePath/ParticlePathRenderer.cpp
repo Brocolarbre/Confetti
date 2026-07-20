@@ -1,5 +1,5 @@
-#include "Confetti/Renderer/Trail/TrailRenderer.hpp"
-#include "Confetti/Renderer/ShaderSource/TrailShaderSource.hpp"
+#include "Confetti/Renderer/ParticlePath/ParticlePathRenderer.hpp"
+#include "Confetti/Renderer/ShaderSource/ParticlePathShaderSource.hpp"
 
 #include <glad/glad.h>
 #include <iostream>
@@ -19,7 +19,7 @@ namespace
 
 namespace cft
 {
-	void TrailRenderer::generateGeometry(const std::deque<TrailPoint>& trail, const PathConfiguration& pathConfiguration, const View& view, TrailGeometry& geometry) const
+	void ParticlePathRenderer::generateGeometry(const std::deque<TrailPoint>& trail, const PathConfiguration& pathConfiguration, const View& view, ParticlePathGeometry& geometry) const
 	{
 		geometry.first.push_back(static_cast<int>(geometry.vertexData.size()));
 		geometry.count.push_back(static_cast<int>(trail.size() * 2));
@@ -74,8 +74,8 @@ namespace cft
 
 			float halfWidth = currentPoint.thickness * 0.5f;
 
-			TrailMesh::Vertex vertexA;
-			TrailMesh::Vertex vertexB;
+			ParticlePathMesh::Vertex vertexA;
+			ParticlePathMesh::Vertex vertexB;
 
 			vertexA.position = currentPoint.position + normal * halfWidth;
 			vertexB.position = currentPoint.position - normal * halfWidth;
@@ -119,9 +119,9 @@ namespace cft
 		}
 	}
 
-	TrailRenderer::TrailGeometry TrailRenderer::generateTrailGeometry(const std::unordered_map<unsigned int, TrailPool>& trailPools, const TrailRegistry& trailRegistry, const View& view)
+	ParticlePathRenderer::ParticlePathGeometry ParticlePathRenderer::generateTrailGeometry(const std::unordered_map<unsigned int, TrailPool>& trailPools, const TrailRegistry& trailRegistry, const View& view)
 	{
-		TrailGeometry geometry;
+		ParticlePathGeometry geometry;
 
 		size_t totalVertices = 0;
 		size_t totalTrails = 0;
@@ -166,9 +166,9 @@ namespace cft
 		return geometry;
 	}
 
-	TrailRenderer::TrailGeometry TrailRenderer::generateRibbonGeometry(const std::unordered_map<unsigned int, RibbonPool>& ribbonPools, const RibbonRegistry& ribbonRegistry, const View& view)
+	ParticlePathRenderer::ParticlePathGeometry ParticlePathRenderer::generateRibbonGeometry(const std::unordered_map<unsigned int, RibbonPool>& ribbonPools, const RibbonRegistry& ribbonRegistry, const View& view)
 	{
-		TrailGeometry geometry;
+		ParticlePathGeometry geometry;
 
 		size_t totalVertices = 0;
 		size_t totalRibbons = 0;
@@ -213,16 +213,16 @@ namespace cft
 		return geometry;
 	}
 
-	TrailRenderer::TrailRenderer() :
+	ParticlePathRenderer::ParticlePathRenderer() :
 		m_imageIdToTextureIndex(),
 		m_textureArray(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE),
 		m_trailMesh(),
 		m_shader()
 	{
-		m_shader.loadFromMemory(std::string(TRAIL_VERTEX_SHADER_SOURCE), std::string(TRAIL_FRAGMENT_SHADER_SOURCE));
+		m_shader.loadFromMemory(std::string(PARTICLE_PATH_VERTEX_SHADER_SOURCE), std::string(PARTICLE_PATH_FRAGMENT_SHADER_SOURCE));
 	}
 
-	void TrailRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
+	void ParticlePathRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
 	{
 		m_imageIdToTextureIndex.clear();
 
@@ -252,10 +252,10 @@ namespace cft
 		m_textureArray.load(textureData, width, height, GL_NEAREST, GL_REPEAT);
 	}
 
-	void TrailRenderer::update(const std::unordered_map<unsigned int, TrailPool>& trailPools, const TrailRegistry& trailRegistry, const std::unordered_map<unsigned int, RibbonPool>& ribbonPools, const RibbonRegistry& ribbonRegistry, const View& view)
+	void ParticlePathRenderer::update(const std::unordered_map<unsigned int, TrailPool>& trailPools, const TrailRegistry& trailRegistry, const std::unordered_map<unsigned int, RibbonPool>& ribbonPools, const RibbonRegistry& ribbonRegistry, const View& view)
 	{
-		TrailGeometry trailGeometry = generateTrailGeometry(trailPools, trailRegistry, view);
-		TrailGeometry ribbonGeometry = generateRibbonGeometry(ribbonPools, ribbonRegistry, view);
+		ParticlePathGeometry trailGeometry = generateTrailGeometry(trailPools, trailRegistry, view);
+		ParticlePathGeometry ribbonGeometry = generateRibbonGeometry(ribbonPools, ribbonRegistry, view);
 
 		int vertexDataOffset = static_cast<int>(trailGeometry.vertexData.size());
 
@@ -269,7 +269,7 @@ namespace cft
 		m_trailMesh.setVertexData(trailGeometry.vertexData, trailGeometry.first, trailGeometry.count);
 	}
 
-	void TrailRenderer::render(const View& view) const
+	void ParticlePathRenderer::render(const View& view) const
 	{
 		TextureArray::setActiveSlot(0);
 		m_textureArray.bind();

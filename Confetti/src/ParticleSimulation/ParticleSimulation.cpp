@@ -66,11 +66,8 @@ namespace cft
 
 			switch (pathConfiguration.thicknessDistribution)
 			{
-			case ThicknessDistribution::Constant: trail[pointIndex].thickness = pathConfiguration.thickness; break;
-			case ThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness = (1.0f - t) * pathConfiguration.thickness; break;
-			case ThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness = (1.0f - t) * (1.0f - t) * pathConfiguration.thickness; break;
-			case ThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness = t * pathConfiguration.thickness; break;
-			case ThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness = t * t * pathConfiguration.thickness; break;
+			case ThicknessDistribution::Linear: trail[pointIndex].thickness = glm::mix(pathConfiguration.startThickness, pathConfiguration.endThickness, t); break;
+			case ThicknessDistribution::Quadratic: trail[pointIndex].thickness = glm::mix(pathConfiguration.startThickness, pathConfiguration.endThickness, t * t); break;
 			}
 
 			if (pathConfiguration.thicknessEvolution.has_value())
@@ -80,12 +77,12 @@ namespace cft
 
 				switch (trailThicknessEvolution.distribution)
 				{
-				case ThicknessDistribution::Constant: trail[pointIndex].thickness += pointAge * trailThicknessEvolution.speed; break;
-				case ThicknessDistribution::LinearDecreasing: trail[pointIndex].thickness += (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
-				case ThicknessDistribution::QuadraticDecreasing: trail[pointIndex].thickness += (1.0f - t) * (1.0f - t) * pointAge * trailThicknessEvolution.speed; break;
-				case ThicknessDistribution::LinearIncreasing: trail[pointIndex].thickness += t * pointAge * trailThicknessEvolution.speed; break;
-				case ThicknessDistribution::QuadraticIncreasing: trail[pointIndex].thickness += t * t * pointAge * trailThicknessEvolution.speed; break;
+				case ThicknessEvolutionDistribution::Constant: trail[pointIndex].thickness += pointAge * trailThicknessEvolution.speed; break;
+				case ThicknessEvolutionDistribution::Linear: trail[pointIndex].thickness += t * pointAge * trailThicknessEvolution.speed; break;
+				case ThicknessEvolutionDistribution::Quadratic: trail[pointIndex].thickness += t * t * pointAge * trailThicknessEvolution.speed; break;
 				}
+
+				trail[pointIndex].thickness = glm::max(trail[pointIndex].thickness, 0.0f);
 			}
 
 			switch (pathConfiguration.colorInterpolation)

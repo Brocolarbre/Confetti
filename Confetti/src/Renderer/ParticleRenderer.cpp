@@ -16,7 +16,7 @@ namespace cft
 		m_toneMapping(width, height, 0.25f, 2.2f),
 		m_billboardParticleRenderer(),
 		m_meshParticleRenderer(),
-		m_trailRenderer()
+		m_particlePathRenderer()
 	{
 		Texture colorAttachment(GL_TEXTURE_2D_MULTISAMPLE, GL_RGBA16F, GL_RGBA, GL_FLOAT, samples);
 		colorAttachment.load(nullptr, m_width, m_height, GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
@@ -57,7 +57,7 @@ namespace cft
 
 	void ParticleRenderer::loadTrailRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
 	{
-		m_trailRenderer.loadTextures(assetRegistry, imageIds, width, height);
+		m_particlePathRenderer.loadTextures(assetRegistry, imageIds, width, height);
 	}
 
 	void ParticleRenderer::resize(unsigned int width, unsigned int height)
@@ -79,7 +79,7 @@ namespace cft
 	{
 		m_billboardParticleRenderer.update(particleSimulation.getParticlePools(), particleSimulation.getParticleRegistry(), assetRegistry);
 		m_meshParticleRenderer.update(particleSimulation.getParticlePools(), particleSimulation.getParticleRegistry());
-		m_trailRenderer.update(particleSimulation.getTrailPools(), particleSimulation.getTrailRegistry(), particleSimulation.getRibbonPools(), particleSimulation.getRibbonRegistry(), view);
+		m_particlePathRenderer.update(particleSimulation.getTrailPools(), particleSimulation.getTrailRegistry(), particleSimulation.getRibbonPools(), particleSimulation.getRibbonRegistry(), view);
 	}
 
 	void ParticleRenderer::render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
@@ -94,7 +94,7 @@ namespace cft
 		glViewport(0, 0, m_width, m_height);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_trailRenderer.render(view);
+		m_particlePathRenderer.render(view);
 		m_billboardParticleRenderer.render(view, elapsedTime);
 		m_meshParticleRenderer.render(view);
 		

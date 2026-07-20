@@ -1,10 +1,10 @@
-#include "Confetti/Renderer/Trail/TrailMesh.hpp"
+#include "Confetti/Renderer/ParticlePath/ParticlePathMesh.hpp"
 
 #include <glad/glad.h>
 
 namespace cft
 {
-	TrailMesh::TrailMesh() :
+	ParticlePathMesh::ParticlePathMesh() :
 		m_vertexArray(0),
 		m_vertexBuffer(0),
 		m_first(),
@@ -31,17 +31,17 @@ namespace cft
 		glBindVertexArray(0);
 	}
 
-	TrailMesh::TrailMesh(TrailMesh&& trailMesh) noexcept :
-		m_vertexArray(trailMesh.m_vertexArray),
-		m_vertexBuffer(trailMesh.m_vertexBuffer),
-		m_first(std::move(trailMesh.m_first)),
-		m_count(std::move(trailMesh.m_count))
+	ParticlePathMesh::ParticlePathMesh(ParticlePathMesh&& particlePathMesh) noexcept :
+		m_vertexArray(particlePathMesh.m_vertexArray),
+		m_vertexBuffer(particlePathMesh.m_vertexBuffer),
+		m_first(std::move(particlePathMesh.m_first)),
+		m_count(std::move(particlePathMesh.m_count))
 	{
-		trailMesh.m_vertexArray = 0;
-		trailMesh.m_vertexBuffer = 0;
+		particlePathMesh.m_vertexArray = 0;
+		particlePathMesh.m_vertexBuffer = 0;
 	}
 
-	TrailMesh::~TrailMesh()
+	ParticlePathMesh::~ParticlePathMesh()
 	{
 		if (m_vertexArray != 0)
 			glDeleteVertexArrays(1, &m_vertexArray);
@@ -50,9 +50,9 @@ namespace cft
 			glDeleteBuffers(1, &m_vertexBuffer);
 	}
 
-	TrailMesh& TrailMesh::operator=(TrailMesh&& trailMesh) noexcept
+	ParticlePathMesh& ParticlePathMesh::operator=(ParticlePathMesh&& particlePathMesh) noexcept
 	{
-		if (&trailMesh == this)
+		if (&particlePathMesh == this)
 			return *this;
 
 		if (m_vertexArray != 0)
@@ -61,18 +61,18 @@ namespace cft
 		if (m_vertexBuffer != 0)
 			glDeleteBuffers(1, &m_vertexBuffer);
 
-		m_vertexArray = trailMesh.m_vertexArray;
-		m_vertexBuffer = trailMesh.m_vertexBuffer;
-		m_first = std::move(trailMesh.m_first);
-		m_count = std::move(trailMesh.m_count);
+		m_vertexArray = particlePathMesh.m_vertexArray;
+		m_vertexBuffer = particlePathMesh.m_vertexBuffer;
+		m_first = std::move(particlePathMesh.m_first);
+		m_count = std::move(particlePathMesh.m_count);
 
-		trailMesh.m_vertexArray = 0;
-		trailMesh.m_vertexBuffer = 0;
+		particlePathMesh.m_vertexArray = 0;
+		particlePathMesh.m_vertexBuffer = 0;
 
 		return *this;
 	}
 
-	void TrailMesh::setVertexData(const std::vector<Vertex>& vertexData, std::vector<int> first, std::vector<int> count)
+	void ParticlePathMesh::setVertexData(const std::vector<Vertex>& vertexData, std::vector<int> first, std::vector<int> count)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(Vertex), vertexData.data(), GL_STREAM_DRAW);
@@ -81,7 +81,7 @@ namespace cft
 		m_count = std::move(count);
 	}
 
-	void TrailMesh::multiDrawArrays() const
+	void ParticlePathMesh::multiDrawArrays() const
 	{
 		if (m_first.empty())
 			return;

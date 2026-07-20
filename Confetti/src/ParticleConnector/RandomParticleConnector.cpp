@@ -29,7 +29,7 @@ namespace cft
 			{
 				if (pointConnexions.size() < 3 && ribbonPool.getPointConnexions(particleId[randomIndexTo]).size() < 3)
 				{
-					ribbonPool.insert(Ribbon{ ribbonRegistryId, particleId[randomIndexFrom], particleId[randomIndexTo], elapsedTime, {} });
+					ribbonPool.insert(Ribbon{ ribbonRegistryId, particleId[randomIndexFrom], particleId[randomIndexTo], elapsedTime, std::deque<TrailPoint>(5, TrailPoint{ {}, {}, {}, {}, elapsedTime }) });
 					++createdRibbonsCount;
 				}
 			}
@@ -40,17 +40,16 @@ namespace cft
 
 	void RandomParticleConnector::updateRibbon(RibbonView& ribbon, const PathConfiguration& pathConfiguration, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle)
 	{
-		if (ribbon.points.empty())
-		{
-			ribbon.points.push_back(TrailPoint{ fromParticle.color, fromParticle.position, 0.2f, 0.0f, 0.0f });
-			ribbon.points.push_back(TrailPoint{ toParticle.color, toParticle.position, 0.2f, 1.0f, 0.0f });
-		}
-		else
-		{
-			ribbon.points[0] = TrailPoint{ fromParticle.color, fromParticle.position, 0.2f, 0.0f, 0.0f };
-			ribbon.points[1] = TrailPoint{ toParticle.color, toParticle.position, 0.2f, 1.0f, 0.0f };
+		ribbon.points[0] = TrailPoint{ glm::vec4{}, fromParticle.postBehaviorPosition, 0.0f, 0.0f, ribbon.points[0].spawnTime };
+		ribbon.points[1] = TrailPoint{ glm::vec4{}, toParticle.postBehaviorPosition, 0.0f, 1.0f, ribbon.points[1].spawnTime };
 
-			//ribbon.points[0].
+		float length = glm::distance(fromParticle.postBehaviorPosition, toParticle.postBehaviorPosition);
+
+		for (unsigned int i = 0; i < ribbon.points.size(); ++i)
+		{
+			float t = static_cast<float>(i) / static_cast<float>(ribbon.points.size() - 1);
+			ribbon.points[i].position = glm::mix(fromParticle.postBehaviorPosition, toParticle.postBehaviorPosition, t);
+			ribbon.points[i].distanceOnTrail = length * t;
 		}
 	}
 

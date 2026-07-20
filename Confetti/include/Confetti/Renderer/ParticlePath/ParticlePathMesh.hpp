@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class TrailMesh
+	class ParticlePathMesh
 	{
 	public:
 		struct Vertex
@@ -23,13 +23,13 @@ namespace cft
 		std::vector<int> m_count;
 
 	public:
-		TrailMesh();
-		TrailMesh(const TrailMesh& trailMesh) = delete;
-		TrailMesh(TrailMesh&& trailMesh) noexcept;
-		~TrailMesh();
+		ParticlePathMesh();
+		ParticlePathMesh(const ParticlePathMesh& particlePathMesh) = delete;
+		ParticlePathMesh(ParticlePathMesh&& particlePathMesh) noexcept;
+		~ParticlePathMesh();
 
-		TrailMesh& operator=(const TrailMesh& trailMesh) = delete;
-		TrailMesh& operator=(TrailMesh&& trailMesh) noexcept;
+		ParticlePathMesh& operator=(const ParticlePathMesh& particlePathMesh) = delete;
+		ParticlePathMesh& operator=(ParticlePathMesh&& particlePathMesh) noexcept;
 
 		void setVertexData(const std::vector<Vertex>& vertexData, std::vector<int> first, std::vector<int> count);
 

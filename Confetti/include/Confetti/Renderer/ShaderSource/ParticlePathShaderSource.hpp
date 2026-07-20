@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	constexpr const char* TRAIL_VERTEX_SHADER_SOURCE = R"(
+	constexpr const char* PARTICLE_PATH_VERTEX_SHADER_SOURCE = R"(
 		#version 460 core
 
 		uniform mat4 uProjection;
@@ -26,7 +26,7 @@ namespace cft
 		}
 	)";
 
-	constexpr const char* TRAIL_FRAGMENT_SHADER_SOURCE = R"(
+	constexpr const char* PARTICLE_PATH_FRAGMENT_SHADER_SOURCE = R"(
 		#version 460 core
 
 		uniform sampler2DArray uTexture;

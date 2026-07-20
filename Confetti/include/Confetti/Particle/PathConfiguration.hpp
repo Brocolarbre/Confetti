@@ -20,16 +20,20 @@ namespace cft
 
 	enum class ThicknessDistribution
 	{
+		Linear,
+		Quadratic
+	};
+
+	enum class ThicknessEvolutionDistribution
+	{
 		Constant,
-		LinearDecreasing,
-		QuadraticDecreasing,
-		LinearIncreasing,
-		QuadraticIncreasing
+		Linear,
+		Quadratic
 	};
 
 	struct ThicknessEvolution
 	{
-		ThicknessDistribution distribution;
+		ThicknessEvolutionDistribution distribution;
 		float speed;
 	};
 
@@ -41,7 +45,8 @@ namespace cft
 
 	struct PathConfiguration
 	{
-		float thickness;
+		float startThickness;
+		float endThickness;
 		std::optional<float> lifetime;
 		std::optional<LifetimeFade> lifetimeFade;
 		bool appendParticleColor;

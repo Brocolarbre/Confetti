@@ -1,7 +1,7 @@
 
 #include "Billboard/BillboardParticleRenderer.hpp"
 #include "Mesh/MeshParticleRenderer.hpp"
-#include "Trail/TrailRenderer.hpp"
+#include "ParticlePath/ParticlePathRenderer.hpp"
 #include "Confetti/Renderer/PostProcessing/Bloom.hpp"
 #include "Confetti/Renderer/PostProcessing/BrightPass.hpp"
 #include "Confetti/Renderer/PostProcessing/Flare.hpp"
@@ -29,7 +29,7 @@ namespace cft
 
 		BillboardParticleRenderer m_billboardParticleRenderer;
 		MeshParticleRenderer m_meshParticleRenderer;
-		TrailRenderer m_trailRenderer;
+		ParticlePathRenderer m_particlePathRenderer;
 
 	public:
 		ParticleRenderer(unsigned int width, unsigned int height, unsigned int samples);
