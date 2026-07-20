@@ -248,7 +248,6 @@ namespace cft
 		for (const std::vector<std::byte>& data : imageData)
 			textureData.push_back(data.data());
 
-		//m_textureArray.load(textureData, width, height, GL_NEAREST, GL_CLAMP_TO_EDGE);
 		m_textureArray.load(textureData, width, height, GL_NEAREST, GL_REPEAT);
 	}
 

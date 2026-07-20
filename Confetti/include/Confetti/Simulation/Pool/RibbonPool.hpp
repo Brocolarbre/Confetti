@@ -18,11 +18,11 @@ namespace cft
 
 		std::unordered_map<unsigned int, std::unordered_set<unsigned int>> m_pointConnections;
 
-		unsigned int m_capacity;
-		unsigned int m_reservedCapacity;
+		unsigned int m_storageCapacity;
+		unsigned int m_reservedSlots;
 		unsigned int m_count;
 
-		void resize(unsigned int capacity);
+		void resizeStorage(unsigned int capacity);
 
 	public:
 		RibbonPool();
@@ -42,7 +42,7 @@ namespace cft
 		std::unordered_set<unsigned int>& getPointConnections(unsigned int particleId);
 		unsigned int getCount() const;
 
-		void reserve(unsigned int capacity);
+		void reserveSlots(unsigned int slots);
 		void insert(const Ribbon& ribbon);
 		void remove(unsigned int index);
 	};

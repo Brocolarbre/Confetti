@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	void TrailPool::resize(unsigned int capacity)
+	void TrailPool::resizeStorage(unsigned int capacity)
 	{
 		m_trailRegistryId.resize(capacity);
 		m_particleId.resize(capacity);
@@ -10,9 +10,9 @@ namespace cft
 		m_particleColor.resize(capacity);
 		m_trailPoints.resize(capacity);
 
-		m_capacity = capacity;
-		m_reservedCapacity = std::min(m_reservedCapacity, m_capacity);
-		m_count = std::min(m_count, m_capacity);
+		m_storageCapacity = capacity;
+		m_reservedSlots = std::min(m_reservedSlots, m_storageCapacity);
+		m_count = std::min(m_count, m_storageCapacity);
 	}
 
 	TrailPool::TrailPool() :
@@ -21,8 +21,8 @@ namespace cft
 		m_particleDeathTime(),
 		m_particleColor(),
 		m_trailPoints(),
-		m_capacity(0),
-		m_reservedCapacity(0),
+		m_storageCapacity(0),
+		m_reservedSlots(0),
 		m_count(0)
 	{
 
@@ -83,12 +83,12 @@ namespace cft
 		return m_count;
 	}
 
-	void TrailPool::reserve(unsigned int capacity)
+	void TrailPool::reserveSlots(unsigned int slots)
 	{
-		if (static_cast<int>(m_capacity) - static_cast<int>(m_count) - static_cast<int>(m_reservedCapacity) < static_cast<int>(capacity))
-			resize(m_capacity + capacity);
+		if (static_cast<int>(m_storageCapacity) - static_cast<int>(m_count) - static_cast<int>(m_reservedSlots) < static_cast<int>(slots))
+			resizeStorage(m_storageCapacity + slots);
 
-		m_reservedCapacity += capacity;
+		m_reservedSlots += slots;
 	}
 
 	void TrailPool::insert(const Trail& trail)
@@ -101,7 +101,7 @@ namespace cft
 		m_particleColor[newIndex] = trail.particleColor;
 		m_trailPoints[newIndex] = trail.points;
 
-		--m_reservedCapacity;
+		--m_reservedSlots;
 	}
 
 	void TrailPool::remove(unsigned int index)

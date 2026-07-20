@@ -13,7 +13,7 @@ namespace cft
 {
 	struct ParticleRegistryEntry
 	{
-		int count;
+		unsigned int count;
 		unsigned int poolId;
 		unsigned int recursionDepth;
 		float periodicTriggerAccumulator;

@@ -8,7 +8,7 @@ namespace cft
 {
 	struct TrailRegistryEntry
 	{
-		int count;
+		unsigned int count;
 		TrailConfiguration trailConfiguration;
 	};
 

@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	void ParticlePool::resize(unsigned int capacity)
+	void ParticlePool::resizeStorage(unsigned int capacity)
 	{
 		m_color.resize(capacity);
 		m_position.resize(capacity);
@@ -19,9 +19,9 @@ namespace cft
 		m_id.resize(capacity);
 		m_particleRegistryId.resize(capacity);
 
-		m_capacity = capacity;
-		m_reservedCapacity = std::min(m_reservedCapacity, m_capacity);
-		m_count = std::min(m_count, m_capacity);
+		m_storageCapacity = capacity;
+		m_reservedSlots = std::min(m_reservedSlots, m_storageCapacity);
+		m_count = std::min(m_count, m_storageCapacity);
 	}
 
 	ParticlePool::ParticlePool() :
@@ -40,8 +40,8 @@ namespace cft
 		m_id(),
 		m_particleRegistryId(),
 		m_idIndexMapping(),
-		m_capacity(0),
-		m_reservedCapacity(0),
+		m_storageCapacity(0),
+		m_reservedSlots(0),
 		m_count(0)
 	{
 
@@ -201,13 +201,13 @@ namespace cft
 		return m_count;
 	}
 
-	void ParticlePool::reserve(unsigned int capacity)
+	void ParticlePool::reserveSlots(unsigned int slots)
 	{
-		if (static_cast<int>(m_capacity) - static_cast<int>(m_count) - static_cast<int>(m_reservedCapacity) < static_cast<int>(capacity))
-			resize(m_capacity + capacity);
+		if (static_cast<int>(m_storageCapacity) - static_cast<int>(m_count) - static_cast<int>(m_reservedSlots) < static_cast<int>(slots))
+			resizeStorage(m_storageCapacity + slots);
 
-		m_idIndexMapping.reserve(capacity);
-		m_reservedCapacity += capacity;
+		m_idIndexMapping.reserve(slots);
+		m_reservedSlots += slots;
 	}
 
 	void ParticlePool::insert(const Particle& particle)
@@ -231,7 +231,7 @@ namespace cft
 
 		m_idIndexMapping[particle.id] = newIndex;
 
-		--m_reservedCapacity;
+		--m_reservedSlots;
 	}
 
 	void ParticlePool::remove(unsigned int index)

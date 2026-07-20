@@ -27,11 +27,11 @@ namespace cft
 
 		std::unordered_map<unsigned int, unsigned int> m_idIndexMapping;
 
-		unsigned int m_capacity;
-		unsigned int m_reservedCapacity;
+		unsigned int m_storageCapacity;
+		unsigned int m_reservedSlots;
 		unsigned int m_count;
 
-		void resize(unsigned int capacity);
+		void resizeStorage(unsigned int capacity);
 
 	public:
 		ParticlePool();
@@ -69,7 +69,7 @@ namespace cft
 		std::optional<unsigned int> getIndex(unsigned int id) const;
 		unsigned int getCount() const;
 
-		void reserve(unsigned int capacity);
+		void reserveSlots(unsigned int slots);
 		void insert(const Particle& particle);
 		void remove(unsigned int index);
 	};

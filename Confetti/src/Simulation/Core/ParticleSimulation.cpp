@@ -42,10 +42,11 @@ namespace cft
 			particleEmitterInstance.inheritedMotionBehaviors.push_back(m_assetRegistry.getMotionBehavior(motionBehaviorId).clone());
 
 		unsigned int maximumParticleCount = particleEmitterInstance.emissionPattern->getMaximumSimultaneousParticleCount(particleEmitterInstance.particleSpawner->getMaxiumParticleLifetime());
-		m_particlePools[particleEmitterDescriptor.poolId].reserve(maximumParticleCount);
-		m_trailPools[particleEmitterDescriptor.poolId].reserve(maximumParticleCount);
-		// Reserve correct amount for m_ribbonPools
-		m_ribbonPools[particleEmitterDescriptor.poolId].reserve(maximumParticleCount * maximumParticleCount);
+		m_particlePools[particleEmitterDescriptor.poolId].reserveSlots(maximumParticleCount);
+		if (particleEmitterDescriptor.trailConfiguration.has_value())
+			m_trailPools[particleEmitterDescriptor.poolId].reserveSlots(maximumParticleCount);
+		if (particleEmitterDescriptor.ribbonConfiguration.has_value())
+			m_ribbonPools[particleEmitterDescriptor.poolId].reserveSlots(m_assetRegistry.getParticleLinker(particleEmitterDescriptor.ribbonConfiguration.value().particleConnectorId).getMaximumRibbonCount(maximumParticleCount));
 		
 		return particleEmitterInstance;
 	}

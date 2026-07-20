@@ -49,7 +49,7 @@ namespace cft
 
 					const ParticleRegistryEntry& particleRegistryEntry = m_particleRegistry.getEntry(particleEmitterInstance.particleRegistryId);
 					ParticlePool& particlePool = m_particlePools.at(particleRegistryEntry.poolId);
-					particlePool.reserve(particleSpawnCount);
+					particlePool.reserveSlots(particleSpawnCount);
 
 					bool spawnSpawnTrigger = false;
 					ParticleEmitterSpawnContext spawnParticleEmitterSpawnContext;
@@ -66,7 +66,7 @@ namespace cft
 					if (spawnTrails)
 					{
 						trailPool = &m_trailPools.at(particleRegistryEntry.poolId);
-						trailPool.value()->reserve(particleSpawnCount);
+						trailPool.value()->reserveSlots(particleSpawnCount);
 					}
 
 					for (Particle& particle : particles)

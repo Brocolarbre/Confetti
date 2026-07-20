@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	void RibbonPool::resize(unsigned int capacity)
+	void RibbonPool::resizeStorage(unsigned int capacity)
 	{
 		m_ribbonRegistryId.resize(capacity);
 		m_fromParticleId.resize(capacity);
@@ -10,9 +10,9 @@ namespace cft
 		m_spawnTime.resize(capacity);
 		m_ribbonPoints.resize(capacity);
 
-		m_capacity = capacity;
-		m_reservedCapacity = std::min(m_reservedCapacity, m_capacity);
-		m_count = std::min(m_count, m_capacity);
+		m_storageCapacity = capacity;
+		m_reservedSlots = std::min(m_reservedSlots, m_storageCapacity);
+		m_count = std::min(m_count, m_storageCapacity);
 	}
 
 	RibbonPool::RibbonPool() :
@@ -22,8 +22,8 @@ namespace cft
 		m_spawnTime(),
 		m_ribbonPoints(),
 		m_pointConnections(),
-		m_capacity(0),
-		m_reservedCapacity(0),
+		m_storageCapacity(0),
+		m_reservedSlots(0),
 		m_count(0)
 	{
 
@@ -89,12 +89,12 @@ namespace cft
 		return m_count;
 	}
 
-	void RibbonPool::reserve(unsigned int capacity)
+	void RibbonPool::reserveSlots(unsigned int slots)
 	{
-		if (static_cast<int>(m_capacity) - static_cast<int>(m_count) - static_cast<int>(m_reservedCapacity) < static_cast<int>(capacity))
-			resize(m_capacity + capacity);
+		if (static_cast<int>(m_storageCapacity) - static_cast<int>(m_count) - static_cast<int>(m_reservedSlots) < static_cast<int>(slots))
+			resizeStorage(m_storageCapacity + slots);
 
-		m_reservedCapacity += capacity;
+		m_reservedSlots += slots;
 	}
 
 	void RibbonPool::insert(const Ribbon& ribbon)
@@ -107,7 +107,7 @@ namespace cft
 		m_spawnTime[newIndex] = ribbon.spawnTime;
 		m_ribbonPoints[newIndex] = ribbon.points;
 
-		--m_reservedCapacity;
+		--m_reservedSlots;
 
 		m_pointConnections[ribbon.fromParticleId].insert(ribbon.toParticleId);
 	}

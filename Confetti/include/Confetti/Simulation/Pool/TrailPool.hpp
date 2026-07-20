@@ -11,13 +11,13 @@ namespace cft
 		std::vector<unsigned int> m_particleId;
 		std::vector<float> m_particleDeathTime;
 		std::vector<glm::vec4> m_particleColor;
-		std::vector<std::deque<PathPoint>> m_trailPoints; // Replace with ring buffer ?
+		std::vector<std::deque<PathPoint>> m_trailPoints;
 
-		unsigned int m_capacity;
-		unsigned int m_reservedCapacity;
+		unsigned int m_storageCapacity;
+		unsigned int m_reservedSlots;
 		unsigned int m_count;
 
-		void resize(unsigned int capacity);
+		void resizeStorage(unsigned int capacity);
 
 	public:
 		TrailPool();
@@ -36,7 +36,7 @@ namespace cft
 
 		unsigned int getCount() const;
 
-		void reserve(unsigned int capacity);
+		void reserveSlots(unsigned int slots);
 		void insert(const Trail& trail);
 		void remove(unsigned int index);
 	};

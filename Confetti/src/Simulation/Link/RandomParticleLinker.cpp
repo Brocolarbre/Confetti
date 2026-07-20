@@ -10,6 +10,11 @@ namespace cft
 
 	}
 
+	unsigned int RandomParticleLinker::getMaximumRibbonCount(unsigned int maximumParticleCount) const
+	{
+		return std::max(m_connectionsCount, (maximumParticleCount * 3));
+	}
+
 	unsigned int RandomParticleLinker::createRibbons(RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int ribbonRegistryId, float elapsedTime)
 	{
 		unsigned int poolCount = static_cast<unsigned int>(particlePool.getCount());

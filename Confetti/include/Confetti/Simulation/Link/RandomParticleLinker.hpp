@@ -15,6 +15,7 @@ namespace cft
 	public:
 		RandomParticleLinker(float maximumDistance, unsigned int connectionsCount, RandomNumberGenerator& randomNumberGenerator);
 
+		unsigned int getMaximumRibbonCount(unsigned int maximumParticleCount) const override;
 		unsigned int createRibbons(RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int ribbonRegistryId, float elapsedTime);
 		void updateRibbon(RibbonView& ribbon, const PathConfiguration& pathConfiguration, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle);
 		bool isRibbonValid(const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) const;

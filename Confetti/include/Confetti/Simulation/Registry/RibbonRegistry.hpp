@@ -10,7 +10,7 @@ namespace cft
 {
 	struct RibbonRegistryEntry
 	{
-		int count; // unsigned int ?
+		unsigned int count;
 		unsigned int poolId;
 		RibbonConfiguration ribbonConfiguration;
 		std::unique_ptr<ParticleLinker> particleConnector;
