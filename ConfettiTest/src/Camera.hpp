@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Confetti/Renderer/View.hpp>
+#include <Confetti/Rendering/View.hpp>
 
 class Camera
 {

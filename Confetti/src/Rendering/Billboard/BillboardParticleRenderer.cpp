@@ -1,0 +1,98 @@
+#include "Confetti/Rendering/Billboard/BillboardParticleRenderer.hpp"
+#include "Confetti/Rendering/ShaderSource/BillboardParticleShaderSource.hpp"
+
+#include <glad/glad.h>
+#include <iostream>
+
+namespace cft
+{
+	void BillboardParticleRenderer::loadSpriteSheets(AssetRegistry& assetRegistry)
+	{
+		m_spriteSheetIdToSpriteSheetSsboIndexMapping.clear();
+		const std::unordered_map<unsigned int, SpriteSheetDescriptor>& spriteSheetDescriptors = assetRegistry.getSpriteSheetDescriptors();
+
+		unsigned int spriteSheetCounter = 0;
+		std::vector<std::reference_wrapper<const SpriteSheetDescriptor>> spriteSheetData;
+		spriteSheetData.reserve(spriteSheetDescriptors.size());
+
+		for (const std::pair<unsigned int, SpriteSheetDescriptor>& spriteSheetDescriptor : spriteSheetDescriptors)
+		{
+			m_spriteSheetIdToSpriteSheetSsboIndexMapping[spriteSheetDescriptor.first] = spriteSheetCounter++;
+			spriteSheetData.push_back(std::ref(spriteSheetDescriptor.second));
+		}
+
+		m_spriteSheetSsbo.bind();
+		m_spriteSheetSsbo.setData(spriteSheetData);
+	}
+
+	BillboardParticleRenderer::BillboardParticleRenderer() :
+		m_imageIdToTextureIndex(),
+		m_spriteSheetIdToSpriteSheetSsboIndexMapping(),
+		m_textureArray(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE),
+		m_spriteSheetSsbo(),
+		m_particleSsbo(),
+		m_shader(),
+		m_mesh()
+	{
+		m_shader.loadFromMemory(std::string(BILLBOARD_PARTICLE_VERTEX_SHADER_SOURCE), std::string(BILLBOARD_PARTICLE_FRAGMENT_SHADER_SOURCE));
+		m_shader.use();
+		m_shader.setUniform("uTexture", 0);
+	}
+
+	void BillboardParticleRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
+	{
+		m_imageIdToTextureIndex.clear();
+
+		std::vector<std::vector<std::byte>> imageData;
+		imageData.reserve(imageIds.size());
+
+		for (unsigned int imageId : imageIds)
+		{
+			const Image& image = assetRegistry.getImage(imageId);
+			m_imageIdToTextureIndex[imageId] = static_cast<unsigned int>(imageData.size());
+			imageData.push_back(image.getData());
+
+			unsigned int imageWidth = image.getWidth();
+			unsigned int imageHeight = image.getHeight();
+
+			if (imageWidth != width || imageHeight != height)
+				std::cerr << "Particle renderer texture loading error : size mismatch for image at id " << imageId << " : " << imageWidth << "x" << imageHeight << " instead of " << width << "x" << height << std::endl;
+		}
+
+		std::vector<const void*> textureData;
+		textureData.reserve(imageData.size());
+
+		for (const std::vector<std::byte>& data : imageData)
+			textureData.push_back(data.data());
+
+		m_textureArray.load(textureData, width, height, GL_NEAREST, GL_CLAMP_TO_EDGE);
+
+		loadSpriteSheets(assetRegistry);
+	}
+
+	void BillboardParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
+	{
+		m_particleSsbo.bind();
+		m_particleSsbo.setData(particlePools, m_imageIdToTextureIndex, m_spriteSheetIdToSpriteSheetSsboIndexMapping, particleRegistry, assetRegistry);
+	}
+
+	void BillboardParticleRenderer::render(const View& view, float elapsedTime) const
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_FUNC_ADD);
+
+		TextureArray::setActiveSlot(0);
+		m_textureArray.bind();
+
+		m_spriteSheetSsbo.bind();
+		m_particleSsbo.bind();
+
+		m_shader.use();
+		m_shader.setUniform("uView", view.viewMatrix);
+		m_shader.setUniform("uProjection", view.projectionMatrix);
+		m_shader.setUniform("uTime", elapsedTime);
+
+		m_mesh.drawInstanced(m_particleSsbo.getParticleCount());
+	}
+}

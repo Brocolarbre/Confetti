@@ -1,0 +1,94 @@
+#include "Confetti/Rendering/ParticlePath/ParticlePathMesh.hpp"
+
+#include <glad/glad.h>
+
+namespace cft
+{
+	ParticlePathMesh::ParticlePathMesh() :
+		m_vertexArray(0),
+		m_vertexBuffer(0),
+		m_first(),
+		m_count()
+	{
+		glGenVertexArrays(1, &m_vertexArray);
+		glGenBuffers(1, &m_vertexBuffer);
+
+		glBindVertexArray(m_vertexArray);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position)));
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, color)));
+
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, textureCoordinates)));
+
+		glEnableVertexAttribArray(3);
+		glVertexAttribIPointer(3, 1, GL_INT, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, textureIndex)));
+
+		glBindVertexArray(0);
+	}
+
+	ParticlePathMesh::ParticlePathMesh(ParticlePathMesh&& particlePathMesh) noexcept :
+		m_vertexArray(particlePathMesh.m_vertexArray),
+		m_vertexBuffer(particlePathMesh.m_vertexBuffer),
+		m_first(std::move(particlePathMesh.m_first)),
+		m_count(std::move(particlePathMesh.m_count))
+	{
+		particlePathMesh.m_vertexArray = 0;
+		particlePathMesh.m_vertexBuffer = 0;
+	}
+
+	ParticlePathMesh::~ParticlePathMesh()
+	{
+		if (m_vertexArray != 0)
+			glDeleteVertexArrays(1, &m_vertexArray);
+
+		if (m_vertexBuffer != 0)
+			glDeleteBuffers(1, &m_vertexBuffer);
+	}
+
+	ParticlePathMesh& ParticlePathMesh::operator=(ParticlePathMesh&& particlePathMesh) noexcept
+	{
+		if (&particlePathMesh == this)
+			return *this;
+
+		if (m_vertexArray != 0)
+			glDeleteVertexArrays(1, &m_vertexArray);
+
+		if (m_vertexBuffer != 0)
+			glDeleteBuffers(1, &m_vertexBuffer);
+
+		m_vertexArray = particlePathMesh.m_vertexArray;
+		m_vertexBuffer = particlePathMesh.m_vertexBuffer;
+		m_first = std::move(particlePathMesh.m_first);
+		m_count = std::move(particlePathMesh.m_count);
+
+		particlePathMesh.m_vertexArray = 0;
+		particlePathMesh.m_vertexBuffer = 0;
+
+		return *this;
+	}
+
+	void ParticlePathMesh::setVertexData(const std::vector<Vertex>& vertexData, std::vector<int> first, std::vector<int> count)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(Vertex), vertexData.data(), GL_STREAM_DRAW);
+
+		m_first = std::move(first);
+		m_count = std::move(count);
+	}
+
+	void ParticlePathMesh::multiDrawArrays() const
+	{
+		if (m_first.empty())
+			return;
+
+		glDisable(GL_CULL_FACE);
+		glBindVertexArray(m_vertexArray);
+		glMultiDrawArrays(GL_TRIANGLE_STRIP, m_first.data(), m_count.data(), static_cast<int>(m_first.size()));
+		glEnable(GL_CULL_FACE);
+	}
+}

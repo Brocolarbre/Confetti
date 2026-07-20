@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Confetti/Renderer/Tools/Shader.hpp>
+#include <Confetti/Rendering/Tool/Shader.hpp>
 
 class RenderContext
 {

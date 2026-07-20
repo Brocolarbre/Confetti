@@ -3,8 +3,8 @@
 #include "Camera.hpp"
 #include "RenderContext.hpp"
 
-#include <Confetti/ParticleSimulation/ParticleSimulation.hpp>
-#include <Confetti/Renderer/ParticleRenderer.hpp>
+#include <Confetti/Simulation/Core/ParticleSimulation.hpp>
+#include <Confetti/Rendering/ParticleRenderer.hpp>
 #include <Krono/Krono.hpp>
 #include <Windove/Window.hpp>
 

@@ -9,6 +9,7 @@ Code cleanup :
 - Use export macro CONFETTI_EXPORT across the entire engine API
 - Folder structure
 - Organize ParticleSimulation.cpp (ex: TrailUpdater)
+- Check comments
 
 Features :
 - Ribbon particle
