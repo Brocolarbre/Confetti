@@ -36,7 +36,7 @@ namespace cft
 						{
 							float distanceOnTrail = 0.0f;
 							if (!trailPoints[i].empty())
-								distanceOnTrail = trailPoints[i].back().distanceOnTrail + glm::distance(trailPoints[i].back().position, particlePosition);
+								distanceOnTrail = trailPoints[i].back().distanceOnPath + glm::distance(trailPoints[i].back().position, particlePosition);
 
 							trailPoints[i].push_back(PathPoint{ glm::vec4(1.0f), particlePosition, 1.0f, distanceOnTrail, elapsedTime });
 

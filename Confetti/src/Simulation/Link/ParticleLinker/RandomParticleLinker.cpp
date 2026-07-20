@@ -15,7 +15,7 @@ namespace cft
 		return std::max(m_connectionsCount, (maximumParticleCount * 3));
 	}
 
-	unsigned int RandomParticleLinker::createRibbons(RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int ribbonRegistryId, float elapsedTime)
+	unsigned int RandomParticleLinker::createRibbons(unsigned int ribbonPointCount, RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int ribbonRegistryId, float elapsedTime)
 	{
 		unsigned int poolCount = static_cast<unsigned int>(particlePool.getCount());
 		unsigned int createdRibbonsCount = 0;
@@ -34,7 +34,7 @@ namespace cft
 			{
 				if (pointConnections.size() < 3 && ribbonPool.getPointConnections(particleId[randomIndexTo]).size() < 3)
 				{
-					ribbonPool.insert(Ribbon{ ribbonRegistryId, particleId[randomIndexFrom], particleId[randomIndexTo], elapsedTime, std::deque<PathPoint>(5, PathPoint{ {}, {}, {}, {}, elapsedTime }) });
+					ribbonPool.insert(Ribbon{ ribbonRegistryId, particleId[randomIndexFrom], particleId[randomIndexTo], elapsedTime, std::deque<PathPoint>(glm::max(ribbonPointCount, 2u), PathPoint{ {}, {}, {}, {}, elapsedTime }) });
 					++createdRibbonsCount;
 				}
 			}

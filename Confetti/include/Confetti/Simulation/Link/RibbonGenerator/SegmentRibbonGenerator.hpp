@@ -6,7 +6,7 @@ namespace cft
 {
 	class SegmentRibbonGenerator : public Cloneable<SegmentRibbonGenerator, RibbonGenerator>
 	{
-	public:
-		void updateRibbon(RibbonView& ribbon, const PathConfiguration& pathConfiguration, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) override;
+	private:
+		glm::vec3 generateRibbonPoint(float t, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) const;
 	};
 }

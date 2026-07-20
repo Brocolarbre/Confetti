@@ -39,7 +39,7 @@ namespace cft
 				if (pathConfiguration.colorStart.has_value())
 				{
 					const std::vector<float>& colorStart = pathConfiguration.colorStart.value();
-					float distanceFromHead = path.back().distanceOnTrail - path[pointIndex].distanceOnTrail;
+					float distanceFromHead = path.back().distanceOnPath - path[pointIndex].distanceOnPath;
 
 					size_t count = std::min(colorGradient.size(), colorStart.size());
 					unsigned int colorIndex = colorGradientSize - 1;
@@ -66,7 +66,7 @@ namespace cft
 				if (pathConfiguration.colorStart.has_value())
 				{
 					const std::vector<float>& colorStart = pathConfiguration.colorStart.value();
-					float distanceFromHead = path.back().distanceOnTrail - path[pointIndex].distanceOnTrail;
+					float distanceFromHead = path.back().distanceOnPath - path[pointIndex].distanceOnPath;
 
 					size_t intervalCount = std::min(colorStart.size(), colorGradient.size() > 0 ? colorGradient.size() - 1 : 0);
 					if (intervalCount == 0)

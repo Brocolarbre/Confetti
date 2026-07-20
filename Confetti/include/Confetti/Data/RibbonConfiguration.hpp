@@ -9,5 +9,6 @@ namespace cft
 		PathConfiguration pathConfiguration;
 		unsigned int particleLinkerId;
 		unsigned int ribbonGeneratorId;
+		unsigned int ribbonPointCount;
 	};
 }

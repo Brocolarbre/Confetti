@@ -10,7 +10,7 @@ namespace cft
 	template <typename T>
 	class AttributeGenerator
 	{
-	protected:
+	private:
 		virtual T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const = 0;
 
 	public:

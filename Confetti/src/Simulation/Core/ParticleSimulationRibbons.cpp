@@ -7,7 +7,7 @@ namespace cft
 	{
 		for (auto& [ribbonRegistryId, ribbonRegistryEntry] : m_ribbonRegistry.getEntries())
 		{
-			unsigned int createdRibbonsCount = ribbonRegistryEntry.particleLinker->createRibbons(m_ribbonPools[ribbonRegistryEntry.poolId], m_particlePools[ribbonRegistryEntry.poolId], ribbonRegistryId, elapsedTime);
+			unsigned int createdRibbonsCount = ribbonRegistryEntry.particleLinker->createRibbons(ribbonRegistryEntry.ribbonConfiguration.ribbonPointCount, m_ribbonPools[ribbonRegistryEntry.poolId], m_particlePools[ribbonRegistryEntry.poolId], ribbonRegistryId, elapsedTime);
 			m_ribbonRegistry.addReferenceCount(ribbonRegistryId, createdRibbonsCount);
 		}
 
@@ -68,8 +68,25 @@ namespace cft
 						if (ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.appendParticleColor)
 							colorGradient.push_back(toParticle.color);
 
-						ribbonRegistryEntry.ribbonGenerator->updateRibbon(RibbonView{ ribbonRegistryId[i], fromParticleId[i], toParticleId[i], spawnTime[i], ribbonPoints[i] }, ribbonRegistryEntry.ribbonConfiguration.pathConfiguration, fromParticle, toParticle);
-						ParticleSimulationPath::update(ribbonPoints[i], ribbonRegistryEntry.ribbonConfiguration.pathConfiguration, colorGradient, elapsedTime);
+						std::deque<PathPoint>& ribbon = ribbonPoints[i];
+
+						if (ribbon.size() >= 2)
+						{
+							ribbon.front().position = fromParticle.postBehaviorPosition;
+							ribbon.back().position = toParticle.postBehaviorPosition;
+						}
+
+						std::vector<glm::vec3> ribbonPointPositions = ribbonRegistryEntry.ribbonGenerator->generateRibbon(glm::max(static_cast<int>(ribbonRegistryEntry.ribbonConfiguration.ribbonPointCount) - 2, 0), fromParticle, toParticle);
+
+						float accumulatedDistance = 0.0f;
+						glm::vec3 previousPointPosition = ribbon.front().position;
+						for (unsigned int pathPointIndex = 1; pathPointIndex < ribbon.size() - 1; ++pathPointIndex)
+						{
+							ribbon[pathPointIndex].position = ribbonPointPositions[static_cast<size_t>(pathPointIndex) - 1];
+							ribbon[pathPointIndex].distanceOnPath = glm::distance(previousPointPosition, ribbon[pathPointIndex].position);
+						}
+						
+						ParticleSimulationPath::update(ribbon, ribbonRegistryEntry.ribbonConfiguration.pathConfiguration, colorGradient, elapsedTime);
 
 						++i;
 					}

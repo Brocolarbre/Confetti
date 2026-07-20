@@ -14,13 +14,4 @@ namespace cft
 		float spawnTime;
 		std::deque<PathPoint> points;
 	};
-
-	struct RibbonView
-	{
-		const unsigned int& ribbonRegistryId;
-		const unsigned int& fromParticleId;
-		const unsigned int& toParticleId;
-		const float& spawnTime;
-		std::deque<PathPoint>& points;
-	};
 }

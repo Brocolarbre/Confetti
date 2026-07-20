@@ -9,7 +9,7 @@ namespace cft
 		glm::vec4 color;
 		glm::vec3 position;
 		float thickness;
-		float distanceOnTrail;
+		float distanceOnPath;
 		float spawnTime;
 	};
 }
