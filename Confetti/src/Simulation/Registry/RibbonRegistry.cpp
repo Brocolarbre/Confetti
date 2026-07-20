@@ -30,10 +30,10 @@ namespace cft
 		m_nextId = 0;
 	}
 
-	unsigned int RibbonRegistry::createEntry(unsigned int poolId, const RibbonConfiguration& ribbonConfiguration, std::unique_ptr<ParticleLinker> particleLinker)
+	unsigned int RibbonRegistry::createEntry(unsigned int poolId, const RibbonConfiguration& ribbonConfiguration, std::unique_ptr<ParticleLinker> particleLinker, std::unique_ptr<RibbonGenerator> ribbonGenerator)
 	{
 		unsigned int id = m_nextId++;
-		m_entries.insert({ id, RibbonRegistryEntry{ 0, poolId, ribbonConfiguration, std::move(particleLinker) } });
+		m_entries.insert({ id, RibbonRegistryEntry{ 0, poolId, ribbonConfiguration, std::move(particleLinker), std::move(ribbonGenerator) }});
 
 		return id;
 	}

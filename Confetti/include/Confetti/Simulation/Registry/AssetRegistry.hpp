@@ -9,7 +9,8 @@
 #include "Confetti/Data/ParticleEmitterDescriptor.hpp"
 #include "Confetti/Data/SpriteSheetDescriptor.hpp"
 #include "Confetti/Behavior/Visual/VisualBehavior.hpp"
-#include "Confetti/Simulation/Link/ParticleLinker.hpp"
+#include "Confetti/Simulation/Link/ParticleLinker/ParticleLinker.hpp"
+#include "Confetti/Simulation/Link/RibbonGenerator/RibbonGenerator.hpp"
 #include "Confetti/Emission/ParticleSpawner.hpp"
 
 #include <unordered_map>
@@ -25,6 +26,7 @@ namespace cft
 		std::unordered_map<unsigned int, std::unique_ptr<ParticleSpawner>> m_particleSpawners;
 		std::unordered_map<unsigned int, std::unique_ptr<EmissionPattern>> m_emissionPatterns;
 		std::unordered_map<unsigned int, std::unique_ptr<ParticleLinker>> m_particleLinkers;
+		std::unordered_map<unsigned int, std::unique_ptr<RibbonGenerator>> m_ribbonGenerators;
 		std::unordered_map<unsigned int, Image> m_images;
 		std::unordered_map<unsigned int, Model> m_models;
 		std::unordered_map<unsigned int, SpriteSheetDescriptor> m_spriteSheetDescriptors;
@@ -38,6 +40,7 @@ namespace cft
 		void addParticleSpawner(unsigned int id, std::unique_ptr<ParticleSpawner> particleSpawner);
 		void addEmissionPattern(unsigned int id, std::unique_ptr<EmissionPattern> emissionPattern);
 		void addParticleLinker(unsigned int id, std::unique_ptr<ParticleLinker> particleLinker);
+		void addRibbonGenerator(unsigned int id, std::unique_ptr<RibbonGenerator> ribbonGenerator);
 		void addImage(unsigned int id, Image image);
 		void addModel(unsigned int id, Model model);
 		void addSpriteSheetDescriptor(unsigned int id, SpriteSheetDescriptor spriteSheetDescriptor);
@@ -50,6 +53,7 @@ namespace cft
 		void removeParticleSpawner(unsigned int id);
 		void removeEmissionPattern(unsigned int id);
 		void removeParticleLinker(unsigned int id);
+		void removeRibbonGenerator(unsigned int id);
 		void removeImage(unsigned int id);
 		void removeModel(unsigned int id);
 		void removeSpriteSheetDescriptor(unsigned int id);
@@ -62,6 +66,7 @@ namespace cft
 		const ParticleSpawner& getParticleSpawner(unsigned int id) const;
 		const EmissionPattern& getEmissionPattern(unsigned int id) const;
 		const ParticleLinker& getParticleLinker(unsigned int id) const;
+		const RibbonGenerator& getRibbonGenerator(unsigned int id) const;
 		const Image& getImage(unsigned int id) const;
 		const Model& getModel(unsigned int id) const;
 		const SpriteSheetDescriptor& getSpriteSheetDescriptor(unsigned int id) const;
@@ -74,6 +79,7 @@ namespace cft
 		ParticleSpawner& getParticleSpawner(unsigned int id);
 		EmissionPattern& getEmissionPattern(unsigned int id);
 		ParticleLinker& getParticleLinker(unsigned int id);
+		RibbonGenerator& getRibbonGenerator(unsigned int id);
 		Image& getImage(unsigned int id);
 		Model& getModel(unsigned int id);
 		SpriteSheetDescriptor& getSpriteSheetDescriptor(unsigned int id);
@@ -86,6 +92,7 @@ namespace cft
 		const std::unordered_map<unsigned int, std::unique_ptr<ParticleSpawner>>& getParticleSpawners() const;
 		const std::unordered_map<unsigned int, std::unique_ptr<EmissionPattern>>& getEmissionPatterns() const;
 		const std::unordered_map<unsigned int, std::unique_ptr<ParticleLinker>>& getParticleLinkers() const;
+		const std::unordered_map<unsigned int, std::unique_ptr<RibbonGenerator>>& getRibbonGenerators() const;
 		const std::unordered_map<unsigned int, Image>& getImages() const;
 		const std::unordered_map<unsigned int, Model>& getModels() const;
 		const std::unordered_map<unsigned int, SpriteSheetDescriptor>& getSpriteSheetDescriptors() const;

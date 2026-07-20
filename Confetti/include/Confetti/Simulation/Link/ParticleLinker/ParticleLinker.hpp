@@ -18,7 +18,6 @@ namespace cft
 
 		virtual unsigned int getMaximumRibbonCount(unsigned int maximumParticleCount) const = 0;
 		virtual unsigned int createRibbons(RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int ribbonRegistryId, float elapsedTime) = 0;
-		virtual void updateRibbon(RibbonView& ribbon, const PathConfiguration& pathConfiguration, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) = 0;
 		virtual bool isRibbonValid(const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) const = 0;
 	};
 }

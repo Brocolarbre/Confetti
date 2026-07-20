@@ -32,6 +32,11 @@ namespace cft
 		m_particleLinkers[id] = std::move(particleLinker);
 	}
 
+	void AssetRegistry::addRibbonGenerator(unsigned int id, std::unique_ptr<RibbonGenerator> ribbonGenerator)
+	{
+		m_ribbonGenerators[id] = std::move(ribbonGenerator);
+	}
+
 	void AssetRegistry::addImage(unsigned int id, Image image)
 	{
 		m_images[id] = std::move(image);
@@ -85,6 +90,11 @@ namespace cft
 	void AssetRegistry::removeParticleLinker(unsigned int id)
 	{
 		m_particleLinkers.erase(id);
+	}
+
+	void AssetRegistry::removeRibbonGenerator(unsigned int id)
+	{
+		m_ribbonGenerators.erase(id);
 	}
 
 	void AssetRegistry::removeImage(unsigned int id)
@@ -142,6 +152,11 @@ namespace cft
 		return *m_particleLinkers.at(id);
 	}
 
+	const RibbonGenerator& AssetRegistry::getRibbonGenerator(unsigned int id) const
+	{
+		return *m_ribbonGenerators.at(id);
+	}
+
 	const Image& AssetRegistry::getImage(unsigned int id) const
 	{
 		return m_images.at(id);
@@ -197,6 +212,11 @@ namespace cft
 		return *m_particleLinkers.at(id);
 	}
 
+	RibbonGenerator& AssetRegistry::getRibbonGenerator(unsigned int id)
+	{
+		return *m_ribbonGenerators.at(id);
+	}
+
 	Image& AssetRegistry::getImage(unsigned int id)
 	{
 		return m_images.at(id);
@@ -250,6 +270,11 @@ namespace cft
 	const std::unordered_map<unsigned int, std::unique_ptr<ParticleLinker>>& AssetRegistry::getParticleLinkers() const
 	{
 		return m_particleLinkers;
+	}
+
+	const std::unordered_map<unsigned int, std::unique_ptr<RibbonGenerator>>& AssetRegistry::getRibbonGenerators() const
+	{
+		return m_ribbonGenerators;
 	}
 
 	const std::unordered_map<unsigned int, Image>& AssetRegistry::getImages() const

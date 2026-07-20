@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Confetti/Data/RibbonConfiguration.hpp"
-#include "Confetti/Simulation/Link/ParticleLinker.hpp"
+#include "Confetti/Simulation/Link/ParticleLinker/ParticleLinker.hpp"
+#include "Confetti/Simulation/Link/RibbonGenerator/RibbonGenerator.hpp"
 
 #include <memory>
 #include <unordered_map>
@@ -13,7 +14,8 @@ namespace cft
 		unsigned int count;
 		unsigned int poolId;
 		RibbonConfiguration ribbonConfiguration;
-		std::unique_ptr<ParticleLinker> particleConnector;
+		std::unique_ptr<ParticleLinker> particleLinker;
+		std::unique_ptr<RibbonGenerator> ribbonGenerator;
 	};
 
 	class RibbonRegistry
@@ -32,7 +34,7 @@ namespace cft
 
 		void clear();
 
-		unsigned int createEntry(unsigned int poolId, const RibbonConfiguration& ribbonConfiguration, std::unique_ptr<ParticleLinker> particleLinker);
+		unsigned int createEntry(unsigned int poolId, const RibbonConfiguration& ribbonConfiguration, std::unique_ptr<ParticleLinker> particleLinker, std::unique_ptr<RibbonGenerator> ribbonGenerator);
 		void addReferenceCount(unsigned int id, int referenceCount);
 	};
 }

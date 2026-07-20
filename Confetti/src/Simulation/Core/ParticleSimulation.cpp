@@ -29,7 +29,7 @@ namespace cft
 		particleEmitterInstance.postBehaviorPosition = glm::vec3(0.0f);
 		particleEmitterInstance.particleRegistryId = m_particleRegistry.createEntry(particleEmitterDescriptor.poolId, recursionDepth, particleEmitterDescriptor.spawnTriggerDescriptor, particleEmitterDescriptor.renderConfiguration, std::move(forceFields), std::move(motionBehaviors), std::move(visualBehaviors));
 		particleEmitterInstance.trailRegistryId = particleEmitterDescriptor.trailConfiguration.has_value() ? std::make_optional<unsigned int>(m_trailRegistry.createEntry(particleEmitterDescriptor.trailConfiguration.value())) : std::nullopt;
-		particleEmitterInstance.ribbonRegistryId = particleEmitterDescriptor.ribbonConfiguration.has_value() ? std::make_optional<unsigned int>(m_ribbonRegistry.createEntry(particleEmitterDescriptor.poolId, particleEmitterDescriptor.ribbonConfiguration.value(), m_assetRegistry.getParticleLinker(particleEmitterDescriptor.ribbonConfiguration.value().particleConnectorId).clone())) : std::nullopt;
+		particleEmitterInstance.ribbonRegistryId = particleEmitterDescriptor.ribbonConfiguration.has_value() ? std::make_optional<unsigned int>(m_ribbonRegistry.createEntry(particleEmitterDescriptor.poolId, particleEmitterDescriptor.ribbonConfiguration.value(), m_assetRegistry.getParticleLinker(particleEmitterDescriptor.ribbonConfiguration.value().particleLinkerId).clone(), m_assetRegistry.getRibbonGenerator(particleEmitterDescriptor.ribbonConfiguration.value().ribbonGeneratorId).clone())) : std::nullopt;
 		particleEmitterInstance.particleSpawner = m_assetRegistry.getParticleSpawner(particleEmitterDescriptor.particleSpawnerId).clone();
 		particleEmitterInstance.emissionPattern = m_assetRegistry.getEmissionPattern(particleEmitterDescriptor.emissionPatternId).clone();
 
@@ -46,7 +46,7 @@ namespace cft
 		if (particleEmitterDescriptor.trailConfiguration.has_value())
 			m_trailPools[particleEmitterDescriptor.poolId].reserveSlots(maximumParticleCount);
 		if (particleEmitterDescriptor.ribbonConfiguration.has_value())
-			m_ribbonPools[particleEmitterDescriptor.poolId].reserveSlots(m_assetRegistry.getParticleLinker(particleEmitterDescriptor.ribbonConfiguration.value().particleConnectorId).getMaximumRibbonCount(maximumParticleCount));
+			m_ribbonPools[particleEmitterDescriptor.poolId].reserveSlots(m_assetRegistry.getParticleLinker(particleEmitterDescriptor.ribbonConfiguration.value().particleLinkerId).getMaximumRibbonCount(maximumParticleCount));
 		
 		return particleEmitterInstance;
 	}
