@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Confetti/Data/PathConfiguration.hpp"
-#include "Confetti/Simulation/Core/PathPoint.hpp"
+#include "Confetti/Simulation/Pool/PathPoint.hpp"
 
 #include <deque>
 

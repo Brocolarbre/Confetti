@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Confetti/Simulation/Core/Particle.hpp"
-#include "Confetti/Simulation/Core/Ribbon.hpp"
+#include "Confetti/Simulation/Pool/ParticlePool.hpp"
+#include "Confetti/Simulation/Pool/RibbonPool.hpp"
 #include "Confetti/Data/RibbonConfiguration.hpp"
 #include "Confetti/Tool/Cloneable.hpp"
 

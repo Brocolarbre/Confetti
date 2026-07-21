@@ -1,12 +1,22 @@
 #pragma once
 
-#include "Confetti/Simulation/Core/Ribbon.hpp"
+#include "PathPoint.hpp"
 
+#include <deque>
 #include <unordered_set>
 #include <vector>
 
 namespace cft
 {
+	struct Ribbon
+	{
+		unsigned int ribbonRegistryId;
+		unsigned int fromParticleId;
+		unsigned int toParticleId;
+		float spawnTime;
+		std::deque<PathPoint> points;
+	};
+
 	class RibbonPool
 	{
 	private:
@@ -39,7 +49,8 @@ namespace cft
 		std::vector<float>& getSpawnTime();
 		std::vector<std::deque<PathPoint>>& getRibbonPoints();
 
-		std::unordered_set<unsigned int>& getPointConnections(unsigned int particleId);
+		bool hasPointConnections(unsigned int particleId) const;
+		const std::unordered_set<unsigned int>& getPointConnections(unsigned int particleId) const;
 		unsigned int getCount() const;
 
 		void reserveSlots(unsigned int slots);

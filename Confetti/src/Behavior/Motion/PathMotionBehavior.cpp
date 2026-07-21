@@ -22,8 +22,8 @@ namespace cft
 
 	glm::vec3 PathMotionBehavior::evaluate(float age, const MotionState& motionState)
 	{
-		float t = m_easing ? m_easing->operator()(age * m_speed) : age * m_speed;
-		lw::Point point = m_interpolator->operator()(m_path, t);
+		float t = m_easing ? (*m_easing)(age * m_speed) : age * m_speed;
+		lw::Point point = (*m_interpolator)(m_path, t);
 		return glm::vec3(point.x, point.y, point.z);
 	}
 }

@@ -265,4 +265,14 @@ namespace cft
 
 		--m_count;
 	}
+
+	ParticleView ParticlePool::getParticleView(unsigned int index)
+	{
+		return ParticleView{ m_color[index], m_position[index], m_rotation[index], m_scale[index], m_linearVelocity[index], m_angularVelocity[index], m_initialColor[index], m_initialScale[index], m_postBehaviorPosition[index], m_phase[index], m_lifetime[index], m_spawnTime[index], m_id[index], m_particleRegistryId[index] };
+	}
+
+	ConstantParticleView ParticlePool::getParticleView(unsigned int index) const
+	{
+		return ConstantParticleView{ m_color[index], m_position[index], m_rotation[index], m_scale[index], m_linearVelocity[index], m_angularVelocity[index], m_initialColor[index], m_initialScale[index], m_postBehaviorPosition[index], m_phase[index], m_lifetime[index], m_spawnTime[index], m_id[index], m_particleRegistryId[index] };
+	}
 }

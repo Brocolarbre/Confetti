@@ -42,6 +42,8 @@
 #include <Confetti/Emission/SpawnShape/DiskSpawnShape.hpp>
 #include <Confetti/Emission/SpawnShape/SphereSpawnShape.hpp>
 #include <Confetti/Emission/SpawnShape/SphereVolumeSpawnShape.hpp>
+#include <Confetti/Simulation/Link/LinkRule/ConnectionLinkRule.hpp>
+#include <Confetti/Simulation/Link/LinkRule/DistanceLinkRule.hpp>
 #include <Confetti/Simulation/Link/ParticleLinker/RandomParticleLinker.hpp>
 #include <Confetti/Simulation/Link/RibbonGenerator/SegmentRibbonGenerator.hpp>
 #include <LineWeaver/Easing/EaseInQuadratic.hpp>
@@ -238,7 +240,14 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
     m_assetRegistry.addEmissionPattern(1, std::make_unique<cft::SingleBurstEmissionPattern>(15));
     m_assetRegistry.addEmissionPattern(2, std::make_unique<cft::SingleBurstEmissionPattern>(8));
 
-    m_assetRegistry.addParticleLinker(0, std::make_unique<cft::RandomParticleLinker>(12.0f, 7, m_randomNumberGenerator));
+    std::vector<std::unique_ptr<cft::LinkRule>> connectionRules;
+    connectionRules.push_back(std::make_unique<cft::ConnectionLinkRule>(3));
+    connectionRules.push_back(std::make_unique<cft::DistanceLinkRule>(0.0f, 12.0f));
+
+    std::vector<std::unique_ptr<cft::LinkRule>> validationRules;
+    validationRules.push_back(std::make_unique<cft::DistanceLinkRule>(0.0f, 14.0f));
+
+    m_assetRegistry.addParticleLinker(0, std::make_unique<cft::RandomParticleLinker>(std::move(connectionRules), std::move(validationRules), 7, m_randomNumberGenerator));
 
     m_assetRegistry.addRibbonGenerator(0, std::make_unique<cft::SegmentRibbonGenerator>());
 

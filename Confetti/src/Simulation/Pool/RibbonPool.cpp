@@ -79,9 +79,14 @@ namespace cft
 		return m_ribbonPoints;
 	}
 
-	std::unordered_set<unsigned int>& RibbonPool::getPointConnections(unsigned int particleId)
+	bool RibbonPool::hasPointConnections(unsigned int particleId) const
 	{
-		return m_pointConnections[particleId];
+		return m_pointConnections.find(particleId) != m_pointConnections.end();
+	}
+
+	const std::unordered_set<unsigned int>& RibbonPool::getPointConnections(unsigned int particleId) const
+	{
+		return m_pointConnections.at(particleId);
 	}
 
 	unsigned int RibbonPool::getCount() const

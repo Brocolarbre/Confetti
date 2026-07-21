@@ -1,12 +1,66 @@
 #pragma once
 
-#include "Confetti/Simulation/Core/Particle.hpp"
-
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <optional>
 #include <vector>
 
 namespace cft
 {
+	struct Particle
+	{
+		glm::vec4 color;
+		glm::vec3 position;
+		glm::quat rotation;
+		glm::vec3 scale;
+		glm::vec3 linearVelocity;
+		glm::vec3 angularVelocity;
+		glm::vec4 initialColor;
+		glm::vec3 initialScale;
+		glm::vec3 postBehaviorPosition;
+		float phase;
+		float lifetime;
+		float spawnTime;
+		unsigned int id;
+		unsigned int particleRegistryId;
+	};
+
+	struct ParticleView
+	{
+		glm::vec4& color;
+		const glm::vec3& position;
+		const glm::quat& rotation;
+		glm::vec3& scale;
+		const glm::vec3& linearVelocity;
+		const glm::vec3& angularVelocity;
+		const glm::vec4& initialColor;
+		const glm::vec3& initialScale;
+		const glm::vec3& postBehaviorPosition;
+		const float& phase;
+		const float& lifetime;
+		const float& spawnTime;
+		const unsigned int& id;
+		const unsigned int& particleRegistryId;
+	};
+
+	struct ConstantParticleView
+	{
+		const glm::vec4& color;
+		const glm::vec3& position;
+		const glm::quat& rotation;
+		const glm::vec3& scale;
+		const glm::vec3& linearVelocity;
+		const glm::vec3& angularVelocity;
+		const glm::vec4& initialColor;
+		const glm::vec3& initialScale;
+		const glm::vec3& postBehaviorPosition;
+		const float& phase;
+		const float& lifetime;
+		const float& spawnTime;
+		const unsigned int& id;
+		const unsigned int& particleRegistryId;
+	};
+
 	class ParticlePool
 	{
 	private:
@@ -72,5 +126,8 @@ namespace cft
 		void reserveSlots(unsigned int slots);
 		void insert(const Particle& particle);
 		void remove(unsigned int index);
+
+		ParticleView getParticleView(unsigned int index);
+		ConstantParticleView getParticleView(unsigned int index) const;
 	};
 }

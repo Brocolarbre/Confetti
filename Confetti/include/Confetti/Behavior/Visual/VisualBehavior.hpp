@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Confetti/Simulation/Core/Particle.hpp"
+#include "Confetti/Simulation/Pool/ParticlePool.hpp"
 #include "Confetti/Tool/Cloneable.hpp"
 
 namespace cft

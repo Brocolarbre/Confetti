@@ -2,7 +2,6 @@
 
 #include "ParticleEffectInstance.hpp"
 #include "ParticleEmitterInstance.hpp"
-#include "PathPoint.hpp"
 #include "Confetti/Simulation/Pool/ParticlePool.hpp"
 #include "Confetti/Simulation/Pool/RibbonPool.hpp"
 #include "Confetti/Simulation/Pool/TrailPool.hpp"

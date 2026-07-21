@@ -2,7 +2,7 @@
 
 #include "AttributeGenerator/AttributeGenerator.hpp"
 #include "AttributeGenerator/AttributeTypes.hpp"
-#include "Confetti/Simulation/Core/Particle.hpp"
+#include "Confetti/Simulation/Pool/ParticlePool.hpp"
 #include "SpawnShape/SpawnShape.hpp"
 
 #include <memory>

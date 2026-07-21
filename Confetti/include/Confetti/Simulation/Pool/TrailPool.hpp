@@ -1,9 +1,20 @@
 #pragma once
 
-#include "Confetti/Simulation/Core/Trail.hpp"
+#include "PathPoint.hpp"
+
+#include <deque>
 
 namespace cft
 {
+	struct Trail
+	{
+		unsigned int trailRegistryId;
+		unsigned int particleId;
+		float particleDeathTime;
+		glm::vec4 particleColor;
+		std::deque<PathPoint> points;
+	};
+
 	class TrailPool
 	{
 	private:
