@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	std::vector<glm::vec3> RibbonGenerator::generateRibbon(unsigned int pointCount, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) const
+	std::vector<glm::vec3> RibbonGenerator::generateRibbon(unsigned int pointCount, float elapsedTime, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) const
 	{
 		std::vector<glm::vec3> points;
 		points.reserve(pointCount);
@@ -12,7 +12,7 @@ namespace cft
 		for (unsigned int i = 0; i < pointCount; ++i)
 		{
 			float t = static_cast<float>(i) / segmentCount;
-			points.push_back(generateRibbonPoint(t, fromParticle, toParticle));
+			points.push_back(generateRibbonPoint(t, elapsedTime, fromParticle, toParticle));
 		}
 
 		return points;

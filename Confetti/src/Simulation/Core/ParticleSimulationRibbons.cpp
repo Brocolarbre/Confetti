@@ -76,7 +76,7 @@ namespace cft
 							ribbon.back().position = toParticle.postBehaviorPosition;
 						}
 
-						std::vector<glm::vec3> ribbonPointPositions = ribbonRegistryEntry.ribbonGenerator->generateRibbon(glm::max(static_cast<int>(ribbonRegistryEntry.ribbonConfiguration.ribbonPointCount) - 2, 0), fromParticle, toParticle);
+						std::vector<glm::vec3> ribbonPointPositions = ribbonRegistryEntry.ribbonGenerator->generateRibbon(glm::max(static_cast<int>(ribbonRegistryEntry.ribbonConfiguration.ribbonPointCount) - 2, 0), elapsedTime, fromParticle, toParticle);
 
 						float accumulatedDistance = 0.0f;
 						glm::vec3 previousPointPosition = ribbon.front().position;
