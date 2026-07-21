@@ -4,7 +4,6 @@
 
 #include <LineWeaver/Interpolation/Interpolator.hpp>
 #include <LineWeaver/Easing/Easing.hpp>
-#include <optional>
 
 namespace cft
 {

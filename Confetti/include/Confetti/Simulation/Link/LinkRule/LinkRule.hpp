@@ -11,6 +11,7 @@ namespace cft
 		const ConstantParticleView& fromParticle;
 		const ConstantParticleView& toParticle;
 		const RibbonPool& ribbonPool;
+		float elapsedTime;
 	};
 
 	class LinkRule

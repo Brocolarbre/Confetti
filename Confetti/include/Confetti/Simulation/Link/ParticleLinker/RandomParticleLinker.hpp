@@ -8,13 +8,12 @@ namespace cft
 	class RandomParticleLinker: public Cloneable<RandomParticleLinker, ParticleLinker>
 	{
 	private:
-		unsigned int m_connectionsCount;
+		unsigned int m_connectionCount;
 		RandomNumberGenerator& m_randomNumberGenerator;
 
 	public:
-		RandomParticleLinker(std::vector<std::unique_ptr<LinkRule>> connectionRules, std::vector<std::unique_ptr<LinkRule>> validationRules, unsigned int connectionsCount, RandomNumberGenerator& randomNumberGenerator);
+		RandomParticleLinker(std::vector<std::unique_ptr<LinkRule>> connectionRules, std::vector<std::unique_ptr<LinkRule>> validationRules, unsigned int connectionCount, RandomNumberGenerator& randomNumberGenerator);
 
-		unsigned int getMaximumRibbonCount(unsigned int maximumParticleCount) const override;
 		unsigned int createRibbons(unsigned int ribbonPointCount, RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int ribbonRegistryId, float elapsedTime) override;
 	};
 }

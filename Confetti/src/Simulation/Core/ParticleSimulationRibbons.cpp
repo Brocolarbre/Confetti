@@ -7,8 +7,11 @@ namespace cft
 	{
 		for (auto& [ribbonRegistryId, ribbonRegistryEntry] : m_ribbonRegistry.getEntries())
 		{
-			unsigned int createdRibbonsCount = ribbonRegistryEntry.particleLinker->createRibbons(ribbonRegistryEntry.ribbonConfiguration.ribbonPointCount, m_ribbonPools[ribbonRegistryEntry.poolId], m_particlePools[ribbonRegistryEntry.poolId], ribbonRegistryId, elapsedTime);
-			m_ribbonRegistry.addReferenceCount(ribbonRegistryId, createdRibbonsCount);
+			if (m_particlePools[ribbonRegistryEntry.poolId].getCount() > 2)
+			{
+				unsigned int createdRibbonsCount = ribbonRegistryEntry.particleLinker->createRibbons(ribbonRegistryEntry.ribbonConfiguration.ribbonPointCount, m_ribbonPools[ribbonRegistryEntry.poolId], m_particlePools[ribbonRegistryEntry.poolId], ribbonRegistryId, elapsedTime);
+				m_ribbonRegistry.addReferenceCount(ribbonRegistryId, createdRibbonsCount);
+			}
 		}
 
 		for (auto& [poolId, ribbonPool] : m_ribbonPools)
@@ -57,7 +60,7 @@ namespace cft
 					ConstantParticleView fromParticle{ particleColor[fromParticleIndexValue], particlePosition[fromParticleIndexValue], particleRotation[fromParticleIndexValue], particleScale[fromParticleIndexValue], particleLinearVelocity[fromParticleIndexValue], particleAngularVelocity[fromParticleIndexValue], particleInitialColor[fromParticleIndexValue], particleInitialScale[fromParticleIndexValue], particlePostBehaviorPosition[fromParticleIndexValue], particlePhase[fromParticleIndexValue], particleLifetime[fromParticleIndexValue], particleSpawnTime[fromParticleIndexValue], particleParticleRegistryId[fromParticleIndexValue], particleId[fromParticleIndexValue] };
 					ConstantParticleView toParticle{ particleColor[toParticleIndexValue], particlePosition[toParticleIndexValue], particleRotation[toParticleIndexValue], particleScale[toParticleIndexValue], particleLinearVelocity[toParticleIndexValue], particleAngularVelocity[toParticleIndexValue], particleInitialColor[toParticleIndexValue], particleInitialScale[toParticleIndexValue], particlePostBehaviorPosition[toParticleIndexValue], particlePhase[toParticleIndexValue], particleLifetime[toParticleIndexValue], particleSpawnTime[toParticleIndexValue], particleParticleRegistryId[toParticleIndexValue], particleId[toParticleIndexValue] };
 
-					if (ribbonRegistryEntry.particleLinker->isRibbonValid(LinkContext{ fromParticle, toParticle, ribbonPool }))
+					if (ribbonRegistryEntry.particleLinker->isRibbonValid(LinkContext{ fromParticle, toParticle, ribbonPool, elapsedTime }))
 					{
 						unsigned int colorGradientSize = static_cast<unsigned int>(ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.colorGradient.size()) + (ribbonRegistryEntry.ribbonConfiguration.pathConfiguration.appendParticleColor ? 2 : 0);
 						std::vector<glm::vec4> colorGradient;

@@ -46,7 +46,7 @@ namespace cft
 		if (particleEmitterDescriptor.trailConfiguration.has_value())
 			m_trailPools[particleEmitterDescriptor.poolId].reserveSlots(maximumParticleCount);
 		if (particleEmitterDescriptor.ribbonConfiguration.has_value())
-			m_ribbonPools[particleEmitterDescriptor.poolId].reserveSlots(m_assetRegistry.getParticleLinker(particleEmitterDescriptor.ribbonConfiguration.value().particleLinkerId).getMaximumRibbonCount(maximumParticleCount));
+			m_ribbonPools[particleEmitterDescriptor.poolId].reserveSlots(maximumParticleCount * (maximumParticleCount - 1) / 2);
 		
 		return particleEmitterInstance;
 	}

@@ -16,7 +16,7 @@ namespace cft
 
 		bool testLinkRules(const std::vector<std::unique_ptr<LinkRule>>& linkRules, const LinkContext& linkContext) const;
 		void createRibbon(unsigned int& createdRibbonsCount, RibbonPool& ribbonPool, unsigned int fromParticleId, unsigned int toParticleId, unsigned int ribbonRegistryId, unsigned int ribbonPointCount, float elapsedTime) const;
-		bool tryConnect(unsigned int& createdRibbonsCount, RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int fromParticleId, unsigned int toParticleId, unsigned int ribbonRegistryId, unsigned int ribbonPointCount, float elapsedTime) const;
+		bool canConnect(RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int fromParticleId, unsigned int toParticleId, float elapsedTime) const;
 
 	public:
 		ParticleLinker(std::vector<std::unique_ptr<LinkRule>> connectionRules, std::vector<std::unique_ptr<LinkRule>> validationRules);
@@ -25,7 +25,6 @@ namespace cft
 
 		virtual std::unique_ptr<ParticleLinker> clone() const = 0;
 
-		virtual unsigned int getMaximumRibbonCount(unsigned int maximumParticleCount) const = 0;
 		virtual unsigned int createRibbons(unsigned int ribbonPointCount, RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int ribbonRegistryId, float elapsedTime) = 0;
 		
 		bool isRibbonValid(const LinkContext& linkContext) const;

@@ -21,7 +21,7 @@ namespace cft
 		++createdRibbonsCount;
 	}
 
-	bool ParticleLinker::tryConnect(unsigned int& createdRibbonsCount, RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int fromParticleId, unsigned int toParticleId, unsigned int ribbonRegistryId, unsigned int ribbonPointCount, float elapsedTime) const
+	bool ParticleLinker::canConnect(RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int fromParticleId, unsigned int toParticleId, float elapsedTime) const
 	{
 		if (fromParticleId == toParticleId)
 			return false;
@@ -33,12 +33,14 @@ namespace cft
 				return false;
 		}
 
-		LinkContext linkContext{ particlePool.getParticleView(particlePool.getIndex(fromParticleId).value()), particlePool.getParticleView(particlePool.getIndex(toParticleId).value()), ribbonPool };
-		if (!testLinkRules(m_connectionRules, linkContext))
-			return false;
+		if (ribbonPool.hasPointConnections(toParticleId))
+		{
+			const std::unordered_set<unsigned int>& pointConnections = ribbonPool.getPointConnections(toParticleId);
+			if (pointConnections.find(fromParticleId) != pointConnections.end())
+				return false;
+		}
 
-		createRibbon(createdRibbonsCount, ribbonPool, fromParticleId, toParticleId, ribbonRegistryId, ribbonPointCount, elapsedTime);
-		return true;
+		return testLinkRules(m_connectionRules, LinkContext{ particlePool.getParticleView(particlePool.getIndex(fromParticleId).value()), particlePool.getParticleView(particlePool.getIndex(toParticleId).value()), ribbonPool, elapsedTime });
 	}
 
 	ParticleLinker::ParticleLinker(std::vector<std::unique_ptr<LinkRule>> connectionRules, std::vector<std::unique_ptr<LinkRule>> validationRules) :
