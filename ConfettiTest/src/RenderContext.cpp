@@ -69,6 +69,9 @@ void RenderContext::render(unsigned int outputTextureId) const
     while (GLenum error = glGetError())
         std::cerr << "OpenGL error : " << error << std::endl;
 
+    if (m_width == 0 || m_height == 0)
+        return;
+
     glDisable(GL_DEPTH_TEST);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
