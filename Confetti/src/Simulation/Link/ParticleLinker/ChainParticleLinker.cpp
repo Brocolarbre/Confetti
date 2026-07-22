@@ -28,7 +28,7 @@ namespace cft
 
 		unsigned int particlePoolCount = particlePool.getCount();
 
-		for (unsigned int i = 0; i < indices.size(); ++i)
+		for (unsigned int i = 0; i < indices.size() - 1; ++i)
 		{
 			unsigned int fromParticleId = particleId[indices[i]];
 			unsigned int toParticleId = particleId[indices[i + 1]];

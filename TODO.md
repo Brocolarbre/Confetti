@@ -8,10 +8,5 @@ Optimizations :
 Code cleanup :
 - Use export macro CONFETTI_EXPORT across the entire engine API
 
-Features :
-- Ribbon particle
-
 Application :
 - Save system (JSON)
-
-https://www.youtube.com/watch?v=ahOfNgvQ93Q

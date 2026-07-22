@@ -115,11 +115,24 @@ namespace cft
 		--m_reservedSlots;
 
 		m_pointConnections[ribbon.fromParticleId].insert(ribbon.toParticleId);
+		m_pointConnections[ribbon.toParticleId].insert(ribbon.fromParticleId); // I added this
 	}
 
 	void RibbonPool::remove(unsigned int index)
 	{
-		m_pointConnections[m_fromParticleId[index]].erase(m_toParticleId[index]);
+		unsigned int fromParticleId = m_fromParticleId[index];
+		unsigned int toParticleId = m_toParticleId[index];
+
+		std::unordered_set<unsigned int>& fromConnections = m_pointConnections[fromParticleId];
+		std::unordered_set<unsigned int>& toConnections = m_pointConnections[toParticleId];
+
+		fromConnections.erase(toParticleId);
+		if (fromConnections.empty())
+			m_pointConnections.erase(fromParticleId);
+
+		toConnections.erase(toParticleId);
+		if (toConnections.empty())
+			m_pointConnections.erase(toParticleId);
 
 		unsigned int lastIndex = --m_count;
 

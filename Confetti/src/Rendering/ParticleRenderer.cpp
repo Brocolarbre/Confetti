@@ -65,6 +65,11 @@ namespace cft
 		m_width = width;
 		m_height = height;
 
+		if (m_width == 0 || m_height == 0)
+			return;
+
+
+
 		m_framebuffer.resize(width, height);
 		m_resolvedFramebuffer.resize(width, height);
 
@@ -84,6 +89,9 @@ namespace cft
 
 	void ParticleRenderer::render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
 	{
+		if (m_width == 0 || m_height == 0)
+			return;
+
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
