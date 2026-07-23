@@ -10,7 +10,6 @@ namespace cft
 	{
 		float start;
 		float end;
-
 	};
 
 	enum class ColorInterpolation

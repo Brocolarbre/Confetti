@@ -1,15 +1,13 @@
 #pragma once
 
-#ifdef _WIN32
-	#ifdef CONFETTI_STATIC
-		#define CONFETTI_EXPORT
+#if defined(_WIN32)
+	#if defined(CONFETTI_STATIC)
+		#define CONFETTI_API
+	#elif defined(CONFETTI_BUILD)
+		#define CONFETTI_API __declspec(dllexport)
 	#else
-		#ifdef CONFETTI_EXPORT
-			#define CONFETTI_EXPORT __declspec(dllexport)
-		#else
-			#define CONFETTI_EXPORT __declspec(dllimport)
-		#endif
+		#define CONFETTI_API __declspec(dllimport)
 	#endif
-#elif __linux__
-	#define CONFETTI_EXPORT
+#else
+	#define CONFETTI_API __attribute__((visibility("default")))
 #endif

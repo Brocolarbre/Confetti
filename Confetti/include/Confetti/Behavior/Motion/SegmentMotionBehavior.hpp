@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SegmentMotionBehavior : public Cloneable < SegmentMotionBehavior, MotionBehavior>
+	class SegmentMotionBehavior : public Cloneable<SegmentMotionBehavior, MotionBehavior>
 	{
 	private:
 		glm::vec3 m_from;

@@ -7,7 +7,6 @@ namespace cft
 		glm::vec3 a = fromParticle.postBehaviorPosition;
 		glm::vec3 b = toParticle.postBehaviorPosition;
 
-		glm::vec3 center = glm::mix(a, b, t);
 		glm::vec3 axis = glm::normalize(b - a);
 
 		glm::vec3 reference = glm::abs(axis.y) < 0.999f ? glm::vec3(0.0f, 1.0f, 0.0f) : glm::vec3(1.0f, 0.0f, 0.0f);
@@ -19,6 +18,7 @@ namespace cft
 
 		lw::Point point = (*m_interpolator)(m_path, t);
 		glm::vec3 offset = right * point.x + up * point.y + axis * point.z;
+		glm::vec3 center = glm::mix(a, b, t);
 
 		return center + offset;
 	}

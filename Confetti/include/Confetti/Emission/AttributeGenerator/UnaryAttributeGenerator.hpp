@@ -56,6 +56,6 @@ namespace cft
 	template<typename T>
 	inline std::unique_ptr<AttributeGenerator<T>> UnaryAttributeGenerator<T>::clone() const
 	{
-		return std::make_unique<UnaryAttributeGenerator<T, Operation>>(m_operand->clone(), m_operation);
+		return std::make_unique<UnaryAttributeGenerator<T>>(m_operand->clone(), m_operation);
 	}
 }
