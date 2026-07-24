@@ -24,7 +24,7 @@ namespace cft
 	inline T RandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
 	{
 		if (m_values.empty())
-			return T(0.0f);
+			return T{};
 
 		return m_values[m_randomNumberGenerator.generateInteger(0u, static_cast<unsigned int>(m_values.size()) - 1)];
 	}

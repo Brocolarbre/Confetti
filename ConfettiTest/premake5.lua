@@ -17,6 +17,11 @@ project "ConfettiTest"
 		"Windove"
 	}
 	
+	filter "options:shared-library"
+		disablewarnings {
+			"4251"
+		}
+	
 	filter "not options:shared-library"		
 		filter { "not options:shared-library", "system:linux" }
 			links "GL"

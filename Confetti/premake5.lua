@@ -26,7 +26,11 @@ project "Confetti"
 		}
 		
 		defines	{
-			"CONFETTI_EXPORT"
+			"CONFETTI_BUILD"
+		}
+		
+		disablewarnings {
+			"4251"
 		}
 		
 	filter "not options:shared-library"

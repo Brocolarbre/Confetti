@@ -24,7 +24,7 @@ namespace cft
 	inline T InterpolatedRandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
 	{
 		if (m_values.empty())
-			return T(0.0f);
+			return T{};
 
 		if (m_values.size() == 1)
 			return m_values[0];

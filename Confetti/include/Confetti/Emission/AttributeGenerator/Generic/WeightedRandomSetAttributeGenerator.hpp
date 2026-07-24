@@ -5,15 +5,18 @@
 
 namespace cft
 {
+	template<typename T>
+	struct WeightedValue
+	{
+		T value;
+		unsigned int weight;
+	};
+
 	template <typename T>
 	class WeightedRandomSetAttributeGenerator : public AttributeGenerator<T>
 	{
 	public:
-		struct WeightedValue
-		{
-			T value;
-			unsigned int weight;
-		};
+		using WeightedValue = WeightedValue<T>;
 
 	private:
 		std::vector<WeightedValue> m_values;
@@ -32,7 +35,7 @@ namespace cft
 	inline T WeightedRandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
 	{
 		if (m_values.empty())
-			return T(0.0f);
+			return T{};
 
 		unsigned int randomIndex = m_randomNumberGenerator.generateInteger(0u, m_totalWeight - 1);
 		unsigned int accumulator = 0;
