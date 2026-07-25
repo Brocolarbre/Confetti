@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
 #include "Confetti/Data/MotionState.hpp"
 #include "Confetti/Tool/Cloneable.hpp"
 
@@ -11,7 +12,7 @@ namespace cft
 		glm::vec3 angular;
 	};
 
-	class ForceField
+	class CONFETTI_API ForceField
 	{
 	public:
 		virtual ~ForceField() = default;

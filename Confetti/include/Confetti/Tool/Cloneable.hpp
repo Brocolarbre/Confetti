@@ -8,6 +8,8 @@ namespace cft
 	class Cloneable : public Base
 	{
 	public:
+		using Base::Base;
+
 		template <typename ...Args>
 		Cloneable(Args&&... args);
 		std::unique_ptr<Base> clone() const override;

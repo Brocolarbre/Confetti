@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class FlickerVisualBehavior : public Cloneable<FlickerVisualBehavior, VisualBehavior>
+	class CONFETTI_API FlickerVisualBehavior : public Cloneable<FlickerVisualBehavior, VisualBehavior>
 	{
 	private:
 		float m_minimumBrightness;

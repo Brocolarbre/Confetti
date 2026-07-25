@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class QuadraticDragForceField : public Cloneable<QuadraticDragForceField, ForceField>
+	class CONFETTI_API QuadraticDragForceField : public Cloneable<QuadraticDragForceField, ForceField>
 	{
 	private:
 		float m_strength;

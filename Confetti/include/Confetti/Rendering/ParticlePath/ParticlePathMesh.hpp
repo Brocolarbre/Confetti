@@ -1,10 +1,12 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 #include <glm/glm.hpp>
 
 namespace cft
 {
-	class ParticlePathMesh
+	class CONFETTI_API ParticlePathMesh
 	{
 	public:
 		struct Vertex

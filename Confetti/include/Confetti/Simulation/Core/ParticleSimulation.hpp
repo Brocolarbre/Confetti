@@ -15,7 +15,7 @@
 
 namespace cft
 {
-	class ParticleSimulation
+	class CONFETTI_API ParticleSimulation
 	{
 	private:
 		AssetRegistry& m_assetRegistry;

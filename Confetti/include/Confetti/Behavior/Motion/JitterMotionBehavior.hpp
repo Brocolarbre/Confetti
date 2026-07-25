@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class JitterMotionBehavior : public Cloneable<JitterMotionBehavior, MotionBehavior>
+	class CONFETTI_API JitterMotionBehavior : public Cloneable<JitterMotionBehavior, MotionBehavior>
 	{
 	private:
 		float m_strength;

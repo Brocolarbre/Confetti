@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class CircleSpawnShape : public Cloneable<CircleSpawnShape, SpawnShape>
+	class CONFETTI_API CircleSpawnShape : public Cloneable<CircleSpawnShape, SpawnShape>
 	{
 	private:
 		float m_radius;

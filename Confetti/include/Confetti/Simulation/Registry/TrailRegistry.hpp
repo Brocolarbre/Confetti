@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
 #include "Confetti/Data/TrailConfiguration.hpp"
 
 #include <unordered_map>
@@ -12,7 +13,7 @@ namespace cft
 		TrailConfiguration trailConfiguration;
 	};
 
-	class TrailRegistry
+	class CONFETTI_API TrailRegistry
 	{
 	private:
 		std::unordered_map<unsigned int, TrailRegistryEntry> m_entries;

@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class FixedBurstEmissionPattern : public Cloneable<FixedBurstEmissionPattern, EmissionPattern>
+	class CONFETTI_API FixedBurstEmissionPattern : public Cloneable<FixedBurstEmissionPattern, EmissionPattern>
 	{
 	private:
 		unsigned int m_count;

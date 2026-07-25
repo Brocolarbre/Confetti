@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class FadeInVisualBehavior : public Cloneable<FadeInVisualBehavior, VisualBehavior>
+	class CONFETTI_API FadeInVisualBehavior : public Cloneable<FadeInVisualBehavior, VisualBehavior>
 	{
 	private:
 		ParticleTime m_duration;

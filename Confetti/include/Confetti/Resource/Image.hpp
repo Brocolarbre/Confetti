@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 #include <string>
 #include <vector>
 
 namespace cft
 {
-	class Image
+	class CONFETTI_API Image
 	{
 	private:
 		unsigned int m_width = 0;

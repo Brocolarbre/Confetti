@@ -18,7 +18,7 @@ namespace cft
 		std::unique_ptr<RibbonGenerator> ribbonGenerator;
 	};
 
-	class RibbonRegistry
+	class CONFETTI_API RibbonRegistry
 	{
 	private:
 		std::unordered_map<unsigned int, RibbonRegistryEntry> m_entries;
@@ -26,6 +26,7 @@ namespace cft
 
 	public:
 		RibbonRegistry();
+		RibbonRegistry(RibbonRegistry&& ribbonRegistry) noexcept = default;
 
 		std::unordered_map<unsigned int, RibbonRegistryEntry>& getEntries();
 

@@ -9,7 +9,7 @@
 
 namespace cft
 {
-	class BillboardParticleRenderer
+	class CONFETTI_API BillboardParticleRenderer
 	{
 	private:
 		std::unordered_map<unsigned int, unsigned int> m_imageIdToTextureIndex;

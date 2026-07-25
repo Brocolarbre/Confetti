@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class ChainParticleLinker : public Cloneable<ChainParticleLinker, ParticleLinker>
+	class CONFETTI_API ChainParticleLinker : public Cloneable<ChainParticleLinker, ParticleLinker>
 	{
 	public:
 		ChainParticleLinker(std::vector<std::unique_ptr<LinkRule>> connectionRules, std::vector<std::unique_ptr<LinkRule>> validationRules);

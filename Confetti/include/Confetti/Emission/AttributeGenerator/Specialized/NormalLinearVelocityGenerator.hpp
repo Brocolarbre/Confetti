@@ -1,11 +1,12 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
 #include "Confetti/Emission/AttributeGenerator/AttributeGenerator.hpp"
 #include "Confetti/Emission/AttributeGenerator/AttributeTypes.hpp"
 
 namespace cft
 {
-	class NormalLinearVelocityGenerator : public AttributeGenerator<LinearVelocity>
+	class CONFETTI_API NormalLinearVelocityGenerator : public AttributeGenerator<LinearVelocity>
 	{
 	private:
 		float m_strength;

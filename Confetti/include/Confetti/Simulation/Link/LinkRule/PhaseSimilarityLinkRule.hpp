@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class PhaseSimilarityLinkRule : public Cloneable<PhaseSimilarityLinkRule, LinkRule>
+	class CONFETTI_API PhaseSimilarityLinkRule : public Cloneable<PhaseSimilarityLinkRule, LinkRule>
 	{
 	private:
 		float m_threshold;

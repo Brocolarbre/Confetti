@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class AgeSimilarityLinkRule : public Cloneable<AgeSimilarityLinkRule, LinkRule>
+	class CONFETTI_API AgeSimilarityLinkRule : public Cloneable<AgeSimilarityLinkRule, LinkRule>
 	{
 	private:
 		float m_threshold;

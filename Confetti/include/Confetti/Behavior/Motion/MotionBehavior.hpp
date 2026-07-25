@@ -1,11 +1,12 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
 #include "Confetti/Data/MotionState.hpp"
 #include "Confetti/Tool/Cloneable.hpp"
 
 namespace cft
 {
-	class MotionBehavior
+	class CONFETTI_API MotionBehavior
 	{
 	public:
 		virtual ~MotionBehavior() = default;

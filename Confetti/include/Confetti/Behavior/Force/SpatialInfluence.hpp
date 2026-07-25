@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 #include <glm/glm.hpp>
 
 namespace cft
@@ -12,7 +14,7 @@ namespace cft
 		Cubic
 	};
 
-	class SpatialInfluence
+	class CONFETTI_API SpatialInfluence
 	{
 	private:
 		glm::vec3 m_origin;
@@ -22,6 +24,7 @@ namespace cft
 
 	public:
 		SpatialInfluence(const glm::vec3& origin, float radius, Falloff falloff);
+		SpatialInfluence(const SpatialInfluence& spatialInfluence);
 
 		const glm::vec3& getOrigin() const;
 

@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 #include <vector>
 #include <glm/glm.hpp>
 
 namespace cft
 {
-	class MeshParticleMesh
+	class CONFETTI_API MeshParticleMesh
 	{
 	public:
 		struct Vertex

@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class GrowInVisualBehavior : public Cloneable<GrowInVisualBehavior, VisualBehavior>
+	class CONFETTI_API GrowInVisualBehavior : public Cloneable<GrowInVisualBehavior, VisualBehavior>
 	{
 	private:
 		ParticleTime m_duration;

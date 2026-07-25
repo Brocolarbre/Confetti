@@ -1,12 +1,14 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 #include <string>
 #include <vector>
 #include <glm/glm.hpp>
 
 namespace cft
 {
-	struct VertexKey
+	struct CONFETTI_API VertexKey
 	{
 		int position;
 		int normal;
@@ -15,7 +17,7 @@ namespace cft
 		bool operator==(const VertexKey& vertexKey) const;
 	};
 
-	struct VertexKeyHash
+	struct CONFETTI_API VertexKeyHash
 	{
 		size_t operator()(const VertexKey& key) const;
 	};
@@ -28,7 +30,7 @@ namespace cft
 		glm::vec2 textureCoordinates;
 	};
 
-	class Model
+	class CONFETTI_API Model
 	{
 	private:
 		std::vector<Vertex> m_vertexData;

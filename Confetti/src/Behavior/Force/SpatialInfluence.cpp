@@ -11,6 +11,15 @@ namespace cft
 
 	}
 
+	SpatialInfluence::SpatialInfluence(const SpatialInfluence& spatialInfluence) :
+		m_origin(spatialInfluence.m_origin),
+		m_radius(spatialInfluence.m_radius),
+		m_squaredRadius(spatialInfluence.m_squaredRadius),
+		m_falloff(spatialInfluence.m_falloff)
+	{
+
+	}
+
 	const glm::vec3& SpatialInfluence::getOrigin() const
 	{
 		return m_origin;

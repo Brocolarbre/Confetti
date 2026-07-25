@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
 #include "SpawnContext.hpp"
 #include "Confetti/Tool/Cloneable.hpp"
 
@@ -7,7 +8,7 @@
 
 namespace cft
 {
-	class SpawnShape
+	class CONFETTI_API SpawnShape
 	{
 	protected:
 		virtual SpawnContext generateValue(unsigned int count, unsigned int index) const = 0;

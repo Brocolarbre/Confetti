@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class ToneMapping
+	class CONFETTI_API ToneMapping
 	{
 	private:
 		Framebuffer m_framebuffer;

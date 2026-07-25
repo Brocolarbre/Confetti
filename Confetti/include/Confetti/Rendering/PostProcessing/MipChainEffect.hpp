@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class MipChainEffect
+	class CONFETTI_API MipChainEffect
 	{
 	protected:
 		MipChainFramebuffer m_framebuffer;

@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class VisualBehavior
+	class CONFETTI_API VisualBehavior
 	{
 	public:
 		virtual ~VisualBehavior() = default;

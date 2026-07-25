@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 namespace cft
 {
-	class BillboardParticleMesh
+	class CONFETTI_API BillboardParticleMesh
 	{
 	private:
 		unsigned int m_vao;

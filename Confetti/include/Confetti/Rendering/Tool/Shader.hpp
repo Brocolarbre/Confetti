@@ -1,12 +1,14 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 #include <glm/glm.hpp>
 #include <string>
 #include <unordered_map>
 
 namespace cft
 {
-	class Shader
+	class CONFETTI_API Shader
 	{
 	private:
 		unsigned int m_id;

@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 namespace cft
 {
-	class Texture
+	class CONFETTI_API Texture
 	{
 	private:
 		unsigned int m_id;

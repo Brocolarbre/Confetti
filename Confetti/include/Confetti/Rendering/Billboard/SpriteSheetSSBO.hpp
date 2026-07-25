@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
 #include "Confetti/Data/SpriteSheetDescriptor.hpp"
 
 #include <glm/glm.hpp>
@@ -7,7 +8,7 @@
 
 namespace cft
 {
-	class SpriteSheetSSBO
+	class CONFETTI_API SpriteSheetSSBO
 	{
 	private:
 		unsigned int m_id;

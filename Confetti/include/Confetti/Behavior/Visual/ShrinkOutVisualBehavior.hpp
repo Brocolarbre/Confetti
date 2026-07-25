@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class ShrinkOutVisualBehavior : public Cloneable<ShrinkOutVisualBehavior, VisualBehavior>
+	class CONFETTI_API ShrinkOutVisualBehavior : public Cloneable<ShrinkOutVisualBehavior, VisualBehavior>
 	{
 	private:
 		ParticleTime m_duration;

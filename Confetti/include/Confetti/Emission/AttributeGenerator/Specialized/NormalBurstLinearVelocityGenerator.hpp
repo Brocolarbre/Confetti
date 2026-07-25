@@ -6,7 +6,7 @@
 
 namespace cft
 {
-	class NormalBurstLinearVelocityGenerator : public AttributeGenerator<LinearVelocity>
+	class CONFETTI_API NormalBurstLinearVelocityGenerator : public AttributeGenerator<LinearVelocity>
 	{
 	private:
 		float m_strength;

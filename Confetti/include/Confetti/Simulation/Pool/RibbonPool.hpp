@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
 #include "PathPoint.hpp"
 
 #include <deque>
@@ -17,7 +18,7 @@ namespace cft
 		std::deque<PathPoint> points;
 	};
 
-	class RibbonPool
+	class CONFETTI_API RibbonPool
 	{
 	private:
 		std::vector<unsigned int> m_ribbonRegistryId;

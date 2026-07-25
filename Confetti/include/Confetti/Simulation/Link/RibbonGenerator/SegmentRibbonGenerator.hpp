@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SegmentRibbonGenerator : public Cloneable<SegmentRibbonGenerator, RibbonGenerator>
+	class CONFETTI_API SegmentRibbonGenerator : public Cloneable<SegmentRibbonGenerator, RibbonGenerator>
 	{
 	private:
 		glm::vec3 generateRibbonPoint(float t, float elapsedTime, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) const;

@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class PulseVisualBehavior : public Cloneable<PulseVisualBehavior, VisualBehavior>
+	class CONFETTI_API PulseVisualBehavior : public Cloneable<PulseVisualBehavior, VisualBehavior>
 	{
 	private:
 		glm::vec4 m_colorA;

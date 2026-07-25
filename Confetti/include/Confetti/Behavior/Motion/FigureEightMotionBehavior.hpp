@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class FigureEightMotionBehavior : public Cloneable<FigureEightMotionBehavior, MotionBehavior>
+	class CONFETTI_API FigureEightMotionBehavior : public Cloneable<FigureEightMotionBehavior, MotionBehavior>
 	{
 	private:
 		glm::vec3 m_axis;

@@ -1,12 +1,14 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <random>
 
 namespace cft
 {
-	class RandomNumberGenerator
+	class CONFETTI_API RandomNumberGenerator
 	{
 	private:
 		std::default_random_engine m_engine;

@@ -6,7 +6,7 @@
 
 namespace cft
 {
-	class BillboardParticleSSBO
+	class CONFETTI_API BillboardParticleSSBO
 	{
 	private:
 		struct ParticleData

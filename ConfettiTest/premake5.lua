@@ -14,26 +14,24 @@ project "ConfettiTest"
 	links {
 		"Confetti",
 		"glfw3",
-		"Windove"
+		"Windove",
+		"glad",
+		"LineWeaver"
 	}
+
+	filter "system:linux"
+		links "GL"
+	filter "system:windows"
+		links "opengl32"
+	filter {}
 	
 	filter "options:shared-library"
 		disablewarnings {
-			"4251"
+			"4251",
+			"4275"
 		}
 	
-	filter "not options:shared-library"		
-		filter { "not options:shared-library", "system:linux" }
-			links "GL"
-		filter { "not options:shared-library", "system:windows" }
-			links "opengl32"
-		filter "not options:shared-library"
-		
-		links {
-			"glad",
-			"LineWeaver"
-		}
-		
+	filter "not options:shared-library"
 		defines {
 			"CONFETTI_STATIC"
 		}

@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class LinearRateEmissionPattern : public Cloneable<LinearRateEmissionPattern, EmissionPattern>
+	class CONFETTI_API LinearRateEmissionPattern : public Cloneable<LinearRateEmissionPattern, EmissionPattern>
 	{
 	private:
 		float m_initialRate;

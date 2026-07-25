@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class ColorShiftVisualBehavior : public Cloneable<ColorShiftVisualBehavior, VisualBehavior>
+	class CONFETTI_API ColorShiftVisualBehavior : public Cloneable<ColorShiftVisualBehavior, VisualBehavior>
 	{
 	private:
 		std::vector<glm::vec4> m_colors;

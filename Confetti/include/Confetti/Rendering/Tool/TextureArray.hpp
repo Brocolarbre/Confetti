@@ -1,10 +1,12 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 #include <vector>
 
 namespace cft
 {
-	class TextureArray
+	class CONFETTI_API TextureArray
 	{
 	private:
 		unsigned int m_id;

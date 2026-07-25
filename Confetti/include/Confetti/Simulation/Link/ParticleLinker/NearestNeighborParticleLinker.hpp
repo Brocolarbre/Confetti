@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class NearestNeighborParticleLinker : public Cloneable<NearestNeighborParticleLinker, ParticleLinker>
+	class CONFETTI_API NearestNeighborParticleLinker : public Cloneable<NearestNeighborParticleLinker, ParticleLinker>
 	{
 	public:
 		NearestNeighborParticleLinker(std::vector<std::unique_ptr<LinkRule>> connectionRules, std::vector<std::unique_ptr<LinkRule>> validationRules);

@@ -11,7 +11,7 @@
 
 namespace cft
 {
-	struct ParticleRegistryEntry
+	struct CONFETTI_API ParticleRegistryEntry
 	{
 		unsigned int count;
 		unsigned int poolId;
@@ -22,9 +22,11 @@ namespace cft
 		std::vector<std::unique_ptr<ForceField>> forceFields;
 		std::vector<std::unique_ptr<MotionBehavior>> motionBehaviors;
 		std::vector<std::unique_ptr<VisualBehavior>> visualBehaviors;
+
+		ParticleRegistryEntry(ParticleRegistryEntry&& particleRegistryEntry) = default;
 	};
 
-	class ParticleRegistry
+	class CONFETTI_API ParticleRegistry
 	{
 	private:
 		std::unordered_map<unsigned int, ParticleRegistryEntry> m_entries;
@@ -32,6 +34,7 @@ namespace cft
 
 	public:
 		ParticleRegistry();
+		ParticleRegistry(ParticleRegistry&& particleRegistry) noexcept = default;
 
 		std::unordered_map<unsigned int, ParticleRegistryEntry>& getEntries();
 

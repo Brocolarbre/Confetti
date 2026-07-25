@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class ConstantRateEmissionPattern : public Cloneable<ConstantRateEmissionPattern, EmissionPattern>
+	class CONFETTI_API ConstantRateEmissionPattern : public Cloneable<ConstantRateEmissionPattern, EmissionPattern>
 	{
 	private:
 		float m_rate;

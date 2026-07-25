@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class ConnectionLinkRule : public Cloneable<ConnectionLinkRule, LinkRule>
+	class CONFETTI_API ConnectionLinkRule : public Cloneable<ConnectionLinkRule, LinkRule>
 	{
 	private:
 		unsigned int m_maximumConnectionCount;

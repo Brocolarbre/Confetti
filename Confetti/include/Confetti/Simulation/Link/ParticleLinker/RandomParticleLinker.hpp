@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class RandomParticleLinker: public Cloneable<RandomParticleLinker, ParticleLinker>
+	class CONFETTI_API RandomParticleLinker: public Cloneable<RandomParticleLinker, ParticleLinker>
 	{
 	private:
 		unsigned int m_connectionCount;

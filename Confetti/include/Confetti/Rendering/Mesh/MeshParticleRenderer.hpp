@@ -10,7 +10,7 @@
 
 namespace cft
 {
-	class MeshParticleRenderer
+	class CONFETTI_API MeshParticleRenderer
 	{
 	private:
 		std::unordered_map<unsigned int, Texture> m_textures;

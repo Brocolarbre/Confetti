@@ -6,7 +6,7 @@
 
 namespace cft
 {
-	class MipChainFramebuffer
+	class CONFETTI_API MipChainFramebuffer
 	{
 	private:
 		unsigned int m_id;

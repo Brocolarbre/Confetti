@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class Bloom : public MipChainEffect
+	class CONFETTI_API Bloom : public MipChainEffect
 	{
 	private:
 		Shader m_downsampleShader;

@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 namespace cft
 {
-	struct ParticleTime
+	struct CONFETTI_API ParticleTime
 	{
 		enum class Space
 		{

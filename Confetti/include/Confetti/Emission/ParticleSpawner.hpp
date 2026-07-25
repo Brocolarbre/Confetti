@@ -9,7 +9,7 @@
 
 namespace cft
 {
-	class ParticleSpawner
+	class CONFETTI_API ParticleSpawner
 	{
 	private:
 		std::unique_ptr<SpawnShape> m_spawnShape;

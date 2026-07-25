@@ -1,10 +1,11 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
 #include "Confetti/Tool/Cloneable.hpp"
 
 namespace cft
 {
-	class EmissionPattern
+	class CONFETTI_API EmissionPattern
 	{
 	public:
 		virtual ~EmissionPattern() = default;

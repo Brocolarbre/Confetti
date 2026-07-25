@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class DirectionalForceField : public Cloneable<DirectionalForceField, ForceField>
+	class CONFETTI_API DirectionalForceField : public Cloneable<DirectionalForceField, ForceField>
 	{
 	private:
 		glm::vec3 m_direction;

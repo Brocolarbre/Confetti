@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class DistanceLinkRule : public Cloneable<DistanceLinkRule, LinkRule>
+	class CONFETTI_API DistanceLinkRule : public Cloneable<DistanceLinkRule, LinkRule>
 	{
 	private:
 		float m_squaredMinimumDistance;

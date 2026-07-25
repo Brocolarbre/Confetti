@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class ShockWaveForceField : public Cloneable<ShockWaveForceField, ForceField>
+	class CONFETTI_API ShockWaveForceField : public Cloneable<ShockWaveForceField, ForceField>
 	{
 	private:
 		SpatialInfluence m_spatialInfluence;

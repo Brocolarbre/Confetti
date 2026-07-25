@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class VelocitySimilarityLinkRule : public Cloneable<VelocitySimilarityLinkRule, LinkRule>
+	class CONFETTI_API VelocitySimilarityLinkRule : public Cloneable<VelocitySimilarityLinkRule, LinkRule>
 	{
 	private:
 		float m_threshold;

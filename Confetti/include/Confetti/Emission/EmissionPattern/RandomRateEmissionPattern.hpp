@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class RandomRateEmissionPattern : public Cloneable<RandomRateEmissionPattern, EmissionPattern>
+	class CONFETTI_API RandomRateEmissionPattern : public Cloneable<RandomRateEmissionPattern, EmissionPattern>
 	{
 	private:
 		float m_minimumRate;

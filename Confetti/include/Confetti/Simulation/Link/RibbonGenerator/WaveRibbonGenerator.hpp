@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class WaveRibbonGenerator : public Cloneable<WaveRibbonGenerator, RibbonGenerator>
+	class CONFETTI_API WaveRibbonGenerator : public Cloneable<WaveRibbonGenerator, RibbonGenerator>
 	{
 	private:
 		float m_frequency;

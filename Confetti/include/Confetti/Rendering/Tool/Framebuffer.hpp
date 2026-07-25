@@ -12,7 +12,7 @@ namespace cft
 	using FramebufferAttachment = std::variant<std::monostate, Texture, Renderbuffer>;
 	constexpr unsigned int MAXIMUM_COLOR_ATTACHMENTS = 16;
 
-	class Framebuffer
+	class CONFETTI_API Framebuffer
 	{
 	private:
 		unsigned int m_id;

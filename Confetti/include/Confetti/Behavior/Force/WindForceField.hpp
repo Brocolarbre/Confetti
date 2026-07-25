@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class WindForceField : public Cloneable<WindForceField, ForceField>
+	class CONFETTI_API WindForceField : public Cloneable<WindForceField, ForceField>
 	{
 	private:
 		glm::vec3 m_velocity;

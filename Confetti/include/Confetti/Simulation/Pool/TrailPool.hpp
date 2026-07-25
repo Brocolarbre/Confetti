@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
 #include "PathPoint.hpp"
 
 #include <deque>
@@ -15,7 +16,7 @@ namespace cft
 		std::deque<PathPoint> points;
 	};
 
-	class TrailPool
+	class CONFETTI_API TrailPool
 	{
 	private:
 		std::vector<unsigned int> m_trailRegistryId;

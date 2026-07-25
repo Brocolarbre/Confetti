@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class ConeSpawnShape : public Cloneable<ConeSpawnShape, SpawnShape>
+	class CONFETTI_API ConeSpawnShape : public Cloneable<ConeSpawnShape, SpawnShape>
 	{
 	private:
 		float m_height;

@@ -14,7 +14,7 @@ namespace cft
 		float elapsedTime;
 	};
 
-	class LinkRule
+	class CONFETTI_API LinkRule
 	{
 	public:
 		virtual ~LinkRule() = default;

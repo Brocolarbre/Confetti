@@ -7,7 +7,7 @@
 
 namespace cft
 {
-	class RibbonGenerator
+	class CONFETTI_API RibbonGenerator
 	{
 	private:
 		virtual glm::vec3 generateRibbonPoint(float t, float elapsedTime, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) const = 0;

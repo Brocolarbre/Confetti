@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class OscillationMotionBehavior : public Cloneable<OscillationMotionBehavior, MotionBehavior>
+	class CONFETTI_API OscillationMotionBehavior : public Cloneable<OscillationMotionBehavior, MotionBehavior>
 	{
 	private:
 		glm::vec3 m_from;

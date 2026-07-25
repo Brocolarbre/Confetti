@@ -31,6 +31,9 @@ Application::Application() :
 	if (!RenderContext::initialize(dove::Window::getProcAddress))
 		std::cerr << "Failed to initialize render context" << std::endl;
 
+	if (!cft::ParticleRenderer::initialize(dove::Window::getProcAddress))
+		std::cerr << "Failed to initialize Confetti render context" << std::endl;
+
 	dove::Vector2 windowSize = m_window.getSize();
 	m_confettiInstance = std::make_unique<ConfettiInstance>(windowSize.x, windowSize.y, windowSettings.samples, m_window);
 }

@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class TurbulenceForceField : public Cloneable<TurbulenceForceField, ForceField>
+	class CONFETTI_API TurbulenceForceField : public Cloneable<TurbulenceForceField, ForceField>
 	{
 	private:
 		float m_strength;

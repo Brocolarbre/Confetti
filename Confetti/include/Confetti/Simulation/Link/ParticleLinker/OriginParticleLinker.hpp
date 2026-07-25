@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class OriginParticleLinker : public Cloneable<OriginParticleLinker, ParticleLinker>
+	class CONFETTI_API OriginParticleLinker : public Cloneable<OriginParticleLinker, ParticleLinker>
 	{
 	private:
 		glm::vec3 m_origin;

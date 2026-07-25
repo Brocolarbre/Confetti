@@ -4,6 +4,8 @@
 
 namespace cft
 {
+	bool ParticleRenderer::m_initialized = false;
+
 	ParticleRenderer::ParticleRenderer(unsigned int width, unsigned int height, unsigned int samples) :
 		m_width(width),
 		m_height(height),
@@ -68,8 +70,6 @@ namespace cft
 		if (m_width == 0 || m_height == 0)
 			return;
 
-
-
 		m_framebuffer.resize(width, height);
 		m_resolvedFramebuffer.resize(width, height);
 
@@ -120,5 +120,16 @@ namespace cft
 
 		m_hdrComposite.render(hdrSceneTexture, m_bloom.getOutputTexture(), m_flare.getOutputTexture());
 		m_toneMapping.render(m_hdrComposite.getOutputTexture());
+	}
+
+	bool ParticleRenderer::initialize(void* (*loader)(const char*))
+	{
+		if (m_initialized)
+			return true;
+
+		if (gladLoadGLLoader(loader))
+			m_initialized = true;
+
+		return m_initialized;
 	}
 }

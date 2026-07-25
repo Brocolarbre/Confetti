@@ -12,7 +12,7 @@
 
 namespace cft
 {
-	class ParticleRenderer
+	class CONFETTI_API ParticleRenderer
 	{
 	private:
 		unsigned int m_width;
@@ -31,6 +31,8 @@ namespace cft
 		MeshParticleRenderer m_meshParticleRenderer;
 		ParticlePathRenderer m_particlePathRenderer;
 
+		static bool m_initialized;
+
 	public:
 		ParticleRenderer(unsigned int width, unsigned int height, unsigned int samples);
 
@@ -44,5 +46,7 @@ namespace cft
 		void resize(unsigned int width, unsigned int height);
 		void update(const ParticleSimulation& particleSimulation, const AssetRegistry& assetRegistry, const View& view);
 		void render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
+
+		static bool initialize(void* (*)(const char*));
 	};
 }

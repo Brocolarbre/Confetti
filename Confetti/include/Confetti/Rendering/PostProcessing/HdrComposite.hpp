@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class HdrComposite
+	class CONFETTI_API HdrComposite
 	{
 	private:
 		Framebuffer m_framebuffer;

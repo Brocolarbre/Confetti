@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class KNearestNeighborParticleLinker : public Cloneable<KNearestNeighborParticleLinker, ParticleLinker>
+	class CONFETTI_API KNearestNeighborParticleLinker : public Cloneable<KNearestNeighborParticleLinker, ParticleLinker>
 	{
 	private:
 		unsigned int m_neighborCount;

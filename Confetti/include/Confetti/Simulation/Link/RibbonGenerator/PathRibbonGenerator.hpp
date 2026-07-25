@@ -7,7 +7,7 @@
 
 namespace cft
 {
-	class PathRibbonGenerator : public Cloneable<PathRibbonGenerator, RibbonGenerator>
+	class CONFETTI_API PathRibbonGenerator : public Cloneable<PathRibbonGenerator, RibbonGenerator>
 	{
 	private:
 		lw::Curve m_path;

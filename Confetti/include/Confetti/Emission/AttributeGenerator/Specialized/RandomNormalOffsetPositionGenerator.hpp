@@ -6,7 +6,7 @@
 
 namespace cft
 {
-	class RandomNormalOffsetPositionGenerator : public AttributeGenerator<Position>
+	class CONFETTI_API RandomNormalOffsetPositionGenerator : public AttributeGenerator<Position>
 	{
 	private:
 		float m_minimumStrength;

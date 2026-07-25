@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 #include <optional>
 
 namespace cft
@@ -13,7 +15,7 @@ namespace cft
 		unsigned int instanceCount;
 	};
 
-	struct MeshParticleBatchKey
+	struct CONFETTI_API MeshParticleBatchKey
 	{
 		unsigned int meshId;
 		std::optional<unsigned int> textureId;
@@ -21,7 +23,7 @@ namespace cft
 		bool operator==(const MeshParticleBatchKey& meshParticleBatchKey) const;
 	};
 
-	struct MeshParticleBatchKeyHash
+	struct CONFETTI_API MeshParticleBatchKeyHash
 	{
 		size_t operator()(const MeshParticleBatchKey& meshParticleBatchKey) const;
 	};

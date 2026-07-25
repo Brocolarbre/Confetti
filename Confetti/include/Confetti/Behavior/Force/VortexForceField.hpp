@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class VortexForceField : public Cloneable<VortexForceField, ForceField>
+	class CONFETTI_API VortexForceField : public Cloneable<VortexForceField, ForceField>
 	{
 	private:
 		SpatialInfluence m_spatialInfluence;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <optional>
@@ -61,7 +63,7 @@ namespace cft
 		const unsigned int& particleRegistryId;
 	};
 
-	class ParticlePool
+	class CONFETTI_API ParticlePool
 	{
 	private:
 		std::vector<glm::vec4> m_color;

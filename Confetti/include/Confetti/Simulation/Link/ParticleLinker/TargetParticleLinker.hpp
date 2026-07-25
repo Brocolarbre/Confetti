@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class TargetParticleLinker : public Cloneable<TargetParticleLinker, ParticleLinker>
+	class CONFETTI_API TargetParticleLinker : public Cloneable<TargetParticleLinker, ParticleLinker>
 	{
 	private:
 		unsigned int m_targetParticleId;

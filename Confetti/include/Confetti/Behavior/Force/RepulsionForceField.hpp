@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class RepulsionForceField : public Cloneable<RepulsionForceField, ForceField>
+	class CONFETTI_API RepulsionForceField : public Cloneable<RepulsionForceField, ForceField>
 	{
 		SpatialInfluence m_spatialInfluence;
 		float m_strength;

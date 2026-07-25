@@ -7,7 +7,7 @@
 
 namespace cft
 {
-	class MeshParticleSSBO
+	class CONFETTI_API MeshParticleSSBO
 	{
 	public:
 		struct ParticleData

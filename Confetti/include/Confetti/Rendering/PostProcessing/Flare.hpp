@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class Flare : public MipChainEffect
+	class CONFETTI_API Flare : public MipChainEffect
 	{
 	private:
 		Shader m_downsampleShader;

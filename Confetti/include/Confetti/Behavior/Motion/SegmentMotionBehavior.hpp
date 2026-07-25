@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SegmentMotionBehavior : public Cloneable<SegmentMotionBehavior, MotionBehavior>
+	class CONFETTI_API SegmentMotionBehavior : public Cloneable<SegmentMotionBehavior, MotionBehavior>
 	{
 	private:
 		glm::vec3 m_from;

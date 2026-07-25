@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SpiralRibbonGenerator : public Cloneable<SpiralRibbonGenerator, RibbonGenerator>
+	class CONFETTI_API SpiralRibbonGenerator : public Cloneable<SpiralRibbonGenerator, RibbonGenerator>
 	{
 	private:
 		float m_frequency;

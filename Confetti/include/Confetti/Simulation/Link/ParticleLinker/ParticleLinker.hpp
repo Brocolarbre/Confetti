@@ -8,7 +8,7 @@
 
 namespace cft
 {
-	class ParticleLinker
+	class CONFETTI_API ParticleLinker
 	{
 	protected:
 		std::vector<std::unique_ptr<LinkRule>> m_connectionRules;
@@ -21,6 +21,7 @@ namespace cft
 	public:
 		ParticleLinker(std::vector<std::unique_ptr<LinkRule>> connectionRules, std::vector<std::unique_ptr<LinkRule>> validationRules);
 		ParticleLinker(const ParticleLinker& particleLinker);
+		ParticleLinker(ParticleLinker&&) noexcept = default;
 		virtual ~ParticleLinker() = default;
 
 		virtual std::unique_ptr<ParticleLinker> clone() const = 0;

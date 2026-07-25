@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class BrightPass
+	class CONFETTI_API BrightPass
 	{
 	private:
 		Framebuffer m_framebuffer;

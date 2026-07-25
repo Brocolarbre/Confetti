@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Confetti/Export.hpp"
+
 namespace cft
 {
-	class Renderbuffer
+	class CONFETTI_API Renderbuffer
 	{
 	private:
 		unsigned int m_id;

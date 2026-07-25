@@ -12,7 +12,7 @@
 
 namespace cft
 {
-	class ParticlePathRenderer
+	class CONFETTI_API ParticlePathRenderer
 	{
 	private:
 		struct ParticlePathGeometry

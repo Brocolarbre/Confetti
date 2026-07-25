@@ -4,7 +4,7 @@
 
 namespace cft
 {
-	class SquashStretchVisualBehavior : public Cloneable<SquashStretchVisualBehavior, VisualBehavior>
+	class CONFETTI_API SquashStretchVisualBehavior : public Cloneable<SquashStretchVisualBehavior, VisualBehavior>
 	{
 	private:
 		glm::vec2 m_strength;

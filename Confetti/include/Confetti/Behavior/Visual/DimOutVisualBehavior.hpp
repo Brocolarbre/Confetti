@@ -5,7 +5,7 @@
 
 namespace cft
 {
-	class DimOutVisualBehavior : public Cloneable<DimOutVisualBehavior, VisualBehavior>
+	class CONFETTI_API DimOutVisualBehavior : public Cloneable<DimOutVisualBehavior, VisualBehavior>
 	{
 	private:
 		ParticleTime m_duration;
