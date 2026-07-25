@@ -37,7 +37,7 @@ namespace cft
 		if (m_values.empty())
 			return T{};
 
-		unsigned int randomIndex = m_randomNumberGenerator.generateInteger(0u, m_totalWeight - 1);
+		unsigned int randomIndex = m_randomNumberGenerator.generate(0u, m_totalWeight - 1);
 		unsigned int accumulator = 0;
 
 		for (const WeightedValue& value : m_values)

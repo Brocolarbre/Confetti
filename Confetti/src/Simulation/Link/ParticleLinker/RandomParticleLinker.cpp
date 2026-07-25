@@ -21,8 +21,8 @@ namespace cft
 
 		for (unsigned int i = 0; i < connectionCount; ++i)
 		{
-			unsigned int randomIndexFrom = m_randomNumberGenerator.generateInteger(0, maximumParticlePoolIndex);
-			unsigned int randomIndexTo = m_randomNumberGenerator.generateInteger(0, maximumParticlePoolIndex);
+			unsigned int randomIndexFrom = m_randomNumberGenerator.generate(0, maximumParticlePoolIndex);
+			unsigned int randomIndexTo = m_randomNumberGenerator.generate(0, maximumParticlePoolIndex);
 
 			if (canConnect(ribbonPool, particlePool, particleId[randomIndexFrom], particleId[randomIndexTo], elapsedTime))
 				createRibbon(createdRibbonsCount, ribbonPool, particleId[randomIndexFrom], particleId[randomIndexTo], ribbonRegistryId, ribbonPointCount, elapsedTime);

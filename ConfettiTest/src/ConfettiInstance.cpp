@@ -67,6 +67,7 @@
 void ConfettiInstance::restartSimulation()
 {
     cft::ParticleSpawner::resetNextId();
+    m_randomNumberGenerator.reset();
 
     m_particleSimulation.clear();
     //m_particleSimulation.addParticleEffect(0.0f, 0);
@@ -369,7 +370,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
     m_assetRegistry.addEmissionPattern(20, std::make_unique<cft::SingleBurstEmissionPattern>(50));
     //m_assetRegistry.addEmissionPattern(20, std::make_unique<cft::LinearRateEmissionPattern>(1000.0f, 10.0f, 5.0f));
     //m_assetRegistry.addParticleEmitter(20, cft::ParticleEmitterDescriptor{ 20, 20, 20, std::nullopt, std::nullopt, std::nullopt, cft::RenderConfiguration{cft::RenderType::Billboard, cft::BillboardRenderConfiguration{ 20 } }, { 20 }, {}, { 20, 21, 22, 23 } });
-    m_assetRegistry.addParticleEmitterDescriptor(20, cft::ParticleEmitterDescriptor{ 20, 20, 20, std::nullopt/*cft::TrailConfiguration{ 0.0f, 0.05f, std::nullopt, std::nullopt, cft::PathConfiguration{ 1.0f, 1.0f, 5.0f, std::nullopt, false, { glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) }, std::nullopt, cft::ColorInterpolation::Linear, cft::ThicknessDistribution::Linear, std::nullopt, cft::PathImage{5, 1.0f}}}*/, cft::RibbonConfiguration{cft::PathConfiguration{0.1f, 0.1f, std::nullopt, std::nullopt, true, {}, std::nullopt, cft::ColorInterpolation::Linear, cft::ThicknessDistribution::Linear, std::nullopt, std::nullopt}, 0, 3, 100 }, std::nullopt, cft::RenderConfiguration{cft::RenderType::Billboard, cft::BillboardRenderConfiguration{20}}, {/*20*/}, {}, {20, 21, 22, 23}});
+    m_assetRegistry.addParticleEmitterDescriptor(20, cft::ParticleEmitterDescriptor{ 20, 20, 20, std::nullopt/*cft::TrailConfiguration{ 0.0f, 0.05f, std::nullopt, std::nullopt, cft::PathConfiguration{ 1.0f, 1.0f, 5.0f, std::nullopt, false, { glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) }, std::nullopt, cft::ColorInterpolation::Linear, cft::ThicknessDistribution::Linear, std::nullopt, cft::PathImage{5, 1.0f}}}*/, cft::RibbonConfiguration{cft::PathConfiguration{0.1f, 0.1f, std::nullopt, std::nullopt, true, {}, std::nullopt, cft::ColorInterpolation::Linear, cft::ThicknessDistribution::Linear, std::nullopt, std::nullopt}, 0, 0, 100 }, std::nullopt, cft::RenderConfiguration{cft::RenderType::Billboard, cft::BillboardRenderConfiguration{20}}, {/*20*/}, {}, {20, 21, 22, 23}});
     //m_assetRegistry.addParticleEmitterDescriptor(20, cft::ParticleEmitterDescriptor{ 20, 20, 20, cft::TrailConfiguration{ 0.0f, 0.05f, std::nullopt, std::nullopt, cft::PathConfiguration{ 1.0f, 5.0f, std::nullopt, false, { glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) }, std::nullopt, cft::ColorInterpolation::Linear, cft::ThicknessDistribution::Constant, std::nullopt, cft::PathImage{ 5, 1.0f } } }, std::nullopt, std::nullopt, cft::RenderConfiguration{cft::RenderType::Billboard, cft::BillboardRenderConfiguration{20}}, { 20 }, {2}, {20, 21, 22, 23} });
     m_assetRegistry.addParticleEffectDescriptor(20, cft::ParticleEffectDescriptor{ { cft::ParticleEmitterSpawnContext{ 20, cft::TimeRange{ 0.0f, 60.0f }, cft::MotionState{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) }, {}, {}}} });
 

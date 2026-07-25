@@ -2,34 +2,44 @@
 
 namespace cft
 {
-	namespace
-	{
-		float mapRange(float value, float fromMin, float fromMax, float toMin, float toMax)
-		{
-			return (((value - fromMin) * (toMax - toMin)) / (fromMax - fromMin)) + toMin;
-		}
-	}
-
 	RandomNumberGenerator::RandomNumberGenerator(unsigned int seed) :
 		m_engine(seed),
-		m_distribution(0.0f, 1.0f)
+		m_seed(seed),
+		m_integerDistribution(),
+		m_unsignedIntegerDistribution(),
+		m_realDistribution()
 	{
 
 	}
 
-	int RandomNumberGenerator::generateInteger(int min, int max)
+	void RandomNumberGenerator::setSeed(unsigned int seed)
 	{
-		return std::uniform_int_distribution<int>(min, max)(m_engine);
+		m_seed = seed;
+		m_engine.seed(seed);
 	}
 
-	unsigned int RandomNumberGenerator::generateInteger(unsigned int min, unsigned int max)
+	void RandomNumberGenerator::reset()
 	{
-		return std::uniform_int_distribution<unsigned int>(min, max)(m_engine);
+		m_engine.seed(m_seed);
+
+		m_integerDistribution.reset();
+		m_unsignedIntegerDistribution.reset();
+		m_realDistribution.reset();
+	}
+
+	int RandomNumberGenerator::generate(int min, int max)
+	{
+		return m_integerDistribution(m_engine, std::uniform_int_distribution<int>::param_type(min, max));
+	}
+
+	unsigned int RandomNumberGenerator::generate(unsigned int min, unsigned int max)
+	{
+		return m_unsignedIntegerDistribution(m_engine, std::uniform_int_distribution<unsigned int>::param_type(min, max));
 	}
 
 	float RandomNumberGenerator::generate(float min, float max)
 	{
-		return mapRange(m_distribution(m_engine), 0.0f, 1.0f, min, max);
+		return m_realDistribution(m_engine, std::uniform_real_distribution<float>::param_type(min, max));
 	}
 
 	glm::vec2 RandomNumberGenerator::generate(const glm::vec2& min, const glm::vec2& max)

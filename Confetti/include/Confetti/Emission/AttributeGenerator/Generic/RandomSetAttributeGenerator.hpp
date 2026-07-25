@@ -26,7 +26,7 @@ namespace cft
 		if (m_values.empty())
 			return T{};
 
-		return m_values[m_randomNumberGenerator.generateInteger(0u, static_cast<unsigned int>(m_values.size()) - 1)];
+		return m_values[m_randomNumberGenerator.generate(0u, static_cast<unsigned int>(m_values.size()) - 1)];
 	}
 
 	template<typename T>
