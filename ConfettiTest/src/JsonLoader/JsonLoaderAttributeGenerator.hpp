@@ -1,6 +1,6 @@
 #pragma once
 
-#include "JsonSerialization.hpp"
+#include "JsonTraits.hpp"
 
 #include <nlohmann/json.hpp>
 #include <stdexcept>
@@ -14,98 +14,61 @@
 #include <Confetti/Emission/AttributeGenerator/Generic/RandomAttributeGenerator.hpp>
 #include <Confetti/Emission/AttributeGenerator/Generic/RandomSetAttributeGenerator.hpp>
 #include <Confetti/Emission/AttributeGenerator/Generic/WeightedRandomSetAttributeGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/Specialized/NormalBurstLinearVelocityGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/Specialized/NormalLinearVelocityGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/Specialized/RandomNormalOffsetPositionGenerator.hpp>
-
-template <typename Type, typename WrapperType>
-struct JsonTraits;
-
-template <>
-struct JsonTraits<cft::Color, Color>
-{
-	static cft::Color read(const nlohmann::json& data)
-	{
-		return data.get<Color>().value;
-	}
-
-	static std::vector<cft::Color> readVector(const nlohmann::json& data)
-	{
-		return JsonTools::wrapperToType<cft::Color>(data.get<std::vector<Color>>());
-	}
-
-	static std::vector<cft::WeightedValue<cft::Color>> readWeightedVector(const nlohmann::json& data)
-	{
-		return JsonTools::wrapperToType<cft::Color>(data.get<std::vector<cft::WeightedValue<Color>>>());
-	}
-};
-
-template <>
-struct JsonTraits<cft::Position, Vec3>
-{
-	static cft::Position read(const nlohmann::json& data)
-	{
-		return data.get<Vec3>().value;
-	}
-
-	static std::vector<cft::Position> readVector(const nlohmann::json& data)
-	{
-		return JsonTools::wrapperToType<cft::Position>(data.get<std::vector<Vec3>>());
-	}
-
-	static std::vector<cft::WeightedValue<cft::Position>> readWeightedVector(const nlohmann::json& data)
-	{
-		return JsonTools::wrapperToType<cft::Position>(data.get<std::vector<cft::WeightedValue<Vec3>>>());
-	}
-};
-
-template <>
-struct JsonTraits<cft::Rotation, Vec3>
-{
-	static cft::Rotation read(const nlohmann::json& data)
-	{
-		return JsonTools::eulerAnglesToQuaternion(data.get<Vec3>().value);
-	}
-
-	static std::vector<cft::Rotation> readVector(const nlohmann::json& data)
-	{
-		return JsonTools::eulerAnglesToQuaternion(JsonTools::wrapperToType<glm::vec3>(data.get<std::vector<Vec3>>()));
-	}
-
-	static std::vector<cft::WeightedValue<cft::Rotation>> readWeightedVector(const nlohmann::json& data)
-	{
-		return JsonTools::eulerAnglesToQuaternion(JsonTools::wrapperToType<glm::vec3>(data.get<std::vector<cft::WeightedValue<Vec3>>>()));
-	}
-};
-
-template <>
-struct JsonTraits<cft::Phase, float>
-{
-	static cft::Phase read(const nlohmann::json& data)
-	{
-		return data.get<float>();
-	}
-
-	static std::vector<cft::Phase> readVector(const nlohmann::json& data)
-	{
-		return data.get<std::vector<float>>();
-	}
-
-	static std::vector<cft::WeightedValue<cft::Phase>> readWeightedVector(const nlohmann::json& data)
-	{
-		return data.get<std::vector<cft::WeightedValue<float>>>();
-	}
-};
 
 class JsonLoaderAttributeGenerator
 {
+private:
+	using json = nlohmann::json;
+
+	template <typename T>
+	static cft::UnaryAttributeGenerator<T>::UnaryOperation parseUnaryOperation(const json& data);
+
+	template <>
+	static cft::UnaryAttributeGenerator<glm::vec3>::UnaryOperation parseUnaryOperation<glm::vec3>(const json& data);
+
+	template <typename Type, typename WrapperType>
+	static std::unique_ptr<cft::AttributeGenerator<Type>> parseUnaryGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
+
+	/*template <typename Type, typename WrapperType>
+	static std::unique_ptr<cft::AttributeGenerator<Type>> parseBinaryGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);*/
+
+	template <typename Type, typename WrapperType>
+	static std::unique_ptr<cft::AttributeGenerator<Type>> parseSpecializedGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
+
+	template <>
+	static std::unique_ptr<cft::AttributeGenerator<glm::vec3>> parseSpecializedGenerator<glm::vec3, Vec3>(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
+
+	template <typename Type, typename WrapperType>
+	static std::unique_ptr<cft::AttributeGenerator<Type>> parseGenericGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
+
 public:
 	template <typename Type, typename WrapperType>
-	static std::unique_ptr<cft::AttributeGenerator<Type>> parseAttributeGenerator(const nlohmann::json& data, cft::RandomNumberGenerator& randomNumberGenerator);
+	static std::unique_ptr<cft::AttributeGenerator<Type>> parseAttributeGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
 };
 
+template <typename T>
+inline cft::UnaryAttributeGenerator<T>::UnaryOperation JsonLoaderAttributeGenerator::parseUnaryOperation(const json& data)
+{
+	return nullptr;
+}
+
 template <typename Type, typename WrapperType>
-inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseAttributeGenerator(const nlohmann::json& data, cft::RandomNumberGenerator& randomNumberGenerator)
+inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseUnaryGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
+{
+	std::unique_ptr<cft::AttributeGenerator<Type>> operand = parseAttributeGenerator<Type, WrapperType>(data["operand"], randomNumberGenerator);
+	typename cft::UnaryAttributeGenerator<Type>::UnaryOperation operation = parseUnaryOperation<Type>(data);
+
+	return std::make_unique<cft::UnaryAttributeGenerator<Type>>(std::move(operand), std::move(operation));
+}
+
+template <typename Type, typename WrapperType>
+inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseSpecializedGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
+{
+	return nullptr;
+}
+
+template<typename Type, typename WrapperType>
+inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseGenericGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
 {
 	std::string type = data["type"];
 
@@ -123,4 +86,19 @@ inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerat
 		return std::make_unique<cft::WeightedRandomSetAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::readWeightedVector(data["values"]), randomNumberGenerator);
 	else
 		throw std::runtime_error("Invalid attribute generator type : '" + type + "'");
+}
+
+template <typename Type, typename WrapperType>
+inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseAttributeGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
+{
+	std::string type = data["type"];
+
+	if (type == "Unary")
+		return parseUnaryGenerator<Type, WrapperType>(data, randomNumberGenerator);
+	/*else if (type == "Binary")
+		return parseBinaryGenerator<Type, WrapperType>(data, randomNumberGenerator);
+	else if (auto generator = parseSpecializedGenerator<Type, WrapperType>(data, randomNumberGenerator))
+		return generator;*/
+	else
+		return parseGenericGenerator<Type, WrapperType>(data, randomNumberGenerator);
 }
