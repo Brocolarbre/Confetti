@@ -73,6 +73,7 @@ namespace cft
 	void BillboardParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
 	{
 		m_particleSsbo.bind();
+		m_particleSsbo.ensureCapaticy(particlePools, particleRegistry);
 		m_particleSsbo.setData(particlePools, m_imageIdToTextureIndex, m_spriteSheetIdToSpriteSheetSsboIndexMapping, particleRegistry, assetRegistry);
 	}
 

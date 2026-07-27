@@ -22,6 +22,8 @@ namespace cft
 		unsigned int m_capacity;
 		unsigned int m_particleCount;
 
+		ParticleData* m_mappedData;
+
 		void resize(unsigned int capacity);
 
 	public:
@@ -29,6 +31,8 @@ namespace cft
 		~BillboardParticleSSBO();
 
 		unsigned int getParticleCount() const;
+
+		void ensureCapaticy(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry);
 
 		void bind() const;
 		void setData(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const std::unordered_map<unsigned int, unsigned int>& imageIdToTextureIndex, const std::unordered_map<unsigned int, unsigned int>& spriteSheetIdToSpriteSheetSsboIndexMapping, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
