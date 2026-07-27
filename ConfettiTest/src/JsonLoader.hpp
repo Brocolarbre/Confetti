@@ -30,5 +30,5 @@ private:
 	static cft::ParticleEmitterDescriptor parseParticleEmitterDescriptor(const json& data);
 
 public:
-	void load(const std::string& path, cft::AssetRegistry& assetRegistry, cft::RandomNumberGenerator& randomNumberGenerator);
+	static void load(const std::string& path, cft::AssetRegistry& assetRegistry, cft::RandomNumberGenerator& randomNumberGenerator);
 };
