@@ -1,5 +1,8 @@
 #pragma once
 
+#include "JsonTypes.hpp"
+#include "JsonTools.hpp"
+
 #include <Confetti/Simulation/Registry/AssetRegistry.hpp>
 #include <Confetti/Behavior/Force/SpatialInfluence.hpp>
 #include <Confetti/Behavior/Visual/ParticleTime.hpp>
@@ -76,57 +79,8 @@
 #include <LineWeaver/Easing/EaseSmootherstep.hpp>
 #include <LineWeaver/Easing/EaseSmoothstep.hpp>
 
-#include <nlohmann/json.hpp>
 #include <stdexcept>
 #include <string>
-
-struct Color
-{
-	glm::vec4 value;
-};
-
-struct Vec3
-{
-	glm::vec3 value;
-};
-
-struct Vec2
-{
-	glm::vec2 value;
-};
-
-static glm::quat eulerAnglesToQuaternion(const glm::vec3& eulerAngles)
-{
-	return glm::quat(glm::vec3(glm::radians(eulerAngles.x), glm::radians(eulerAngles.y), glm::radians(eulerAngles.z)));
-}
-
-static std::vector<glm::quat> eulerAnglesToQuaternion(const std::vector<glm::vec3>& eulerAngles)
-{
-	std::vector<glm::quat> rotations;
-	rotations.reserve(eulerAngles.size());
-
-	for (const glm::vec3& rotation : eulerAngles)
-		rotations.push_back(eulerAnglesToQuaternion(rotation));
-
-	return rotations;
-}
-
-static std::vector<cft::WeightedValue<glm::quat>> eulerAnglesToQuaternion(const std::vector<cft::WeightedValue<glm::vec3>>& eulerAngles)
-{
-	std::vector<cft::WeightedValue<glm::quat>> rotations;
-	rotations.reserve(eulerAngles.size());
-
-	for (const cft::WeightedValue<glm::vec3>& rotation : eulerAngles)
-		rotations.push_back(cft::WeightedValue<glm::quat>{ eulerAnglesToQuaternion(rotation.value), rotation.weight });
-
-	return rotations;
-}
-
-template <typename T, typename WrapperType>
-static std::vector<T> wrapperToType(const std::vector<WrapperType>& wrapper);
-
-template <typename T, typename WrapperType>
-static std::vector<cft::WeightedValue<T>> wrapperToType(const std::vector<cft::WeightedValue<WrapperType>>& wrapper);
 
 namespace nlohmann
 {
@@ -447,7 +401,7 @@ namespace nlohmann
 		static void from_json(const json& data, cft::MotionState& value)
 		{
 			glm::vec3 eulerAngles = data["rotation"].get<Vec3>().value;
-			glm::quat rotation = eulerAnglesToQuaternion(glm::vec3(glm::radians(eulerAngles.x), glm::radians(eulerAngles.y), glm::radians(eulerAngles.z)));
+			glm::quat rotation = JsonTools::eulerAnglesToQuaternion(glm::vec3(glm::radians(eulerAngles.x), glm::radians(eulerAngles.y), glm::radians(eulerAngles.z)));
 
 			value = cft::MotionState{
 				data["position"].get<Vec3>().value,
@@ -496,7 +450,7 @@ namespace nlohmann
 				data["lifetime"].is_null() ? std::nullopt : std::make_optional<float>(data["lifetime"]),
 				data["lifetimeFade"].is_null() ? std::nullopt : std::make_optional<cft::LifetimeFade>(data["lifetimeFade"].get<cft::LifetimeFade>()),
 				data["appendParticleColor"],
-				wrapperToType<glm::vec4>(data["colorGradient"].get<std::vector<Color>>()),
+				JsonTools::wrapperToType<cft::Color>(data["colorGradient"].get<std::vector<Color>>()),
 				data["colorStart"].is_null() ? std::nullopt : std::make_optional<std::vector<float>>(data["colorStart"].get<std::vector<float>>()),
 				data["colorInterpolation"].get<cft::ColorInterpolation>(),
 				data["thicknessDistribution"].get<cft::ThicknessDistribution>(),
@@ -650,34 +604,4 @@ namespace nlohmann
 			};
 		}
 	};
-}
-
-template<typename T, typename WrapperType>
-inline std::vector<T> wrapperToType(const std::vector<WrapperType>& wrapper)
-{
-	std::vector<T> type;
-	type.reserve(wrapper.size());
-
-	for (const WrapperType& wrapperValue : wrapper)
-		type.push_back(wrapperValue.value);
-
-	return type;
-}
-
-template<typename T, typename WrapperType>
-inline T wrapperToType(const WrapperType& wrapper)
-{
-	return wrapper.value;
-}
-
-template <typename T, typename WrapperType>
-inline std::vector<cft::WeightedValue<T>> wrapperToType(const std::vector<cft::WeightedValue<WrapperType>>& wrapper)
-{
-	std::vector<cft::WeightedValue<T>> type;
-	type.reserve(wrapper.size());
-
-	for (const cft::WeightedValue<WrapperType>& wrapperValue : wrapper)
-		type.push_back(cft::WeightedValue<T>{ wrapperToType<T>(wrapperValue.value), wrapperValue.weight });
-
-	return type;
 }

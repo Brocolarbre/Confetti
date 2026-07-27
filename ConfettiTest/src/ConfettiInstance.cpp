@@ -1,6 +1,5 @@
 #include "ConfettiInstance.hpp"
-
-#include "JsonLoader.hpp"
+#include "JsonLoader/JsonLoader.hpp"
 
 #include <Confetti/Behavior/Force/AttractionForceField.hpp>
 #include <Confetti/Behavior/Force/DirectionalForceField.hpp>

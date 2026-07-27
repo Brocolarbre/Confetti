@@ -1,20 +1,13 @@
 #pragma once
 
-#include "JsonSerialization.hpp"
+#include <nlohmann/json.hpp>
+#include <Confetti/Simulation/Registry/AssetRegistry.hpp>
+#include <Confetti/Tool/RandomNumberGenerator.hpp>
 
 class JsonLoader
 {
 private:
 	using json = nlohmann::json;
-
-	static std::unique_ptr<cft::AttributeGenerator<cft::Color>> parseColorAttributeGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
-	static std::unique_ptr<cft::AttributeGenerator<cft::Position>> parsePositionAttributeGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
-	static std::unique_ptr<cft::AttributeGenerator<cft::Rotation>> parseRotationAttributeGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
-	static std::unique_ptr<cft::AttributeGenerator<cft::Scale>> parseScaleAttributeGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
-	static std::unique_ptr<cft::AttributeGenerator<cft::LinearVelocity>> parseLinearVelocityAttributeGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
-	static std::unique_ptr<cft::AttributeGenerator<cft::AngularVelocity>> parseAngularVelocityAttributeGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
-	static std::unique_ptr<cft::AttributeGenerator<cft::Phase>> parsePhaseAttributeGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
-	static std::unique_ptr<cft::AttributeGenerator<cft::Lifetime>> parseLifetimeAttributeGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
 
 	static std::unique_ptr<cft::ForceField> parseForceField(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
 	static std::unique_ptr<cft::MotionBehavior> parseMotionBehavior(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
