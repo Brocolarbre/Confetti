@@ -3,7 +3,31 @@
 #include "JsonSerialization.hpp"
 
 template <typename Type, typename WrapperType>
-struct JsonTraits;
+struct JsonTraits
+{
+public:
+	static Type read(const nlohmann::json& data);
+	static std::vector<Type> readVector(const nlohmann::json& data);
+	static std::vector<cft::WeightedValue<Type>> readWeightedVector(const nlohmann::json& data);
+};
+
+template <typename Type, typename WrapperType>
+inline Type JsonTraits<Type, WrapperType>::read(const nlohmann::json& data)
+{
+	return data.get<Type>();
+}
+
+template <typename Type, typename WrapperType>
+inline std::vector<Type> JsonTraits<Type, WrapperType>::readVector(const nlohmann::json& data)
+{
+	return std::vector<Type>();
+}
+
+template <typename Type, typename WrapperType>
+inline std::vector<cft::WeightedValue<Type>> JsonTraits<Type, WrapperType>::readWeightedVector(const nlohmann::json& data)
+{
+	return std::vector<cft::WeightedValue<Type>>();
+}
 
 template <>
 struct JsonTraits<cft::Color, Color>

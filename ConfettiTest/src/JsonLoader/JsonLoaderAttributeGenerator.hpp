@@ -6,8 +6,6 @@
 #include <stdexcept>
 #include <string>
 
-#include <Confetti/Emission/AttributeGenerator/BinaryAttributeGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/UnaryAttributeGenerator.hpp>
 #include <Confetti/Emission/AttributeGenerator/Generic/ConstantAttributeGenerator.hpp>
 #include <Confetti/Emission/AttributeGenerator/Generic/InterpolatedRandomSetAttributeGenerator.hpp>
 #include <Confetti/Emission/AttributeGenerator/Generic/LinearAttributeGenerator.hpp>
@@ -20,23 +18,14 @@ class JsonLoaderAttributeGenerator
 private:
 	using json = nlohmann::json;
 
-	template <typename T>
-	static cft::UnaryAttributeGenerator<T>::UnaryOperation parseUnaryOperation(const json& data);
-
-	template <>
-	static cft::UnaryAttributeGenerator<glm::vec3>::UnaryOperation parseUnaryOperation<glm::vec3>(const json& data);
-
-	template <typename Type, typename WrapperType>
-	static std::unique_ptr<cft::AttributeGenerator<Type>> parseUnaryGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
-
-	/*template <typename Type, typename WrapperType>
-	static std::unique_ptr<cft::AttributeGenerator<Type>> parseBinaryGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);*/
-
 	template <typename Type, typename WrapperType>
 	static std::unique_ptr<cft::AttributeGenerator<Type>> parseSpecializedGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
 
 	template <>
 	static std::unique_ptr<cft::AttributeGenerator<glm::vec3>> parseSpecializedGenerator<glm::vec3, Vec3>(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
+
+	template <>
+	static std::unique_ptr<cft::AttributeGenerator<glm::vec4>> parseSpecializedGenerator<glm::vec4, Color>(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
 
 	template <typename Type, typename WrapperType>
 	static std::unique_ptr<cft::AttributeGenerator<Type>> parseGenericGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
@@ -46,28 +35,13 @@ public:
 	static std::unique_ptr<cft::AttributeGenerator<Type>> parseAttributeGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator);
 };
 
-template <typename T>
-inline cft::UnaryAttributeGenerator<T>::UnaryOperation JsonLoaderAttributeGenerator::parseUnaryOperation(const json& data)
-{
-	return nullptr;
-}
-
-template <typename Type, typename WrapperType>
-inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseUnaryGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
-{
-	std::unique_ptr<cft::AttributeGenerator<Type>> operand = parseAttributeGenerator<Type, WrapperType>(data["operand"], randomNumberGenerator);
-	typename cft::UnaryAttributeGenerator<Type>::UnaryOperation operation = parseUnaryOperation<Type>(data);
-
-	return std::make_unique<cft::UnaryAttributeGenerator<Type>>(std::move(operand), std::move(operation));
-}
-
 template <typename Type, typename WrapperType>
 inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseSpecializedGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
 {
 	return nullptr;
 }
 
-template<typename Type, typename WrapperType>
+template <typename Type, typename WrapperType>
 inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseGenericGenerator(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
 {
 	std::string type = data["type"];
@@ -93,12 +67,8 @@ inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerat
 {
 	std::string type = data["type"];
 
-	if (type == "Unary")
-		return parseUnaryGenerator<Type, WrapperType>(data, randomNumberGenerator);
-	/*else if (type == "Binary")
-		return parseBinaryGenerator<Type, WrapperType>(data, randomNumberGenerator);
-	else if (auto generator = parseSpecializedGenerator<Type, WrapperType>(data, randomNumberGenerator))
-		return generator;*/
+	if (std::unique_ptr<cft::AttributeGenerator<Type>> generator = parseSpecializedGenerator<Type, WrapperType>(data, randomNumberGenerator))
+		return generator;
 	else
 		return parseGenericGenerator<Type, WrapperType>(data, randomNumberGenerator);
 }

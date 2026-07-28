@@ -10,8 +10,6 @@
 
 #include <Confetti/Emission/ParticleSpawner.hpp>
 
-#include <Confetti/Emission/AttributeGenerator/BinaryAttributeGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/UnaryAttributeGenerator.hpp>
 #include <Confetti/Emission/AttributeGenerator/Generic/ConstantAttributeGenerator.hpp>
 #include <Confetti/Emission/AttributeGenerator/Generic/InterpolatedRandomSetAttributeGenerator.hpp>
 #include <Confetti/Emission/AttributeGenerator/Generic/LinearAttributeGenerator.hpp>
@@ -117,6 +115,15 @@ namespace nlohmann
 		static void from_json(const json& data, lw::Point& value)
 		{
 			value = lw::Point(data["x"], data["y"], data["z"]);
+		}
+	};
+
+	template<>
+	struct adl_serializer<glm::vec4>
+	{
+		static void from_json(const json& data, glm::vec4& value)
+		{
+			value = glm::vec4(data["x"], data["y"], data["z"], data["w"]);
 		}
 	};
 
