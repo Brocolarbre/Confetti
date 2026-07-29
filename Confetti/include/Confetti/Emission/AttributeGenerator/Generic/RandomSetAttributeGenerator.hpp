@@ -6,22 +6,23 @@
 namespace cft
 {
 	template <typename T>
-	class RandomSetAttributeGenerator : public AttributeGenerator<T>
+	class RandomSetAttributeGenerator : public Cloneable<RandomSetAttributeGenerator<T>, AttributeGenerator<T>>
 	{
 	private:
 		std::vector<T> m_values;
-		RandomNumberGenerator& m_randomNumberGenerator;
+		RandomNumberGenerator m_randomNumberGenerator;
 
-		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const override;
+		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
 
 	public:
-		RandomSetAttributeGenerator(const std::vector<T>& values, RandomNumberGenerator& randomNumberGenerator);
+		RandomSetAttributeGenerator(const std::vector<T>& values, std::uint64_t seed = 0);
 
-		std::unique_ptr<AttributeGenerator<T>> clone() const override;
+		std::optional<std::uint64_t> getSeed() const override;
+		void setSeed(std::uint64_t seed) override;
 	};
 
-	template<typename T>
-	inline T RandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
+	template <typename T>
+	inline T RandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
 	{
 		if (m_values.empty())
 			return T{};
@@ -29,17 +30,23 @@ namespace cft
 		return m_values[m_randomNumberGenerator.generate(0u, static_cast<unsigned int>(m_values.size()) - 1)];
 	}
 
-	template<typename T>
-	inline RandomSetAttributeGenerator<T>::RandomSetAttributeGenerator(const std::vector<T>& values, RandomNumberGenerator& randomNumberGenerator) :
+	template <typename T>
+	inline RandomSetAttributeGenerator<T>::RandomSetAttributeGenerator(const std::vector<T>& values, std::uint64_t seed) :
 		m_values(values),
-		m_randomNumberGenerator(randomNumberGenerator)
+		m_randomNumberGenerator(seed)
 	{
 
 	}
 
-	template<typename T>
-	inline std::unique_ptr<AttributeGenerator<T>> RandomSetAttributeGenerator<T>::clone() const
+	template <typename T>
+	inline std::optional<std::uint64_t> RandomSetAttributeGenerator<T>::getSeed() const
 	{
-		return std::make_unique<RandomSetAttributeGenerator<T>>(*this);
+		return m_randomNumberGenerator.getSeed();
+	}
+
+	template <typename T>
+	inline void RandomSetAttributeGenerator<T>::setSeed(std::uint64_t seed)
+	{
+		m_randomNumberGenerator.setSeed(seed);
 	}
 }

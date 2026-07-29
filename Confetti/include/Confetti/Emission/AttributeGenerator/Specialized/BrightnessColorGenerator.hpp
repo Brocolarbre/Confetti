@@ -12,13 +12,16 @@ namespace cft
 		std::unique_ptr<AttributeGenerator<Color>> m_colorGenerator;
 		std::unique_ptr<AttributeGenerator<float>> m_brightnessGenerator;
 
-		Color generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const override;
+		Color generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
 
 	public:
 		BrightnessColorGenerator(std::unique_ptr<AttributeGenerator<Color>> colorGenerator, std::unique_ptr<AttributeGenerator<float>> brightnessGenerator);
 
-		std::vector<Color> generate(unsigned int count, const std::vector<SpawnContext>& context) const override;
-
 		std::unique_ptr<AttributeGenerator<Color>> clone() const override;
+
+		std::optional<std::uint64_t> getSeed() const override;
+		void setSeed(std::uint64_t seed) override;
+
+		std::vector<Color> generate(unsigned int count, const std::vector<SpawnContext>& context) override;
 	};
 }

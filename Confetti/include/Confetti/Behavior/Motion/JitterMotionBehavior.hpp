@@ -9,10 +9,13 @@ namespace cft
 	{
 	private:
 		float m_strength;
-		RandomNumberGenerator& m_randomNumberGenerator;
+		RandomNumberGenerator m_randomNumberGenerator;
 
 	public:
-		JitterMotionBehavior(float strength, RandomNumberGenerator& randomNumberGenerator);
+		JitterMotionBehavior(float strength, std::uint64_t seed = 0);
+
+		std::optional<std::uint64_t> getSeed() const override;
+		void setSeed(std::uint64_t seed) override;
 
 		glm::vec3 evaluate(float age, const MotionState& motionState) override;
 	};

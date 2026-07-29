@@ -11,17 +11,18 @@ namespace cft
 	class CONFETTI_API RandomNumberGenerator
 	{
 	private:
-		std::mt19937 m_engine;
-		unsigned int m_seed;
+		std::mt19937_64 m_engine;
+		std::uint64_t m_seed;
 
 		std::uniform_int_distribution<int> m_integerDistribution;
 		std::uniform_int_distribution<unsigned int> m_unsignedIntegerDistribution;
 		std::uniform_real_distribution<float> m_realDistribution;
 
 	public:
-		RandomNumberGenerator(unsigned int seed = 0);
+		RandomNumberGenerator(std::uint64_t seed = 0);
 
-		void setSeed(unsigned int seed);
+		std::uint64_t getSeed() const;
+		void setSeed(std::uint64_t seed);
 		void reset();
 
 		int generate(int min, int max);

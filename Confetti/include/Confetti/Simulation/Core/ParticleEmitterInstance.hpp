@@ -10,6 +10,7 @@ namespace cft
 {
 	struct ParticleEmitterInstance
 	{
+		std::uint64_t seed;
 		TimeRange timeRange;
 		MotionState motionState;
 		glm::vec3 postBehaviorPosition;

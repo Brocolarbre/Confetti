@@ -56,7 +56,7 @@
 
 using json = nlohmann::json;
 
-std::unique_ptr<cft::ForceField> JsonLoader::parseForceField(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
+std::unique_ptr<cft::ForceField> JsonLoader::parseForceField(const json& data)
 {
 	std::string type = data["type"];
 
@@ -75,7 +75,7 @@ std::unique_ptr<cft::ForceField> JsonLoader::parseForceField(const json& data, c
 	else if (type == "ShockWave")
 		return std::make_unique<cft::ShockWaveForceField>(data["spatialInfluence"].get<cft::SpatialInfluence>(), data["axis"].get<Vec3>().value, data["speed"], data["strength"], data["thickness"]);
 	else if (type == "Turbulence")
-		return std::make_unique<cft::TurbulenceForceField>(data["strength"], randomNumberGenerator);
+		return std::make_unique<cft::TurbulenceForceField>(data["strength"], data["seed"]);
 	else if (type == "Vortex")
 		return std::make_unique<cft::VortexForceField>(data["spatialInfluence"].get<cft::SpatialInfluence>(), data["axis"].get<Vec3>().value, data["strength"], data["pullStrength"]);
 	else if (type == "Wind")
@@ -84,7 +84,7 @@ std::unique_ptr<cft::ForceField> JsonLoader::parseForceField(const json& data, c
 		throw std::runtime_error("Invalid force field type : '" + type + "'");
 }
 
-std::unique_ptr<cft::MotionBehavior> JsonLoader::parseMotionBehavior(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
+std::unique_ptr<cft::MotionBehavior> JsonLoader::parseMotionBehavior(const json& data)
 {
 	std::string type = data["type"];
 
@@ -93,7 +93,7 @@ std::unique_ptr<cft::MotionBehavior> JsonLoader::parseMotionBehavior(const json&
 	else if (type == "FigureEight")
 		return std::make_unique<cft::FigureEightMotionBehavior>(data["axis"].get<Vec3>().value, data["radius"], data["speed"]);
 	else if (type == "Jitter")
-		return std::make_unique<cft::JitterMotionBehavior>(data["strength"], randomNumberGenerator);
+		return std::make_unique<cft::JitterMotionBehavior>(data["strength"], data["seed"]);
 	else if (type == "Orbit")
 		return std::make_unique<cft::OrbitMotionBehavior>(data["origin"].get<Vec3>().value, data["axis"].get<Vec3>().value, data["radius"], data["speed"]);
 	else if (type == "Oscillation")
@@ -136,39 +136,39 @@ std::unique_ptr<cft::VisualBehavior> JsonLoader::parseVisualBehavior(const json&
 		throw std::runtime_error("Invalid visual behavior type : '" + type + "'");
 }
 
-std::unique_ptr<cft::ParticleSpawner> JsonLoader::parseParticleSpawner(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
+std::unique_ptr<cft::ParticleSpawner> JsonLoader::parseParticleSpawner(const json& data)
 {
 	if (data.contains("spawnShape"))
 	{
 		return std::make_unique<cft::ParticleSpawner>(
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Color, Color>(data["colorAttributeGenerator"], randomNumberGenerator),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Color, Color>(data["colorAttributeGenerator"]),
 			data["spawnShape"].get<std::unique_ptr<cft::SpawnShape>>(),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Rotation, Vec3>(data["rotationAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Scale, Vec3>(data["scaleAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::LinearVelocity, Vec3>(data["linearVelocityAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::AngularVelocity, Vec3>(data["angularVelocityAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Phase, float>(data["phaseAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Lifetime, float>(data["lifetimeAttributeGenerator"], randomNumberGenerator),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Rotation, Vec3>(data["rotationAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Scale, Vec3>(data["scaleAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::LinearVelocity, Vec3>(data["linearVelocityAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::AngularVelocity, Vec3>(data["angularVelocityAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Phase, float>(data["phaseAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Lifetime, float>(data["lifetimeAttributeGenerator"]),
 			data["maximumParticleLifetime"]
 		);
 	}
 	else
 	{
 		return std::make_unique<cft::ParticleSpawner>(
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Color, Color>(data["colorAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Position, Vec3>(data["positionAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Rotation, Vec3>(data["rotationAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Scale, Vec3>(data["scaleAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::LinearVelocity, Vec3>(data["linearVelocityAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::AngularVelocity, Vec3>(data["angularVelocityAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Phase, float>(data["phaseAttributeGenerator"], randomNumberGenerator),
-			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Lifetime, float>(data["lifetimeAttributeGenerator"], randomNumberGenerator),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Color, Color>(data["colorAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Position, Vec3>(data["positionAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Rotation, Vec3>(data["rotationAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Scale, Vec3>(data["scaleAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::LinearVelocity, Vec3>(data["linearVelocityAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::AngularVelocity, Vec3>(data["angularVelocityAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Phase, float>(data["phaseAttributeGenerator"]),
+			JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Lifetime, float>(data["lifetimeAttributeGenerator"]),
 			data["maximumParticleLifetime"]
 		);
 	}
 }
 
-std::unique_ptr<cft::EmissionPattern> JsonLoader::parseEmissionPattern(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
+std::unique_ptr<cft::EmissionPattern> JsonLoader::parseEmissionPattern(const json& data)
 {
 	std::string type = data["type"];
 
@@ -183,14 +183,14 @@ std::unique_ptr<cft::EmissionPattern> JsonLoader::parseEmissionPattern(const jso
 	else if (type == "PeriodicBurst")
 		return std::make_unique<cft::PeriodicBurstEmissionPattern>(data["count"], data["interval"]);
 	else if (type == "RandomRate")
-		return std::make_unique<cft::RandomRateEmissionPattern>(data["minimumRate"], data["maximumRate"], randomNumberGenerator);
+		return std::make_unique<cft::RandomRateEmissionPattern>(data["minimumRate"], data["maximumRate"], data["seed"]);
 	else if (type == "SingleBurst")
 		return std::make_unique<cft::SingleBurstEmissionPattern>(data["count"]);
 	else
 		throw std::runtime_error("Invalid emission pattern type : '" + type + "'");
 }
 
-std::unique_ptr<cft::ParticleLinker> JsonLoader::parseParticleLinker(const json& data, cft::RandomNumberGenerator& randomNumberGenerator)
+std::unique_ptr<cft::ParticleLinker> JsonLoader::parseParticleLinker(const json& data)
 {
 	std::string type = data["type"];
 
@@ -206,7 +206,7 @@ std::unique_ptr<cft::ParticleLinker> JsonLoader::parseParticleLinker(const json&
 	else if (type == "Origin")
 		return std::make_unique<cft::OriginParticleLinker>(std::move(connectionRules), std::move(validationRules), data["origin"].get<Vec3>().value);
 	else if (type == "Random")
-		return std::make_unique<cft::RandomParticleLinker>(std::move(connectionRules), std::move(validationRules), data["connectionCount"], randomNumberGenerator);
+		return std::make_unique<cft::RandomParticleLinker>(std::move(connectionRules), std::move(validationRules), data["connectionCount"], data["seed"]);
 	else if (type == "Target")
 		return std::make_unique<cft::TargetParticleLinker>(std::move(connectionRules), std::move(validationRules), data["targetParticleId"]);
 	else
@@ -280,28 +280,25 @@ cft::ParticleEmitterDescriptor JsonLoader::parseParticleEmitterDescriptor(const 
 	};
 }
 
-void JsonLoader::load(const std::string& path, cft::AssetRegistry& assetRegistry, cft::RandomNumberGenerator& randomNumberGenerator)
+void JsonLoader::loadAssets(const json& data, cft::AssetRegistry& assetRegistry)
 {
-	std::ifstream file(path);
-	json data = json::parse(file);
-
 	for (const auto& forceFieldData : data["forceFields"])
-		assetRegistry.addForceField(forceFieldData["id"], parseForceField(forceFieldData, randomNumberGenerator));
+		assetRegistry.addForceField(forceFieldData["id"], parseForceField(forceFieldData));
 
 	for (const auto& motionBehaviorData : data["motionBehaviors"])
-		assetRegistry.addMotionBehavior(motionBehaviorData["id"], parseMotionBehavior(motionBehaviorData, randomNumberGenerator));
+		assetRegistry.addMotionBehavior(motionBehaviorData["id"], parseMotionBehavior(motionBehaviorData));
 
 	for (const auto& visualBehaviorData : data["visualBehaviors"])
 		assetRegistry.addVisualBehavior(visualBehaviorData["id"], parseVisualBehavior(visualBehaviorData));
 
 	for (const auto& particleSpawnerData : data["particleSpawners"])
-		assetRegistry.addParticleSpawner(particleSpawnerData["id"], parseParticleSpawner(particleSpawnerData, randomNumberGenerator));
+		assetRegistry.addParticleSpawner(particleSpawnerData["id"], parseParticleSpawner(particleSpawnerData));
 
 	for (const auto& emissionPatternData : data["emissionPatterns"])
-		assetRegistry.addEmissionPattern(emissionPatternData["id"], parseEmissionPattern(emissionPatternData, randomNumberGenerator));
+		assetRegistry.addEmissionPattern(emissionPatternData["id"], parseEmissionPattern(emissionPatternData));
 
 	for (const auto& particleLinkerData : data["particleLinkers"])
-		assetRegistry.addParticleLinker(particleLinkerData["id"], parseParticleLinker(particleLinkerData, randomNumberGenerator));
+		assetRegistry.addParticleLinker(particleLinkerData["id"], parseParticleLinker(particleLinkerData));
 
 	for (const auto& ribbonGeneratorData : data["ribbonGenerators"])
 		assetRegistry.addRibbonGenerator(ribbonGeneratorData["id"], parseRibbonGenerator(ribbonGeneratorData));
@@ -320,4 +317,54 @@ void JsonLoader::load(const std::string& path, cft::AssetRegistry& assetRegistry
 
 	for (const auto& particleEmitterDescriptorData : data["particleEmitterDescriptors"])
 		assetRegistry.addParticleEmitterDescriptor(particleEmitterDescriptorData["id"], parseParticleEmitterDescriptor(particleEmitterDescriptorData));
+}
+
+void JsonLoader::loadBillboardRendererTextures(const json& data, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry)
+{
+	unsigned int width = data["width"];
+	unsigned int height = data["height"];
+
+	std::vector<unsigned int> imageIds;
+	imageIds.reserve(data["imageIds"].size());
+
+	for (const auto& imageId : data["imageIds"])
+		imageIds.push_back(imageId);
+
+	particleRenderer.loadBillboardRendererTextures(assetRegistry, imageIds, width, height);
+}
+
+void JsonLoader::loadMeshRendererTextures(const json& data, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry)
+{
+	std::vector<unsigned int> meshRendererImageIds;
+	meshRendererImageIds.reserve(data.size());
+
+	for (const auto& meshRendererImageId : data)
+		meshRendererImageIds.push_back(meshRendererImageId);
+
+	particleRenderer.loadMeshRendererTextures(assetRegistry, meshRendererImageIds);
+}
+
+void JsonLoader::loadMeshRendererMeshes(const json& data, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry)
+{
+	std::vector<unsigned int> meshRendererModelIds;
+	meshRendererModelIds.reserve(data.size());
+
+	for (const auto& meshRendererModelId : data)
+		meshRendererModelIds.push_back(meshRendererModelId);
+
+	particleRenderer.loadMeshRendererMeshes(assetRegistry, meshRendererModelIds);
+}
+
+void JsonLoader::load(const std::string& path, cft::ParticleSimulation& particleSimulation, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry)
+{
+	std::ifstream file(path);
+	json data = json::parse(file);
+
+	particleSimulation.setSeed(data["seed"]);
+
+	loadAssets(data["assets"], assetRegistry);
+
+	loadBillboardRendererTextures(data["billboardRendererImages"], particleRenderer, assetRegistry);
+	loadMeshRendererTextures(data["meshRendererImageIds"], particleRenderer, assetRegistry);
+	loadMeshRendererMeshes(data["meshRendererModelIds"], particleRenderer, assetRegistry);
 }

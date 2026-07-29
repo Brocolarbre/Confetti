@@ -71,6 +71,40 @@ namespace cft
 		}
 	}
 
+	ParticleSpawner::Seeds ParticleSpawner::getSeeds() const
+	{
+		return Seeds{
+			m_colorGenerator->getSeed(),
+			!m_spawnShape ? m_positionGenerator->getSeed() : std::nullopt,
+			m_rotationGenerator->getSeed(),
+			m_scaleGenerator->getSeed(),
+			m_linearVelocityGenerator->getSeed(),
+			m_angularVelocityGenerator->getSeed(),
+			m_phaseGenerator->getSeed(),
+			m_lifetimeGenerator->getSeed()
+		};
+	}
+
+	void ParticleSpawner::setSeeds(Seeds seeds)
+	{
+		if (seeds.colorGeneratorSeed.has_value())
+			m_colorGenerator->setSeed(seeds.colorGeneratorSeed.value());
+		if (!m_spawnShape && seeds.positionGeneratorSeed.has_value())
+			m_positionGenerator->setSeed(seeds.positionGeneratorSeed.value());
+		if (seeds.rotationGeneratorSeed.has_value())
+			m_rotationGenerator->setSeed(seeds.rotationGeneratorSeed.value());
+		if (seeds.scaleGeneratorSeed.has_value())
+			m_scaleGenerator->setSeed(seeds.scaleGeneratorSeed.value());
+		if (seeds.linearVelocityGeneratorSeed.has_value())
+			m_linearVelocityGenerator->setSeed(seeds.linearVelocityGeneratorSeed.value());
+		if (seeds.angularVelocityGeneratorSeed.has_value())
+			m_angularVelocityGenerator->setSeed(seeds.angularVelocityGeneratorSeed.value());
+		if (seeds.phaseGeneratorSeed.has_value())
+			m_phaseGenerator->setSeed(seeds.phaseGeneratorSeed.value());
+		if (seeds.lifetimeGeneratorSeed.has_value())
+			m_lifetimeGenerator->setSeed(seeds.lifetimeGeneratorSeed.value());
+	}
+
 	float ParticleSpawner::getMaxiumParticleLifetime() const
 	{
 		return m_maximumParticleLifetime;

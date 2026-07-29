@@ -11,6 +11,19 @@ namespace cft
 {
 	class CONFETTI_API ParticleSpawner
 	{
+	public:
+		struct Seeds
+		{
+			std::optional<std::uint64_t> colorGeneratorSeed;
+			std::optional<std::uint64_t> positionGeneratorSeed;
+			std::optional<std::uint64_t> rotationGeneratorSeed;
+			std::optional<std::uint64_t> scaleGeneratorSeed;
+			std::optional<std::uint64_t> linearVelocityGeneratorSeed;
+			std::optional<std::uint64_t> angularVelocityGeneratorSeed;
+			std::optional<std::uint64_t> phaseGeneratorSeed;
+			std::optional<std::uint64_t> lifetimeGeneratorSeed;
+		};
+
 	private:
 		std::unique_ptr<SpawnShape> m_spawnShape;
 		std::unique_ptr<AttributeGenerator<Color>> m_colorGenerator;
@@ -32,6 +45,8 @@ namespace cft
 		ParticleSpawner(std::unique_ptr<AttributeGenerator<Color>> colorGenerator, std::unique_ptr<SpawnShape> spawnShape, std::unique_ptr<AttributeGenerator<Rotation>> rotationGenerator, std::unique_ptr<AttributeGenerator<Scale>> scaleGenerator, std::unique_ptr<AttributeGenerator<LinearVelocity>> linearVelocityGenerator, std::unique_ptr<AttributeGenerator<AngularVelocity>> angularVelocityGenerator, std::unique_ptr<AttributeGenerator<Phase>> phaseGenerator, std::unique_ptr<AttributeGenerator<Lifetime>> lifetimeGenerator, float maximumParticleLifetime);
 
 		std::unique_ptr<ParticleSpawner> clone() const;
+		Seeds getSeeds() const;
+		void setSeeds(Seeds seeds);
 		float getMaxiumParticleLifetime() const;
 		std::vector<Particle> spawn(unsigned int count, float elapsedTime, float deltaTime, unsigned int particleRegistryId);
 

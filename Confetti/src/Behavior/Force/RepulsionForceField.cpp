@@ -9,7 +9,7 @@ namespace cft
 
 	}
 
-	MotionAcceleration RepulsionForceField::evaluate(const MotionState& motionState) const
+	MotionAcceleration RepulsionForceField::evaluate(const MotionState& motionState)
 	{
 		float strengthFactor = m_spatialInfluence.getStrengthFactor(motionState.position);
 		glm::vec3 offset = motionState.position - m_spatialInfluence.getOrigin();

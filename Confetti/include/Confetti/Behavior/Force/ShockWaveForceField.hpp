@@ -17,6 +17,6 @@ namespace cft
 	public:
 		ShockWaveForceField(const SpatialInfluence& spatialInfluence, const glm::vec3& axis, float speed, float strength, float thickness);
 
-		MotionAcceleration evaluate(const MotionState& motionState) const override;
+		MotionAcceleration evaluate(const MotionState& motionState) override;
 	};
 }

@@ -30,10 +30,10 @@ namespace cft
 		m_nextId = 0;
 	}
 
-	unsigned int ParticleRegistry::createEntry(unsigned int poolId, unsigned int recursionDepth, const std::optional<SpawnTriggerDescriptor>& spawnTriggerDescriptor, const RenderConfiguration& renderConfiguration, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<VisualBehavior>>& visualBehaviors)
+	unsigned int ParticleRegistry::createEntry(unsigned int poolId, unsigned int recursionDepth, std::optional<std::uint64_t> parentSeed, const std::optional<SpawnTriggerDescriptor>& spawnTriggerDescriptor, const RenderConfiguration& renderConfiguration, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<VisualBehavior>>& visualBehaviors)
 	{
 		unsigned int id = m_nextId++;
-		m_entries.insert({ id, ParticleRegistryEntry{ 0, poolId, recursionDepth, 0.0f, spawnTriggerDescriptor, renderConfiguration, std::move(forceFields), std::move(motionBehaviors), std::move(visualBehaviors) } });
+		m_entries.insert({ id, ParticleRegistryEntry{ 0, poolId, recursionDepth, parentSeed, 0.0f, spawnTriggerDescriptor, renderConfiguration, std::move(forceFields), std::move(motionBehaviors), std::move(visualBehaviors) } });
 
 		return id;
 	}

@@ -9,7 +9,7 @@ namespace cft
 
 	}
 
-	MotionAcceleration DirectionalForceField::evaluate(const MotionState& motionState) const
+	MotionAcceleration DirectionalForceField::evaluate(const MotionState& motionState)
 	{
 		return MotionAcceleration{ m_direction * m_strength, glm::vec3(0.0f) };
 	}

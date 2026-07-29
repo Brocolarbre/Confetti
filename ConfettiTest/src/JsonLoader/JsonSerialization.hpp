@@ -82,7 +82,7 @@
 
 namespace nlohmann
 {
-	template<>
+	template <>
 	struct adl_serializer<Color>
 	{
 		static void from_json(const json& data, Color& value)
@@ -91,7 +91,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<Vec3>
 	{
 		static void from_json(const json& data, Vec3& value)
@@ -100,7 +100,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<Vec2>
 	{
 		static void from_json(const json& data, Vec2& value)
@@ -109,7 +109,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<lw::Point>
 	{
 		static void from_json(const json& data, lw::Point& value)
@@ -118,7 +118,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<glm::vec4>
 	{
 		static void from_json(const json& data, glm::vec4& value)
@@ -127,7 +127,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::Falloff>
 	{
 		static void from_json(const json& data, cft::Falloff& value)
@@ -145,7 +145,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::SpatialInfluence>
 	{
 		static cft::SpatialInfluence from_json(const json& data)
@@ -158,7 +158,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<std::unique_ptr<lw::Interpolator>>
 	{
 		static void from_json(const json& data, std::unique_ptr<lw::Interpolator>& value)
@@ -180,7 +180,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<std::unique_ptr<lw::Easing>>
 	{
 		static void from_json(const json& data, std::unique_ptr<lw::Easing>& value)
@@ -260,7 +260,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::ParticleTime::Space>
 	{
 		static void from_json(const json& data, cft::ParticleTime::Space& value)
@@ -274,7 +274,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::ParticleTime>
 	{
 		static void from_json(const json& data, cft::ParticleTime& value)
@@ -286,7 +286,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<std::unique_ptr<cft::LinkRule>>
 	{
 		static void from_json(const json& data, std::unique_ptr<cft::LinkRule>& value)
@@ -310,7 +310,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::ThicknessEvolutionDistribution>
 	{
 		static void from_json(const json& data, cft::ThicknessEvolutionDistribution& value)
@@ -326,7 +326,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::LifetimeFade>
 	{
 		static void from_json(const json& data, cft::LifetimeFade& value)
@@ -338,7 +338,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::ColorInterpolation>
 	{
 		static void from_json(const json& data, cft::ColorInterpolation& value)
@@ -352,7 +352,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::ThicknessDistribution>
 	{
 		static void from_json(const json& data, cft::ThicknessDistribution& value)
@@ -366,7 +366,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::ThicknessEvolution>
 	{
 		static void from_json(const json& data, cft::ThicknessEvolution& value)
@@ -378,7 +378,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::PathImage>
 	{
 		static void from_json(const json& data, cft::PathImage& value)
@@ -390,7 +390,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::TimeRange>
 	{
 		static void from_json(const json& data, cft::TimeRange& value)
@@ -402,7 +402,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::MotionState>
 	{
 		static void from_json(const json& data, cft::MotionState& value)
@@ -419,7 +419,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::ParticleEmitterSpawnContext>
 	{
 		static void from_json(const json& data, cft::ParticleEmitterSpawnContext& value)
@@ -434,7 +434,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::PeriodicSpawnTriggerContext>
 	{
 		static void from_json(const json& data, cft::PeriodicSpawnTriggerContext& value)
@@ -446,7 +446,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::PathConfiguration>
 	{
 		static void from_json(const json& data, cft::PathConfiguration& value)
@@ -467,7 +467,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::TrailConfiguration>
 	{
 		static void from_json(const json& data, cft::TrailConfiguration& value)
@@ -482,7 +482,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::RibbonConfiguration>
 	{
 		static void from_json(const json& data, cft::RibbonConfiguration& value)
@@ -496,7 +496,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::SpawnTriggerDescriptor>
 	{
 		static void from_json(const json& data, cft::SpawnTriggerDescriptor& value)
@@ -510,7 +510,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::RenderType>
 	{
 		static void from_json(const json& data, cft::RenderType& value)
@@ -524,7 +524,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::BillboardRenderConfiguration>
 	{
 		static void from_json(const json& data, cft::BillboardRenderConfiguration& value)
@@ -535,7 +535,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::MeshRenderConfiguration>
 	{
 		static void from_json(const json& data, cft::MeshRenderConfiguration& value)
@@ -547,7 +547,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<cft::RenderConfiguration>
 	{
 		static void from_json(const json& data, cft::RenderConfiguration& value)
@@ -572,7 +572,7 @@ namespace nlohmann
 		}
 	};
 
-	template<>
+	template <>
 	struct adl_serializer<std::unique_ptr<cft::SpawnShape>>
 	{
 		static void from_json(const json& data, std::unique_ptr<cft::SpawnShape>& value)
@@ -600,7 +600,7 @@ namespace nlohmann
 		}
 	};
 
-	template<typename T>
+	template <typename T>
 	struct adl_serializer<cft::WeightedValue<T>>
 	{
 		static void from_json(const json& data, cft::WeightedValue<T>& value)

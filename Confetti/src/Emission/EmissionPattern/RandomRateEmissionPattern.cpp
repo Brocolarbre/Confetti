@@ -4,13 +4,23 @@
 
 namespace cft
 {
-	RandomRateEmissionPattern::RandomRateEmissionPattern(float minimumRate, float maximumRate, RandomNumberGenerator& randomNumberGenerator) :
+	RandomRateEmissionPattern::RandomRateEmissionPattern(float minimumRate, float maximumRate, std::uint64_t seed) :
 		m_minimumRate(minimumRate),
 		m_maximumRate(maximumRate),
 		m_accumulator(0.0f),
-		m_randomNumberGenerator(randomNumberGenerator)
+		m_randomNumberGenerator(seed)
 	{
 
+	}
+
+	std::optional<std::uint64_t> RandomRateEmissionPattern::getSeed() const
+	{
+		return m_randomNumberGenerator.getSeed();
+	}
+
+	void RandomRateEmissionPattern::setSeed(std::uint64_t seed)
+	{
+		m_randomNumberGenerator.setSeed(seed);
 	}
 
 	unsigned int RandomRateEmissionPattern::getMaximumSimultaneousParticleCount(float maximumParticleLifetime) const

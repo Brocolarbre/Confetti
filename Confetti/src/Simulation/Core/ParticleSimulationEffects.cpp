@@ -13,7 +13,7 @@ namespace cft
 				const ParticleEmitterSpawnContext& emitterSpawnContext = particleEffectInstance.emitterSpawnContexts[j];
 				if (elapsedTime >= particleEffectInstance.spawnTime + emitterSpawnContext.timeRange.spawnTime)
 				{
-					ParticleEmitterInstance particleEmitterInstance = createParticleEmitter(emitterSpawnContext, MotionState{}, 0, elapsedTime);
+					ParticleEmitterInstance particleEmitterInstance = createParticleEmitter(emitterSpawnContext, MotionState{}, std::nullopt, 0, elapsedTime);
 
 					m_particleRegistry.addReferenceCount(particleEmitterInstance.particleRegistryId, 1);
 

@@ -6,18 +6,19 @@
 
 namespace cft
 {
-	class CONFETTI_API NormalBurstLinearVelocityGenerator : public AttributeGenerator<LinearVelocity>
+	class CONFETTI_API NormalBurstLinearVelocityGenerator : public Cloneable<NormalBurstLinearVelocityGenerator, AttributeGenerator<LinearVelocity>>
 	{
 	private:
 		float m_strength;
 		float m_maximumAngle;
-		RandomNumberGenerator& m_randomNumberGenerator;
+		RandomNumberGenerator m_randomNumberGenerator;
 
-		LinearVelocity generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const override;
+		LinearVelocity generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
 
 	public:
-		NormalBurstLinearVelocityGenerator(float strength, float maximumAngle, RandomNumberGenerator& randomNumberGenerator);
+		NormalBurstLinearVelocityGenerator(float strength, float maximumAngle, std::uint64_t seed = 0);
 
-		std::unique_ptr<AttributeGenerator<LinearVelocity>> clone() const override;
+		std::optional<std::uint64_t> getSeed() const override;
+		void setSeed(std::uint64_t seed) override;
 	};
 }

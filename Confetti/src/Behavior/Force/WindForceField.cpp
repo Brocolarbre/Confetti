@@ -9,7 +9,7 @@ namespace cft
 
 	}
 
-	MotionAcceleration WindForceField::evaluate(const MotionState& motionState) const
+	MotionAcceleration WindForceField::evaluate(const MotionState& motionState)
 	{
 		glm::vec3 relativeVelocity = motionState.linearVelocity - m_velocity;
 		return MotionAcceleration{ -m_drag * relativeVelocity * glm::length(relativeVelocity), glm::vec3(0.0f) };

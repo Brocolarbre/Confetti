@@ -3,7 +3,6 @@
 #include "Camera.hpp"
 #include "RenderContext.hpp"
 
-#include <Confetti/Simulation/Core/ParticleSimulation.hpp>
 #include <Confetti/Rendering/ParticleRenderer.hpp>
 #include <Krono/Krono.hpp>
 #include <Windove/Window.hpp>
@@ -15,7 +14,6 @@ private:
 	Camera m_camera;
 
 	cft::AssetRegistry m_assetRegistry;
-	cft::RandomNumberGenerator m_randomNumberGenerator;
 	cft::ParticleRenderer m_particleRenderer;
 	cft::ParticleSimulation m_particleSimulation;
 

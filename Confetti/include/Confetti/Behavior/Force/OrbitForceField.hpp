@@ -17,6 +17,6 @@ namespace cft
 	public:
 		OrbitForceField(const SpatialInfluence& spatialInfluence, const glm::vec3& axis, float strength, float radius, float radialCorrectionStrength);
 
-		MotionAcceleration evaluate(const MotionState& motionState) const override;
+		MotionAcceleration evaluate(const MotionState& motionState) override;
 	};
 }

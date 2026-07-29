@@ -5,10 +5,11 @@
 #include "Confetti/Data/RibbonConfiguration.hpp"
 #include "Confetti/Simulation/Pool/ParticlePool.hpp"
 #include "Confetti/Tool/Cloneable.hpp"
+#include "Confetti/Tool/Seedable.hpp"
 
 namespace cft
 {
-	class CONFETTI_API ParticleLinker
+	class CONFETTI_API ParticleLinker : public Seedable
 	{
 	protected:
 		std::vector<std::unique_ptr<LinkRule>> m_connectionRules;
@@ -27,7 +28,6 @@ namespace cft
 		virtual std::unique_ptr<ParticleLinker> clone() const = 0;
 
 		virtual unsigned int createRibbons(unsigned int ribbonPointCount, RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int ribbonRegistryId, float elapsedTime) = 0;
-		
 		bool isRibbonValid(const LinkContext& linkContext) const;
 	};
 }

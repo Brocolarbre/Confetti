@@ -16,6 +16,7 @@ namespace cft
 		unsigned int count;
 		unsigned int poolId;
 		unsigned int recursionDepth;
+		std::optional<std::uint64_t> parentSeed;
 		float periodicTriggerAccumulator;
 		std::optional<SpawnTriggerDescriptor> spawnTriggerDescriptor;
 		RenderConfiguration renderConfiguration;
@@ -43,7 +44,7 @@ namespace cft
 
 		void clear();
 
-		unsigned int createEntry(unsigned int poolId, unsigned int recursionDepth, const std::optional<SpawnTriggerDescriptor>& spawnTriggerDescriptor, const RenderConfiguration& renderConfiguration, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<VisualBehavior>>& visualBehaviors);
+		unsigned int createEntry(unsigned int poolId, unsigned int recursionDepth, std::optional<std::uint64_t> parentSeed, const std::optional<SpawnTriggerDescriptor>& spawnTriggerDescriptor, const RenderConfiguration& renderConfiguration, std::vector<std::unique_ptr<ForceField>> forceFields, std::vector<std::unique_ptr<MotionBehavior>>& motionBehaviors, std::vector<std::unique_ptr<VisualBehavior>>& visualBehaviors);
 		void addReferenceCount(unsigned int id, int referenceCount);
 	};
 }

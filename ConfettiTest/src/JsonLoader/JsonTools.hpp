@@ -23,13 +23,13 @@ public:
 	static std::vector<cft::WeightedValue<T>> wrapperToType(const std::vector<cft::WeightedValue<WrapperType>>& wrapper);
 };
 
-template<typename T, typename WrapperType>
+template <typename T, typename WrapperType>
 inline T JsonTools::wrapperToType(const WrapperType& wrapper)
 {
 	return wrapper.value;
 }
 
-template<typename T, typename WrapperType>
+template <typename T, typename WrapperType>
 inline std::vector<T> JsonTools::wrapperToType(const std::vector<WrapperType>& wrapper)
 {
 	std::vector<T> type;

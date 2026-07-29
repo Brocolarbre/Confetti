@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	Color BrightnessColorGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
+	Color BrightnessColorGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
 	{
 		return {};
 	}
@@ -14,7 +14,23 @@ namespace cft
 
 	}
 
-	std::vector<Color> BrightnessColorGenerator::generate(unsigned int count, const std::vector<SpawnContext>& context) const
+	std::unique_ptr<AttributeGenerator<Color>> BrightnessColorGenerator::clone() const
+	{
+		return std::make_unique<BrightnessColorGenerator>(m_colorGenerator->clone(), m_brightnessGenerator->clone());
+	}
+
+	std::optional<std::uint64_t> BrightnessColorGenerator::getSeed() const
+	{
+		return m_colorGenerator->getSeed();
+	}
+
+	void BrightnessColorGenerator::setSeed(std::uint64_t seed)
+	{
+		m_colorGenerator->setSeed(seed);
+		m_brightnessGenerator->setSeed(seed);
+	}
+
+	std::vector<Color> BrightnessColorGenerator::generate(unsigned int count, const std::vector<SpawnContext>& context)
 	{
 		std::vector<Color> color = m_colorGenerator->generate(count, context);
 		std::vector<float> brightness = m_brightnessGenerator->generate(count, context);
@@ -30,10 +46,5 @@ namespace cft
 		}
 
 		return color;
-	}
-
-	std::unique_ptr<AttributeGenerator<Color>> BrightnessColorGenerator::clone() const
-	{
-		return std::make_unique<BrightnessColorGenerator>(m_colorGenerator->clone(), m_brightnessGenerator->clone());
 	}
 }

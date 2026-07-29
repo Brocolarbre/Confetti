@@ -2,12 +2,22 @@
 
 namespace cft
 {
-	RandomParticleLinker::RandomParticleLinker(std::vector<std::unique_ptr<LinkRule>> connectionRules, std::vector<std::unique_ptr<LinkRule>> validationRules, unsigned int connectionCount, RandomNumberGenerator& randomNumberGenerator) :
+	RandomParticleLinker::RandomParticleLinker(std::vector<std::unique_ptr<LinkRule>> connectionRules, std::vector<std::unique_ptr<LinkRule>> validationRules, unsigned int connectionCount, std::uint64_t seed) :
 		Cloneable(std::move(connectionRules), std::move(validationRules)),
 		m_connectionCount(connectionCount),
-		m_randomNumberGenerator(randomNumberGenerator)
+		m_randomNumberGenerator(seed)
 	{
 
+	}
+
+	std::optional<std::uint64_t> RandomParticleLinker::getSeed() const
+	{
+		return m_randomNumberGenerator.getSeed();
+	}
+
+	void RandomParticleLinker::setSeed(std::uint64_t seed)
+	{
+		m_randomNumberGenerator.setSeed(seed);
 	}
 
 	unsigned int RandomParticleLinker::createRibbons(unsigned int ribbonPointCount, RibbonPool& ribbonPool, const ParticlePool& particlePool, unsigned int ribbonRegistryId, float elapsedTime)

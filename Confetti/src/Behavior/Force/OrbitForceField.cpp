@@ -12,7 +12,7 @@ namespace cft
 
 	}
 
-	MotionAcceleration OrbitForceField::evaluate(const MotionState& motionState) const
+	MotionAcceleration OrbitForceField::evaluate(const MotionState& motionState)
 	{
 		float strengthFactor = m_spatialInfluence.getStrengthFactor(motionState.position);
 

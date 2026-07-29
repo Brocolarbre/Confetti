@@ -10,18 +10,21 @@ namespace cft
 	{
 	private:
 		std::vector<T> m_values;
-		RandomNumberGenerator& m_randomNumberGenerator;
+		RandomNumberGenerator m_randomNumberGenerator;
 
-		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const override;
+		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
 
 	public:
-		InterpolatedRandomSetAttributeGenerator(const std::vector<T>& values, RandomNumberGenerator& randomNumberGenerator);
+		InterpolatedRandomSetAttributeGenerator(const std::vector<T>& values, std::uint64_t seed = 0);
 
 		std::unique_ptr<AttributeGenerator<T>> clone() const override;
+
+		std::optional<std::uint64_t> getSeed() const override;
+		void setSeed(std::uint64_t seed) override;
 	};
 
-	template<typename T>
-	inline T InterpolatedRandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
+	template <typename T>
+	inline T InterpolatedRandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
 	{
 		if (m_values.empty())
 			return T{};
@@ -36,17 +39,29 @@ namespace cft
 		return glm::mix(m_values[i], m_values[j], t);
 	}
 
-	template<typename T>
-	inline InterpolatedRandomSetAttributeGenerator<T>::InterpolatedRandomSetAttributeGenerator(const std::vector<T>& values, RandomNumberGenerator& randomNumberGenerator) :
+	template <typename T>
+	inline InterpolatedRandomSetAttributeGenerator<T>::InterpolatedRandomSetAttributeGenerator(const std::vector<T>& values, std::uint64_t seed) :
 		m_values(values),
-		m_randomNumberGenerator(randomNumberGenerator)
+		m_randomNumberGenerator(seed)
 	{
 
 	}
 
-	template<typename T>
+	template <typename T>
 	inline std::unique_ptr<AttributeGenerator<T>> InterpolatedRandomSetAttributeGenerator<T>::clone() const
 	{
 		return std::make_unique<InterpolatedRandomSetAttributeGenerator<T>>(*this);
+	}
+
+	template <typename T>
+	inline std::optional<std::uint64_t> InterpolatedRandomSetAttributeGenerator<T>::getSeed() const
+	{
+		return m_randomNumberGenerator.getSeed();
+	}
+
+	template <typename T>
+	inline void InterpolatedRandomSetAttributeGenerator<T>::setSeed(std::uint64_t seed)
+	{
+		m_randomNumberGenerator.setSeed(seed);
 	}
 }

@@ -13,6 +13,6 @@ namespace cft
 	public:
 		WindForceField(const glm::vec3& direction, float strength, float drag);
 
-		MotionAcceleration evaluate(const MotionState& motionState) const override;
+		MotionAcceleration evaluate(const MotionState& motionState) override;
 	};
 }

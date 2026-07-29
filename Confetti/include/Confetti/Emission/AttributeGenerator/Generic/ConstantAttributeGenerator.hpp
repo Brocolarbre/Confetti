@@ -5,35 +5,27 @@
 namespace cft
 {
 	template <typename T>
-	class ConstantAttributeGenerator : public AttributeGenerator<T>
+	class ConstantAttributeGenerator : public Cloneable<ConstantAttributeGenerator<T>, AttributeGenerator<T>>
 	{
 	private:
 		T m_value;
 
-		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const override;
+		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
 
 	public:
 		ConstantAttributeGenerator(const T& value);
-
-		std::unique_ptr<AttributeGenerator<T>> clone() const override;
 	};
 
-	template<typename T>
-	inline T ConstantAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
+	template <typename T>
+	inline T ConstantAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
 	{
 		return m_value;
 	}
 
-	template<typename T>
+	template <typename T>
 	inline ConstantAttributeGenerator<T>::ConstantAttributeGenerator(const T& value) :
 		m_value(value)
 	{
 
-	}
-
-	template<typename T>
-	inline std::unique_ptr<AttributeGenerator<T>> ConstantAttributeGenerator<T>::clone() const
-	{
-		return std::make_unique<ConstantAttributeGenerator<T>>(*this);
 	}
 }

@@ -80,7 +80,7 @@ namespace cft
 
 						if (spawnSpawnTrigger)
 						{
-							ParticleEmitterInstance spawnParticleEmitterInstance = createParticleEmitter(spawnParticleEmitterSpawnContext, MotionState{ particle.position, particle.linearVelocity, particle.rotation, particle.angularVelocity }, particleRegistryEntry.recursionDepth + 1, elapsedTime);
+							ParticleEmitterInstance spawnParticleEmitterInstance = createParticleEmitter(spawnParticleEmitterSpawnContext, MotionState{ particle.position, particle.linearVelocity, particle.rotation, particle.angularVelocity }, particleRegistryEntry.parentSeed, particleRegistryEntry.recursionDepth + 1, elapsedTime);
 							pendingParticleEmitterInstances.push_back(std::move(spawnParticleEmitterInstance));
 						}
 					}

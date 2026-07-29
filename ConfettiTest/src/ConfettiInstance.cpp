@@ -4,7 +4,6 @@
 void ConfettiInstance::restartSimulation()
 {
     cft::ParticleSpawner::resetNextId();
-    m_randomNumberGenerator.reset();
 
     m_particleSimulation.clear();
     m_particleSimulation.addParticleEffect(0.0f, 0);
@@ -24,8 +23,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
     m_camera(width, height),
     m_particleRenderer(width, height, samples),
     m_assetRegistry(),
-    m_randomNumberGenerator(),
-    m_particleSimulation(m_assetRegistry, m_randomNumberGenerator),
+    m_particleSimulation(m_assetRegistry),
     m_elapsedTimeChronometer(false),
     m_deltaTimeChronometer(false),
     m_timeStep(1.0 / 60.0),
@@ -35,11 +33,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
 {
     window.addEventHandler(*this);
 
-    JsonLoader::load("res/systems/fireworks.json", m_assetRegistry, m_randomNumberGenerator);
-
-    m_particleRenderer.loadBillboardRendererTextures(m_assetRegistry, { 0 }, 100, 100);
-    m_particleRenderer.loadMeshRendererTextures(m_assetRegistry, { 1 });
-    m_particleRenderer.loadMeshRendererMeshes(m_assetRegistry, { 0 });
+    JsonLoader::load("res/systems/fireworks.json", m_particleSimulation, m_particleRenderer, m_assetRegistry);
 
     restartSimulation();
 }

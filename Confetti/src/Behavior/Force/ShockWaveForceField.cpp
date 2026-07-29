@@ -12,7 +12,7 @@ namespace cft
 
 	}
 
-	MotionAcceleration ShockWaveForceField::evaluate(const MotionState& motionState) const
+	MotionAcceleration ShockWaveForceField::evaluate(const MotionState& motionState)
 	{
 		float spatialFactor = m_spatialInfluence.getStrengthFactor(motionState.position);
 

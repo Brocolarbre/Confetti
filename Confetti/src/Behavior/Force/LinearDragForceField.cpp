@@ -8,7 +8,7 @@ namespace cft
 
 	}
 
-	MotionAcceleration LinearDragForceField::evaluate(const MotionState& motionState) const
+	MotionAcceleration LinearDragForceField::evaluate(const MotionState& motionState)
 	{
 		return MotionAcceleration{ -m_strength * motionState.linearVelocity, glm::vec3(0.0f) };
 	}

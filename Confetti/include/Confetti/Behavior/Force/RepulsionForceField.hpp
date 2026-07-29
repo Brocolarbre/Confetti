@@ -13,6 +13,6 @@ namespace cft
 	public:
 		RepulsionForceField(const SpatialInfluence& spatialInfluence, float strength);
 
-		MotionAcceleration evaluate(const MotionState& motionState) const override;
+		MotionAcceleration evaluate(const MotionState& motionState) override;
 	};
 }

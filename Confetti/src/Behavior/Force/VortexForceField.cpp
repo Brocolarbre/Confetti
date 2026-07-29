@@ -11,7 +11,7 @@ namespace cft
 
 	}
 
-	MotionAcceleration VortexForceField::evaluate(const MotionState& motionState) const
+	MotionAcceleration VortexForceField::evaluate(const MotionState& motionState)
 	{
 		float strengthFactor = m_spatialInfluence.getStrengthFactor(motionState.position);
 

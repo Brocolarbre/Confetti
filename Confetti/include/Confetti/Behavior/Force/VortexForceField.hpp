@@ -16,6 +16,6 @@ namespace cft
 	public:
 		VortexForceField(const SpatialInfluence& spatialInfluence, const glm::vec3& axis, float strength, float pullStrength);
 
-		MotionAcceleration evaluate(const MotionState& motionState) const override;
+		MotionAcceleration evaluate(const MotionState& motionState) override;
 	};
 }

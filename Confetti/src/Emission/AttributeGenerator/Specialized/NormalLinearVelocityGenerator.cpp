@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	LinearVelocity NormalLinearVelocityGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
+	LinearVelocity NormalLinearVelocityGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
 	{
 		return context.position + context.normal * m_strength;
 	}
@@ -11,10 +11,5 @@ namespace cft
 		m_strength(strength)
 	{
 
-	}
-
-	std::unique_ptr<AttributeGenerator<LinearVelocity>> NormalLinearVelocityGenerator::clone() const
-	{
-		return std::make_unique<NormalLinearVelocityGenerator>(*this);
 	}
 }

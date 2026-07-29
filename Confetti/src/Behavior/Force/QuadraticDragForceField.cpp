@@ -8,7 +8,7 @@ namespace cft
 
 	}
 
-	MotionAcceleration QuadraticDragForceField::evaluate(const MotionState& motionState) const
+	MotionAcceleration QuadraticDragForceField::evaluate(const MotionState& motionState)
 	{
 		return MotionAcceleration{ -m_strength * motionState.linearVelocity * glm::length(motionState.linearVelocity), glm::vec3(0.0f) };
 	}

@@ -2,22 +2,27 @@
 
 namespace cft
 {
-	LinearVelocity NormalBurstLinearVelocityGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const
+	LinearVelocity NormalBurstLinearVelocityGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
 	{
 		glm::vec3 direction = glm::normalize(context.normal + m_randomNumberGenerator.generate(glm::vec3(-m_maximumAngle), glm::vec3(m_maximumAngle)));
 		return context.position + direction * m_strength;
 	}
 
-	NormalBurstLinearVelocityGenerator::NormalBurstLinearVelocityGenerator(float strength, float maximumAngle, RandomNumberGenerator& randomNumberGenerator) :
+	NormalBurstLinearVelocityGenerator::NormalBurstLinearVelocityGenerator(float strength, float maximumAngle, std::uint64_t seed) :
 		m_strength(strength),
 		m_maximumAngle(maximumAngle),
-		m_randomNumberGenerator(randomNumberGenerator)
+		m_randomNumberGenerator(seed)
 	{
 
 	}
 
-	std::unique_ptr<AttributeGenerator<LinearVelocity>> NormalBurstLinearVelocityGenerator::clone() const
+	std::optional<std::uint64_t> NormalBurstLinearVelocityGenerator::getSeed() const
 	{
-		return std::make_unique<NormalBurstLinearVelocityGenerator>(*this);
+		return m_randomNumberGenerator.getSeed();
+	}
+
+	void NormalBurstLinearVelocityGenerator::setSeed(std::uint64_t seed)
+	{
+		m_randomNumberGenerator.setSeed(seed);
 	}
 }

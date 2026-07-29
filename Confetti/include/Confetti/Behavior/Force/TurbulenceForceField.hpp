@@ -9,11 +9,14 @@ namespace cft
 	{
 	private:
 		float m_strength;
-		RandomNumberGenerator& m_randomNumberGenerator;
+		RandomNumberGenerator m_randomNumberGenerator;
 
 	public:
-		TurbulenceForceField(float strength, RandomNumberGenerator& randomNumberGenerator);
+		TurbulenceForceField(float strength, std::uint64_t seed = 0);
 
-		MotionAcceleration evaluate(const MotionState& motionState) const override;
+		std::optional<std::uint64_t> getSeed() const override;
+		void setSeed(std::uint64_t seed) override;
+
+		MotionAcceleration evaluate(const MotionState& motionState) override;
 	};
 }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Confetti/Emission/SpawnShape/SpawnContext.hpp"
+#include "Confetti/Tool/Cloneable.hpp"
+#include "Confetti/Tool/Seedable.hpp"
 
 #include <memory>
 #include <vector>
@@ -8,20 +10,21 @@
 namespace cft
 {
 	template <typename T>
-	class AttributeGenerator
+	class AttributeGenerator : public Seedable
 	{
 	private:
-		virtual T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) const = 0;
+		virtual T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) = 0;
 
 	public:
 		virtual ~AttributeGenerator() = default;
 
-		virtual std::vector<T> generate(unsigned int count, const std::vector<SpawnContext>& context) const;
 		virtual std::unique_ptr<AttributeGenerator<T>> clone() const = 0;
+
+		virtual std::vector<T> generate(unsigned int count, const std::vector<SpawnContext>& context);
 	};
 
-	template<typename T>
-	inline std::vector<T> AttributeGenerator<T>::generate(unsigned int count, const std::vector<SpawnContext>& context) const
+	template <typename T>
+	inline std::vector<T> AttributeGenerator<T>::generate(unsigned int count, const std::vector<SpawnContext>& context)
 	{
 		if (context.size() != count)
 			return {};

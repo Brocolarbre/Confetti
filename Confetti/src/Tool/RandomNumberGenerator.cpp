@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	RandomNumberGenerator::RandomNumberGenerator(unsigned int seed) :
+	RandomNumberGenerator::RandomNumberGenerator(std::uint64_t seed) :
 		m_engine(seed),
 		m_seed(seed),
 		m_integerDistribution(),
@@ -12,10 +12,15 @@ namespace cft
 
 	}
 
-	void RandomNumberGenerator::setSeed(unsigned int seed)
+	std::uint64_t RandomNumberGenerator::getSeed() const
+	{
+		return m_seed;
+	}
+
+	void RandomNumberGenerator::setSeed(std::uint64_t seed)
 	{
 		m_seed = seed;
-		m_engine.seed(seed);
+		reset();
 	}
 
 	void RandomNumberGenerator::reset()

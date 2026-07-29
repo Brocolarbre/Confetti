@@ -4,10 +4,11 @@
 #include "Confetti/Simulation/Pool/RibbonPool.hpp"
 #include "Confetti/Data/RibbonConfiguration.hpp"
 #include "Confetti/Tool/Cloneable.hpp"
+#include "Confetti/Tool/Seedable.hpp"
 
 namespace cft
 {
-	class CONFETTI_API RibbonGenerator
+	class CONFETTI_API RibbonGenerator : public Seedable
 	{
 	private:
 		virtual glm::vec3 generateRibbonPoint(float t, float elapsedTime, const ConstantParticleView& fromParticle, const ConstantParticleView& toParticle) const = 0;

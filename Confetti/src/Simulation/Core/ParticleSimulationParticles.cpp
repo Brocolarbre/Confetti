@@ -58,7 +58,7 @@ namespace cft
 						const SpawnTriggerDescriptor& spawnTriggerValue = entry.spawnTriggerDescriptor.value();
 						if (entry.recursionDepth < spawnTriggerValue.maximumRecursionDepth && spawnTriggerValue.deathEmitterSpawnContext.has_value())
 						{
-							ParticleEmitterInstance deathParticleEmitterInstance = createParticleEmitter(spawnTriggerValue.deathEmitterSpawnContext.value(), MotionState{ position[i], linearVelocity[i], rotation[i], angularVelocity[i] }, entry.recursionDepth + 1, elapsedTime);
+							ParticleEmitterInstance deathParticleEmitterInstance = createParticleEmitter(spawnTriggerValue.deathEmitterSpawnContext.value(), MotionState{ position[i], linearVelocity[i], rotation[i], angularVelocity[i] }, entry.parentSeed, entry.recursionDepth + 1, elapsedTime);
 							m_particleRegistry.addReferenceCount(deathParticleEmitterInstance.particleRegistryId, 1);
 							if (deathParticleEmitterInstance.trailRegistryId.has_value())
 								m_trailRegistry.addReferenceCount(deathParticleEmitterInstance.trailRegistryId.value(), 1);
@@ -73,7 +73,7 @@ namespace cft
 				{
 					if (triggeredPeriodicSpawnTriggers.find(particleRegistryId[i]) != triggeredPeriodicSpawnTriggers.end())
 					{
-						ParticleEmitterInstance periodicParticleEmitterInstance = createParticleEmitter(entry.spawnTriggerDescriptor.value().periodicEmitterSpawnContext.value().emitterSpawnContext, MotionState{ position[i], linearVelocity[i], rotation[i], angularVelocity[i] }, entry.recursionDepth + 1, elapsedTime);
+						ParticleEmitterInstance periodicParticleEmitterInstance = createParticleEmitter(entry.spawnTriggerDescriptor.value().periodicEmitterSpawnContext.value().emitterSpawnContext, MotionState{ position[i], linearVelocity[i], rotation[i], angularVelocity[i] }, entry.parentSeed, entry.recursionDepth + 1, elapsedTime);
 						m_particleRegistry.addReferenceCount(periodicParticleEmitterInstance.particleRegistryId, 1);
 						if (periodicParticleEmitterInstance.trailRegistryId.has_value())
 							m_trailRegistry.addReferenceCount(periodicParticleEmitterInstance.trailRegistryId.value(), 1);
