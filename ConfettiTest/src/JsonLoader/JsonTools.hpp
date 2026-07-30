@@ -13,6 +13,12 @@ public:
 	static std::vector<glm::quat> eulerAnglesToQuaternion(const std::vector<glm::vec3>& eulerAngles);
 	static std::vector<cft::WeightedValue<glm::quat>> eulerAnglesToQuaternion(const std::vector<cft::WeightedValue<glm::vec3>>& eulerAngles);
 
+	template <typename T>
+	static std::optional<T> parseOptional(const json& data);
+
+	template <typename T>
+	static std::unique_ptr<T> parseOptionalPointer(const json& data);
+
 	template <typename T, typename WrapperType>
 	static T wrapperToType(const WrapperType& wrapper);
 
@@ -22,6 +28,24 @@ public:
 	template <typename T, typename WrapperType>
 	static std::vector<cft::WeightedValue<T>> wrapperToType(const std::vector<cft::WeightedValue<WrapperType>>& wrapper);
 };
+
+template <typename T>
+inline std::optional<T> JsonTools::parseOptional(const json& data)
+{
+	if (data.is_null())
+		return std::nullopt;
+
+	return std::make_optional<T>(data.get<T>());
+}
+
+template <typename T>
+inline std::unique_ptr<T> JsonTools::parseOptionalPointer(const json& data)
+{
+	if (data.is_null())
+		return nullptr;
+
+	return data.get<std::unique_ptr<T>>();
+}
 
 template <typename T, typename WrapperType>
 inline T JsonTools::wrapperToType(const WrapperType& wrapper)

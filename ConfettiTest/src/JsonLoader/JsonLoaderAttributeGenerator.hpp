@@ -44,20 +44,20 @@ inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerat
 template <typename Type, typename WrapperType>
 inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseGenericGenerator(const json& data)
 {
-	std::string type = data["type"];
+	std::string type = data.at("type");
 
 	if (type == "Constant")
-		return std::make_unique<cft::ConstantAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::read(data["value"]));
+		return std::make_unique<cft::ConstantAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::read(data.at("value")));
 	else if (type == "InterpolatedRandomSet")
-		return std::make_unique<cft::InterpolatedRandomSetAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::readVector(data["values"]), data["seed"]);
+		return std::make_unique<cft::InterpolatedRandomSetAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::readVector(data.at("values")), data.at("seed"));
 	else if (type == "Linear")
-		return std::make_unique<cft::LinearAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::read(data["from"]), JsonTraits<Type, WrapperType>::read(data["to"]));
+		return std::make_unique<cft::LinearAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::read(data.at("from")), JsonTraits<Type, WrapperType>::read(data.at("to")));
 	else if (type == "Random")
-		return std::make_unique<cft::RandomAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::read(data["minimum"]), JsonTraits<Type, WrapperType>::read(data["maximum"]), data["seed"]);
+		return std::make_unique<cft::RandomAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::read(data.at("minimum")), JsonTraits<Type, WrapperType>::read(data.at("maximum")), data.at("seed"));
 	else if (type == "RandomSet")
-		return std::make_unique<cft::RandomSetAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::readVector(data["values"]), data["seed"]);
+		return std::make_unique<cft::RandomSetAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::readVector(data.at("values")), data.at("seed"));
 	else if (type == "WeightedRandomSet")
-		return std::make_unique<cft::WeightedRandomSetAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::readWeightedVector(data["values"]), data["seed"]);
+		return std::make_unique<cft::WeightedRandomSetAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::readWeightedVector(data.at("values")), data.at("seed"));
 	else
 		throw std::runtime_error("Invalid attribute generator type : '" + type + "'");
 }
@@ -65,7 +65,7 @@ inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerat
 template <typename Type, typename WrapperType>
 inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseAttributeGenerator(const json& data)
 {
-	std::string type = data["type"];
+	std::string type = data.at("type");
 
 	if (std::unique_ptr<cft::AttributeGenerator<Type>> generator = parseSpecializedGenerator<Type, WrapperType>(data))
 		return generator;

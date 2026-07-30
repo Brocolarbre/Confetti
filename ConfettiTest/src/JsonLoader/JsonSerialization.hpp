@@ -87,7 +87,7 @@ namespace nlohmann
 	{
 		static void from_json(const json& data, Color& value)
 		{
-			value.value = glm::vec4(data["r"], data["g"], data["b"], data["a"]);
+			value.value = glm::vec4(data.at("r"), data.at("g"), data.at("b"), data.at("a"));
 		}
 	};
 
@@ -96,7 +96,7 @@ namespace nlohmann
 	{
 		static void from_json(const json& data, Vec3& value)
 		{
-			value.value = glm::vec3(data["x"], data["y"], data["z"]);
+			value.value = glm::vec3(data.at("x"), data.at("y"), data.at("z"));
 		}
 	};
 
@@ -105,7 +105,7 @@ namespace nlohmann
 	{
 		static void from_json(const json& data, Vec2& value)
 		{
-			value.value = glm::vec2(data["x"], data["y"]);
+			value.value = glm::vec2(data.at("x"), data.at("y"));
 		}
 	};
 
@@ -114,7 +114,7 @@ namespace nlohmann
 	{
 		static void from_json(const json& data, lw::Point& value)
 		{
-			value = lw::Point(data["x"], data["y"], data["z"]);
+			value = lw::Point(data.at("x"), data.at("y"), data.at("z"));
 		}
 	};
 
@@ -123,7 +123,7 @@ namespace nlohmann
 	{
 		static void from_json(const json& data, glm::vec4& value)
 		{
-			value = glm::vec4(data["x"], data["y"], data["z"], data["w"]);
+			value = glm::vec4(data.at("x"), data.at("y"), data.at("z"), data.at("w"));
 		}
 	};
 
@@ -151,9 +151,9 @@ namespace nlohmann
 		static cft::SpatialInfluence from_json(const json& data)
 		{
 			return cft::SpatialInfluence{
-				data["origin"].get<Vec3>().value,
-				data["radius"],
-				data["falloff"].get<cft::Falloff>()
+				data.at("origin").get<Vec3>().value,
+				data.at("radius"),
+				data.at("falloff").get<cft::Falloff>()
 			};
 		}
 	};
@@ -163,12 +163,12 @@ namespace nlohmann
 	{
 		static void from_json(const json& data, std::unique_ptr<lw::Interpolator>& value)
 		{
-			std::string type = data["type"];
+			std::string type = data.at("type");
 
 			if (type == "Bezier")
-				value = std::make_unique<lw::BezierInterpolator>(data["pointsPerSegment"]);
+				value = std::make_unique<lw::BezierInterpolator>(data.at("pointsPerSegment"));
 			else if (type == "BSpline")
-				value = std::make_unique<lw::BSplineInterpolator>(data["interpolator"].get<std::unique_ptr<lw::Interpolator>>());
+				value = std::make_unique<lw::BSplineInterpolator>(data.at("interpolator").get<std::unique_ptr<lw::Interpolator>>());
 			else if (type == "CatmullRom")
 				value = std::make_unique<lw::CatmullRomInterpolator>();
 			else if (type == "Hermite")
@@ -185,10 +185,10 @@ namespace nlohmann
 	{
 		static void from_json(const json& data, std::unique_ptr<lw::Easing>& value)
 		{
-			std::string type = data["type"];
+			std::string type = data.at("type");
 
 			if (type == "Curve")
-				value = std::make_unique<lw::EaseCurve>(data["interpolator"].get<std::unique_ptr<lw::Interpolator>>(), data["path"].get<std::vector<lw::Point>>());
+				value = std::make_unique<lw::EaseCurve>(data.at("interpolator").get<std::unique_ptr<lw::Interpolator>>(), data.at("path").get<std::vector<lw::Point>>());
 			else if (type == "InBack")
 				value = std::make_unique<lw::EaseInBack>();
 			else if (type == "InBounce")
@@ -280,8 +280,8 @@ namespace nlohmann
 		static void from_json(const json& data, cft::ParticleTime& value)
 		{
 			value = cft::ParticleTime{
-				data["value"],
-				data["space"].get<cft::ParticleTime::Space>()
+				data.at("value"),
+				data.at("space").get<cft::ParticleTime::Space>()
 			};
 		}
 	};
@@ -291,20 +291,20 @@ namespace nlohmann
 	{
 		static void from_json(const json& data, std::unique_ptr<cft::LinkRule>& value)
 		{
-			std::string type = data["type"];
+			std::string type = data.at("type");
 
 			if (type == "AgeSimilarity")
-				value = std::make_unique<cft::AgeSimilarityLinkRule>(data["threshold"]);
+				value = std::make_unique<cft::AgeSimilarityLinkRule>(data.at("threshold"));
 			else if (type == "ColorSimilarity")
-				value = std::make_unique<cft::ColorSimilarityLinkRule>(data["threshold"]);
+				value = std::make_unique<cft::ColorSimilarityLinkRule>(data.at("threshold"));
 			else if (type == "Connection")
-				value = std::make_unique<cft::ConnectionLinkRule>(data["maximumConnectionCount"]);
+				value = std::make_unique<cft::ConnectionLinkRule>(data.at("maximumConnectionCount"));
 			else if (type == "Distance")
-				value = std::make_unique<cft::DistanceLinkRule>(data["minimumDistance"], data["maximumDistance"]);
+				value = std::make_unique<cft::DistanceLinkRule>(data.at("minimumDistance"), data.at("maximumDistance"));
 			else if (type == "PhaseSimilarity")
-				value = std::make_unique<cft::PhaseSimilarityLinkRule>(data["threshold"]);
+				value = std::make_unique<cft::PhaseSimilarityLinkRule>(data.at("threshold"));
 			else if (type == "VelocitySimilarity")
-				value = std::make_unique<cft::VelocitySimilarityLinkRule>(data["threshold"]);
+				value = std::make_unique<cft::VelocitySimilarityLinkRule>(data.at("threshold"));
 			else
 				throw std::runtime_error("Invalid link rule type : '" + type + "'");
 		}
@@ -332,8 +332,8 @@ namespace nlohmann
 		static void from_json(const json& data, cft::LifetimeFade& value)
 		{
 			value = cft::LifetimeFade{
-				data["start"],
-				data["end"]
+				data.at("start"),
+				data.at("end")
 			};
 		}
 	};
@@ -372,8 +372,8 @@ namespace nlohmann
 		static void from_json(const json& data, cft::ThicknessEvolution& value)
 		{
 			value = cft::ThicknessEvolution{
-				data["distribution"].get<cft::ThicknessEvolutionDistribution>(),
-				data["speed"]
+				data.at("distribution").get<cft::ThicknessEvolutionDistribution>(),
+				data.at("speed")
 			};
 		}
 	};
@@ -384,8 +384,8 @@ namespace nlohmann
 		static void from_json(const json& data, cft::PathImage& value)
 		{
 			value = cft::PathImage{
-				data["imageId"],
-				data["repeatStretch"].is_null() ? std::nullopt : std::make_optional<float>(data["repeatStretch"])
+				data.at("imageId"),
+				JsonTools::parseOptional<float>(data.at("repeatStretch"))
 			};
 		}
 	};
@@ -396,8 +396,8 @@ namespace nlohmann
 		static void from_json(const json& data, cft::TimeRange& value)
 		{
 			value = cft::TimeRange{
-				data["spawnTime"],
-				data["duration"]
+				data.at("spawnTime"),
+				data.at("duration")
 			};
 		}
 	};
@@ -407,14 +407,14 @@ namespace nlohmann
 	{
 		static void from_json(const json& data, cft::MotionState& value)
 		{
-			glm::vec3 eulerAngles = data["rotation"].get<Vec3>().value;
+			glm::vec3 eulerAngles = data.at("rotation").get<Vec3>().value;
 			glm::quat rotation = JsonTools::eulerAnglesToQuaternion(glm::vec3(glm::radians(eulerAngles.x), glm::radians(eulerAngles.y), glm::radians(eulerAngles.z)));
 
 			value = cft::MotionState{
-				data["position"].get<Vec3>().value,
-				data["linearVelocity"].get<Vec3>().value,
+				data.at("position").get<Vec3>().value,
+				data.at("linearVelocity").get<Vec3>().value,
 				rotation,
-				data["angularVelocity"].get<Vec3>().value
+				data.at("angularVelocity").get<Vec3>().value
 			};
 		}
 	};
@@ -425,11 +425,11 @@ namespace nlohmann
 		static void from_json(const json& data, cft::ParticleEmitterSpawnContext& value)
 		{
 			value = cft::ParticleEmitterSpawnContext{
-				data["emitterDescriptorId"],
-				data["timeRange"].get<cft::TimeRange>(),
-				data["initialMotionState"].get<cft::MotionState>(),
-				data["forceFieldIds"].get<std::vector<unsigned int>>(),
-				data["motionBehaviorIds"].get<std::vector<unsigned int>>()
+				data.at("emitterDescriptorId"),
+				data.at("timeRange").get<cft::TimeRange>(),
+				data.at("initialMotionState").get<cft::MotionState>(),
+				data.at("forceFieldIds").get<std::vector<unsigned int>>(),
+				data.at("motionBehaviorIds").get<std::vector<unsigned int>>()
 			};
 		}
 	};
@@ -440,8 +440,8 @@ namespace nlohmann
 		static void from_json(const json& data, cft::PeriodicSpawnTriggerContext& value)
 		{
 			value = cft::PeriodicSpawnTriggerContext{
-				data["emitterSpawnContext"].get<cft::ParticleEmitterSpawnContext>(),
-				data["interval"]
+				data.at("emitterSpawnContext").get<cft::ParticleEmitterSpawnContext>(),
+				data.at("interval")
 			};
 		}
 	};
@@ -452,17 +452,17 @@ namespace nlohmann
 		static void from_json(const json& data, cft::PathConfiguration& value)
 		{
 			value = cft::PathConfiguration{
-				data["startThickness"],
-				data["endThickness"],
-				data["lifetime"].is_null() ? std::nullopt : std::make_optional<float>(data["lifetime"]),
-				data["lifetimeFade"].is_null() ? std::nullopt : std::make_optional<cft::LifetimeFade>(data["lifetimeFade"].get<cft::LifetimeFade>()),
-				data["appendParticleColor"],
-				JsonTools::wrapperToType<cft::Color>(data["colorGradient"].get<std::vector<Color>>()),
-				data["colorStart"].is_null() ? std::nullopt : std::make_optional<std::vector<float>>(data["colorStart"].get<std::vector<float>>()),
-				data["colorInterpolation"].get<cft::ColorInterpolation>(),
-				data["thicknessDistribution"].get<cft::ThicknessDistribution>(),
-				data["thicknessEvolution"].is_null() ? std::nullopt : std::make_optional<cft::ThicknessEvolution>(data["thicknessEvolution"].get<cft::ThicknessEvolution>()),
-				data["pathImage"].is_null() ? std::nullopt : std::make_optional<cft::PathImage>(data["pathImage"].get<cft::PathImage>())
+				data.at("startThickness"),
+				data.at("endThickness"),
+				JsonTools::parseOptional<float>(data.at("lifetime")),
+				JsonTools::parseOptional<cft::LifetimeFade>(data.at("lifetimeFade")),
+				data.at("appendParticleColor"),
+				JsonTools::wrapperToType<cft::Color>(data.at("colorGradient").get<std::vector<Color>>()),
+				JsonTools::parseOptional<std::vector<float>>(data.at("colorStart")),
+				data.at("colorInterpolation").get<cft::ColorInterpolation>(),
+				data.at("thicknessDistribution").get<cft::ThicknessDistribution>(),
+				JsonTools::parseOptional<cft::ThicknessEvolution>(data.at("thicknessEvolution")),
+				JsonTools::parseOptional<cft::PathImage>(data.at("pathImage"))
 			};
 		}
 	};
@@ -473,11 +473,11 @@ namespace nlohmann
 		static void from_json(const json& data, cft::TrailConfiguration& value)
 		{
 			value = cft::TrailConfiguration{
-				data["persistenceLifetime"],
-				data["minimumSpawnDistance"],
-				data["maximumSpawnTime"].is_null() ? std::nullopt : std::make_optional<float>(data["maximumSpawnTime"]),
-				data["maximumSegmentCount"].is_null() ? std::nullopt : std::make_optional<unsigned int>(data["maximumSegmentCount"]),
-				data["pathConfiguration"].get<cft::PathConfiguration>()
+				data.at("persistenceLifetime"),
+				data.at("minimumSpawnDistance"),
+				JsonTools::parseOptional<float>(data.at("maximumSpawnTime")),
+				JsonTools::parseOptional<unsigned int>(data.at("maximumSegmentCount")),
+				data.at("pathConfiguration").get<cft::PathConfiguration>()
 			};
 		}
 	};
@@ -488,10 +488,10 @@ namespace nlohmann
 		static void from_json(const json& data, cft::RibbonConfiguration& value)
 		{
 			value = cft::RibbonConfiguration{
-				data["pathConfiguration"].get<cft::PathConfiguration>(),
-				data["particleLinkerId"],
-				data["ribbonGeneratorId"],
-				data["ribbonPointCount"]
+				data.at("pathConfiguration").get<cft::PathConfiguration>(),
+				data.at("particleLinkerId"),
+				data.at("ribbonGeneratorId"),
+				data.at("ribbonPointCount")
 			};
 		}
 	};
@@ -502,10 +502,10 @@ namespace nlohmann
 		static void from_json(const json& data, cft::SpawnTriggerDescriptor& value)
 		{
 			value = cft::SpawnTriggerDescriptor{
-				data["maximumRecursionDepth"],
-				data["spawnEmitterSpawnContext"].is_null() ? std::nullopt : std::make_optional<cft::ParticleEmitterSpawnContext>(data["spawnEmitterSpawnContext"].get<cft::ParticleEmitterSpawnContext>()),
-				data["deathEmitterSpawnContext"].is_null() ? std::nullopt : std::make_optional<cft::ParticleEmitterSpawnContext>(data["deathEmitterSpawnContext"].get<cft::ParticleEmitterSpawnContext>()),
-				data["periodicEmitterSpawnContext"].is_null() ? std::nullopt : std::make_optional<cft::PeriodicSpawnTriggerContext>(data["periodicEmitterSpawnContext"].get<cft::PeriodicSpawnTriggerContext>())
+				data.at("maximumRecursionDepth"),
+				JsonTools::parseOptional<cft::ParticleEmitterSpawnContext>(data.at("spawnEmitterSpawnContext")),
+				JsonTools::parseOptional<cft::ParticleEmitterSpawnContext>(data.at("deathEmitterSpawnContext")),
+				JsonTools::parseOptional<cft::PeriodicSpawnTriggerContext>(data.at("periodicEmitterSpawnContext"))
 			};
 		}
 	};
@@ -530,7 +530,7 @@ namespace nlohmann
 		static void from_json(const json& data, cft::BillboardRenderConfiguration& value)
 		{
 			value = cft::BillboardRenderConfiguration{
-				data["spriteSheetId"].is_null() ? std::nullopt : std::make_optional<unsigned int>(data["spriteSheetId"])
+				JsonTools::parseOptional<unsigned int>(data.at("spriteSheetId"))
 			};
 		}
 	};
@@ -541,8 +541,8 @@ namespace nlohmann
 		static void from_json(const json& data, cft::MeshRenderConfiguration& value)
 		{
 			value = cft::MeshRenderConfiguration{
-				data["modelId"],
-				data["imageId"].is_null() ? std::nullopt : std::make_optional<unsigned int>(data["imageId"])
+				data.at("modelId"),
+				JsonTools::parseOptional<unsigned int>(data.at("imageId"))
 			};
 		}
 	};
@@ -552,16 +552,16 @@ namespace nlohmann
 	{
 		static void from_json(const json& data, cft::RenderConfiguration& value)
 		{
-			cft::RenderType renderType = data["renderType"].get<cft::RenderType>();
+			cft::RenderType renderType = data.at("renderType").get<cft::RenderType>();
 			std::variant<cft::BillboardRenderConfiguration, cft::MeshRenderConfiguration> configurationData;
 
 			switch (renderType)
 			{
 			case cft::RenderType::Billboard:
-				configurationData = data["configurationData"].get<cft::BillboardRenderConfiguration>();
+				configurationData = data.at("configurationData").get<cft::BillboardRenderConfiguration>();
 				break;
 			case cft::RenderType::Mesh:
-				configurationData = data["configurationData"].get<cft::MeshRenderConfiguration>();
+				configurationData = data.at("configurationData").get<cft::MeshRenderConfiguration>();
 				break;
 			}
 
@@ -577,26 +577,26 @@ namespace nlohmann
 	{
 		static void from_json(const json& data, std::unique_ptr<cft::SpawnShape>& value)
 		{
-			std::string type = data["type"];
+			std::string type = data.at("type");
 
 			if (type == "Circle")
-				value = std::make_unique<cft::CircleSpawnShape>(data["radius"], data["axis"].get<Vec3>().value);
+				value = std::make_unique<cft::CircleSpawnShape>(data.at("radius"), data.at("axis").get<Vec3>().value);
 			else if (type == "Cone")
-				value = std::make_unique<cft::ConeSpawnShape>(data["height"], data["radius"], data["axis"].get<Vec3>().value);
+				value = std::make_unique<cft::ConeSpawnShape>(data.at("height"), data.at("radius"), data.at("axis").get<Vec3>().value);
 			else if (type == "ConeVolume")
-				value = std::make_unique<cft::ConeVolumeSpawnShape>(data["height"], data["radius"], data["axis"].get<Vec3>().value);
+				value = std::make_unique<cft::ConeVolumeSpawnShape>(data.at("height"), data.at("radius"), data.at("axis").get<Vec3>().value);
 			else if (type == "Cylinder")
-				value = std::make_unique<cft::CylinderSpawnShape>(data["height"], data["radius"], data["axis"].get<Vec3>().value);
+				value = std::make_unique<cft::CylinderSpawnShape>(data.at("height"), data.at("radius"), data.at("axis").get<Vec3>().value);
 			else if (type == "CylinderVolume")
-				value = std::make_unique<cft::CylinderVolumeSpawnShape>(data["height"], data["radius"], data["axis"].get<Vec3>().value);
+				value = std::make_unique<cft::CylinderVolumeSpawnShape>(data.at("height"), data.at("radius"), data.at("axis").get<Vec3>().value);
 			else if (type == "Disk")
-				value = std::make_unique<cft::DiskSpawnShape>(data["radius"], data["axis"].get<Vec3>().value);
+				value = std::make_unique<cft::DiskSpawnShape>(data.at("radius"), data.at("axis").get<Vec3>().value);
 			else if (type == "Sphere")
-				value = std::make_unique<cft::SphereSpawnShape>(data["radius"]);
+				value = std::make_unique<cft::SphereSpawnShape>(data.at("radius"));
 			else if (type == "SphereVolume")
-				value = std::make_unique<cft::SphereVolumeSpawnShape>(data["radius"]);
+				value = std::make_unique<cft::SphereVolumeSpawnShape>(data.at("radius"));
 			else
-				throw std::runtime_error("Invalid spanw shape type : '" + type + "'");
+				throw std::runtime_error("Invalid spawn shape type : '" + type + "'");
 		}
 	};
 
@@ -606,8 +606,8 @@ namespace nlohmann
 		static void from_json(const json& data, cft::WeightedValue<T>& value)
 		{
 			value = cft::WeightedValue<T>{
-				data["value"].get<T>(),
-				data["weight"]
+				data.at("value").get<T>(),
+				data.at("weight")
 			};
 		}
 	};
