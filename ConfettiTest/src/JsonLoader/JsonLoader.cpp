@@ -9,6 +9,10 @@ JsonFactory<cft::VisualBehavior> JsonLoader::m_visualBehaviorFactory;
 JsonFactory<cft::EmissionPattern> JsonLoader::m_emissionPatternFactory;
 JsonFactory<cft::ParticleLinker> JsonLoader::m_particleLinkerFactory;
 JsonFactory<cft::RibbonGenerator> JsonLoader::m_ribbonGeneratorFactory;
+JsonFactory<cft::SpawnShape> JsonLoader::m_spawnShapeFactory;
+JsonFactory<cft::LinkRule> JsonLoader::m_linkRuleFactory;
+JsonFactory<lw::Interpolator> JsonLoader::m_interpolatorFactory;
+JsonFactory<lw::Easing> JsonLoader::m_easingFactory;
 
 bool JsonLoader::m_initialized = false;
 
@@ -98,6 +102,10 @@ void JsonLoader::initialize()
 	registerTypes(m_emissionPatternFactory);
 	registerTypes(m_particleLinkerFactory);
 	registerTypes(m_ribbonGeneratorFactory);
+	registerTypes(m_spawnShapeFactory);
+	registerTypes(m_linkRuleFactory);
+	registerTypes(m_interpolatorFactory);
+	registerTypes(m_easingFactory);
 
 	m_initialized = true;
 }
@@ -114,4 +122,54 @@ void JsonLoader::load(const std::string& path, cft::ParticleSimulation& particle
 	loadBillboardRendererTextures(data.at("billboardRendererImages"), particleRenderer, assetRegistry);
 	loadMeshRendererTextures(data.at("meshRendererImageIds"), particleRenderer, assetRegistry);
 	loadMeshRendererMeshes(data.at("meshRendererModelIds"), particleRenderer, assetRegistry);
+}
+
+JsonFactory<cft::ForceField>& JsonLoader::getForceFieldFactory()
+{
+	return m_forceFieldFactory;
+}
+
+JsonFactory<cft::MotionBehavior>& JsonLoader::getMotionBehaviorFactory()
+{
+	return m_motionBehaviorFactory;
+}
+
+JsonFactory<cft::VisualBehavior>& JsonLoader::getVisualBehaviorFactory()
+{
+	return m_visualBehaviorFactory;
+}
+
+JsonFactory<cft::EmissionPattern>& JsonLoader::getEmissionPatternFactory()
+{
+	return m_emissionPatternFactory;
+}
+
+JsonFactory<cft::ParticleLinker>& JsonLoader::getParticleLinkerFactory()
+{
+	return m_particleLinkerFactory;
+}
+
+JsonFactory<cft::RibbonGenerator>& JsonLoader::getRibbonGeneratorFactory()
+{
+	return m_ribbonGeneratorFactory;
+}
+
+JsonFactory<cft::SpawnShape>& JsonLoader::getSpawnShapeFactory()
+{
+	return m_spawnShapeFactory;
+}
+
+JsonFactory<cft::LinkRule>& JsonLoader::getLinkRuleFactory()
+{
+	return m_linkRuleFactory;
+}
+
+JsonFactory<lw::Interpolator>& JsonLoader::getInterpolatorFactory()
+{
+	return m_interpolatorFactory;
+}
+
+JsonFactory<lw::Easing>& JsonLoader::getEasingFactory()
+{
+	return m_easingFactory;
 }

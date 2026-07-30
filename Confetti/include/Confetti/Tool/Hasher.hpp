@@ -13,7 +13,7 @@ namespace cft
     class Hasher
     {
     public:
-        template<typename ...Args>
+        template <typename ...Args>
         static std::uint64_t hash(Args... values)
         {
             std::uint64_t seed = 0;
