@@ -1,5 +1,6 @@
 #include "ConfettiInstance.hpp"
-#include "JsonLoader/JsonLoader.hpp"
+
+#include <Confetti/Serialization/JsonLoader.hpp>
 
 void ConfettiInstance::restartSimulation()
 {
@@ -33,8 +34,8 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
 {
     window.addEventHandler(*this);
 
-    JsonLoader::initialize();
-    JsonLoader::load("res/systems/fireworks.json", m_particleSimulation, m_particleRenderer, m_assetRegistry);
+    cft::JsonLoader::initialize();
+    cft::JsonLoader::load("res/systems/fireworks.json", m_particleSimulation, m_particleRenderer, m_assetRegistry);
 
     restartSimulation();
 }

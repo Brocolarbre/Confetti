@@ -1,36 +1,32 @@
 #pragma once
 
 #include "JsonLoader.hpp"
-#include "JsonTypes.hpp"
 #include "JsonTools.hpp"
+#include "JsonTypes.hpp"
 
-#include <Confetti/Simulation/Registry/AssetRegistry.hpp>
 #include <Confetti/Behavior/Force/SpatialInfluence.hpp>
 #include <Confetti/Behavior/Visual/ParticleTime.hpp>
-
 #include <Confetti/Emission/ParticleSpawner.hpp>
-
-#include <stdexcept>
-#include <string>
+#include <Confetti/Simulation/Registry/AssetRegistry.hpp>
 
 namespace nlohmann
 {
 	template <>
-	struct adl_serializer<Color>
+	struct adl_serializer<cft::JsonTypes::Color>
 	{
-		static void from_json(const json& data, Color& value);
+		static void from_json(const json& data, cft::JsonTypes::Color& value);
 	};
 
 	template <>
-	struct adl_serializer<Vec3>
+	struct adl_serializer<cft::JsonTypes::Vec3>
 	{
-		static void from_json(const json& data, Vec3& value);
+		static void from_json(const json& data, cft::JsonTypes::Vec3& value);
 	};
 
 	template <>
-	struct adl_serializer<Vec2>
+	struct adl_serializer<cft::JsonTypes::Vec2>
 	{
-		static void from_json(const json& data, Vec2& value);
+		static void from_json(const json& data, cft::JsonTypes::Vec2& value);
 	};
 
 	template <>

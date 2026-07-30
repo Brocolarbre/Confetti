@@ -1,19 +1,19 @@
-#include "JsonSerialization.hpp"
-#include "JsonLoaderAttributeGenerator.hpp"
+#include "Confetti/Serialization/JsonSerialization.hpp"
+#include "Confetti/Serialization/JsonLoaderAttributeGenerator.hpp"
 
 namespace nlohmann
 {
-	void adl_serializer<Color>::from_json(const json& data, Color& value)
+	void adl_serializer<cft::JsonTypes::Color>::from_json(const json& data, cft::JsonTypes::Color& value)
 	{
 		value.value = glm::vec4(data.at("r"), data.at("g"), data.at("b"), data.at("a"));
 	}
 
-	void adl_serializer<Vec3>::from_json(const json& data, Vec3& value)
+	void adl_serializer<cft::JsonTypes::Vec3>::from_json(const json& data, cft::JsonTypes::Vec3& value)
 	{
 		value.value = glm::vec3(data.at("x"), data.at("y"), data.at("z"));
 	}
 
-	void adl_serializer<Vec2>::from_json(const json& data, Vec2& value)
+	void adl_serializer<cft::JsonTypes::Vec2>::from_json(const json& data, cft::JsonTypes::Vec2& value)
 	{
 		value.value = glm::vec2(data.at("x"), data.at("y"));
 	}
@@ -45,7 +45,7 @@ namespace nlohmann
 	cft::SpatialInfluence adl_serializer<cft::SpatialInfluence>::from_json(const json& data)
 	{
 		return cft::SpatialInfluence{
-			data.at("origin").get<Vec3>().value,
+			data.at("origin").get<cft::JsonTypes::Vec3>().value,
 			data.at("radius"),
 			data.at("falloff").get<cft::Falloff>()
 		};
@@ -53,12 +53,12 @@ namespace nlohmann
 
 	void adl_serializer<std::unique_ptr<lw::Interpolator>>::from_json(const json& data, std::unique_ptr<lw::Interpolator>& value)
 	{
-		value = JsonLoader::getInterpolatorFactory().instantiate(data);
+		value = cft::JsonLoader::getInterpolatorFactory().instantiate(data);
 	}
 
 	void adl_serializer<std::unique_ptr<lw::Easing>>::from_json(const json& data, std::unique_ptr<lw::Easing>& value)
 	{
-		value = JsonLoader::getEasingFactory().instantiate(data);
+		value = cft::JsonLoader::getEasingFactory().instantiate(data);
 	}
 
 	void adl_serializer<cft::ParticleTime::Space>::from_json(const json& data, cft::ParticleTime::Space& value)
@@ -81,7 +81,7 @@ namespace nlohmann
 
 	void adl_serializer<std::unique_ptr<cft::LinkRule>>::from_json(const json& data, std::unique_ptr<cft::LinkRule>& value)
 	{
-		value = JsonLoader::getLinkRuleFactory().instantiate(data);
+		value = cft::JsonLoader::getLinkRuleFactory().instantiate(data);
 	}
 
 	void adl_serializer<cft::ThicknessEvolutionDistribution>::from_json(const json& data, cft::ThicknessEvolutionDistribution& value)
@@ -136,7 +136,7 @@ namespace nlohmann
 	{
 		value = cft::PathImage{
 			data.at("imageId"),
-			JsonTools::parseOptional<float>(data.at("repeatStretch"))
+			cft::JsonTools::parseOptional<float>(data.at("repeatStretch"))
 		};
 	}
 
@@ -150,14 +150,14 @@ namespace nlohmann
 
 	void adl_serializer<cft::MotionState>::from_json(const json& data, cft::MotionState& value)
 	{
-		glm::vec3 eulerAngles = data.at("rotation").get<Vec3>().value;
-		glm::quat rotation = JsonTools::eulerAnglesToQuaternion(glm::vec3(glm::radians(eulerAngles.x), glm::radians(eulerAngles.y), glm::radians(eulerAngles.z)));
+		glm::vec3 eulerAngles = data.at("rotation").get<cft::JsonTypes::Vec3>().value;
+		glm::quat rotation = cft::JsonTools::eulerAnglesToQuaternion(glm::vec3(glm::radians(eulerAngles.x), glm::radians(eulerAngles.y), glm::radians(eulerAngles.z)));
 
 		value = cft::MotionState{
-			data.at("position").get<Vec3>().value,
-			data.at("linearVelocity").get<Vec3>().value,
+			data.at("position").get<cft::JsonTypes::Vec3>().value,
+			data.at("linearVelocity").get<cft::JsonTypes::Vec3>().value,
 			rotation,
-			data.at("angularVelocity").get<Vec3>().value
+			data.at("angularVelocity").get<cft::JsonTypes::Vec3>().value
 		};
 	}
 
@@ -185,15 +185,15 @@ namespace nlohmann
 		value = cft::PathConfiguration{
 			data.at("startThickness"),
 			data.at("endThickness"),
-			JsonTools::parseOptional<float>(data.at("lifetime")),
-			JsonTools::parseOptional<cft::LifetimeFade>(data.at("lifetimeFade")),
+			cft::JsonTools::parseOptional<float>(data.at("lifetime")),
+			cft::JsonTools::parseOptional<cft::LifetimeFade>(data.at("lifetimeFade")),
 			data.at("appendParticleColor"),
-			JsonTools::wrapperToType<cft::Color>(data.at("colorGradient").get<std::vector<Color>>()),
-			JsonTools::parseOptional<std::vector<float>>(data.at("colorStart")),
+			cft::JsonTools::wrapperToType<cft::Color>(data.at("colorGradient").get<std::vector<cft::JsonTypes::Color>>()),
+			cft::JsonTools::parseOptional<std::vector<float>>(data.at("colorStart")),
 			data.at("colorInterpolation").get<cft::ColorInterpolation>(),
 			data.at("thicknessDistribution").get<cft::ThicknessDistribution>(),
-			JsonTools::parseOptional<cft::ThicknessEvolution>(data.at("thicknessEvolution")),
-			JsonTools::parseOptional<cft::PathImage>(data.at("pathImage"))
+			cft::JsonTools::parseOptional<cft::ThicknessEvolution>(data.at("thicknessEvolution")),
+			cft::JsonTools::parseOptional<cft::PathImage>(data.at("pathImage"))
 		};
 	}
 
@@ -202,8 +202,8 @@ namespace nlohmann
 		value = cft::TrailConfiguration{
 			data.at("persistenceLifetime"),
 			data.at("minimumSpawnDistance"),
-			JsonTools::parseOptional<float>(data.at("maximumSpawnTime")),
-			JsonTools::parseOptional<unsigned int>(data.at("maximumSegmentCount")),
+			cft::JsonTools::parseOptional<float>(data.at("maximumSpawnTime")),
+			cft::JsonTools::parseOptional<unsigned int>(data.at("maximumSegmentCount")),
 			data.at("pathConfiguration").get<cft::PathConfiguration>()
 		};
 	}
@@ -222,9 +222,9 @@ namespace nlohmann
 	{
 		value = cft::SpawnTriggerDescriptor{
 			data.at("maximumRecursionDepth"),
-			JsonTools::parseOptional<cft::ParticleEmitterSpawnContext>(data.at("spawnEmitterSpawnContext")),
-			JsonTools::parseOptional<cft::ParticleEmitterSpawnContext>(data.at("deathEmitterSpawnContext")),
-			JsonTools::parseOptional<cft::PeriodicSpawnTriggerContext>(data.at("periodicEmitterSpawnContext"))
+			cft::JsonTools::parseOptional<cft::ParticleEmitterSpawnContext>(data.at("spawnEmitterSpawnContext")),
+			cft::JsonTools::parseOptional<cft::ParticleEmitterSpawnContext>(data.at("deathEmitterSpawnContext")),
+			cft::JsonTools::parseOptional<cft::PeriodicSpawnTriggerContext>(data.at("periodicEmitterSpawnContext"))
 		};
 	}
 
@@ -241,7 +241,7 @@ namespace nlohmann
 	void adl_serializer<cft::BillboardRenderConfiguration>::from_json(const json& data, cft::BillboardRenderConfiguration& value)
 	{
 		value = cft::BillboardRenderConfiguration{
-			JsonTools::parseOptional<unsigned int>(data.at("spriteSheetId"))
+			cft::JsonTools::parseOptional<unsigned int>(data.at("spriteSheetId"))
 		};
 	}
 
@@ -249,7 +249,7 @@ namespace nlohmann
 	{
 		value = cft::MeshRenderConfiguration{
 			data.at("modelId"),
-			JsonTools::parseOptional<unsigned int>(data.at("imageId"))
+			cft::JsonTools::parseOptional<unsigned int>(data.at("imageId"))
 		};
 	}
 
@@ -276,7 +276,7 @@ namespace nlohmann
 
 	void adl_serializer<std::unique_ptr<cft::SpawnShape>>::from_json(const json& data, std::unique_ptr<cft::SpawnShape>& value)
 	{
-		value = JsonLoader::getSpawnShapeFactory().instantiate(data);
+		value = cft::JsonLoader::getSpawnShapeFactory().instantiate(data);
 	}
 
 	void adl_serializer<std::unique_ptr<cft::ParticleSpawner>>::from_json(const json& data, std::unique_ptr<cft::ParticleSpawner>& value)
@@ -284,28 +284,28 @@ namespace nlohmann
 		if (data.contains("spawnShape"))
 		{
 			value = std::make_unique<cft::ParticleSpawner>(
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Color, Color>(data.at("colorAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Color, cft::JsonTypes::Color>(data.at("colorAttributeGenerator")),
 				data.at("spawnShape").get<std::unique_ptr<cft::SpawnShape>>(),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Rotation, Vec3>(data.at("rotationAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Scale, Vec3>(data.at("scaleAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::LinearVelocity, Vec3>(data.at("linearVelocityAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::AngularVelocity, Vec3>(data.at("angularVelocityAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Phase, float>(data.at("phaseAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Lifetime, float>(data.at("lifetimeAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Rotation, cft::JsonTypes::Vec3>(data.at("rotationAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Scale, cft::JsonTypes::Vec3>(data.at("scaleAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::LinearVelocity, cft::JsonTypes::Vec3>(data.at("linearVelocityAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::AngularVelocity, cft::JsonTypes::Vec3>(data.at("angularVelocityAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Phase, float>(data.at("phaseAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Lifetime, float>(data.at("lifetimeAttributeGenerator")),
 				data.at("maximumParticleLifetime")
 			);
 		}
 		else
 		{
 			value = std::make_unique<cft::ParticleSpawner>(
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Color, Color>(data.at("colorAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Position, Vec3>(data.at("positionAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Rotation, Vec3>(data.at("rotationAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Scale, Vec3>(data.at("scaleAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::LinearVelocity, Vec3>(data.at("linearVelocityAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::AngularVelocity, Vec3>(data.at("angularVelocityAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Phase, float>(data.at("phaseAttributeGenerator")),
-				JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Lifetime, float>(data.at("lifetimeAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Color, cft::JsonTypes::Color>(data.at("colorAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Position, cft::JsonTypes::Vec3>(data.at("positionAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Rotation, cft::JsonTypes::Vec3>(data.at("rotationAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Scale, cft::JsonTypes::Vec3>(data.at("scaleAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::LinearVelocity, cft::JsonTypes::Vec3>(data.at("linearVelocityAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::AngularVelocity, cft::JsonTypes::Vec3>(data.at("angularVelocityAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Phase, float>(data.at("phaseAttributeGenerator")),
+				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Lifetime, float>(data.at("lifetimeAttributeGenerator")),
 				data.at("maximumParticleLifetime")
 			);
 		}
@@ -352,9 +352,9 @@ namespace nlohmann
 			data.at("poolId"),
 			data.at("particleSpawnerId"),
 			data.at("emissionPatternId"),
-			JsonTools::parseOptional<cft::TrailConfiguration>(data.at("trailConfiguration")),
-			JsonTools::parseOptional<cft::RibbonConfiguration>(data.at("ribbonConfiguration")),
-			JsonTools::parseOptional<cft::SpawnTriggerDescriptor>(data.at("spawnTriggerDescriptor")),
+			cft::JsonTools::parseOptional<cft::TrailConfiguration>(data.at("trailConfiguration")),
+			cft::JsonTools::parseOptional<cft::RibbonConfiguration>(data.at("ribbonConfiguration")),
+			cft::JsonTools::parseOptional<cft::SpawnTriggerDescriptor>(data.at("spawnTriggerDescriptor")),
 			data.at("renderConfiguration").get<cft::RenderConfiguration>(),
 			data.at("forceFieldIds").get<std::vector<unsigned int>>(),
 			data.at("motionBehaviorIds").get<std::vector<unsigned int>>(),
