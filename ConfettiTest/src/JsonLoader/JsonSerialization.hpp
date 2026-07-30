@@ -600,6 +600,83 @@ namespace nlohmann
 		}
 	};
 
+	template <>
+	struct adl_serializer<std::unique_ptr<cft::ParticleSpawner>>
+	{
+		static void from_json(const json& data, std::unique_ptr<cft::ParticleSpawner>& value);
+	};
+
+	template <>
+	struct adl_serializer<cft::Image>
+	{
+		static void from_json(const json& data, cft::Image& value)
+		{
+			cft::Image image;
+			image.loadFromFile(data.at("path"));
+
+			value = image;
+		}
+	};
+
+	template <>
+	struct adl_serializer<cft::Model>
+	{
+		static void from_json(const json& data, cft::Model& value)
+		{
+			cft::Model model;
+			model.loadFromFile(data.at("path"));
+
+			value = model;
+		}
+	};
+
+	template <>
+	struct adl_serializer<cft::SpriteSheetDescriptor>
+	{
+		static void from_json(const json& data, cft::SpriteSheetDescriptor& value)
+		{
+			value = cft::SpriteSheetDescriptor{
+				data.at("imageId"),
+				data.at("frameCount"),
+				data.at("rowFrameCount"),
+				data.at("frameWidth"),
+				data.at("frameHeight"),
+				data.at("animationSpeed")
+			};
+		}
+	};
+
+	template <>
+	struct adl_serializer<cft::ParticleEffectDescriptor>
+	{
+		static void from_json(const json& data, cft::ParticleEffectDescriptor& value)
+		{
+			value = cft::ParticleEffectDescriptor{
+				data.at("emitterSpawnContexts").get<std::vector<cft::ParticleEmitterSpawnContext>>()
+			};
+		}
+	};
+
+	template <>
+	struct adl_serializer<cft::ParticleEmitterDescriptor>
+	{
+		static void from_json(const json& data, cft::ParticleEmitterDescriptor& value)
+		{
+			value = cft::ParticleEmitterDescriptor{
+				data.at("poolId"),
+				data.at("particleSpawnerId"),
+				data.at("emissionPatternId"),
+				JsonTools::parseOptional<cft::TrailConfiguration>(data.at("trailConfiguration")),
+				JsonTools::parseOptional<cft::RibbonConfiguration>(data.at("ribbonConfiguration")),
+				JsonTools::parseOptional<cft::SpawnTriggerDescriptor>(data.at("spawnTriggerDescriptor")),
+				data.at("renderConfiguration").get<cft::RenderConfiguration>(),
+				data.at("forceFieldIds").get<std::vector<unsigned int>>(),
+				data.at("motionBehaviorIds").get<std::vector<unsigned int>>(),
+				data.at("visualBehaviorIds").get<std::vector<unsigned int>>()
+			};
+		}
+	};
+	
 	template <typename T>
 	struct adl_serializer<cft::WeightedValue<T>>
 	{

@@ -28,7 +28,7 @@ namespace cft
 	unsigned int TrailRegistry::createEntry(const TrailConfiguration& trailConfiguration)
 	{
 		unsigned int id = m_nextId++;
-		m_entries.insert({ id, TrailRegistryEntry{ 0, trailConfiguration } });
+		m_entries.try_emplace(id, TrailRegistryEntry{ 0, trailConfiguration });
 
 		return id;
 	}

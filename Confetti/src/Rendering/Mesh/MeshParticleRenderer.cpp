@@ -27,7 +27,7 @@ namespace cft
 			unsigned int channelCount = image.getChannelCount();
 			Texture texture(GL_TEXTURE_2D, channelCount > 3 ? GL_RGBA8 : GL_RGB8, channelCount > 3 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE);
 			texture.load(image.getData().data(), image.getWidth(), image.getHeight(), GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, true);
-			m_textures.insert({ imageId, std::move(texture) });
+			m_textures.try_emplace(imageId, std::move(texture));
 		}
 	}
 
@@ -48,7 +48,7 @@ namespace cft
 				particleMeshVertexData.push_back(MeshParticleMesh::Vertex{ vertex.position, vertex.color, vertex.textureCoordinates });
 
 			mesh.load(particleMeshVertexData, model.getIndexData());
-			m_meshes.insert({ modelId, std::move(mesh) });
+			m_meshes.try_emplace(modelId, std::move(mesh));
 		}
 	}
 

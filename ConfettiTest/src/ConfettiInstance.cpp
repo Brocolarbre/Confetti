@@ -33,6 +33,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
 {
     window.addEventHandler(*this);
 
+    JsonLoader::initialize();
     JsonLoader::load("res/systems/fireworks.json", m_particleSimulation, m_particleRenderer, m_assetRegistry);
 
     restartSimulation();
