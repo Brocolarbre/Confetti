@@ -30,12 +30,14 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
     m_timeStep(1.0 / 60.0),
     m_timeAccumulator(0.0),
     m_width(width),
-    m_height(height)
+    m_height(height),
+    m_worldSpaceMousePosition()
 {
     window.addEventHandler(*this);
 
+    cft::JsonLoader::getProviderRegistry().registerProvider<glm::vec3>("mouseCursor", [this]() { return glm::vec3(m_worldSpaceMousePosition, 0.0f); });
     cft::JsonLoader::initialize();
-    cft::JsonLoader::load("res/systems/fireworks.json", m_particleSimulation, m_particleRenderer, m_assetRegistry);
+    cft::JsonLoader::load("res/systems/follow.json", m_particleSimulation, m_particleRenderer, m_assetRegistry);
 
     restartSimulation();
 }
@@ -44,6 +46,11 @@ void ConfettiInstance::onKeyPressed(dove::KeyEvent keyEvent)
 {
     if (keyEvent.key == dove::Keyboard::Key::R)
         restartSimulation();
+}
+
+void ConfettiInstance::onMouseMoved(unsigned int x, unsigned int y)
+{
+    m_worldSpaceMousePosition = glm::vec2(m_camera.screenToWorld(x, y, m_width, m_height));
 }
 
 void ConfettiInstance::onWindowResized(unsigned int width, unsigned int height)

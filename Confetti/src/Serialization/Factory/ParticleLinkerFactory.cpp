@@ -10,7 +10,7 @@
 
 namespace cft
 {
-	void JsonLoader::registerTypes(JsonFactory<cft::ParticleLinker>& factory)
+	void JsonLoader::registerTypes(JsonFactory<cft::ParticleLinker>& factory, const ProviderRegistry& providerRegistry)
 	{
 		factory.registerType("Chain", [](const json& data) { return std::make_unique<cft::ChainParticleLinker>(std::move(data.at("connectionRules").get<std::vector<std::unique_ptr<cft::LinkRule>>>()), std::move(data.at("validationRules").get<std::vector<std::unique_ptr<cft::LinkRule>>>())); });
 		factory.registerType("KNearestNeighbor", [](const json& data) { return std::make_unique<cft::KNearestNeighborParticleLinker>(std::move(data.at("connectionRules").get<std::vector<std::unique_ptr<cft::LinkRule>>>()), std::move(data.at("validationRules").get<std::vector<std::unique_ptr<cft::LinkRule>>>()), data.at("neighborCount")); });

@@ -1,21 +1,23 @@
 #pragma once
 
 #include "Factory/JsonFactory.hpp"
+#include "ProviderRegistry.hpp"
 
-#include <Confetti/Rendering/ParticleRenderer.hpp>
-#include <Confetti/Behavior/Force/ForceField.hpp>
-#include <Confetti/Behavior/Motion/MotionBehavior.hpp>
-#include <Confetti/Behavior/Visual/VisualBehavior.hpp>
-#include <Confetti/Emission/ParticleSpawner.hpp>
-#include <Confetti/Emission/EmissionPattern/EmissionPattern.hpp>
-#include <Confetti/Simulation/Link/ParticleLinker/ParticleLinker.hpp>
-#include <Confetti/Simulation/Link/RibbonGenerator/RibbonGenerator.hpp>
+#include "Confetti/Rendering/ParticleRenderer.hpp"
+#include "Confetti/Behavior/Force/ForceField.hpp"
+#include "Confetti/Behavior/Motion/MotionBehavior.hpp"
+#include "Confetti/Behavior/Visual/VisualBehavior.hpp"
+#include "Confetti/Emission/ParticleSpawner.hpp"
+#include "Confetti/Emission/EmissionPattern/EmissionPattern.hpp"
+#include "Confetti/Simulation/Link/ParticleLinker/ParticleLinker.hpp"
+#include "Confetti/Simulation/Link/RibbonGenerator/RibbonGenerator.hpp"
+
 #include <LineWeaver/Interpolation/Interpolator.hpp>
 #include <LineWeaver/Easing/Easing.hpp>
 
 namespace cft
 {
-	class JsonLoader
+	class CONFETTI_API JsonLoader
 	{
 	private:
 		using json = nlohmann::json;
@@ -31,18 +33,20 @@ namespace cft
 		static JsonFactory<lw::Interpolator> m_interpolatorFactory;
 		static JsonFactory<lw::Easing> m_easingFactory;
 
+		static ProviderRegistry m_providerRegistry;
+
 		static bool m_initialized;
 
-		static void registerTypes(JsonFactory<cft::ForceField>& factory);
-		static void registerTypes(JsonFactory<cft::MotionBehavior>& factory);
-		static void registerTypes(JsonFactory<cft::VisualBehavior>& factory);
-		static void registerTypes(JsonFactory<cft::EmissionPattern>& factory);
-		static void registerTypes(JsonFactory<cft::ParticleLinker>& factory);
-		static void registerTypes(JsonFactory<cft::RibbonGenerator>& factory);
-		static void registerTypes(JsonFactory<cft::SpawnShape>& factory);
-		static void registerTypes(JsonFactory<cft::LinkRule>& factory);
-		static void registerTypes(JsonFactory<lw::Interpolator>& factory);
-		static void registerTypes(JsonFactory<lw::Easing>& factory);
+		static void registerTypes(JsonFactory<cft::ForceField>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<cft::MotionBehavior>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<cft::VisualBehavior>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<cft::EmissionPattern>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<cft::ParticleLinker>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<cft::RibbonGenerator>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<cft::SpawnShape>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<cft::LinkRule>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<lw::Interpolator>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<lw::Easing>& factory, const ProviderRegistry& providerRegistry);
 
 		static void loadAssets(const json& data, cft::AssetRegistry& assetRegistry);
 		static void loadBillboardRendererTextures(const json& data, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry);
@@ -63,5 +67,7 @@ namespace cft
 		static JsonFactory<cft::LinkRule>& getLinkRuleFactory();
 		static JsonFactory<lw::Interpolator>& getInterpolatorFactory();
 		static JsonFactory<lw::Easing>& getEasingFactory();
+
+		static ProviderRegistry& getProviderRegistry();
 	};
 }

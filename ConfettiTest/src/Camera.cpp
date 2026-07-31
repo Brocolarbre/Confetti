@@ -13,6 +13,30 @@ Camera::Camera(unsigned int width, unsigned int height) :
 
 }
 
+glm::vec3 Camera::screenToWorld(unsigned int x, unsigned int y, unsigned int width, unsigned int height) const
+{
+    float ndcX = (2.0f * x) / static_cast<float>(width) - 1.0f;
+    float ndcY = 1.0f - (2.0f * y) / static_cast<float>(height);
+
+    glm::vec4 nearClip(ndcX, ndcY, -1.0f, 1.0f);
+    glm::vec4 farClip(ndcX, ndcY, 1.0f, 1.0f);
+
+    glm::mat4 inverseViewProjection = glm::inverse(m_projectionMatrix * m_viewMatrix);
+
+    glm::vec4 nearWorld = inverseViewProjection * nearClip;
+    glm::vec4 farWorld = inverseViewProjection * farClip;
+
+    nearWorld /= nearWorld.w;
+    farWorld /= farWorld.w;
+
+    glm::vec3 rayOrigin = glm::vec3(nearWorld);
+    glm::vec3 rayDirection = glm::normalize(glm::vec3(farWorld - nearWorld));
+
+    float t = -rayOrigin.z / rayDirection.z;
+
+    return rayOrigin + t * rayDirection;
+}
+
 cft::View Camera::getView() const
 {
     return cft::View{

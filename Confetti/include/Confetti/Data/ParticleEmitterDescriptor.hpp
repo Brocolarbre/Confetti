@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MotionStateInheritance.hpp"
 #include "RenderConfiguration.hpp"
 #include "RibbonConfiguration.hpp"
 #include "SpawnTriggerDescriptor.hpp"
@@ -12,6 +13,7 @@ namespace cft
 		unsigned int poolId;
 		unsigned int particleSpawnerId;
 		unsigned int emissionPatternId;
+		MotionStateInheritance motionStateInheritance;
 		std::optional<TrailConfiguration> trailConfiguration;
 		std::optional<RibbonConfiguration> ribbonConfiguration;
 		std::optional<SpawnTriggerDescriptor> spawnTriggerDescriptor;

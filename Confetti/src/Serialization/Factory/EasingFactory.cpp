@@ -38,7 +38,7 @@
 
 namespace cft
 {
-	void JsonLoader::registerTypes(JsonFactory<lw::Easing>& factory)
+	void JsonLoader::registerTypes(JsonFactory<lw::Easing>& factory, const ProviderRegistry& providerRegistry)
 	{
 		factory.registerType("Curve", [](const json& data) { return std::make_unique<lw::EaseCurve>(data.at("interpolator").get<std::unique_ptr<lw::Interpolator>>(), data.at("path").get<std::vector<lw::Point>>()); });
 		factory.registerType("InBack", [](const json& data) { return std::make_unique<lw::EaseInBack>(); });

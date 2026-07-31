@@ -126,6 +126,12 @@ namespace nlohmann
 	};
 
 	template <>
+	struct adl_serializer<cft::MotionStateInheritance>
+	{
+		static void from_json(const json& data, cft::MotionStateInheritance& value);
+	};
+
+	template <>
 	struct adl_serializer<cft::MotionState>
 	{
 		static void from_json(const json& data, cft::MotionState& value);

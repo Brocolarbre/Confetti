@@ -12,7 +12,7 @@
 
 namespace cft
 {
-	void JsonLoader::registerTypes(JsonFactory<cft::SpawnShape>& factory)
+	void JsonLoader::registerTypes(JsonFactory<cft::SpawnShape>& factory, const ProviderRegistry& providerRegistry)
 	{
 		factory.registerType("Circle", [](const json& data) { return std::make_unique<cft::CircleSpawnShape>(data.at("radius"), data.at("axis").get<JsonTypes::Vec3>().value); });
 		factory.registerType("Cone", [](const json& data) { return std::make_unique<cft::ConeSpawnShape>(data.at("height"), data.at("radius"), data.at("axis").get<JsonTypes::Vec3>().value); });

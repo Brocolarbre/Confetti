@@ -2,16 +2,16 @@
 
 #include "JsonTraits.hpp"
 
+#include "Confetti/Emission/AttributeGenerator/Generic/ConstantAttributeGenerator.hpp"
+#include "Confetti/Emission/AttributeGenerator/Generic/InterpolatedRandomSetAttributeGenerator.hpp"
+#include "Confetti/Emission/AttributeGenerator/Generic/LinearAttributeGenerator.hpp"
+#include "Confetti/Emission/AttributeGenerator/Generic/RandomAttributeGenerator.hpp"
+#include "Confetti/Emission/AttributeGenerator/Generic/RandomSetAttributeGenerator.hpp"
+#include "Confetti/Emission/AttributeGenerator/Generic/WeightedRandomSetAttributeGenerator.hpp"
+
 #include <nlohmann/json.hpp>
 #include <stdexcept>
 #include <string>
-
-#include <Confetti/Emission/AttributeGenerator/Generic/ConstantAttributeGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/Generic/InterpolatedRandomSetAttributeGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/Generic/LinearAttributeGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/Generic/RandomAttributeGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/Generic/RandomSetAttributeGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/Generic/WeightedRandomSetAttributeGenerator.hpp>
 
 namespace cft
 {
@@ -32,10 +32,10 @@ namespace cft
 	};
 
 	template <>
-	static std::unique_ptr<cft::AttributeGenerator<glm::vec3>> JsonLoaderAttributeGenerator::parseSpecializedGenerator<glm::vec3, JsonTypes::Vec3>(const json& data);
+	std::unique_ptr<cft::AttributeGenerator<glm::vec3>> JsonLoaderAttributeGenerator::parseSpecializedGenerator<glm::vec3, JsonTypes::Vec3>(const json& data);
 
 	template <>
-	static std::unique_ptr<cft::AttributeGenerator<glm::vec4>> JsonLoaderAttributeGenerator::parseSpecializedGenerator<glm::vec4, JsonTypes::Color>(const json& data);
+	std::unique_ptr<cft::AttributeGenerator<glm::vec4>> JsonLoaderAttributeGenerator::parseSpecializedGenerator<glm::vec4, JsonTypes::Color>(const json& data);
 
 	template <typename Type, typename WrapperType>
 	inline std::unique_ptr<cft::AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseSpecializedGenerator(const json& data)

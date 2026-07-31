@@ -148,6 +148,16 @@ namespace nlohmann
 		};
 	}
 
+	void adl_serializer<cft::MotionStateInheritance>::from_json(const json& data, cft::MotionStateInheritance& value)
+	{
+		value = cft::MotionStateInheritance{
+			data.at("position"),
+			data.at("linearVelocityFactor"),
+			data.at("position"),
+			data.at("angularVelocityFactor")
+		};
+	}
+
 	void adl_serializer<cft::MotionState>::from_json(const json& data, cft::MotionState& value)
 	{
 		glm::vec3 eulerAngles = data.at("rotation").get<cft::JsonTypes::Vec3>().value;
@@ -193,7 +203,7 @@ namespace nlohmann
 			data.at("colorInterpolation").get<cft::ColorInterpolation>(),
 			data.at("thicknessDistribution").get<cft::ThicknessDistribution>(),
 			cft::JsonTools::parseOptional<cft::ThicknessEvolution>(data.at("thicknessEvolution")),
-			cft::JsonTools::parseOptional<cft::PathImage>(data.at("pathImage"))
+			cft::JsonTools::parseOptional<cft::PathImage>(data.at("image"))
 		};
 	}
 
@@ -352,6 +362,7 @@ namespace nlohmann
 			data.at("poolId"),
 			data.at("particleSpawnerId"),
 			data.at("emissionPatternId"),
+			data.at("motionStateInheritance").get<cft::MotionStateInheritance>(),
 			cft::JsonTools::parseOptional<cft::TrailConfiguration>(data.at("trailConfiguration")),
 			cft::JsonTools::parseOptional<cft::RibbonConfiguration>(data.at("ribbonConfiguration")),
 			cft::JsonTools::parseOptional<cft::SpawnTriggerDescriptor>(data.at("spawnTriggerDescriptor")),

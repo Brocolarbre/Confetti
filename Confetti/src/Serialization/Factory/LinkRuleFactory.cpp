@@ -10,7 +10,7 @@
 
 namespace cft
 {
-	void JsonLoader::registerTypes(JsonFactory<cft::LinkRule>& factory)
+	void JsonLoader::registerTypes(JsonFactory<cft::LinkRule>& factory, const ProviderRegistry& providerRegistry)
 	{
 		factory.registerType("AgeSimilarity", [](const json& data) { return std::make_unique<cft::AgeSimilarityLinkRule>(data.at("threshold")); });
 		factory.registerType("ColorSimilarity", [](const json& data) { return std::make_unique<cft::ColorSimilarityLinkRule>(data.at("threshold")); });

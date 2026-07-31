@@ -11,7 +11,7 @@
 
 namespace cft
 {
-	void JsonLoader::registerTypes(JsonFactory<cft::EmissionPattern>& factory)
+	void JsonLoader::registerTypes(JsonFactory<cft::EmissionPattern>& factory, const ProviderRegistry& providerRegistry)
 	{
 		factory.registerType("ConstantRate", [](const json& data) { return std::make_unique<cft::ConstantRateEmissionPattern>(data.at("rate")); });
 		factory.registerType("FixedBurst", [](const json& data) { return std::make_unique<cft::FixedBurstEmissionPattern>(data.at("count"), data.at("burstCount"), data.at("interval")); });

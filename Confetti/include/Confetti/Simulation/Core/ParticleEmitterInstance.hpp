@@ -19,6 +19,7 @@ namespace cft
 		std::optional<unsigned int> ribbonRegistryId;
 		std::unique_ptr<ParticleSpawner> particleSpawner;
 		std::unique_ptr<EmissionPattern> emissionPattern;
+		MotionStateInheritance motionStateInheritance;
 		std::vector<std::unique_ptr<ForceField>> inheritedForceFields;
 		std::vector<std::unique_ptr<MotionBehavior>> inheritedMotionBehaviors;
 	};

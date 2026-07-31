@@ -26,6 +26,8 @@ private:
 	unsigned int m_width;
 	unsigned int m_height;
 
+	glm::vec2 m_worldSpaceMousePosition;
+
 	void restartSimulation();
 	void updateSimulation(float elapsedTime, float deltaTime);
 
@@ -33,6 +35,7 @@ public:
 	ConfettiInstance(unsigned int width, unsigned int height, unsigned int samples, dove::Window& window);
 
 	void onKeyPressed(dove::KeyEvent keyEvent) override;
+	void onMouseMoved(unsigned int x, unsigned int y) override;
 	void onWindowResized(unsigned int width, unsigned int height) override;
 
 	void update();

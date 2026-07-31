@@ -71,8 +71,14 @@ namespace cft
 
 					for (Particle& particle : particles)
 					{
-						particle.position += particleEmitterInstance.postBehaviorPosition;
-						particle.linearVelocity += particleEmitterInstance.motionState.linearVelocity;
+						if (particleEmitterInstance.motionStateInheritance.position)
+							particle.position += particleEmitterInstance.postBehaviorPosition;
+						if (particleEmitterInstance.motionStateInheritance.rotation)
+							particle.rotation += particleEmitterInstance.motionState.rotation;
+
+						particle.linearVelocity += particleEmitterInstance.motionState.linearVelocity * particleEmitterInstance.motionStateInheritance.linearVelocityFactor;
+						particle.angularVelocity += particleEmitterInstance.motionState.angularVelocity * particleEmitterInstance.motionStateInheritance.angularVelocityFactor;
+
 						particlePool.insert(particle);
 
 						if (spawnTrails)

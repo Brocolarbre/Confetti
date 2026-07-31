@@ -14,7 +14,7 @@
 
 namespace cft
 {
-	void JsonLoader::registerTypes(JsonFactory<cft::VisualBehavior>& factory)
+	void JsonLoader::registerTypes(JsonFactory<cft::VisualBehavior>& factory, const ProviderRegistry& providerRegistry)
 	{
 		factory.registerType("ColorShift", [](const json& data) { return std::make_unique<cft::ColorShiftVisualBehavior>(JsonTraits<cft::Color, JsonTypes::Color>::readVector(data.at("colors")), data.at("speed"), data.at("cyclic")); });
 		factory.registerType("DimOut", [](const json& data) { return std::make_unique<cft::DimOutVisualBehavior>(data.at("duration").get<cft::ParticleTime>()); });

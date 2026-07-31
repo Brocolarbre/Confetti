@@ -16,6 +16,8 @@ namespace cft
 	JsonFactory<lw::Interpolator> JsonLoader::m_interpolatorFactory;
 	JsonFactory<lw::Easing> JsonLoader::m_easingFactory;
 
+	ProviderRegistry JsonLoader::m_providerRegistry;
+
 	bool JsonLoader::m_initialized = false;
 
 	void JsonLoader::loadAssets(const json& data, cft::AssetRegistry& assetRegistry)
@@ -98,16 +100,16 @@ namespace cft
 		if (m_initialized)
 			return;
 
-		registerTypes(m_forceFieldFactory);
-		registerTypes(m_motionBehaviorFactory);
-		registerTypes(m_visualBehaviorFactory);
-		registerTypes(m_emissionPatternFactory);
-		registerTypes(m_particleLinkerFactory);
-		registerTypes(m_ribbonGeneratorFactory);
-		registerTypes(m_spawnShapeFactory);
-		registerTypes(m_linkRuleFactory);
-		registerTypes(m_interpolatorFactory);
-		registerTypes(m_easingFactory);
+		registerTypes(m_forceFieldFactory, m_providerRegistry);
+		registerTypes(m_motionBehaviorFactory, m_providerRegistry);
+		registerTypes(m_visualBehaviorFactory, m_providerRegistry);
+		registerTypes(m_emissionPatternFactory, m_providerRegistry);
+		registerTypes(m_particleLinkerFactory, m_providerRegistry);
+		registerTypes(m_ribbonGeneratorFactory, m_providerRegistry);
+		registerTypes(m_spawnShapeFactory, m_providerRegistry);
+		registerTypes(m_linkRuleFactory, m_providerRegistry);
+		registerTypes(m_interpolatorFactory, m_providerRegistry);
+		registerTypes(m_easingFactory, m_providerRegistry);
 
 		m_initialized = true;
 	}
@@ -174,5 +176,10 @@ namespace cft
 	JsonFactory<lw::Easing>& JsonLoader::getEasingFactory()
 	{
 		return m_easingFactory;
+	}
+
+	ProviderRegistry& JsonLoader::getProviderRegistry()
+	{
+		return m_providerRegistry;
 	}
 }

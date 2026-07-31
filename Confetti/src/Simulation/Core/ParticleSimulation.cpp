@@ -48,6 +48,7 @@ namespace cft
 		particleEmitterInstance.particleSpawner->setSeeds(cft::ParticleSpawner::Seeds{ colorGeneratorSeed, positionGeneratorSeed, rotationGeneratorSeed, scaleGeneratorSeed, linearVelocityGeneratorSeed, angularVelocityGeneratorSeed, phaseGeneratorSeed, lifetimeGeneratorSeed });
 
 		particleEmitterInstance.emissionPattern = instantiateElement<EmissionPattern>(emitterSeed, particleEmitterDescriptor.emissionPatternId, std::nullopt, [this](unsigned int id) -> const EmissionPattern& { return m_assetRegistry.getEmissionPattern(id); });
+		particleEmitterInstance.motionStateInheritance = particleEmitterDescriptor.motionStateInheritance;
 		particleEmitterInstance.inheritedForceFields = instantiateElements<ForceField>(emitterSeed, emitterSpawnContext.forceFieldIds, [this](unsigned int id) -> const ForceField& { return m_assetRegistry.getForceField(id); });
 		particleEmitterInstance.inheritedMotionBehaviors = instantiateElements<MotionBehavior>(emitterSeed, emitterSpawnContext.motionBehaviorIds, [this](unsigned int id) -> const MotionBehavior& { return m_assetRegistry.getMotionBehavior(id); });
 

@@ -8,7 +8,7 @@
 
 namespace cft
 {
-	void JsonLoader::registerTypes(JsonFactory<cft::RibbonGenerator>& factory)
+	void JsonLoader::registerTypes(JsonFactory<cft::RibbonGenerator>& factory, const ProviderRegistry& providerRegistry)
 	{
 		factory.registerType("Path", [](const json& data) { return std::make_unique<cft::PathRibbonGenerator>(data.at("path").get<std::vector<lw::Point>>(), data.at("interpolator").get<std::unique_ptr<lw::Interpolator>>(), JsonTools::parseOptionalPointer<lw::Easing>(data.at("easing"))); });
 		factory.registerType("Segment", [](const json& data) { return std::make_unique<cft::SegmentRibbonGenerator>(); });

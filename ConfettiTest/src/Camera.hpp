@@ -15,5 +15,7 @@ private:
 public:
 	Camera(unsigned int width, unsigned int height);
 
+	glm::vec3 screenToWorld(unsigned int x, unsigned int y, unsigned int width, unsigned int height) const;
+
 	cft::View getView() const;
 };

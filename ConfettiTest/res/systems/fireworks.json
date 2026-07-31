@@ -484,6 +484,12 @@
                 "poolId": 0,
                 "particleSpawnerId": 0,
                 "emissionPatternId": 0,
+                "motionStateInheritance": {
+                    "position": true,
+                    "linearVelocityFactor": 1.0,
+                    "rotation": true,
+                    "angularVelocityFactor": 1.0
+                },
                 "trailConfiguration": null,
                 "ribbonConfiguration": null,
                 "spawnTriggerDescriptor": {
@@ -571,6 +577,12 @@
                 "poolId": 1,
                 "particleSpawnerId": 1,
                 "emissionPatternId": 1,
+                "motionStateInheritance": {
+                    "position": true,
+                    "linearVelocityFactor": 1.0,
+                    "rotation": true,
+                    "angularVelocityFactor": 1.0
+                },
                 "trailConfiguration": null,
                 "ribbonConfiguration": null,
                 "spawnTriggerDescriptor": null,
@@ -589,6 +601,12 @@
                 "poolId": 2,
                 "particleSpawnerId": 2,
                 "emissionPatternId": 2,
+                "motionStateInheritance": {
+                    "position": true,
+                    "linearVelocityFactor": 1.0,
+                    "rotation": true,
+                    "angularVelocityFactor": 1.0
+                },
                 "trailConfiguration": null,
                 "ribbonConfiguration": null,
                 "spawnTriggerDescriptor": {

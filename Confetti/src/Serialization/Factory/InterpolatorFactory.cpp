@@ -9,7 +9,7 @@
 
 namespace cft
 {
-	void JsonLoader::registerTypes(JsonFactory<lw::Interpolator>& factory)
+	void JsonLoader::registerTypes(JsonFactory<lw::Interpolator>& factory, const ProviderRegistry& providerRegistry)
 	{
 		factory.registerType("Bezier", [](const json& data) { return std::make_unique<lw::BezierInterpolator>(data.at("pointsPerSegment")); });
 		factory.registerType("BSpline", [](const json& data) { return std::make_unique<lw::BSplineInterpolator>(data.at("interpolator").get<std::unique_ptr<lw::Interpolator>>()); });
