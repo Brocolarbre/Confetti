@@ -8,15 +8,17 @@ Camera::Camera(unsigned int width, unsigned int height) :
     m_up(0.0f, 0.0f, 0.0f),
     m_forward(0.0f, 0.0f, 0.0f),
     m_viewMatrix(glm::lookAt(m_position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
-    m_projectionMatrix(glm::perspective(glm::radians(45.0f), static_cast<float>(width) / static_cast<float>(glm::max(height, 1u)), 0.01f, 1000.0f))
+    m_projectionMatrix(glm::perspective(glm::radians(45.0f), static_cast<float>(width) / static_cast<float>(glm::max(height, 1u)), 0.01f, 1000.0f)),
+    m_width(width),
+    m_height(height)
 {
 
 }
 
-glm::vec3 Camera::screenToWorld(unsigned int x, unsigned int y, unsigned int width, unsigned int height) const
+glm::vec3 Camera::screenToWorld(unsigned int x, unsigned int y) const
 {
-    float ndcX = (2.0f * x) / static_cast<float>(width) - 1.0f;
-    float ndcY = 1.0f - (2.0f * y) / static_cast<float>(height);
+    float ndcX = (2.0f * x) / static_cast<float>(m_width) - 1.0f;
+    float ndcY = 1.0f - (2.0f * y) / static_cast<float>(m_height);
 
     glm::vec4 nearClip(ndcX, ndcY, -1.0f, 1.0f);
     glm::vec4 farClip(ndcX, ndcY, 1.0f, 1.0f);

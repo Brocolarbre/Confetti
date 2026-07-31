@@ -80,14 +80,14 @@ namespace cft
 		m_toneMapping.resize(width, height);
 	}
 
-	void ParticleRenderer::update(const ParticleSimulation& particleSimulation, const AssetRegistry& assetRegistry, const View& view)
+	void ParticleRenderer::update(const ParticleSimulation& particleSimulation, const AssetRegistry& assetRegistry, const View& view, float elapsedTime)
 	{
-		m_billboardParticleRenderer.update(particleSimulation.getParticlePools(), particleSimulation.getParticleRegistry(), assetRegistry);
+		m_billboardParticleRenderer.update(particleSimulation.getParticlePools(), particleSimulation.getParticleRegistry(), assetRegistry, elapsedTime);
 		m_meshParticleRenderer.update(particleSimulation.getParticlePools(), particleSimulation.getParticleRegistry());
 		m_particlePathRenderer.update(particleSimulation.getTrailPools(), particleSimulation.getTrailRegistry(), particleSimulation.getRibbonPools(), particleSimulation.getRibbonRegistry(), view);
 	}
 
-	void ParticleRenderer::render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
+	void ParticleRenderer::render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry) const
 	{
 		if (m_width == 0 || m_height == 0)
 			return;
@@ -103,7 +103,7 @@ namespace cft
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		m_particlePathRenderer.render(view);
-		m_billboardParticleRenderer.render(view, elapsedTime);
+		m_billboardParticleRenderer.render(view);
 		m_meshParticleRenderer.render(view);
 		
 		m_framebuffer.copy(m_resolvedFramebuffer, GL_COLOR_BUFFER_BIT, 0, 0);

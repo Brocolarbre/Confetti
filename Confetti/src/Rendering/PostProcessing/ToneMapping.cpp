@@ -52,7 +52,7 @@ namespace cft
 		m_framebuffer.resize(width, height);
 	}
 
-	void ToneMapping::render(unsigned int texture)
+	void ToneMapping::render(unsigned int texture) const
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);

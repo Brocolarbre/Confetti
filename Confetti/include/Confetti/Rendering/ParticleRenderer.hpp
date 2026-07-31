@@ -45,9 +45,10 @@ namespace cft
 		void loadTrailRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
 
 		void resize(unsigned int width, unsigned int height);
-		void update(const ParticleSimulation& particleSimulation, const AssetRegistry& assetRegistry, const View& view);
-		void render(const View& view, float elapsedTime, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry);
 
-		static bool initialize(void* (*)(const char*));
+		void update(const ParticleSimulation& particleSimulation, const AssetRegistry& assetRegistry, const View& view, float elapsedTime);
+		void render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry) const;
+
+		static bool initialize(void* (*)(const char* loader));
 	};
 }

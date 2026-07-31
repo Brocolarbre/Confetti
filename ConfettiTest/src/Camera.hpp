@@ -12,10 +12,13 @@ private:
 	glm::mat4 m_viewMatrix;
 	glm::mat4 m_projectionMatrix;
 
+	unsigned int m_width;
+	unsigned int m_height;
+
 public:
 	Camera(unsigned int width, unsigned int height);
 
-	glm::vec3 screenToWorld(unsigned int x, unsigned int y, unsigned int width, unsigned int height) const;
+	glm::vec3 screenToWorld(unsigned int x, unsigned int y) const;
 
 	cft::View getView() const;
 };

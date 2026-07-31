@@ -25,6 +25,6 @@ namespace cft
 		void setFlareStrength(float flareStrength);
 
 		void resize(unsigned int width, unsigned int height);
-		void render(unsigned int sourceTexture, unsigned int bloomTexture, unsigned int flareTexture);
+		void render(unsigned int sourceTexture, unsigned int bloomTexture, unsigned int flareTexture) const;
 	};
 }

@@ -1,18 +1,19 @@
 #include "Confetti/Serialization/JsonLoader.hpp"
 #include "Confetti/Serialization/JsonSerialization.hpp"
+#include "Confetti/ParticleSystem.hpp"
 
 #include <fstream>
 
 namespace cft
 {
-	JsonFactory<cft::ForceField> JsonLoader::m_forceFieldFactory;
-	JsonFactory<cft::MotionBehavior> JsonLoader::m_motionBehaviorFactory;
-	JsonFactory<cft::VisualBehavior> JsonLoader::m_visualBehaviorFactory;
-	JsonFactory<cft::EmissionPattern> JsonLoader::m_emissionPatternFactory;
-	JsonFactory<cft::ParticleLinker> JsonLoader::m_particleLinkerFactory;
-	JsonFactory<cft::RibbonGenerator> JsonLoader::m_ribbonGeneratorFactory;
-	JsonFactory<cft::SpawnShape> JsonLoader::m_spawnShapeFactory;
-	JsonFactory<cft::LinkRule> JsonLoader::m_linkRuleFactory;
+	JsonFactory<ForceField> JsonLoader::m_forceFieldFactory;
+	JsonFactory<MotionBehavior> JsonLoader::m_motionBehaviorFactory;
+	JsonFactory<VisualBehavior> JsonLoader::m_visualBehaviorFactory;
+	JsonFactory<EmissionPattern> JsonLoader::m_emissionPatternFactory;
+	JsonFactory<ParticleLinker> JsonLoader::m_particleLinkerFactory;
+	JsonFactory<RibbonGenerator> JsonLoader::m_ribbonGeneratorFactory;
+	JsonFactory<SpawnShape> JsonLoader::m_spawnShapeFactory;
+	JsonFactory<LinkRule> JsonLoader::m_linkRuleFactory;
 	JsonFactory<lw::Interpolator> JsonLoader::m_interpolatorFactory;
 	JsonFactory<lw::Easing> JsonLoader::m_easingFactory;
 
@@ -20,7 +21,7 @@ namespace cft
 
 	bool JsonLoader::m_initialized = false;
 
-	void JsonLoader::loadAssets(const json& data, cft::AssetRegistry& assetRegistry)
+	void JsonLoader::loadAssets(const json& data, AssetRegistry& assetRegistry)
 	{
 		for (const auto& forceFieldData : data.at("forceFields"))
 			assetRegistry.addForceField(forceFieldData.at("id"), m_forceFieldFactory.instantiate(forceFieldData));
@@ -32,7 +33,7 @@ namespace cft
 			assetRegistry.addVisualBehavior(visualBehaviorData.at("id"), m_visualBehaviorFactory.instantiate(visualBehaviorData));
 
 		for (const auto& particleSpawnerData : data.at("particleSpawners"))
-			assetRegistry.addParticleSpawner(particleSpawnerData.at("id"), particleSpawnerData.get<std::unique_ptr<cft::ParticleSpawner>>());
+			assetRegistry.addParticleSpawner(particleSpawnerData.at("id"), particleSpawnerData.get<std::unique_ptr<ParticleSpawner>>());
 
 		for (const auto& emissionPatternData : data.at("emissionPatterns"))
 			assetRegistry.addEmissionPattern(emissionPatternData.at("id"), m_emissionPatternFactory.instantiate(emissionPatternData));
@@ -44,22 +45,22 @@ namespace cft
 			assetRegistry.addRibbonGenerator(ribbonGeneratorData.at("id"), m_ribbonGeneratorFactory.instantiate(ribbonGeneratorData));
 
 		for (const auto& imageData : data.at("images"))
-			assetRegistry.addImage(imageData.at("id"), imageData.get<cft::Image>());
+			assetRegistry.addImage(imageData.at("id"), imageData.get<Image>());
 
 		for (const auto& modelData : data.at("models"))
-			assetRegistry.addModel(modelData.at("id"), modelData.get<cft::Model>());
+			assetRegistry.addModel(modelData.at("id"), modelData.get<Model>());
 
 		for (const auto& spriteSheetDescriptorData : data.at("spriteSheetDescriptors"))
-			assetRegistry.addSpriteSheetDescriptor(spriteSheetDescriptorData.at("id"), spriteSheetDescriptorData.get<cft::SpriteSheetDescriptor>());
+			assetRegistry.addSpriteSheetDescriptor(spriteSheetDescriptorData.at("id"), spriteSheetDescriptorData.get<SpriteSheetDescriptor>());
 
 		for (const auto& particleEffectDescriptorData : data.at("particleEffectDescriptors"))
-			assetRegistry.addParticleEffectDescriptor(particleEffectDescriptorData.at("id"), particleEffectDescriptorData.get<cft::ParticleEffectDescriptor>());
+			assetRegistry.addParticleEffectDescriptor(particleEffectDescriptorData.at("id"), particleEffectDescriptorData.get<ParticleEffectDescriptor>());
 
 		for (const auto& particleEmitterDescriptorData : data.at("particleEmitterDescriptors"))
-			assetRegistry.addParticleEmitterDescriptor(particleEmitterDescriptorData.at("id"), particleEmitterDescriptorData.get<cft::ParticleEmitterDescriptor>());
+			assetRegistry.addParticleEmitterDescriptor(particleEmitterDescriptorData.at("id"), particleEmitterDescriptorData.get<ParticleEmitterDescriptor>());
 	}
 
-	void JsonLoader::loadBillboardRendererTextures(const json& data, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry)
+	void JsonLoader::loadBillboardRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
 	{
 		unsigned int width = data.at("width");
 		unsigned int height = data.at("height");
@@ -73,7 +74,7 @@ namespace cft
 		particleRenderer.loadBillboardRendererTextures(assetRegistry, imageIds, width, height);
 	}
 
-	void JsonLoader::loadMeshRendererTextures(const json& data, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry)
+	void JsonLoader::loadMeshRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
 	{
 		std::vector<unsigned int> meshRendererImageIds;
 		meshRendererImageIds.reserve(data.size());
@@ -84,7 +85,7 @@ namespace cft
 		particleRenderer.loadMeshRendererTextures(assetRegistry, meshRendererImageIds);
 	}
 
-	void JsonLoader::loadMeshRendererMeshes(const json& data, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry)
+	void JsonLoader::loadMeshRendererMeshes(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
 	{
 		std::vector<unsigned int> meshRendererModelIds;
 		meshRendererModelIds.reserve(data.size());
@@ -114,56 +115,56 @@ namespace cft
 		m_initialized = true;
 	}
 
-	void JsonLoader::load(const std::string& path, cft::ParticleSimulation& particleSimulation, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry)
+	void JsonLoader::load(const std::string& path, ParticleSystem& particleSystem)
 	{
 		std::ifstream file(path);
 		json data = json::parse(file);
 
-		particleSimulation.setSeed(data.at("seed"));
+		particleSystem.m_simulation.setSeed(data.at("seed"));
 
-		loadAssets(data.at("assets"), assetRegistry);
+		loadAssets(data.at("assets"), particleSystem.m_assetRegistry);
 
-		loadBillboardRendererTextures(data.at("billboardRendererImages"), particleRenderer, assetRegistry);
-		loadMeshRendererTextures(data.at("meshRendererImageIds"), particleRenderer, assetRegistry);
-		loadMeshRendererMeshes(data.at("meshRendererModelIds"), particleRenderer, assetRegistry);
+		loadBillboardRendererTextures(data.at("billboardRendererImages"), particleSystem.m_renderer, particleSystem.m_assetRegistry);
+		loadMeshRendererTextures(data.at("meshRendererImageIds"), particleSystem.m_renderer, particleSystem.m_assetRegistry);
+		loadMeshRendererMeshes(data.at("meshRendererModelIds"), particleSystem.m_renderer, particleSystem.m_assetRegistry);
 	}
 
-	JsonFactory<cft::ForceField>& JsonLoader::getForceFieldFactory()
+	JsonFactory<ForceField>& JsonLoader::getForceFieldFactory()
 	{
 		return m_forceFieldFactory;
 	}
 
-	JsonFactory<cft::MotionBehavior>& JsonLoader::getMotionBehaviorFactory()
+	JsonFactory<MotionBehavior>& JsonLoader::getMotionBehaviorFactory()
 	{
 		return m_motionBehaviorFactory;
 	}
 
-	JsonFactory<cft::VisualBehavior>& JsonLoader::getVisualBehaviorFactory()
+	JsonFactory<VisualBehavior>& JsonLoader::getVisualBehaviorFactory()
 	{
 		return m_visualBehaviorFactory;
 	}
 
-	JsonFactory<cft::EmissionPattern>& JsonLoader::getEmissionPatternFactory()
+	JsonFactory<EmissionPattern>& JsonLoader::getEmissionPatternFactory()
 	{
 		return m_emissionPatternFactory;
 	}
 
-	JsonFactory<cft::ParticleLinker>& JsonLoader::getParticleLinkerFactory()
+	JsonFactory<ParticleLinker>& JsonLoader::getParticleLinkerFactory()
 	{
 		return m_particleLinkerFactory;
 	}
 
-	JsonFactory<cft::RibbonGenerator>& JsonLoader::getRibbonGeneratorFactory()
+	JsonFactory<RibbonGenerator>& JsonLoader::getRibbonGeneratorFactory()
 	{
 		return m_ribbonGeneratorFactory;
 	}
 
-	JsonFactory<cft::SpawnShape>& JsonLoader::getSpawnShapeFactory()
+	JsonFactory<SpawnShape>& JsonLoader::getSpawnShapeFactory()
 	{
 		return m_spawnShapeFactory;
 	}
 
-	JsonFactory<cft::LinkRule>& JsonLoader::getLinkRuleFactory()
+	JsonFactory<LinkRule>& JsonLoader::getLinkRuleFactory()
 	{
 		return m_linkRuleFactory;
 	}

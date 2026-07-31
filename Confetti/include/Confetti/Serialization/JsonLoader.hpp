@@ -17,19 +17,21 @@
 
 namespace cft
 {
+	class ParticleSystem;
+
 	class CONFETTI_API JsonLoader
 	{
 	private:
 		using json = nlohmann::json;
 
-		static JsonFactory<cft::ForceField> m_forceFieldFactory;
-		static JsonFactory<cft::MotionBehavior> m_motionBehaviorFactory;
-		static JsonFactory<cft::VisualBehavior> m_visualBehaviorFactory;
-		static JsonFactory<cft::EmissionPattern> m_emissionPatternFactory;
-		static JsonFactory<cft::ParticleLinker> m_particleLinkerFactory;
-		static JsonFactory<cft::RibbonGenerator> m_ribbonGeneratorFactory;
-		static JsonFactory<cft::SpawnShape> m_spawnShapeFactory;
-		static JsonFactory<cft::LinkRule> m_linkRuleFactory;
+		static JsonFactory<ForceField> m_forceFieldFactory;
+		static JsonFactory<MotionBehavior> m_motionBehaviorFactory;
+		static JsonFactory<VisualBehavior> m_visualBehaviorFactory;
+		static JsonFactory<EmissionPattern> m_emissionPatternFactory;
+		static JsonFactory<ParticleLinker> m_particleLinkerFactory;
+		static JsonFactory<RibbonGenerator> m_ribbonGeneratorFactory;
+		static JsonFactory<SpawnShape> m_spawnShapeFactory;
+		static JsonFactory<LinkRule> m_linkRuleFactory;
 		static JsonFactory<lw::Interpolator> m_interpolatorFactory;
 		static JsonFactory<lw::Easing> m_easingFactory;
 
@@ -37,34 +39,34 @@ namespace cft
 
 		static bool m_initialized;
 
-		static void registerTypes(JsonFactory<cft::ForceField>& factory, const ProviderRegistry& providerRegistry);
-		static void registerTypes(JsonFactory<cft::MotionBehavior>& factory, const ProviderRegistry& providerRegistry);
-		static void registerTypes(JsonFactory<cft::VisualBehavior>& factory, const ProviderRegistry& providerRegistry);
-		static void registerTypes(JsonFactory<cft::EmissionPattern>& factory, const ProviderRegistry& providerRegistry);
-		static void registerTypes(JsonFactory<cft::ParticleLinker>& factory, const ProviderRegistry& providerRegistry);
-		static void registerTypes(JsonFactory<cft::RibbonGenerator>& factory, const ProviderRegistry& providerRegistry);
-		static void registerTypes(JsonFactory<cft::SpawnShape>& factory, const ProviderRegistry& providerRegistry);
-		static void registerTypes(JsonFactory<cft::LinkRule>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<ForceField>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<MotionBehavior>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<VisualBehavior>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<EmissionPattern>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<ParticleLinker>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<RibbonGenerator>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<SpawnShape>& factory, const ProviderRegistry& providerRegistry);
+		static void registerTypes(JsonFactory<LinkRule>& factory, const ProviderRegistry& providerRegistry);
 		static void registerTypes(JsonFactory<lw::Interpolator>& factory, const ProviderRegistry& providerRegistry);
 		static void registerTypes(JsonFactory<lw::Easing>& factory, const ProviderRegistry& providerRegistry);
 
-		static void loadAssets(const json& data, cft::AssetRegistry& assetRegistry);
-		static void loadBillboardRendererTextures(const json& data, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry);
-		static void loadMeshRendererTextures(const json& data, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry);
-		static void loadMeshRendererMeshes(const json& data, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry);
+		static void loadAssets(const json& data, AssetRegistry& assetRegistry);
+		static void loadBillboardRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
+		static void loadMeshRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
+		static void loadMeshRendererMeshes(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
 
 	public:
 		static void initialize();
-		static void load(const std::string& path, cft::ParticleSimulation& particleSimulation, cft::ParticleRenderer& particleRenderer, cft::AssetRegistry& assetRegistry);
+		static void load(const std::string& path, ParticleSystem& particleSystem);
 
-		static JsonFactory<cft::ForceField>& getForceFieldFactory();
-		static JsonFactory<cft::MotionBehavior>& getMotionBehaviorFactory();
-		static JsonFactory<cft::VisualBehavior>& getVisualBehaviorFactory();
-		static JsonFactory<cft::EmissionPattern>& getEmissionPatternFactory();
-		static JsonFactory<cft::ParticleLinker>& getParticleLinkerFactory();
-		static JsonFactory<cft::RibbonGenerator>& getRibbonGeneratorFactory();
-		static JsonFactory<cft::SpawnShape>& getSpawnShapeFactory();
-		static JsonFactory<cft::LinkRule>& getLinkRuleFactory();
+		static JsonFactory<ForceField>& getForceFieldFactory();
+		static JsonFactory<MotionBehavior>& getMotionBehaviorFactory();
+		static JsonFactory<VisualBehavior>& getVisualBehaviorFactory();
+		static JsonFactory<EmissionPattern>& getEmissionPatternFactory();
+		static JsonFactory<ParticleLinker>& getParticleLinkerFactory();
+		static JsonFactory<RibbonGenerator>& getRibbonGeneratorFactory();
+		static JsonFactory<SpawnShape>& getSpawnShapeFactory();
+		static JsonFactory<LinkRule>& getLinkRuleFactory();
 		static JsonFactory<lw::Interpolator>& getInterpolatorFactory();
 		static JsonFactory<lw::Easing>& getEasingFactory();
 

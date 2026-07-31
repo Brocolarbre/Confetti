@@ -1,19 +1,21 @@
 #include "Confetti/Serialization/JsonSerialization.hpp"
 #include "Confetti/Serialization/JsonLoaderAttributeGenerator.hpp"
 
+using namespace cft;
+
 namespace nlohmann
 {
-	void adl_serializer<cft::JsonTypes::Color>::from_json(const json& data, cft::JsonTypes::Color& value)
+	void adl_serializer<JsonTypes::Color>::from_json(const json& data, JsonTypes::Color& value)
 	{
 		value.value = glm::vec4(data.at("r"), data.at("g"), data.at("b"), data.at("a"));
 	}
 
-	void adl_serializer<cft::JsonTypes::Vec3>::from_json(const json& data, cft::JsonTypes::Vec3& value)
+	void adl_serializer<JsonTypes::Vec3>::from_json(const json& data, JsonTypes::Vec3& value)
 	{
 		value.value = glm::vec3(data.at("x"), data.at("y"), data.at("z"));
 	}
 
-	void adl_serializer<cft::JsonTypes::Vec2>::from_json(const json& data, cft::JsonTypes::Vec2& value)
+	void adl_serializer<JsonTypes::Vec2>::from_json(const json& data, JsonTypes::Vec2& value)
 	{
 		value.value = glm::vec2(data.at("x"), data.at("y"));
 	}
@@ -28,129 +30,129 @@ namespace nlohmann
 		value = glm::vec4(data.at("x"), data.at("y"), data.at("z"), data.at("w"));
 	}
 
-	void adl_serializer<cft::Falloff>::from_json(const json& data, cft::Falloff& value)
+	void adl_serializer<Falloff>::from_json(const json& data, Falloff& value)
 	{
 		if (data == "Constant")
-			value = cft::Falloff::Constant;
+			value = Falloff::Constant;
 		else if (data == "Linear")
-			value = cft::Falloff::Linear;
+			value = Falloff::Linear;
 		else if (data == "Quadratic")
-			value = cft::Falloff::Quadratic;
+			value = Falloff::Quadratic;
 		else if (data == "Cubic")
-			value = cft::Falloff::Cubic;
+			value = Falloff::Cubic;
 		else
 			throw std::runtime_error("Invalid falloff type : '" + std::string(data) + "'");
 	}
 
-	cft::SpatialInfluence adl_serializer<cft::SpatialInfluence>::from_json(const json& data)
+	SpatialInfluence adl_serializer<SpatialInfluence>::from_json(const json& data)
 	{
-		return cft::SpatialInfluence{
-			data.at("origin").get<cft::JsonTypes::Vec3>().value,
+		return SpatialInfluence{
+			data.at("origin").get<JsonTypes::Vec3>().value,
 			data.at("radius"),
-			data.at("falloff").get<cft::Falloff>()
+			data.at("falloff").get<Falloff>()
 		};
 	}
 
 	void adl_serializer<std::unique_ptr<lw::Interpolator>>::from_json(const json& data, std::unique_ptr<lw::Interpolator>& value)
 	{
-		value = cft::JsonLoader::getInterpolatorFactory().instantiate(data);
+		value = JsonLoader::getInterpolatorFactory().instantiate(data);
 	}
 
 	void adl_serializer<std::unique_ptr<lw::Easing>>::from_json(const json& data, std::unique_ptr<lw::Easing>& value)
 	{
-		value = cft::JsonLoader::getEasingFactory().instantiate(data);
+		value = JsonLoader::getEasingFactory().instantiate(data);
 	}
 
-	void adl_serializer<cft::ParticleTime::Space>::from_json(const json& data, cft::ParticleTime::Space& value)
+	void adl_serializer<ParticleTime::Space>::from_json(const json& data, ParticleTime::Space& value)
 	{
 		if (data == "Absolute")
-			value = cft::ParticleTime::Space::Absolute;
+			value = ParticleTime::Space::Absolute;
 		else if (data == "Normalized")
-			value = cft::ParticleTime::Space::Normalized;
+			value = ParticleTime::Space::Normalized;
 		else
 			throw std::runtime_error("Invalid particle time space type : '" + std::string(data) + "'");
 	}
 
-	void adl_serializer<cft::ParticleTime>::from_json(const json& data, cft::ParticleTime& value)
+	void adl_serializer<ParticleTime>::from_json(const json& data, ParticleTime& value)
 	{
-		value = cft::ParticleTime{
+		value = ParticleTime{
 			data.at("value"),
-			data.at("space").get<cft::ParticleTime::Space>()
+			data.at("space").get<ParticleTime::Space>()
 		};
 	}
 
-	void adl_serializer<std::unique_ptr<cft::LinkRule>>::from_json(const json& data, std::unique_ptr<cft::LinkRule>& value)
+	void adl_serializer<std::unique_ptr<LinkRule>>::from_json(const json& data, std::unique_ptr<LinkRule>& value)
 	{
-		value = cft::JsonLoader::getLinkRuleFactory().instantiate(data);
+		value = JsonLoader::getLinkRuleFactory().instantiate(data);
 	}
 
-	void adl_serializer<cft::ThicknessEvolutionDistribution>::from_json(const json& data, cft::ThicknessEvolutionDistribution& value)
+	void adl_serializer<ThicknessEvolutionDistribution>::from_json(const json& data, ThicknessEvolutionDistribution& value)
 	{
 		if (data == "Constant")
-			value = cft::ThicknessEvolutionDistribution::Constant;
+			value = ThicknessEvolutionDistribution::Constant;
 		else if (data == "Linear")
-			value = cft::ThicknessEvolutionDistribution::Linear;
+			value = ThicknessEvolutionDistribution::Linear;
 		else if (data == "Quadratic")
-			value = cft::ThicknessEvolutionDistribution::Quadratic;
+			value = ThicknessEvolutionDistribution::Quadratic;
 		else
 			throw std::runtime_error("Invalid thickness distribution type : '" + std::string(data) + "'");
 	}
 
-	void adl_serializer<cft::LifetimeFade>::from_json(const json& data, cft::LifetimeFade& value)
+	void adl_serializer<LifetimeFade>::from_json(const json& data, LifetimeFade& value)
 	{
-		value = cft::LifetimeFade{
+		value = LifetimeFade{
 			data.at("start"),
 			data.at("end")
 		};
 	}
 
-	void adl_serializer<cft::ColorInterpolation>::from_json(const json& data, cft::ColorInterpolation& value)
+	void adl_serializer<ColorInterpolation>::from_json(const json& data, ColorInterpolation& value)
 	{
 		if (data == "Constant")
-			value = cft::ColorInterpolation::Constant;
+			value = ColorInterpolation::Constant;
 		else if (data == "Linear")
-			value = cft::ColorInterpolation::Linear;
+			value = ColorInterpolation::Linear;
 		else
 			throw std::runtime_error("Invalid color interpolation type : '" + std::string(data) + "'");
 	}
 
-	void adl_serializer<cft::ThicknessDistribution>::from_json(const json& data, cft::ThicknessDistribution& value)
+	void adl_serializer<ThicknessDistribution>::from_json(const json& data, ThicknessDistribution& value)
 	{
 		if (data == "Linear")
-			value = cft::ThicknessDistribution::Linear;
+			value = ThicknessDistribution::Linear;
 		else if (data == "Quadratic")
-			value = cft::ThicknessDistribution::Quadratic;
+			value = ThicknessDistribution::Quadratic;
 		else
 			throw std::runtime_error("Invalid thickness distribution type : '" + std::string(data) + "'");
 	}
 
-	void adl_serializer<cft::ThicknessEvolution>::from_json(const json& data, cft::ThicknessEvolution& value)
+	void adl_serializer<ThicknessEvolution>::from_json(const json& data, ThicknessEvolution& value)
 	{
-		value = cft::ThicknessEvolution{
-			data.at("distribution").get<cft::ThicknessEvolutionDistribution>(),
+		value = ThicknessEvolution{
+			data.at("distribution").get<ThicknessEvolutionDistribution>(),
 			data.at("speed")
 		};
 	}
 
-	void adl_serializer<cft::PathImage>::from_json(const json& data, cft::PathImage& value)
+	void adl_serializer<PathImage>::from_json(const json& data, PathImage& value)
 	{
-		value = cft::PathImage{
+		value = PathImage{
 			data.at("imageId"),
-			cft::JsonTools::parseOptional<float>(data.at("repeatStretch"))
+			JsonTools::parseOptional<float>(data.at("repeatStretch"))
 		};
 	}
 
-	void adl_serializer<cft::TimeRange>::from_json(const json& data, cft::TimeRange& value)
+	void adl_serializer<TimeRange>::from_json(const json& data, TimeRange& value)
 	{
-		value = cft::TimeRange{
+		value = TimeRange{
 			data.at("spawnTime"),
 			data.at("duration")
 		};
 	}
 
-	void adl_serializer<cft::MotionStateInheritance>::from_json(const json& data, cft::MotionStateInheritance& value)
+	void adl_serializer<MotionStateInheritance>::from_json(const json& data, MotionStateInheritance& value)
 	{
-		value = cft::MotionStateInheritance{
+		value = MotionStateInheritance{
 			data.at("position"),
 			data.at("linearVelocityFactor"),
 			data.at("position"),
@@ -158,188 +160,188 @@ namespace nlohmann
 		};
 	}
 
-	void adl_serializer<cft::MotionState>::from_json(const json& data, cft::MotionState& value)
+	void adl_serializer<MotionState>::from_json(const json& data, MotionState& value)
 	{
-		glm::vec3 eulerAngles = data.at("rotation").get<cft::JsonTypes::Vec3>().value;
-		glm::quat rotation = cft::JsonTools::eulerAnglesToQuaternion(glm::vec3(glm::radians(eulerAngles.x), glm::radians(eulerAngles.y), glm::radians(eulerAngles.z)));
+		glm::vec3 eulerAngles = data.at("rotation").get<JsonTypes::Vec3>().value;
+		glm::quat rotation = JsonTools::eulerAnglesToQuaternion(glm::vec3(glm::radians(eulerAngles.x), glm::radians(eulerAngles.y), glm::radians(eulerAngles.z)));
 
-		value = cft::MotionState{
-			data.at("position").get<cft::JsonTypes::Vec3>().value,
-			data.at("linearVelocity").get<cft::JsonTypes::Vec3>().value,
+		value = MotionState{
+			data.at("position").get<JsonTypes::Vec3>().value,
+			data.at("linearVelocity").get<JsonTypes::Vec3>().value,
 			rotation,
-			data.at("angularVelocity").get<cft::JsonTypes::Vec3>().value
+			data.at("angularVelocity").get<JsonTypes::Vec3>().value
 		};
 	}
 
-	void adl_serializer<cft::ParticleEmitterSpawnContext>::from_json(const json& data, cft::ParticleEmitterSpawnContext& value)
+	void adl_serializer<ParticleEmitterSpawnContext>::from_json(const json& data, ParticleEmitterSpawnContext& value)
 	{
-		value = cft::ParticleEmitterSpawnContext{
+		value = ParticleEmitterSpawnContext{
 			data.at("emitterDescriptorId"),
-			data.at("timeRange").get<cft::TimeRange>(),
-			data.at("initialMotionState").get<cft::MotionState>(),
+			data.at("timeRange").get<TimeRange>(),
+			data.at("initialMotionState").get<MotionState>(),
 			data.at("forceFieldIds").get<std::vector<unsigned int>>(),
 			data.at("motionBehaviorIds").get<std::vector<unsigned int>>()
 		};
 	}
 
-	void adl_serializer<cft::PeriodicSpawnTriggerContext>::from_json(const json& data, cft::PeriodicSpawnTriggerContext& value)
+	void adl_serializer<PeriodicSpawnTriggerContext>::from_json(const json& data, PeriodicSpawnTriggerContext& value)
 	{
-		value = cft::PeriodicSpawnTriggerContext{
-			data.at("emitterSpawnContext").get<cft::ParticleEmitterSpawnContext>(),
+		value = PeriodicSpawnTriggerContext{
+			data.at("emitterSpawnContext").get<ParticleEmitterSpawnContext>(),
 			data.at("interval")
 		};
 	}
 
-	void adl_serializer<cft::PathConfiguration>::from_json(const json& data, cft::PathConfiguration& value)
+	void adl_serializer<PathConfiguration>::from_json(const json& data, PathConfiguration& value)
 	{
-		value = cft::PathConfiguration{
+		value = PathConfiguration{
 			data.at("startThickness"),
 			data.at("endThickness"),
-			cft::JsonTools::parseOptional<float>(data.at("lifetime")),
-			cft::JsonTools::parseOptional<cft::LifetimeFade>(data.at("lifetimeFade")),
+			JsonTools::parseOptional<float>(data.at("lifetime")),
+			JsonTools::parseOptional<LifetimeFade>(data.at("lifetimeFade")),
 			data.at("appendParticleColor"),
-			cft::JsonTools::wrapperToType<cft::Color>(data.at("colorGradient").get<std::vector<cft::JsonTypes::Color>>()),
-			cft::JsonTools::parseOptional<std::vector<float>>(data.at("colorStart")),
-			data.at("colorInterpolation").get<cft::ColorInterpolation>(),
-			data.at("thicknessDistribution").get<cft::ThicknessDistribution>(),
-			cft::JsonTools::parseOptional<cft::ThicknessEvolution>(data.at("thicknessEvolution")),
-			cft::JsonTools::parseOptional<cft::PathImage>(data.at("image"))
+			JsonTools::wrapperToType<Color>(data.at("colorGradient").get<std::vector<JsonTypes::Color>>()),
+			JsonTools::parseOptional<std::vector<float>>(data.at("colorStart")),
+			data.at("colorInterpolation").get<ColorInterpolation>(),
+			data.at("thicknessDistribution").get<ThicknessDistribution>(),
+			JsonTools::parseOptional<ThicknessEvolution>(data.at("thicknessEvolution")),
+			JsonTools::parseOptional<PathImage>(data.at("image"))
 		};
 	}
 
-	void adl_serializer<cft::TrailConfiguration>::from_json(const json& data, cft::TrailConfiguration& value)
+	void adl_serializer<TrailConfiguration>::from_json(const json& data, TrailConfiguration& value)
 	{
-		value = cft::TrailConfiguration{
+		value = TrailConfiguration{
 			data.at("persistenceLifetime"),
 			data.at("minimumSpawnDistance"),
-			cft::JsonTools::parseOptional<float>(data.at("maximumSpawnTime")),
-			cft::JsonTools::parseOptional<unsigned int>(data.at("maximumSegmentCount")),
-			data.at("pathConfiguration").get<cft::PathConfiguration>()
+			JsonTools::parseOptional<float>(data.at("maximumSpawnTime")),
+			JsonTools::parseOptional<unsigned int>(data.at("maximumSegmentCount")),
+			data.at("pathConfiguration").get<PathConfiguration>()
 		};
 	}
 
-	void adl_serializer<cft::RibbonConfiguration>::from_json(const json& data, cft::RibbonConfiguration& value)
+	void adl_serializer<RibbonConfiguration>::from_json(const json& data, RibbonConfiguration& value)
 	{
-		value = cft::RibbonConfiguration{
-			data.at("pathConfiguration").get<cft::PathConfiguration>(),
+		value = RibbonConfiguration{
+			data.at("pathConfiguration").get<PathConfiguration>(),
 			data.at("particleLinkerId"),
 			data.at("ribbonGeneratorId"),
 			data.at("ribbonPointCount")
 		};
 	}
 
-	void adl_serializer<cft::SpawnTriggerDescriptor>::from_json(const json& data, cft::SpawnTriggerDescriptor& value)
+	void adl_serializer<SpawnTriggerDescriptor>::from_json(const json& data, SpawnTriggerDescriptor& value)
 	{
-		value = cft::SpawnTriggerDescriptor{
+		value = SpawnTriggerDescriptor{
 			data.at("maximumRecursionDepth"),
-			cft::JsonTools::parseOptional<cft::ParticleEmitterSpawnContext>(data.at("spawnEmitterSpawnContext")),
-			cft::JsonTools::parseOptional<cft::ParticleEmitterSpawnContext>(data.at("deathEmitterSpawnContext")),
-			cft::JsonTools::parseOptional<cft::PeriodicSpawnTriggerContext>(data.at("periodicEmitterSpawnContext"))
+			JsonTools::parseOptional<ParticleEmitterSpawnContext>(data.at("spawnEmitterSpawnContext")),
+			JsonTools::parseOptional<ParticleEmitterSpawnContext>(data.at("deathEmitterSpawnContext")),
+			JsonTools::parseOptional<PeriodicSpawnTriggerContext>(data.at("periodicEmitterSpawnContext"))
 		};
 	}
 
-	void adl_serializer<cft::RenderType>::from_json(const json& data, cft::RenderType& value)
+	void adl_serializer<RenderType>::from_json(const json& data, RenderType& value)
 	{
 		if (data == "Billboard")
-			value = cft::RenderType::Billboard;
+			value = RenderType::Billboard;
 		else if (data == "Mesh")
-			value = cft::RenderType::Mesh;
+			value = RenderType::Mesh;
 		else
 			throw std::runtime_error("Invalid render type : '" + std::string(data) + "'");
 	}
 
-	void adl_serializer<cft::BillboardRenderConfiguration>::from_json(const json& data, cft::BillboardRenderConfiguration& value)
+	void adl_serializer<BillboardRenderConfiguration>::from_json(const json& data, BillboardRenderConfiguration& value)
 	{
-		value = cft::BillboardRenderConfiguration{
-			cft::JsonTools::parseOptional<unsigned int>(data.at("spriteSheetId"))
+		value = BillboardRenderConfiguration{
+			JsonTools::parseOptional<unsigned int>(data.at("spriteSheetId"))
 		};
 	}
 
-	void adl_serializer<cft::MeshRenderConfiguration>::from_json(const json& data, cft::MeshRenderConfiguration& value)
+	void adl_serializer<MeshRenderConfiguration>::from_json(const json& data, MeshRenderConfiguration& value)
 	{
-		value = cft::MeshRenderConfiguration{
+		value = MeshRenderConfiguration{
 			data.at("modelId"),
-			cft::JsonTools::parseOptional<unsigned int>(data.at("imageId"))
+			JsonTools::parseOptional<unsigned int>(data.at("imageId"))
 		};
 	}
 
-	void adl_serializer<cft::RenderConfiguration>::from_json(const json& data, cft::RenderConfiguration& value)
+	void adl_serializer<RenderConfiguration>::from_json(const json& data, RenderConfiguration& value)
 	{
-		cft::RenderType renderType = data.at("renderType").get<cft::RenderType>();
-		std::variant<cft::BillboardRenderConfiguration, cft::MeshRenderConfiguration> configurationData;
+		RenderType renderType = data.at("renderType").get<RenderType>();
+		std::variant<BillboardRenderConfiguration, MeshRenderConfiguration> configurationData;
 
 		switch (renderType)
 		{
-		case cft::RenderType::Billboard:
-			configurationData = data.at("configurationData").get<cft::BillboardRenderConfiguration>();
+		case RenderType::Billboard:
+			configurationData = data.at("configurationData").get<BillboardRenderConfiguration>();
 			break;
-		case cft::RenderType::Mesh:
-			configurationData = data.at("configurationData").get<cft::MeshRenderConfiguration>();
+		case RenderType::Mesh:
+			configurationData = data.at("configurationData").get<MeshRenderConfiguration>();
 			break;
 		}
 
-		value = cft::RenderConfiguration{
+		value = RenderConfiguration{
 			renderType,
 			configurationData
 		};
 	}
 
-	void adl_serializer<std::unique_ptr<cft::SpawnShape>>::from_json(const json& data, std::unique_ptr<cft::SpawnShape>& value)
+	void adl_serializer<std::unique_ptr<SpawnShape>>::from_json(const json& data, std::unique_ptr<SpawnShape>& value)
 	{
-		value = cft::JsonLoader::getSpawnShapeFactory().instantiate(data);
+		value = JsonLoader::getSpawnShapeFactory().instantiate(data);
 	}
 
-	void adl_serializer<std::unique_ptr<cft::ParticleSpawner>>::from_json(const json& data, std::unique_ptr<cft::ParticleSpawner>& value)
+	void adl_serializer<std::unique_ptr<ParticleSpawner>>::from_json(const json& data, std::unique_ptr<ParticleSpawner>& value)
 	{
 		if (data.contains("spawnShape"))
 		{
-			value = std::make_unique<cft::ParticleSpawner>(
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Color, cft::JsonTypes::Color>(data.at("colorAttributeGenerator")),
-				data.at("spawnShape").get<std::unique_ptr<cft::SpawnShape>>(),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Rotation, cft::JsonTypes::Vec3>(data.at("rotationAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Scale, cft::JsonTypes::Vec3>(data.at("scaleAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::LinearVelocity, cft::JsonTypes::Vec3>(data.at("linearVelocityAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::AngularVelocity, cft::JsonTypes::Vec3>(data.at("angularVelocityAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Phase, float>(data.at("phaseAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Lifetime, float>(data.at("lifetimeAttributeGenerator")),
+			value = std::make_unique<ParticleSpawner>(
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<Color, JsonTypes::Color>(data.at("colorAttributeGenerator")),
+				data.at("spawnShape").get<std::unique_ptr<SpawnShape>>(),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<Rotation, JsonTypes::Vec3>(data.at("rotationAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<Scale, JsonTypes::Vec3>(data.at("scaleAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<LinearVelocity, JsonTypes::Vec3>(data.at("linearVelocityAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<AngularVelocity, JsonTypes::Vec3>(data.at("angularVelocityAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<Phase, float>(data.at("phaseAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<Lifetime, float>(data.at("lifetimeAttributeGenerator")),
 				data.at("maximumParticleLifetime")
 			);
 		}
 		else
 		{
-			value = std::make_unique<cft::ParticleSpawner>(
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Color, cft::JsonTypes::Color>(data.at("colorAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Position, cft::JsonTypes::Vec3>(data.at("positionAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Rotation, cft::JsonTypes::Vec3>(data.at("rotationAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Scale, cft::JsonTypes::Vec3>(data.at("scaleAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::LinearVelocity, cft::JsonTypes::Vec3>(data.at("linearVelocityAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::AngularVelocity, cft::JsonTypes::Vec3>(data.at("angularVelocityAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Phase, float>(data.at("phaseAttributeGenerator")),
-				cft::JsonLoaderAttributeGenerator::parseAttributeGenerator<cft::Lifetime, float>(data.at("lifetimeAttributeGenerator")),
+			value = std::make_unique<ParticleSpawner>(
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<Color, JsonTypes::Color>(data.at("colorAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<Position, JsonTypes::Vec3>(data.at("positionAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<Rotation, JsonTypes::Vec3>(data.at("rotationAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<Scale, JsonTypes::Vec3>(data.at("scaleAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<LinearVelocity, JsonTypes::Vec3>(data.at("linearVelocityAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<AngularVelocity, JsonTypes::Vec3>(data.at("angularVelocityAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<Phase, float>(data.at("phaseAttributeGenerator")),
+				JsonLoaderAttributeGenerator::parseAttributeGenerator<Lifetime, float>(data.at("lifetimeAttributeGenerator")),
 				data.at("maximumParticleLifetime")
 			);
 		}
 	}
 
-	void adl_serializer<cft::Image>::from_json(const json& data, cft::Image& value)
+	void adl_serializer<Image>::from_json(const json& data, Image& value)
 	{
-		cft::Image image;
+		Image image;
 		image.loadFromFile(data.at("path"));
 
 		value = image;
 	}
 
-	void adl_serializer<cft::Model>::from_json(const json& data, cft::Model& value)
+	void adl_serializer<Model>::from_json(const json& data, Model& value)
 	{
-		cft::Model model;
+		Model model;
 		model.loadFromFile(data.at("path"));
 
 		value = model;
 	}
 
-	void adl_serializer<cft::SpriteSheetDescriptor>::from_json(const json& data, cft::SpriteSheetDescriptor& value)
+	void adl_serializer<SpriteSheetDescriptor>::from_json(const json& data, SpriteSheetDescriptor& value)
 	{
-		value = cft::SpriteSheetDescriptor{
+		value = SpriteSheetDescriptor{
 			data.at("imageId"),
 			data.at("frameCount"),
 			data.at("rowFrameCount"),
@@ -349,24 +351,24 @@ namespace nlohmann
 		};
 	}
 
-	void adl_serializer<cft::ParticleEffectDescriptor>::from_json(const json& data, cft::ParticleEffectDescriptor& value)
+	void adl_serializer<ParticleEffectDescriptor>::from_json(const json& data, ParticleEffectDescriptor& value)
 	{
-		value = cft::ParticleEffectDescriptor{
-			data.at("emitterSpawnContexts").get<std::vector<cft::ParticleEmitterSpawnContext>>()
+		value = ParticleEffectDescriptor{
+			data.at("emitterSpawnContexts").get<std::vector<ParticleEmitterSpawnContext>>()
 		};
 	}
 
-	void adl_serializer<cft::ParticleEmitterDescriptor>::from_json(const json& data, cft::ParticleEmitterDescriptor& value)
+	void adl_serializer<ParticleEmitterDescriptor>::from_json(const json& data, ParticleEmitterDescriptor& value)
 	{
-		value = cft::ParticleEmitterDescriptor{
+		value = ParticleEmitterDescriptor{
 			data.at("poolId"),
 			data.at("particleSpawnerId"),
 			data.at("emissionPatternId"),
-			data.at("motionStateInheritance").get<cft::MotionStateInheritance>(),
-			cft::JsonTools::parseOptional<cft::TrailConfiguration>(data.at("trailConfiguration")),
-			cft::JsonTools::parseOptional<cft::RibbonConfiguration>(data.at("ribbonConfiguration")),
-			cft::JsonTools::parseOptional<cft::SpawnTriggerDescriptor>(data.at("spawnTriggerDescriptor")),
-			data.at("renderConfiguration").get<cft::RenderConfiguration>(),
+			data.at("motionStateInheritance").get<MotionStateInheritance>(),
+			JsonTools::parseOptional<TrailConfiguration>(data.at("trailConfiguration")),
+			JsonTools::parseOptional<RibbonConfiguration>(data.at("ribbonConfiguration")),
+			JsonTools::parseOptional<SpawnTriggerDescriptor>(data.at("spawnTriggerDescriptor")),
+			data.at("renderConfiguration").get<RenderConfiguration>(),
 			data.at("forceFieldIds").get<std::vector<unsigned int>>(),
 			data.at("motionBehaviorIds").get<std::vector<unsigned int>>(),
 			data.at("visualBehaviorIds").get<std::vector<unsigned int>>()

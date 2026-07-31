@@ -53,7 +53,7 @@ namespace cft
 		m_framebuffer.resize(width, height);
 	}
 
-	void HdrComposite::render(unsigned int sourceTexture, unsigned int bloomTexture, unsigned int flareTexture)
+	void HdrComposite::render(unsigned int sourceTexture, unsigned int bloomTexture, unsigned int flareTexture) const
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, sourceTexture);

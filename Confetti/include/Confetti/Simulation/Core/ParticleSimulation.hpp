@@ -62,7 +62,7 @@ namespace cft
 
 		void setSeed(std::uint64_t seed);
 
-		void addParticleEffect(float elapsedTime, unsigned int id);
+		void addParticleEffect(unsigned int id, float elapsedTime);
 
 		void clear();
 		void update(float elapsedTime, float deltaTime);

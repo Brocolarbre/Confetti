@@ -10,13 +10,13 @@
 
 namespace cft
 {
-	void JsonLoader::registerTypes(JsonFactory<cft::LinkRule>& factory, const ProviderRegistry& providerRegistry)
+	void JsonLoader::registerTypes(JsonFactory<LinkRule>& factory, const ProviderRegistry& providerRegistry)
 	{
-		factory.registerType("AgeSimilarity", [](const json& data) { return std::make_unique<cft::AgeSimilarityLinkRule>(data.at("threshold")); });
-		factory.registerType("ColorSimilarity", [](const json& data) { return std::make_unique<cft::ColorSimilarityLinkRule>(data.at("threshold")); });
-		factory.registerType("Connection", [](const json& data) { return std::make_unique<cft::ConnectionLinkRule>(data.at("maximumConnectionCount")); });
-		factory.registerType("Distance", [](const json& data) { return std::make_unique<cft::DistanceLinkRule>(data.at("minimumDistance"), data.at("maximumDistance")); });
-		factory.registerType("PhaseSimilarity", [](const json& data) { return std::make_unique<cft::PhaseSimilarityLinkRule>(data.at("threshold")); });
-		factory.registerType("VelocitySimilarity", [](const json& data) { return std::make_unique<cft::VelocitySimilarityLinkRule>(data.at("threshold")); });
+		factory.registerType("AgeSimilarity", [](const json& data) { return std::make_unique<AgeSimilarityLinkRule>(data.at("threshold")); });
+		factory.registerType("ColorSimilarity", [](const json& data) { return std::make_unique<ColorSimilarityLinkRule>(data.at("threshold")); });
+		factory.registerType("Connection", [](const json& data) { return std::make_unique<ConnectionLinkRule>(data.at("maximumConnectionCount")); });
+		factory.registerType("Distance", [](const json& data) { return std::make_unique<DistanceLinkRule>(data.at("minimumDistance"), data.at("maximumDistance")); });
+		factory.registerType("PhaseSimilarity", [](const json& data) { return std::make_unique<PhaseSimilarityLinkRule>(data.at("threshold")); });
+		factory.registerType("VelocitySimilarity", [](const json& data) { return std::make_unique<VelocitySimilarityLinkRule>(data.at("threshold")); });
 	}
 }

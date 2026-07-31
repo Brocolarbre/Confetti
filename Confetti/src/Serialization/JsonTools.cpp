@@ -18,13 +18,13 @@ namespace cft
 		return rotations;
 	}
 
-	std::vector<cft::WeightedValue<glm::quat>> JsonTools::eulerAnglesToQuaternion(const std::vector<cft::WeightedValue<glm::vec3>>& eulerAngles)
+	std::vector<WeightedValue<glm::quat>> JsonTools::eulerAnglesToQuaternion(const std::vector<WeightedValue<glm::vec3>>& eulerAngles)
 	{
-		std::vector<cft::WeightedValue<glm::quat>> rotations;
+		std::vector<WeightedValue<glm::quat>> rotations;
 		rotations.reserve(eulerAngles.size());
 
-		for (const cft::WeightedValue<glm::vec3>& rotation : eulerAngles)
-			rotations.push_back(cft::WeightedValue<glm::quat>{ eulerAnglesToQuaternion(rotation.value), rotation.weight });
+		for (const WeightedValue<glm::vec3>& rotation : eulerAngles)
+			rotations.push_back(WeightedValue<glm::quat>{ eulerAnglesToQuaternion(rotation.value), rotation.weight });
 
 		return rotations;
 	}

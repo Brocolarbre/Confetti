@@ -25,6 +25,6 @@ namespace cft
 		void setGamma(float gamma);
 
 		void resize(unsigned int width, unsigned int height);
-		void render(unsigned int texture);
+		void render(unsigned int texture) const;
 	};
 }

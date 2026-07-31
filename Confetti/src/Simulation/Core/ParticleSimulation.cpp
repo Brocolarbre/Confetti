@@ -131,7 +131,7 @@ namespace cft
 		m_seed = seed;
 	}
 
-	void ParticleSimulation::addParticleEffect(float elapsedTime, unsigned int id)
+	void ParticleSimulation::addParticleEffect(unsigned int id, float elapsedTime)
 	{
 		m_particleEffectInstances.push_back(ParticleEffectInstance{ elapsedTime, m_assetRegistry.getParticleEffectDescriptor(id).emitterSpawnContexts });
 	}

@@ -15,18 +15,18 @@
 
 namespace cft
 {
-	void JsonLoader::registerTypes(JsonFactory<cft::ForceField>& factory, const ProviderRegistry& providerRegistry)
+	void JsonLoader::registerTypes(JsonFactory<ForceField>& factory, const ProviderRegistry& providerRegistry)
 	{
-		factory.registerType("Attraction", [](const json& data) { return std::make_unique<cft::AttractionForceField>(data.at("spatialInfluence").get<cft::SpatialInfluence>(), data.at("strength")); });
-		factory.registerType("Directional", [](const json& data) { return std::make_unique<cft::DirectionalForceField>(data.at("direction").get<JsonTypes::Vec3>().value, data.at("strength")); });
-		factory.registerType("FollowTarget", [&providerRegistry](const json& data) { return std::make_unique<cft::FollowTargetForceField>(providerRegistry.getProvider<glm::vec3>(data.at("targetProvider")), data.at("responseTime"), data.at("dampingRatio")); });
-		factory.registerType("LinearDrag", [](const json& data) { return std::make_unique<cft::LinearDragForceField>(data.at("strength")); });
-		factory.registerType("Orbit", [](const json& data) { return std::make_unique<cft::OrbitForceField>(data.at("spatialInfluence").get<cft::SpatialInfluence>(), data.at("axis").get<JsonTypes::Vec3>().value, data.at("strength"), data.at("radius"), data.at("radialCorrectionStrength")); });
-		factory.registerType("QuadraticDrag", [](const json& data) { return std::make_unique<cft::QuadraticDragForceField>(data.at("strength")); });
-		factory.registerType("Repulsion", [](const json& data) { return std::make_unique<cft::RepulsionForceField>(data.at("spatialInfluence").get<cft::SpatialInfluence>(), data.at("strength")); });
-		factory.registerType("ShockWave", [](const json& data) { return std::make_unique<cft::ShockWaveForceField>(data.at("spatialInfluence").get<cft::SpatialInfluence>(), data.at("axis").get<JsonTypes::Vec3>().value, data.at("speed"), data.at("strength"), data.at("thickness")); });
-		factory.registerType("Turbulence", [](const json& data) { return std::make_unique<cft::TurbulenceForceField>(data.at("strength"), data.at("seed")); });
-		factory.registerType("Vortex", [](const json& data) { return std::make_unique<cft::VortexForceField>(data.at("spatialInfluence").get<cft::SpatialInfluence>(), data.at("axis").get<JsonTypes::Vec3>().value, data.at("strength"), data.at("pullStrength")); });
-		factory.registerType("Wind", [](const json& data) { return std::make_unique<cft::WindForceField>(data.at("direction").get<JsonTypes::Vec3>().value, data.at("strength"), data.at("drag")); });
+		factory.registerType("Attraction", [](const json& data) { return std::make_unique<AttractionForceField>(data.at("spatialInfluence").get<SpatialInfluence>(), data.at("strength")); });
+		factory.registerType("Directional", [](const json& data) { return std::make_unique<DirectionalForceField>(data.at("direction").get<JsonTypes::Vec3>().value, data.at("strength")); });
+		factory.registerType("FollowTarget", [&providerRegistry](const json& data) { return std::make_unique<FollowTargetForceField>(providerRegistry.getProvider<glm::vec3>(data.at("targetProvider")), data.at("responseTime"), data.at("dampingRatio")); });
+		factory.registerType("LinearDrag", [](const json& data) { return std::make_unique<LinearDragForceField>(data.at("strength")); });
+		factory.registerType("Orbit", [](const json& data) { return std::make_unique<OrbitForceField>(data.at("spatialInfluence").get<SpatialInfluence>(), data.at("axis").get<JsonTypes::Vec3>().value, data.at("strength"), data.at("radius"), data.at("radialCorrectionStrength")); });
+		factory.registerType("QuadraticDrag", [](const json& data) { return std::make_unique<QuadraticDragForceField>(data.at("strength")); });
+		factory.registerType("Repulsion", [](const json& data) { return std::make_unique<RepulsionForceField>(data.at("spatialInfluence").get<SpatialInfluence>(), data.at("strength")); });
+		factory.registerType("ShockWave", [](const json& data) { return std::make_unique<ShockWaveForceField>(data.at("spatialInfluence").get<SpatialInfluence>(), data.at("axis").get<JsonTypes::Vec3>().value, data.at("speed"), data.at("strength"), data.at("thickness")); });
+		factory.registerType("Turbulence", [](const json& data) { return std::make_unique<TurbulenceForceField>(data.at("strength"), data.at("seed")); });
+		factory.registerType("Vortex", [](const json& data) { return std::make_unique<VortexForceField>(data.at("spatialInfluence").get<SpatialInfluence>(), data.at("axis").get<JsonTypes::Vec3>().value, data.at("strength"), data.at("pullStrength")); });
+		factory.registerType("Wind", [](const json& data) { return std::make_unique<WindForceField>(data.at("direction").get<JsonTypes::Vec3>().value, data.at("strength"), data.at("drag")); });
 	}
 }

@@ -32,7 +32,8 @@ namespace cft
 		m_spriteSheetSsbo(),
 		m_particleSsbo(),
 		m_shader(),
-		m_mesh()
+		m_mesh(),
+		m_elapsedTime(0.0f)
 	{
 		m_shader.loadFromMemory(std::string(BILLBOARD_PARTICLE_VERTEX_SHADER_SOURCE), std::string(BILLBOARD_PARTICLE_FRAGMENT_SHADER_SOURCE));
 		m_shader.use();
@@ -70,14 +71,16 @@ namespace cft
 		loadSpriteSheets(assetRegistry);
 	}
 
-	void BillboardParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry)
+	void BillboardParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry, float elapsedTime)
 	{
 		m_particleSsbo.bind();
 		m_particleSsbo.ensureCapaticy(particlePools, particleRegistry);
 		m_particleSsbo.setData(particlePools, m_imageIdToTextureIndex, m_spriteSheetIdToSpriteSheetSsboIndexMapping, particleRegistry, assetRegistry);
+		
+		m_elapsedTime = elapsedTime;
 	}
 
-	void BillboardParticleRenderer::render(const View& view, float elapsedTime) const
+	void BillboardParticleRenderer::render(const View& view) const
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -92,7 +95,7 @@ namespace cft
 		m_shader.use();
 		m_shader.setUniform("uView", view.viewMatrix);
 		m_shader.setUniform("uProjection", view.projectionMatrix);
-		m_shader.setUniform("uTime", elapsedTime);
+		m_shader.setUniform("uTime", m_elapsedTime);
 
 		m_mesh.drawInstanced(m_particleSsbo.getParticleCount());
 	}
