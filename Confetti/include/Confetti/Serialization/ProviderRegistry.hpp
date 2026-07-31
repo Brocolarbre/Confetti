@@ -12,21 +12,7 @@ namespace cft
 	class ProviderRegistry
 	{
 	private:
-		struct CONFETTI_API AbstractProvider
-		{
-			virtual ~AbstractProvider() = default;
-		};
-
-		template <typename T>
-		struct Provider : public AbstractProvider
-		{
-			std::function<T()> function;
-
-			Provider(std::function<T()> function);
-		};
-
-	private:
-		std::unordered_map<std::string, std::shared_ptr<AbstractProvider>> m_providers;
+		std::unordered_map<std::string, std::any> m_providers;
 
 	public:
 		template <typename T>
@@ -37,16 +23,9 @@ namespace cft
 	};
 
 	template <typename T>
-	inline ProviderRegistry::Provider<T>::Provider(std::function<T()> function) :
-		function(std::move(function))
-	{
-
-	}
-
-	template <typename T>
 	inline void ProviderRegistry::registerProvider(const std::string& name, std::function<T()> provider)
 	{
-		m_providers[name] = std::make_shared<Provider<T>>(std::move(provider));
+		m_providers[name] = std::move(provider);
 	}
 
 	template <typename T>
@@ -57,8 +36,6 @@ namespace cft
 		if (it == m_providers.end())
 			throw std::runtime_error("Unknown provider : '" + name + "'");
 
-		auto provider = std::static_pointer_cast<Provider<T>>(it->second);
-
-		return provider->function;
+		return std::any_cast<const std::function<T()>&>(it->second);
 	}
 }
