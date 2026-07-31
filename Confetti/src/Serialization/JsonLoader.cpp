@@ -17,8 +17,6 @@ namespace cft
 	JsonFactory<lw::Interpolator> JsonLoader::m_interpolatorFactory;
 	JsonFactory<lw::Easing> JsonLoader::m_easingFactory;
 
-	ProviderRegistry JsonLoader::m_providerRegistry;
-
 	bool JsonLoader::m_initialized = false;
 
 	void JsonLoader::loadAssets(const json& data, AssetRegistry& assetRegistry)
@@ -96,21 +94,21 @@ namespace cft
 		particleRenderer.loadMeshRendererMeshes(assetRegistry, meshRendererModelIds);
 	}
 
-	void JsonLoader::initialize()
+	void JsonLoader::initialize(const ProviderRegistry& providerRegistry)
 	{
 		if (m_initialized)
 			return;
 
-		registerTypes(m_forceFieldFactory, m_providerRegistry);
-		registerTypes(m_motionBehaviorFactory, m_providerRegistry);
-		registerTypes(m_visualBehaviorFactory, m_providerRegistry);
-		registerTypes(m_emissionPatternFactory, m_providerRegistry);
-		registerTypes(m_particleLinkerFactory, m_providerRegistry);
-		registerTypes(m_ribbonGeneratorFactory, m_providerRegistry);
-		registerTypes(m_spawnShapeFactory, m_providerRegistry);
-		registerTypes(m_linkRuleFactory, m_providerRegistry);
-		registerTypes(m_interpolatorFactory, m_providerRegistry);
-		registerTypes(m_easingFactory, m_providerRegistry);
+		registerTypes(m_forceFieldFactory, providerRegistry);
+		registerTypes(m_motionBehaviorFactory, providerRegistry);
+		registerTypes(m_visualBehaviorFactory, providerRegistry);
+		registerTypes(m_emissionPatternFactory, providerRegistry);
+		registerTypes(m_particleLinkerFactory, providerRegistry);
+		registerTypes(m_ribbonGeneratorFactory, providerRegistry);
+		registerTypes(m_spawnShapeFactory, providerRegistry);
+		registerTypes(m_linkRuleFactory, providerRegistry);
+		registerTypes(m_interpolatorFactory, providerRegistry);
+		registerTypes(m_easingFactory, providerRegistry);
 
 		m_initialized = true;
 	}
@@ -127,6 +125,25 @@ namespace cft
 		loadBillboardRendererTextures(data.at("billboardRendererImages"), particleSystem.m_renderer, particleSystem.m_assetRegistry);
 		loadMeshRendererTextures(data.at("meshRendererImageIds"), particleSystem.m_renderer, particleSystem.m_assetRegistry);
 		loadMeshRendererMeshes(data.at("meshRendererModelIds"), particleSystem.m_renderer, particleSystem.m_assetRegistry);
+	}
+
+	void JsonLoader::clear()
+	{
+		if (!m_initialized)
+			return;
+
+		m_forceFieldFactory.clear();
+		m_motionBehaviorFactory.clear();
+		m_visualBehaviorFactory.clear();
+		m_emissionPatternFactory.clear();
+		m_particleLinkerFactory.clear();
+		m_ribbonGeneratorFactory.clear();
+		m_spawnShapeFactory.clear();
+		m_linkRuleFactory.clear();
+		m_interpolatorFactory.clear();
+		m_easingFactory.clear();
+
+		m_initialized = false;
 	}
 
 	JsonFactory<ForceField>& JsonLoader::getForceFieldFactory()
@@ -177,10 +194,5 @@ namespace cft
 	JsonFactory<lw::Easing>& JsonLoader::getEasingFactory()
 	{
 		return m_easingFactory;
-	}
-
-	ProviderRegistry& JsonLoader::getProviderRegistry()
-	{
-		return m_providerRegistry;
 	}
 }

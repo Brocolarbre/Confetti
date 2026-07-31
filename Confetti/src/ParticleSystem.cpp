@@ -2,14 +2,15 @@
 
 namespace cft
 {
-	ParticleSystem::ParticleSystem(float timeStep, unsigned int width, unsigned int height, unsigned int samples) :
+	ParticleSystem::ParticleSystem(float timeStep, unsigned int maximumStepsPerFrame, unsigned int width, unsigned int height, unsigned int samples) :
 		m_assetRegistry(),
 		m_simulation(m_assetRegistry),
 		m_renderer(width, height, samples),
 		m_timeStep(timeStep),
 		m_timeScale(1.0f),
 		m_elapsedTime(0.0f),
-		m_timeAccumulator(0.0f)
+		m_timeAccumulator(0.0f),
+		m_maximumStepsPerFrame(std::max(maximumStepsPerFrame, 1u))
 	{
 
 	}
@@ -43,17 +44,23 @@ namespace cft
 	void ParticleSystem::update(float deltaTime, const View& view)
 	{
 		float scaledDeltaTime = deltaTime * m_timeScale;
-
-		m_elapsedTime += scaledDeltaTime;
 		m_timeAccumulator += scaledDeltaTime;
 
-		while (m_timeAccumulator >= m_timeStep)
+		unsigned int stepCount = 0;
+		while (m_timeAccumulator >= m_timeStep && stepCount < m_maximumStepsPerFrame)
 		{
-			m_simulation.update(m_elapsedTime, scaledDeltaTime);
-			m_renderer.update(m_simulation, m_assetRegistry, view, m_elapsedTime);
-
 			m_timeAccumulator -= m_timeStep;
+			m_elapsedTime += m_timeStep;
+
+			m_simulation.update(m_elapsedTime, m_timeStep);
+			++stepCount;
+
+			if (stepCount == m_maximumStepsPerFrame)
+				m_timeAccumulator = std::min(m_timeAccumulator, m_timeStep);
 		}
+
+		if (stepCount > 0)
+			m_renderer.update(m_simulation, m_assetRegistry, view, m_elapsedTime);
 	}
 
 	void ParticleSystem::render(const View& view) const

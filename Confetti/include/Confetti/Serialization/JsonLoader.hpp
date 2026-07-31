@@ -35,8 +35,6 @@ namespace cft
 		static JsonFactory<lw::Interpolator> m_interpolatorFactory;
 		static JsonFactory<lw::Easing> m_easingFactory;
 
-		static ProviderRegistry m_providerRegistry;
-
 		static bool m_initialized;
 
 		static void registerTypes(JsonFactory<ForceField>& factory, const ProviderRegistry& providerRegistry);
@@ -56,8 +54,9 @@ namespace cft
 		static void loadMeshRendererMeshes(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
 
 	public:
-		static void initialize();
+		static void initialize(const ProviderRegistry& providerRegistry);
 		static void load(const std::string& path, ParticleSystem& particleSystem);
+		static void clear();
 
 		static JsonFactory<ForceField>& getForceFieldFactory();
 		static JsonFactory<MotionBehavior>& getMotionBehaviorFactory();
@@ -69,7 +68,5 @@ namespace cft
 		static JsonFactory<LinkRule>& getLinkRuleFactory();
 		static JsonFactory<lw::Interpolator>& getInterpolatorFactory();
 		static JsonFactory<lw::Easing>& getEasingFactory();
-
-		static ProviderRegistry& getProviderRegistry();
 	};
 }

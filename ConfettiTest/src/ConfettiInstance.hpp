@@ -3,7 +3,7 @@
 #include "Camera.hpp"
 #include "RenderContext.hpp"
 
-#include <Confetti/ParticleSystem.hpp>
+#include <Confetti/Confetti.hpp>
 #include <Krono/Krono.hpp>
 #include <Windove/Window.hpp>
 

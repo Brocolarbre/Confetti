@@ -24,6 +24,7 @@ namespace cft
 	public:
 		void registerType(const std::string& type, Factory factory);
 		std::unique_ptr<Base> instantiate(const json& data) const;
+		void clear();
 	};
 
 	template <typename Base>
@@ -43,5 +44,11 @@ namespace cft
 			throw std::runtime_error("Unknown type : '" + type + "'");
 
 		return it->second(data);
+	}
+
+	template <typename Base>
+	inline void JsonFactory<Base>::clear()
+	{
+		m_factories.clear();
 	}
 }

@@ -17,10 +17,12 @@ namespace cft
 		float m_elapsedTime;
 		float m_timeAccumulator;
 
+		unsigned int m_maximumStepsPerFrame;
+
 		friend class JsonLoader;
 
 	public:
-		ParticleSystem(float timeStep, unsigned int width, unsigned int height, unsigned int samples);
+		ParticleSystem(float timeStep, unsigned int maximumStepsPerFrame, unsigned int width, unsigned int height, unsigned int samples);
 
 		unsigned int getRendererOutputTextureId() const;
 
