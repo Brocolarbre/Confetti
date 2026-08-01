@@ -4,17 +4,26 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
     m_renderContext(width, height),
     m_camera(width, height),
     m_particleSystem(1.0f / 60.0f, 8, width, height, samples),
+    m_providerRegistry(),
     m_chronometer(false),
     m_worldSpaceMousePosition()
 {
     window.addEventHandler(*this);
 
-    cft::ProviderRegistry providerRegistry;
-    providerRegistry.registerProvider<glm::vec3>("mouseCursor", [this]() { return glm::vec3(m_worldSpaceMousePosition, 0.0f); });
+    m_providerRegistry.registerProvider<glm::vec3>("mouseCursor", [this]() { return glm::vec3(m_worldSpaceMousePosition, 0.0f); });
+    onDragAndDrop({ "res/systems/follow.json" });
+}
 
-    cft::JsonLoader::initialize(providerRegistry);
-    cft::JsonLoader::load("res/systems/follow.json", m_particleSystem);
+void ConfettiInstance::onDragAndDrop(const std::vector<std::string>& paths)
+{
+    if (paths.empty() || !paths.front().ends_with(".json"))
+        return;
 
+    cft::JsonLoader::clear();
+    cft::JsonLoader::initialize(m_providerRegistry);
+    cft::JsonLoader::load(paths.front(), m_particleSystem);
+
+    m_particleSystem.clear();
     m_particleSystem.playEffect(0);
     m_chronometer.start();
 }
