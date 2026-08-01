@@ -1,12 +1,12 @@
 #include "Confetti/Serialization/JsonLoader.hpp"
 #include "Confetti/Serialization/JsonSerialization.hpp"
 
-#include <Confetti/Simulation/Link/LinkRule/AgeSimilarityLinkRule.hpp>
-#include <Confetti/Simulation/Link/LinkRule/ColorSimilarityLinkRule.hpp>
-#include <Confetti/Simulation/Link/LinkRule/ConnectionLinkRule.hpp>
-#include <Confetti/Simulation/Link/LinkRule/DistanceLinkRule.hpp>
-#include <Confetti/Simulation/Link/LinkRule/PhaseSimilarityLinkRule.hpp>
-#include <Confetti/Simulation/Link/LinkRule/VelocitySimilarityLinkRule.hpp>
+#include "Confetti/Simulation/Link/LinkRule/AgeSimilarityLinkRule.hpp"
+#include "Confetti/Simulation/Link/LinkRule/ColorSimilarityLinkRule.hpp"
+#include "Confetti/Simulation/Link/LinkRule/ConnectionLinkRule.hpp"
+#include "Confetti/Simulation/Link/LinkRule/DistanceLinkRule.hpp"
+#include "Confetti/Simulation/Link/LinkRule/PhaseSimilarityLinkRule.hpp"
+#include "Confetti/Simulation/Link/LinkRule/VelocitySimilarityLinkRule.hpp"
 
 namespace cft
 {

@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	LinearVelocity NormalBurstLinearVelocityGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
+	LinearVelocity NormalBurstLinearVelocityGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime)
 	{
 		glm::vec3 direction = glm::normalize(context.normal + m_randomNumberGenerator.generate(glm::vec3(-m_maximumAngle), glm::vec3(m_maximumAngle)));
 		return context.position + direction * m_strength;

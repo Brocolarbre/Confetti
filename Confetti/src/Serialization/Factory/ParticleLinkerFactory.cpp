@@ -1,12 +1,12 @@
 #include "Confetti/Serialization/JsonLoader.hpp"
 #include "Confetti/Serialization/JsonSerialization.hpp"
 
-#include <Confetti/Simulation/Link/ParticleLinker/ChainParticleLinker.hpp>
-#include <Confetti/Simulation/Link/ParticleLinker/KNearestNeighborParticleLinker.hpp>
-#include <Confetti/Simulation/Link/ParticleLinker/NearestNeighborParticleLinker.hpp>
-#include <Confetti/Simulation/Link/ParticleLinker/OriginParticleLinker.hpp>
-#include <Confetti/Simulation/Link/ParticleLinker/RandomParticleLinker.hpp>
-#include <Confetti/Simulation/Link/ParticleLinker/TargetParticleLinker.hpp>
+#include "Confetti/Simulation/Link/ParticleLinker/ChainParticleLinker.hpp"
+#include "Confetti/Simulation/Link/ParticleLinker/KNearestNeighborParticleLinker.hpp"
+#include "Confetti/Simulation/Link/ParticleLinker/NearestNeighborParticleLinker.hpp"
+#include "Confetti/Simulation/Link/ParticleLinker/OriginParticleLinker.hpp"
+#include "Confetti/Simulation/Link/ParticleLinker/RandomParticleLinker.hpp"
+#include "Confetti/Simulation/Link/ParticleLinker/TargetParticleLinker.hpp"
 
 namespace cft
 {

@@ -74,18 +74,28 @@
                     "seed": 0
                 },
                 "linearVelocityAttributeGenerator": {
-                    "type": "Random",
-                    "minimum": {
-                        "x": -10.0,
-                        "y": -10.0,
-                        "z": -10.0
+                    "type": "ValueStrength",
+                    "value": {
+                        "type": "Random",
+                        "minimum": {
+                            "x": -10.0,
+                            "y": -10.0,
+                            "z": -10.0
+                        },
+                        "maximum": {
+                            "x": 10.0,
+                            "y": 10.0,
+                            "z": 10.0
+                        },
+                        "seed": 0
                     },
-                    "maximum": {
-                        "x": 10.0,
-                        "y": 10.0,
-                        "z": 10.0
-                    },
-                    "seed": 0
+                    "strength": {
+                        "type": "Time",
+                        "from": 0.1,
+                        "to": 1.0,
+                        "fromTime": 0.0,
+                        "toTime": 5.0
+                    }
                 },
                 "angularVelocityAttributeGenerator": {
                     "type": "Constant",

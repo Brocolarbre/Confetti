@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	Position RandomNormalOffsetPositionGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
+	Position RandomNormalOffsetPositionGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime)
 	{
 		return context.position + context.normal * m_randomNumberGenerator.generate(m_minimumStrength, m_maximumStrength);
 	}

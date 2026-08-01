@@ -13,7 +13,7 @@ namespace cft
 		T m_maximum;
 		RandomNumberGenerator m_randomNumberGenerator;
 
-		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
+		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime) override;
 
 	public:
 		RandomAttributeGenerator(const T& minimum, const T& maximum, std::uint64_t seed = 0);
@@ -23,7 +23,7 @@ namespace cft
 	};
 
 	template <typename T>
-	inline T RandomAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
+	inline T RandomAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime)
 	{
 		return m_randomNumberGenerator.generate(m_minimum, m_maximum);
 	}

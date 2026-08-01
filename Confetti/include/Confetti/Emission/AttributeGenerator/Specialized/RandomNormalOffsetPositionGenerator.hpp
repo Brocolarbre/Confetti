@@ -13,7 +13,7 @@ namespace cft
 		float m_maximumStrength;
 		RandomNumberGenerator m_randomNumberGenerator;
 
-		Position generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
+		Position generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime) override;
 
 	public:
 		RandomNormalOffsetPositionGenerator(float minimumStrength, float maximumStrength, std::uint64_t seed = 0);

@@ -1,14 +1,14 @@
 #include "Confetti/Serialization/JsonLoader.hpp"
 #include "Confetti/Serialization/JsonSerialization.hpp"
 
-#include <Confetti/Emission/SpawnShape/CircleSpawnShape.hpp>
-#include <Confetti/Emission/SpawnShape/ConeSpawnShape.hpp>
-#include <Confetti/Emission/SpawnShape/ConeVolumeSpawnShape.hpp>
-#include <Confetti/Emission/SpawnShape/CylinderSpawnShape.hpp>
-#include <Confetti/Emission/SpawnShape/CylinderVolumeSpawnShape.hpp>
-#include <Confetti/Emission/SpawnShape/DiskSpawnShape.hpp>
-#include <Confetti/Emission/SpawnShape/SphereSpawnShape.hpp>
-#include <Confetti/Emission/SpawnShape/SphereVolumeSpawnShape.hpp>
+#include "Confetti/Emission/SpawnShape/CircleSpawnShape.hpp"
+#include "Confetti/Emission/SpawnShape/ConeSpawnShape.hpp"
+#include "Confetti/Emission/SpawnShape/ConeVolumeSpawnShape.hpp"
+#include "Confetti/Emission/SpawnShape/CylinderSpawnShape.hpp"
+#include "Confetti/Emission/SpawnShape/CylinderVolumeSpawnShape.hpp"
+#include "Confetti/Emission/SpawnShape/DiskSpawnShape.hpp"
+#include "Confetti/Emission/SpawnShape/SphereSpawnShape.hpp"
+#include "Confetti/Emission/SpawnShape/SphereVolumeSpawnShape.hpp"
 
 namespace cft
 {

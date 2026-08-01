@@ -4,10 +4,10 @@
 #include "JsonTools.hpp"
 #include "JsonTypes.hpp"
 
-#include <Confetti/Behavior/Force/SpatialInfluence.hpp>
-#include <Confetti/Behavior/Visual/ParticleTime.hpp>
-#include <Confetti/Emission/ParticleSpawner.hpp>
-#include <Confetti/Simulation/Registry/AssetRegistry.hpp>
+#include "Confetti/Behavior/Force/SpatialInfluence.hpp"
+#include "Confetti/Behavior/Visual/ParticleTime.hpp"
+#include "Confetti/Emission/ParticleSpawner.hpp"
+#include "Confetti/Simulation/Registry/AssetRegistry.hpp"
 
 namespace nlohmann
 {

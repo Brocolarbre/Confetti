@@ -1,13 +1,13 @@
 #include "Confetti/Serialization/JsonLoader.hpp"
 #include "Confetti/Serialization/JsonSerialization.hpp"
 
-#include <Confetti/Emission/EmissionPattern/ConstantRateEmissionPattern.hpp>
-#include <Confetti/Emission/EmissionPattern/FixedBurstEmissionPattern.hpp>
-#include <Confetti/Emission/EmissionPattern/LinearBurstEmissionPattern.hpp>
-#include <Confetti/Emission/EmissionPattern/LinearRateEmissionPattern.hpp>
-#include <Confetti/Emission/EmissionPattern/PeriodicBurstEmissionPattern.hpp>
-#include <Confetti/Emission/EmissionPattern/RandomRateEmissionPattern.hpp>
-#include <Confetti/Emission/EmissionPattern/SingleBurstEmissionPattern.hpp>
+#include "Confetti/Emission/EmissionPattern/ConstantRateEmissionPattern.hpp"
+#include "Confetti/Emission/EmissionPattern/FixedBurstEmissionPattern.hpp"
+#include "Confetti/Emission/EmissionPattern/LinearBurstEmissionPattern.hpp"
+#include "Confetti/Emission/EmissionPattern/LinearRateEmissionPattern.hpp"
+#include "Confetti/Emission/EmissionPattern/PeriodicBurstEmissionPattern.hpp"
+#include "Confetti/Emission/EmissionPattern/RandomRateEmissionPattern.hpp"
+#include "Confetti/Emission/EmissionPattern/SingleBurstEmissionPattern.hpp"
 
 namespace cft
 {

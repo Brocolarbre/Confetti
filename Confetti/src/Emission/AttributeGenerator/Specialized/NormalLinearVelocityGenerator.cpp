@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	LinearVelocity NormalLinearVelocityGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
+	LinearVelocity NormalLinearVelocityGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime)
 	{
 		return context.position + context.normal * m_strength;
 	}

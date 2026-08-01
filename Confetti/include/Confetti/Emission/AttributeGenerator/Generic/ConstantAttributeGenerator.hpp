@@ -10,14 +10,14 @@ namespace cft
 	private:
 		T m_value;
 
-		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
+		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime) override;
 
 	public:
 		ConstantAttributeGenerator(const T& value);
 	};
 
 	template <typename T>
-	inline T ConstantAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
+	inline T ConstantAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime)
 	{
 		return m_value;
 	}

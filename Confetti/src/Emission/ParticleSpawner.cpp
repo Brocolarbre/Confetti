@@ -129,19 +129,19 @@ namespace cft
 		else
 		{
 			spawnContext = std::vector<SpawnContext>(count, SpawnContext{ glm::vec3(0.0f), glm::vec3(0.0f) });
-			position = m_positionGenerator->generate(count, spawnContext);
+			position = m_positionGenerator->generate(count, spawnContext, elapsedTime);
 
 			for (unsigned int i = 0; i < spawnContext.size(); ++i)
 				spawnContext[i].position = position[i];
 		}
 
-		color = m_colorGenerator->generate(count, spawnContext);
-		rotation = m_rotationGenerator->generate(count, spawnContext);
-		scale = m_scaleGenerator->generate(count, spawnContext);
-		linearVelocity = m_linearVelocityGenerator->generate(count, spawnContext);
-		angularVelocity = m_angularVelocityGenerator->generate(count, spawnContext);
-		phase = m_phaseGenerator->generate(count, spawnContext);
-		lifetime = m_lifetimeGenerator->generate(count, spawnContext);
+		color = m_colorGenerator->generate(count, spawnContext, elapsedTime);
+		rotation = m_rotationGenerator->generate(count, spawnContext, elapsedTime);
+		scale = m_scaleGenerator->generate(count, spawnContext, elapsedTime);
+		linearVelocity = m_linearVelocityGenerator->generate(count, spawnContext, elapsedTime);
+		angularVelocity = m_angularVelocityGenerator->generate(count, spawnContext, elapsedTime);
+		phase = m_phaseGenerator->generate(count, spawnContext, elapsedTime);
+		lifetime = m_lifetimeGenerator->generate(count, spawnContext, elapsedTime);
 
 		std::vector<Particle> particles;
 		particles.reserve(count);

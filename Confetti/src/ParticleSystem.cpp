@@ -29,6 +29,7 @@ namespace cft
 	{
 		ParticleSpawner::resetNextId();
 		m_simulation.clear();
+		m_elapsedTime = 0.0f;
 	}
 
 	void ParticleSystem::setTimeScale(float timeScale)

@@ -12,7 +12,7 @@ namespace cft
 		std::vector<T> m_values;
 		RandomNumberGenerator m_randomNumberGenerator;
 
-		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
+		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime) override;
 
 	public:
 		InterpolatedRandomSetAttributeGenerator(const std::vector<T>& values, std::uint64_t seed = 0);
@@ -24,7 +24,7 @@ namespace cft
 	};
 
 	template <typename T>
-	inline T InterpolatedRandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
+	inline T InterpolatedRandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime)
 	{
 		if (m_values.empty())
 			return T{};

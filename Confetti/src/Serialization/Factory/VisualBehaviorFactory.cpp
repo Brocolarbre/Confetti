@@ -1,16 +1,16 @@
 #include "Confetti/Serialization/JsonLoader.hpp"
 #include "Confetti/Serialization/JsonTraits.hpp"
 
-#include <Confetti/Behavior/Visual/ColorShiftVisualBehavior.hpp>
-#include <Confetti/Behavior/Visual/DimOutVisualBehavior.hpp>
-#include <Confetti/Behavior/Visual/FadeInVisualBehavior.hpp>
-#include <Confetti/Behavior/Visual/FadeOutVisualBehavior.hpp>
-#include <Confetti/Behavior/Visual/FlickerVisualBehavior.hpp>
-#include <Confetti/Behavior/Visual/GrowInVisualBehavior.hpp>
-#include <Confetti/Behavior/Visual/PulseVisualBehavior.hpp>
-#include <Confetti/Behavior/Visual/ShrinkOutVisualBehavior.hpp>
-#include <Confetti/Behavior/Visual/SmoothColorShiftVisualBehavior.hpp>
-#include <Confetti/Behavior/Visual/SquashStretchVisualBehavior.hpp>
+#include "Confetti/Behavior/Visual/ColorShiftVisualBehavior.hpp"
+#include "Confetti/Behavior/Visual/DimOutVisualBehavior.hpp"
+#include "Confetti/Behavior/Visual/FadeInVisualBehavior.hpp"
+#include "Confetti/Behavior/Visual/FadeOutVisualBehavior.hpp"
+#include "Confetti/Behavior/Visual/FlickerVisualBehavior.hpp"
+#include "Confetti/Behavior/Visual/GrowInVisualBehavior.hpp"
+#include "Confetti/Behavior/Visual/PulseVisualBehavior.hpp"
+#include "Confetti/Behavior/Visual/ShrinkOutVisualBehavior.hpp"
+#include "Confetti/Behavior/Visual/SmoothColorShiftVisualBehavior.hpp"
+#include "Confetti/Behavior/Visual/SquashStretchVisualBehavior.hpp"
 
 namespace cft
 {

@@ -1,17 +1,17 @@
 #include "Confetti/Serialization/JsonLoader.hpp"
 #include "Confetti/Serialization/JsonSerialization.hpp"
 
-#include <Confetti/Behavior/Force/AttractionForceField.hpp>
-#include <Confetti/Behavior/Force/DirectionalForceField.hpp>
-#include <Confetti/Behavior/Force/FollowTargetForceField.hpp>
-#include <Confetti/Behavior/Force/LinearDragForceField.hpp>
-#include <Confetti/Behavior/Force/OrbitForceField.hpp>
-#include <Confetti/Behavior/Force/QuadraticDragForceField.hpp>
-#include <Confetti/Behavior/Force/RepulsionForceField.hpp>
-#include <Confetti/Behavior/Force/ShockWaveForceField.hpp>
-#include <Confetti/Behavior/Force/TurbulenceForceField.hpp>
-#include <Confetti/Behavior/Force/VortexForceField.hpp>
-#include <Confetti/Behavior/Force/WindForceField.hpp>
+#include "Confetti/Behavior/Force/AttractionForceField.hpp"
+#include "Confetti/Behavior/Force/DirectionalForceField.hpp"
+#include "Confetti/Behavior/Force/FollowTargetForceField.hpp"
+#include "Confetti/Behavior/Force/LinearDragForceField.hpp"
+#include "Confetti/Behavior/Force/OrbitForceField.hpp"
+#include "Confetti/Behavior/Force/QuadraticDragForceField.hpp"
+#include "Confetti/Behavior/Force/RepulsionForceField.hpp"
+#include "Confetti/Behavior/Force/ShockWaveForceField.hpp"
+#include "Confetti/Behavior/Force/TurbulenceForceField.hpp"
+#include "Confetti/Behavior/Force/VortexForceField.hpp"
+#include "Confetti/Behavior/Force/WindForceField.hpp"
 
 namespace cft
 {

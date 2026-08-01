@@ -2,7 +2,7 @@
 
 namespace cft
 {
-	Color BrightnessColorGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
+	Color BrightnessColorGenerator::generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime)
 	{
 		return {};
 	}
@@ -30,10 +30,10 @@ namespace cft
 		m_brightnessGenerator->setSeed(seed);
 	}
 
-	std::vector<Color> BrightnessColorGenerator::generate(unsigned int count, const std::vector<SpawnContext>& context)
+	std::vector<Color> BrightnessColorGenerator::generate(unsigned int count, const std::vector<SpawnContext>& context, float elapsedTime)
 	{
-		std::vector<Color> color = m_colorGenerator->generate(count, context);
-		std::vector<float> brightness = m_brightnessGenerator->generate(count, context);
+		std::vector<Color> color = m_colorGenerator->generate(count, context, elapsedTime);
+		std::vector<float> brightness = m_brightnessGenerator->generate(count, context, elapsedTime);
 
 		if (color.size() != count || brightness.size() != count)
 			return {};

@@ -11,7 +11,7 @@ namespace cft
 	private:
 		float m_strength;
 
-		LinearVelocity generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
+		LinearVelocity generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime) override;
 
 	public:
 		NormalLinearVelocityGenerator(float strength);

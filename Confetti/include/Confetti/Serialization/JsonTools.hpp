@@ -1,7 +1,8 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include <Confetti/Emission/AttributeGenerator/Generic/WeightedRandomSetAttributeGenerator.hpp>
+
+#include "Confetti/Emission/AttributeGenerator/Generic/WeightedRandomSetAttributeGenerator.hpp"
 
 namespace cft
 {

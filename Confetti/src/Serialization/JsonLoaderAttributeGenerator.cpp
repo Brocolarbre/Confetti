@@ -1,9 +1,10 @@
 #include "Confetti/Serialization/JsonLoaderAttributeGenerator.hpp"
 
-#include <Confetti/Emission/AttributeGenerator/Specialized/BrightnessColorGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/Specialized/NormalBurstLinearVelocityGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/Specialized/NormalLinearVelocityGenerator.hpp>
-#include <Confetti/Emission/AttributeGenerator/Specialized/RandomNormalOffsetPositionGenerator.hpp>
+#include "Confetti/Emission/AttributeGenerator/Specialized/BrightnessColorGenerator.hpp"
+#include "Confetti/Emission/AttributeGenerator/Specialized/NormalBurstLinearVelocityGenerator.hpp"
+#include "Confetti/Emission/AttributeGenerator/Specialized/NormalLinearVelocityGenerator.hpp"
+#include "Confetti/Emission/AttributeGenerator/Specialized/RandomNormalOffsetPositionGenerator.hpp"
+#include "Confetti/Emission/AttributeGenerator/Specialized/ValueStrengthGenerator.hpp"
 
 namespace cft
 {
@@ -18,6 +19,8 @@ namespace cft
             return std::make_unique<NormalLinearVelocityGenerator>(data.at("strength"));
         else if (type == "RandomNormalOffset")
             return std::make_unique<RandomNormalOffsetPositionGenerator>(data.at("minimumStrength"), data.at("maximumStrength"), data.at("seed"));
+        else if (type == "ValueStrength")
+            return std::make_unique<ValueStrengthGenerator>(parseAttributeGenerator<glm::vec3, JsonTypes::Vec3>(data.at("value")), parseAttributeGenerator<float, float>(data.at("strength")));
         else
             return nullptr;
     }

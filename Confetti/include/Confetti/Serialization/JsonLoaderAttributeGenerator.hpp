@@ -1,4 +1,3 @@
-#pragma once
 
 #include "JsonTraits.hpp"
 
@@ -7,6 +6,7 @@
 #include "Confetti/Emission/AttributeGenerator/Generic/LinearAttributeGenerator.hpp"
 #include "Confetti/Emission/AttributeGenerator/Generic/RandomAttributeGenerator.hpp"
 #include "Confetti/Emission/AttributeGenerator/Generic/RandomSetAttributeGenerator.hpp"
+#include "Confetti/Emission/AttributeGenerator/Generic/TimeAttributeGenerator.hpp"
 #include "Confetti/Emission/AttributeGenerator/Generic/WeightedRandomSetAttributeGenerator.hpp"
 
 #include <nlohmann/json.hpp>
@@ -58,6 +58,8 @@ namespace cft
 			return std::make_unique<RandomAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::read(data.at("minimum")), JsonTraits<Type, WrapperType>::read(data.at("maximum")), data.at("seed"));
 		else if (type == "RandomSet")
 			return std::make_unique<RandomSetAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::readVector(data.at("values")), data.at("seed"));
+		else if (type == "Time")
+			return std::make_unique<TimeAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::read(data.at("from")), JsonTraits<Type, WrapperType>::read(data.at("to")), data.at("fromTime"), data.at("toTime"));
 		else if (type == "WeightedRandomSet")
 			return std::make_unique<WeightedRandomSetAttributeGenerator<Type>>(JsonTraits<Type, WrapperType>::readWeightedVector(data.at("values")), data.at("seed"));
 		else

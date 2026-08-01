@@ -23,7 +23,7 @@ namespace cft
 		unsigned int m_totalWeight;
 		RandomNumberGenerator m_randomNumberGenerator;
 
-		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
+		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime) override;
 
 	public:
 		WeightedRandomSetAttributeGenerator(const std::vector<WeightedValue>& values, std::uint64_t seed = 0);
@@ -33,7 +33,7 @@ namespace cft
 	};
 
 	template <typename T>
-	inline T WeightedRandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
+	inline T WeightedRandomSetAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime)
 	{
 		if (m_values.empty())
 			return T{};

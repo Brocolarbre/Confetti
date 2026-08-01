@@ -1,10 +1,10 @@
 #include "Confetti/Serialization/JsonLoader.hpp"
 #include "Confetti/Serialization/JsonSerialization.hpp"
 
-#include <Confetti/Simulation/Link/RibbonGenerator/PathRibbonGenerator.hpp>
-#include <Confetti/Simulation/Link/RibbonGenerator/SegmentRibbonGenerator.hpp>
-#include <Confetti/Simulation/Link/RibbonGenerator/SpiralRibbonGenerator.hpp>
-#include <Confetti/Simulation/Link/RibbonGenerator/WaveRibbonGenerator.hpp>
+#include "Confetti/Simulation/Link/RibbonGenerator/PathRibbonGenerator.hpp"
+#include "Confetti/Simulation/Link/RibbonGenerator/SegmentRibbonGenerator.hpp"
+#include "Confetti/Simulation/Link/RibbonGenerator/SpiralRibbonGenerator.hpp"
+#include "Confetti/Simulation/Link/RibbonGenerator/WaveRibbonGenerator.hpp"
 
 namespace cft
 {

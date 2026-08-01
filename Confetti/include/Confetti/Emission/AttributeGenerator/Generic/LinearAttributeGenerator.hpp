@@ -11,14 +11,14 @@ namespace cft
 		T m_from;
 		T m_to;
 
-		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context) override;
+		T generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime) override;
 
 	public:
 		LinearAttributeGenerator(const T& from, const T& to);
 	};
 
 	template <typename T>
-	inline T LinearAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context)
+	inline T LinearAttributeGenerator<T>::generateValue(unsigned int count, unsigned int index, const SpawnContext& context, float elapsedTime)
 	{
 		float t = static_cast<float>(index) / static_cast<float>(count - 1);
 		return glm::mix(m_from, m_to, t);

@@ -1,15 +1,15 @@
 #include "Confetti/Serialization/JsonLoader.hpp"
 #include "Confetti/Serialization/JsonSerialization.hpp"
 
-#include <Confetti/Behavior/Motion/CircleMotionBehavior.hpp>
-#include <Confetti/Behavior/Motion/FigureEightMotionBehavior.hpp>
-#include <Confetti/Behavior/Motion/JitterMotionBehavior.hpp>
-#include <Confetti/Behavior/Motion/OrbitMotionBehavior.hpp>
-#include <Confetti/Behavior/Motion/OscillationMotionBehavior.hpp>
-#include <Confetti/Behavior/Motion/PathMotionBehavior.hpp>
-#include <Confetti/Behavior/Motion/SegmentMotionBehavior.hpp>
-#include <Confetti/Behavior/Motion/SnapTargetMotionBehavior.hpp>
-#include <Confetti/Behavior/Motion/SpiralMotionBehavior.hpp>
+#include "Confetti/Behavior/Motion/CircleMotionBehavior.hpp"
+#include "Confetti/Behavior/Motion/FigureEightMotionBehavior.hpp"
+#include "Confetti/Behavior/Motion/JitterMotionBehavior.hpp"
+#include "Confetti/Behavior/Motion/OrbitMotionBehavior.hpp"
+#include "Confetti/Behavior/Motion/OscillationMotionBehavior.hpp"
+#include "Confetti/Behavior/Motion/PathMotionBehavior.hpp"
+#include "Confetti/Behavior/Motion/SegmentMotionBehavior.hpp"
+#include "Confetti/Behavior/Motion/SnapTargetMotionBehavior.hpp"
+#include "Confetti/Behavior/Motion/SpiralMotionBehavior.hpp"
 
 namespace cft
 {
