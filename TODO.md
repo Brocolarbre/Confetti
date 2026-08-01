@@ -1,7 +1,2 @@
-Optimizations :
-- Fix HDR-based post-processing effects on high light levels
-- Particle sorting for blending
-- SSBO : use persistent mapping on all SSBO use cases
-- Implement a frames in flight system applied to every OpenGL object that benefits from it (SSBO, UBO...)
-- Mesh particle renderer : sort and store particles at the same time, no copy
-- Parallelization : CPU multithreading, GPU acceleration
+Optimize renderer : persistent mapping SSBO, frames in flight, sort and store particles in one go to avoid copy in the mesh particle renderer
+Optimize simulation : CPU multithreading, GPU acceleration
