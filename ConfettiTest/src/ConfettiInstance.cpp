@@ -1,5 +1,8 @@
 #include "ConfettiInstance.hpp"
 
+//
+#include <iostream>
+
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsigned int samples, dove::Window& window) :
     m_renderContext(width, height),
     m_camera(width, height),
@@ -54,6 +57,14 @@ void ConfettiInstance::onWindowResized(unsigned int width, unsigned int height)
 void ConfettiInstance::update()
 {
     float deltaTime = static_cast<float>(m_chronometer.getElapsedTime().seconds);
+    //
+    static krono::Chronometer c;
+    if (c.getElapsedTime().seconds > 0.5)
+    {
+        std::cout << 1.0 / deltaTime << '\n';
+        c.restart();
+    }
+    //
     m_chronometer.restart();
 
     m_particleSystem.update(deltaTime, m_camera.getView());

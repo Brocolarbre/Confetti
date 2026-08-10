@@ -120,7 +120,7 @@
             {
                 "id": 0,
                 "type": "ConstantRate",
-                "rate": 100.0
+                "rate": 100000.0
             }
         ],
         "particleLinkers": [],

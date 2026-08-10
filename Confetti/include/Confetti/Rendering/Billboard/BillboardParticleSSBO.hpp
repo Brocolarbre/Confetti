@@ -17,6 +17,12 @@ namespace cft
 			glm::vec4 rotation;
 		};
 
+		struct PoolUploadRange
+		{
+			const ParticlePool* pool;
+			size_t offset;
+		};
+
 	private:
 		unsigned int m_id;
 		unsigned int m_capacity;

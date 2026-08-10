@@ -91,7 +91,8 @@ namespace cft
 		m_ribbonPools(),
 		m_particleRegistry(),
 		m_trailRegistry(),
-		m_ribbonRegistry()
+		m_ribbonRegistry(),
+		m_threadPool(std::max(1u, std::thread::hardware_concurrency()))
 	{
 
 	}

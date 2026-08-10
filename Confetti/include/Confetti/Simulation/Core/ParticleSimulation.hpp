@@ -1,7 +1,7 @@
 #pragma once
 
+#include "ParticleSimulationJobs.hpp"
 #include "ParticleEffectInstance.hpp"
-#include "ParticleEmitterInstance.hpp"
 #include "Confetti/Simulation/Pool/ParticlePool.hpp"
 #include "Confetti/Simulation/Pool/RibbonPool.hpp"
 #include "Confetti/Simulation/Pool/TrailPool.hpp"
@@ -12,6 +12,8 @@
 #include "Confetti/Tool/RandomNumberGenerator.hpp"
 
 #include <deque>
+
+#include <ThreadPool.h>
 
 namespace cft
 {
@@ -33,11 +35,19 @@ namespace cft
 		TrailRegistry m_trailRegistry;
 		RibbonRegistry m_ribbonRegistry;
 
+		ThreadPool m_threadPool;
+
 		void updateParticleEffects(float elapsedTime, float deltaTime);
 		void updateParticleEmitters(float elapsedTime, float deltaTime);
+		
 		void updateParticles(float elapsedTime, float deltaTime);
+		ParticleUpdateResult updateParticleBatch(unsigned int poolId, ParticlePool& particlePool, unsigned int begin, unsigned int end, const std::unordered_set<unsigned int>& triggeredPeriodicSpawnTriggers, float elapsedTime, float deltaTime);
+		
 		void updateTrails(float elapsedTime, float deltaTime);
+		TrailUpdateResult updateTrailBatch(unsigned int poolId, TrailPool& trailPool, unsigned int begin, unsigned int end, float elapsedTime, float deltaTime);
+		
 		void updateRibbons(float elapsedTime, float deltaTime);
+		RibbonUpdateResult updateRibbonBatch(unsigned int poolId, RibbonPool& ribbonPool, unsigned int begin, unsigned int end, float elapsedTime, float deltaTime);
 
 		ParticleEmitterInstance createParticleEmitter(const ParticleEmitterSpawnContext& emitterSpawnContext, const MotionState& parentMotionState, std::optional<std::uint64_t> parentSeed, unsigned int recursionDepth, float elapsedTime);
 		

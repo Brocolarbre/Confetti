@@ -1,6 +1,8 @@
 #include "Confetti/Simulation/Core/ParticleSimulation.hpp"
 
 #include <glm/glm.hpp>
+#include <execution>
+#include <future>
 
 namespace cft
 {
@@ -27,94 +29,148 @@ namespace cft
 			}
 		}
 
-		for (auto& [poolId, particlePool] : m_particlePools)
+		std::vector<std::future<ParticleUpdateResult>> particleUpdateFutureResults;
+
+		unsigned int totalParticleCount = 0;
+		for (auto& [poolId, pool] : m_particlePools)
+			totalParticleCount += pool.getCount();
+
+		unsigned int desiredTasks = std::max(1u, static_cast<unsigned int>(m_threadPool.threadCount() * 4));
+		unsigned int chunkSize = std::max(1024u, (totalParticleCount + desiredTasks - 1) / desiredTasks);
+
+		for (auto& [poolId, pool] : m_particlePools)
 		{
-			std::vector<glm::vec4>& color = particlePool.getColor();
-			std::vector<glm::vec3>& position = particlePool.getPosition();
-			std::vector<glm::quat>& rotation = particlePool.getRotation();
-			std::vector<glm::vec3>& scale = particlePool.getScale();
-			std::vector<glm::vec3>& linearVelocity = particlePool.getLinearVelocity();
-			std::vector<glm::vec3>& angularVelocity = particlePool.getAngularVelocity();
-			const std::vector<glm::vec4>& initialColor = particlePool.getInitialColor();
-			const std::vector<glm::vec3>& initialScale = particlePool.getInitialScale();
-			std::vector<glm::vec3>& postBehaviorPosition = particlePool.getPostBehaviorPosition();
-			const std::vector<float>& phase = particlePool.getPhase();
-			const std::vector<float>& lifetime = particlePool.getLifetime();
-			const std::vector<float>& spawnTime = particlePool.getSpawnTime();
-			const std::vector<unsigned int>& id = particlePool.getId();
-			const std::vector<unsigned int>& particleRegistryId = particlePool.getParticleRegistryId();
+			unsigned int count = pool.getCount();
 
-			std::unordered_map<unsigned int, unsigned int> removedParticleCount;
-
-			for (unsigned int i = 0; i < particlePool.getCount();)
+			for (unsigned int begin = 0; begin < count; begin += chunkSize)
 			{
-				ParticleRegistryEntry& entry = m_particleRegistry.getEntry(particleRegistryId[i]);
+				unsigned int end = std::min(begin + chunkSize, count);
 
-				float despawnTime = spawnTime[i] + lifetime[i];
-				if (elapsedTime >= despawnTime)
-				{
-					if (entry.spawnTriggerDescriptor.has_value())
-					{
-						const SpawnTriggerDescriptor& spawnTriggerValue = entry.spawnTriggerDescriptor.value();
-						if (entry.recursionDepth < spawnTriggerValue.maximumRecursionDepth && spawnTriggerValue.deathEmitterSpawnContext.has_value())
-						{
-							ParticleEmitterInstance deathParticleEmitterInstance = createParticleEmitter(spawnTriggerValue.deathEmitterSpawnContext.value(), MotionState{ position[i], linearVelocity[i], rotation[i], angularVelocity[i] }, entry.parentSeed, entry.recursionDepth + 1, elapsedTime);
-							m_particleRegistry.addReferenceCount(deathParticleEmitterInstance.particleRegistryId, 1);
-							if (deathParticleEmitterInstance.trailRegistryId.has_value())
-								m_trailRegistry.addReferenceCount(deathParticleEmitterInstance.trailRegistryId.value(), 1);
-							m_particleEmitterInstances.push_back(std::move(deathParticleEmitterInstance));
-						}
-					}
-
-					++removedParticleCount[particleRegistryId[i]];
-					particlePool.remove(i);
-				}
-				else
-				{
-					if (triggeredPeriodicSpawnTriggers.find(particleRegistryId[i]) != triggeredPeriodicSpawnTriggers.end())
-					{
-						ParticleEmitterInstance periodicParticleEmitterInstance = createParticleEmitter(entry.spawnTriggerDescriptor.value().periodicEmitterSpawnContext.value().emitterSpawnContext, MotionState{ position[i], linearVelocity[i], rotation[i], angularVelocity[i] }, entry.parentSeed, entry.recursionDepth + 1, elapsedTime);
-						m_particleRegistry.addReferenceCount(periodicParticleEmitterInstance.particleRegistryId, 1);
-						if (periodicParticleEmitterInstance.trailRegistryId.has_value())
-							m_trailRegistry.addReferenceCount(periodicParticleEmitterInstance.trailRegistryId.value(), 1);
-						m_particleEmitterInstances.push_back(std::move(periodicParticleEmitterInstance));
-					}
-
-					MotionState motionState{ position[i], linearVelocity[i], rotation[i], angularVelocity[i] };
-					for (const std::unique_ptr<ForceField>& forceField : entry.forceFields)
-					{
-						MotionAcceleration motionAcceleration = forceField->evaluate(motionState);
-
-						motionState.linearVelocity += motionAcceleration.linear * deltaTime;
-						motionState.angularVelocity += motionAcceleration.angular * deltaTime;
-					}
-
-					motionState.position += motionState.linearVelocity * deltaTime;
-					motionState.rotation = glm::normalize(glm::quat(1.0f, 0.5f * motionState.angularVelocity * deltaTime) * motionState.rotation);
-
-					position[i] = motionState.position;
-					rotation[i] = motionState.rotation;
-					linearVelocity[i] = motionState.linearVelocity;
-					angularVelocity[i] = motionState.angularVelocity;
-
-					postBehaviorPosition[i] = motionState.position;
-
-					float particleAge = elapsedTime - spawnTime[i];
-
-					for (const std::unique_ptr<MotionBehavior>& motionBehavior : entry.motionBehaviors)
-						postBehaviorPosition[i] += motionBehavior->evaluate(particleAge, motionState);
-
-					float particleNormalizedAge = particleAge / lifetime[i];
-
-					for (const std::unique_ptr<VisualBehavior>& visualBehavior : entry.visualBehaviors)
-						visualBehavior->evaluate(elapsedTime, particleNormalizedAge, ParticleView{ color[i], position[i], rotation[i], scale[i], linearVelocity[i], angularVelocity[i], initialColor[i], initialScale[i], postBehaviorPosition[i], phase[i], lifetime[i], spawnTime[i], particleRegistryId[i], id[i] });
-
-					++i;
-				}
+				particleUpdateFutureResults.push_back(m_threadPool.enqueue([&, poolId, begin, end]() {
+					return updateParticleBatch(poolId, pool, begin, end, triggeredPeriodicSpawnTriggers, elapsedTime, deltaTime);
+				}));
 			}
-
-			for (auto& [particleRegistry, count] : removedParticleCount)
-				m_particleRegistry.addReferenceCount(particleRegistry, -static_cast<int>(count));
 		}
+
+		std::vector<ParticleUpdateResult> results;
+		results.reserve(particleUpdateFutureResults.size());
+		
+		for (std::future<ParticleUpdateResult>& futureResult : particleUpdateFutureResults)
+			results.push_back(futureResult.get());
+
+		std::vector<ParticleEmitterSpawnRequest> spawnRequests;
+		std::vector<ParticleRemoval> removals;
+
+		for (ParticleUpdateResult& result : results)
+		{
+			spawnRequests.insert(spawnRequests.end(), result.emitterSpawnRequests.begin(), result.emitterSpawnRequests.end());
+			removals.insert(removals.end(), result.removedParticles.begin(), result.removedParticles.end());
+		}
+
+		std::sort(std::execution::par_unseq, spawnRequests.begin(), spawnRequests.end(), [](const auto& a, const auto& b) {
+			return a.sourceParticleId < b.sourceParticleId;
+		});
+
+		for (ParticleEmitterSpawnRequest& spawnRequest : spawnRequests)
+		{
+			ParticleEmitterInstance emitter = createParticleEmitter(spawnRequest.spawnContext, spawnRequest.motionState, spawnRequest.parentSeed, spawnRequest.recursionDepth, elapsedTime);
+			m_particleRegistry.addReferenceCount(emitter.particleRegistryId, 1);
+
+			if (emitter.trailRegistryId.has_value())
+				m_trailRegistry.addReferenceCount(emitter.trailRegistryId.value(), 1);
+
+			if (emitter.ribbonRegistryId.has_value())
+				m_ribbonRegistry.addReferenceCount(emitter.ribbonRegistryId.value(), 1);
+
+			m_particleEmitterInstances.push_back(std::move(emitter));
+		}	
+
+		std::sort(std::execution::par_unseq, removals.begin(), removals.end(), [](const auto& a, const auto& b) {
+			if (a.poolId != b.poolId)
+				return a.poolId < b.poolId;
+
+			return a.particleIndex > b.particleIndex;
+		});
+
+		for (ParticleRemoval& removal : removals)
+		{
+			m_particleRegistry.addReferenceCount(removal.particleRegistryId, -1);
+			m_particlePools.at(removal.poolId).remove(removal.particleIndex);
+		}
+	}
+
+	ParticleUpdateResult ParticleSimulation::updateParticleBatch(unsigned int poolId, ParticlePool& particlePool, unsigned int begin, unsigned int end, const std::unordered_set<unsigned int>& triggeredPeriodicSpawnTriggers, float elapsedTime, float deltaTime)
+	{
+		ParticleUpdateResult result;
+
+		std::vector<glm::vec4>& color = particlePool.getColor();
+		std::vector<glm::vec3>& position = particlePool.getPosition();
+		std::vector<glm::quat>& rotation = particlePool.getRotation();
+		std::vector<glm::vec3>& scale = particlePool.getScale();
+		std::vector<glm::vec3>& linearVelocity = particlePool.getLinearVelocity();
+		std::vector<glm::vec3>& angularVelocity = particlePool.getAngularVelocity();
+		const std::vector<glm::vec4>& initialColor = particlePool.getInitialColor();
+		const std::vector<glm::vec3>& initialScale = particlePool.getInitialScale();
+		std::vector<glm::vec3>& postBehaviorPosition = particlePool.getPostBehaviorPosition();
+		const std::vector<float>& phase = particlePool.getPhase();
+		const std::vector<float>& lifetime = particlePool.getLifetime();
+		const std::vector<float>& spawnTime = particlePool.getSpawnTime();
+		const std::vector<unsigned int>& id = particlePool.getId();
+		const std::vector<unsigned int>& particleRegistryId = particlePool.getParticleRegistryId();
+
+		for (unsigned int i = begin; i < end; ++i)
+		{
+			ParticleRegistryEntry& entry = m_particleRegistry.getEntry(particleRegistryId[i]);
+
+			float despawnTime = spawnTime[i] + lifetime[i];
+			if (elapsedTime >= despawnTime)
+			{
+				if (entry.spawnTriggerDescriptor.has_value())
+				{
+					const auto& trigger = entry.spawnTriggerDescriptor.value();
+
+					if (entry.recursionDepth < trigger.maximumRecursionDepth && trigger.deathEmitterSpawnContext.has_value())
+						result.emitterSpawnRequests.push_back({ id[i], trigger.deathEmitterSpawnContext.value(), MotionState{position[i], linearVelocity[i], rotation[i], angularVelocity[i]}, entry.parentSeed, entry.recursionDepth + 1});
+				}
+
+				result.removedParticles.push_back({ poolId, i, particleRegistryId[i] });
+			}
+			else
+			{
+				if (triggeredPeriodicSpawnTriggers.find(particleRegistryId[i]) != triggeredPeriodicSpawnTriggers.end())
+					result.emitterSpawnRequests.push_back({ id[i], entry.spawnTriggerDescriptor->periodicEmitterSpawnContext->emitterSpawnContext, MotionState{ position[i], linearVelocity[i], rotation[i], angularVelocity[i] }, entry.parentSeed, entry.recursionDepth + 1 });
+				
+				MotionState motionState{ position[i], linearVelocity[i], rotation[i], angularVelocity[i] };
+				for (const std::unique_ptr<ForceField>& forceField : entry.forceFields)
+				{
+					MotionAcceleration motionAcceleration = forceField->evaluate(motionState);
+
+					motionState.linearVelocity += motionAcceleration.linear * deltaTime;
+					motionState.angularVelocity += motionAcceleration.angular * deltaTime;
+				}
+
+				motionState.position += motionState.linearVelocity * deltaTime;
+				motionState.rotation = glm::normalize(glm::quat(1.0f, 0.5f * motionState.angularVelocity * deltaTime) * motionState.rotation);
+
+				position[i] = motionState.position;
+				rotation[i] = motionState.rotation;
+				linearVelocity[i] = motionState.linearVelocity;
+				angularVelocity[i] = motionState.angularVelocity;
+
+				postBehaviorPosition[i] = motionState.position;
+
+				float particleAge = elapsedTime - spawnTime[i];
+
+				for (const std::unique_ptr<MotionBehavior>& motionBehavior : entry.motionBehaviors)
+					postBehaviorPosition[i] += motionBehavior->evaluate(particleAge, motionState);
+
+				float particleNormalizedAge = particleAge / lifetime[i];
+
+				for (const std::unique_ptr<VisualBehavior>& visualBehavior : entry.visualBehaviors)
+					visualBehavior->evaluate(elapsedTime, particleNormalizedAge, ParticleView{ color[i], position[i], rotation[i], scale[i], linearVelocity[i], angularVelocity[i], initialColor[i], initialScale[i], postBehaviorPosition[i], phase[i], lifetime[i], spawnTime[i], particleRegistryId[i], id[i] });
+			}
+		}
+
+		return result;
 	}
 }

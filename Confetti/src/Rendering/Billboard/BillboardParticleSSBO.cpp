@@ -1,6 +1,8 @@
 #include "Confetti/Rendering/Billboard/BillboardParticleSSBO.hpp"
 
 #include <glad/glad.h>
+#include <algorithm>
+#include <execution>
 
 namespace cft
 {
@@ -81,23 +83,38 @@ namespace cft
 		if (m_particleCount == 0)
 			return;
 
-		ParticleData* output = m_mappedData;
+		std::vector<PoolUploadRange> ranges;
+		ranges.reserve(particlePools.size());
+		std::size_t offset = 0;
 
 		for (const auto& [id, pool] : particlePools)
 		{
-			unsigned int particleCount = pool.getCount();
+			if (pool.getCount() == 0)
+				continue;
+
+			if (particleRegistry.getEntry(pool.getParticleRegistryId().front()).renderConfiguration.renderType != RenderType::Billboard)
+				continue;
+
+			ranges.push_back({ &pool, offset });
+			offset += pool.getCount();
+		}
+
+		std::for_each(std::execution::par, ranges.begin(), ranges.end(), [&](const PoolUploadRange& range) {
+			const ParticlePool& pool = *range.pool;
+			ParticleData* output = m_mappedData + range.offset;
 
 			const std::vector<unsigned int>& particleRegistryId = pool.getParticleRegistryId();
 
 			if (pool.getCount() == 0 || particleRegistry.getEntry(particleRegistryId.front()).renderConfiguration.renderType != RenderType::Billboard)
-				continue;
+				return;
 
 			const std::vector<glm::vec4>& color = pool.getColor();
 			const std::vector<glm::vec3>& position = pool.getPostBehaviorPosition();
 			const std::vector<glm::quat>& rotation = pool.getRotation();
 			const std::vector<glm::vec3>& scale = pool.getScale();
 			const std::vector<float>& phase = pool.getPhase();
-			
+
+			unsigned int particleCount = pool.getCount();
 			for (unsigned int i = 0; i < particleCount; ++i)
 			{
 				float spriteSheetSsboIndex = -1.0f;
@@ -116,7 +133,7 @@ namespace cft
 				*output = ParticleData{ color[i], glm::vec4(position[i], phase[i]), glm::vec4(scale[i].x, scale[i].y, spriteSheetSsboIndex, textureIndex), glm::vec4(angle, 0.0f, 0.0f, 0.0f) };
 				++output;
 			}
-		}
+		});
 
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_id);
 		glFlushMappedBufferRange(GL_SHADER_STORAGE_BUFFER, 0, m_particleCount * sizeof(ParticleData));
