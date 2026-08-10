@@ -24,7 +24,12 @@ namespace cft
 	public:
 		ParticleSystem(float timeStep, unsigned int maximumStepsPerFrame, unsigned int width, unsigned int height, unsigned int samples);
 
+		AssetRegistry& getAssetRegistry();
 		unsigned int getRendererOutputTextureId() const;
+
+		void loadBillboardRendererTextures(const std::vector<unsigned int>& billboardImageIds, unsigned int imageWidth, unsigned int imageHeight);
+		void loadMeshRendererTextures(const std::vector<unsigned int>& meshImageIds);
+		void loadMeshRendererMeshes(const std::vector<unsigned int>& meshModelIds);
 
 		void resize(unsigned int width, unsigned int height);
 		void clear();
