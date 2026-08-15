@@ -79,8 +79,8 @@ namespace cft
 			m_renderer.update(m_simulation, m_assetRegistry, view, m_elapsedTime);
 	}
 
-	void ParticleSystem::render(const View& view) const
+	void ParticleSystem::render(const View& view, const std::optional<ParticleRenderer::SourceFramebuffer>& sourceFramebuffer) const
 	{
-		m_renderer.render(view, m_simulation.getParticlePools(), m_simulation.getParticleRegistry(), m_assetRegistry);
+		m_renderer.render(view, m_simulation.getParticlePools(), m_simulation.getParticleRegistry(), m_assetRegistry, sourceFramebuffer);
 	}
 }

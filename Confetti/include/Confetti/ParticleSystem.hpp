@@ -35,6 +35,6 @@ namespace cft
 		void playEffect(unsigned int id, float delay = 0.0f);
 
 		void update(float deltaTime, const View& view);
-		void render(const View& view) const;
+		void render(const View& view, const std::optional<ParticleRenderer::SourceFramebuffer>& sourceFramebuffer) const;
 	};
 }

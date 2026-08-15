@@ -124,7 +124,7 @@ namespace cft
 		m_particlePathRenderer.update(particleSimulation.getTrailPools(), particleSimulation.getTrailRegistry(), particleSimulation.getRibbonPools(), particleSimulation.getRibbonRegistry(), view);
 	}
 
-	void ParticleRenderer::render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry) const
+	void ParticleRenderer::render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry, const std::optional<SourceFramebuffer>& sourceFramebuffer) const
 	{
 		if (m_width == 0 || m_height == 0)
 			return;
@@ -135,15 +135,39 @@ namespace cft
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		m_framebuffer.bind();
-		glViewport(0, 0, m_width, m_height);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		if (sourceFramebuffer.has_value())
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, sourceFramebuffer.value().id);
+		}
+		else
+		{
+			m_framebuffer.bind();
+			glViewport(0, 0, m_width, m_height);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
 
 		m_particlePathRenderer.render(view);
 		m_billboardParticleRenderer.render(view);
 		m_meshParticleRenderer.render(view);
 		
-		m_framebuffer.copy(m_resolvedFramebuffer, GL_COLOR_BUFFER_BIT, 0, 0);
+		if (sourceFramebuffer.has_value())
+		{
+			const SourceFramebuffer& sourceFramebufferValue = sourceFramebuffer.value();
+
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferValue.id);
+			glReadBuffer(GL_COLOR_ATTACHMENT0 + sourceFramebufferValue.colorAttachmentIndex);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_resolvedFramebuffer.getId());
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+			glBlitFramebuffer(0, 0, m_width, m_height, 0, 0, m_resolvedFramebuffer.getWidth(), m_resolvedFramebuffer.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		}
+		else
+		{
+			m_framebuffer.copy(m_resolvedFramebuffer, GL_COLOR_BUFFER_BIT, 0, 0);
+		}
 
 		unsigned int hdrSceneTexture = std::get<Texture>(m_resolvedFramebuffer.getColorAttachment(0)).getId();
 

@@ -61,6 +61,6 @@ void ConfettiInstance::update()
 
 void ConfettiInstance::render() const
 {
-    m_particleSystem.render(m_camera.getView());
+    m_particleSystem.render(m_camera.getView(), std::nullopt);
     m_renderContext.render(m_particleSystem.getRendererOutputTextureId());
 }

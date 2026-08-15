@@ -15,6 +15,13 @@ namespace cft
 {
 	class CONFETTI_API ParticleRenderer
 	{
+	public:
+		struct SourceFramebuffer
+		{
+			unsigned int id;
+			unsigned int colorAttachmentIndex;
+		};
+
 	private:
 		unsigned int m_width;
 		unsigned int m_height;
@@ -59,7 +66,7 @@ namespace cft
 		void resize(unsigned int width, unsigned int height);
 
 		void update(const ParticleSimulation& particleSimulation, const AssetRegistry& assetRegistry, const View& view, float elapsedTime);
-		void render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry) const;
+		void render(const View& view, const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry, const std::optional<SourceFramebuffer>& sourceFramebuffer) const;
 
 		static bool initialize(void* (*)(const char* loader));
 	};
