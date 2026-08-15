@@ -32,17 +32,29 @@ namespace cft
 		MeshParticleRenderer m_meshParticleRenderer;
 		ParticlePathRenderer m_particlePathRenderer;
 
+		bool m_bloomEnabled;
+		bool m_flareEnabled;
+
 		static bool m_initialized;
 
 	public:
-		ParticleRenderer(unsigned int width, unsigned int height, unsigned int samples);
+		ParticleRenderer(unsigned int width, unsigned int height, unsigned int samples, unsigned int mipCount = 5);
 
 		unsigned int getOutputTextureId() const;
 
+		Bloom& getBloom();
+		BrightPass& getBrightPass();
+		Flare& getFlare();
+		HdrComposite& getHdrComposite();
+		ToneMapping& getToneMapping();
+
+		void setBloomEnabled(bool enabled);
+		void setFlareEnabled(bool enabled);
+
 		void loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
+		void loadPathRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
 		void loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds);
 		void loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds);
-		void loadTrailRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
 
 		void resize(unsigned int width, unsigned int height);
 

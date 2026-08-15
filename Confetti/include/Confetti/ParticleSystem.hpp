@@ -19,17 +19,14 @@ namespace cft
 
 		unsigned int m_maximumStepsPerFrame;
 
-		friend class JsonLoader;
-
 	public:
-		ParticleSystem(float timeStep, unsigned int maximumStepsPerFrame, unsigned int width, unsigned int height, unsigned int samples);
+		ParticleSystem(float timeStep, unsigned int maximumStepsPerFrame, unsigned int width, unsigned int height, unsigned int samples, unsigned int mipCount = 5);
 
 		AssetRegistry& getAssetRegistry();
-		unsigned int getRendererOutputTextureId() const;
+		ParticleSimulation& getParticleSimulation();
+		ParticleRenderer& getParticleRenderer();
 
-		void loadBillboardRendererTextures(const std::vector<unsigned int>& billboardImageIds, unsigned int imageWidth, unsigned int imageHeight);
-		void loadMeshRendererTextures(const std::vector<unsigned int>& meshImageIds);
-		void loadMeshRendererMeshes(const std::vector<unsigned int>& meshModelIds);
+		unsigned int getRendererOutputTextureId() const;
 
 		void resize(unsigned int width, unsigned int height);
 		void clear();

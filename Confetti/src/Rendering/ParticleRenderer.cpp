@@ -6,19 +6,21 @@ namespace cft
 {
 	bool ParticleRenderer::m_initialized = false;
 
-	ParticleRenderer::ParticleRenderer(unsigned int width, unsigned int height, unsigned int samples) :
+	ParticleRenderer::ParticleRenderer(unsigned int width, unsigned int height, unsigned int samples, unsigned int mipCount) :
 		m_width(width),
 		m_height(height),
 		m_framebuffer(width, height),
 		m_resolvedFramebuffer(width, height),
-		m_bloom(width, height, 5, 0.005f),
+		m_bloom(width, height, mipCount, 0.005f),
 		m_brightPass(width, height, 2.0f),
-		m_flare(width, height, 5, glm::vec2(1.0f, 0.0f), 0.8f, 0.05f),
+		m_flare(width, height, mipCount, glm::vec2(1.0f, 0.0f), 0.8f, 0.05f),
 		m_hdrComposite(width, height, 0.04f, 0.5f),
 		m_toneMapping(width, height, 0.25f, 2.2f),
 		m_billboardParticleRenderer(),
 		m_meshParticleRenderer(),
-		m_particlePathRenderer()
+		m_particlePathRenderer(),
+		m_bloomEnabled(true),
+		m_flareEnabled(true)
 	{
 		Texture colorAttachment(GL_TEXTURE_2D_MULTISAMPLE, GL_RGBA16F, GL_RGBA, GL_FLOAT, samples);
 		colorAttachment.load(nullptr, m_width, m_height, GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, false);
@@ -42,9 +44,49 @@ namespace cft
 		return m_toneMapping.getOutputTexture();
 	}
 
+	Bloom& ParticleRenderer::getBloom()
+	{
+		return m_bloom;
+	}
+
+	BrightPass& ParticleRenderer::getBrightPass()
+	{
+		return m_brightPass;
+	}
+
+	Flare& ParticleRenderer::getFlare()
+	{
+		return m_flare;
+	}
+
+	HdrComposite& ParticleRenderer::getHdrComposite()
+	{
+		return m_hdrComposite;
+	}
+
+	ToneMapping& ParticleRenderer::getToneMapping()
+	{
+		return m_toneMapping;
+	}
+
+	void ParticleRenderer::setBloomEnabled(bool enabled)
+	{
+		m_bloomEnabled = enabled;
+	}
+
+	void ParticleRenderer::setFlareEnabled(bool enabled)
+	{
+		m_flareEnabled = enabled;
+	}
+
 	void ParticleRenderer::loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
 	{
 		m_billboardParticleRenderer.loadTextures(assetRegistry, imageIds, width, height);
+	}
+
+	void ParticleRenderer::loadPathRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
+	{
+		m_particlePathRenderer.loadTextures(assetRegistry, imageIds, width, height);
 	}
 
 	void ParticleRenderer::loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds)
@@ -55,11 +97,6 @@ namespace cft
 	void ParticleRenderer::loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds)
 	{
 		m_meshParticleRenderer.loadMeshes(assetRegistry, modelIds);
-	}
-
-	void ParticleRenderer::loadTrailRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
-	{
-		m_particlePathRenderer.loadTextures(assetRegistry, imageIds, width, height);
 	}
 
 	void ParticleRenderer::resize(unsigned int width, unsigned int height)
@@ -112,11 +149,18 @@ namespace cft
 
 		glDisable(GL_BLEND);
 		
-		m_bloom.render(hdrSceneTexture);
-		glViewport(0, 0, m_width, m_height);
-		m_brightPass.render(hdrSceneTexture);
-		m_flare.render(m_brightPass.getOutputTexture());
-		glViewport(0, 0, m_width, m_height);
+		if (m_bloomEnabled)
+		{
+			m_bloom.render(hdrSceneTexture);
+			glViewport(0, 0, m_width, m_height);
+		}
+
+		if (m_flareEnabled)
+		{
+			m_brightPass.render(hdrSceneTexture);
+			m_flare.render(m_brightPass.getOutputTexture());
+			glViewport(0, 0, m_width, m_height);
+		}
 
 		m_hdrComposite.render(hdrSceneTexture, m_bloom.getOutputTexture(), m_flare.getOutputTexture());
 		m_toneMapping.render(m_hdrComposite.getOutputTexture());

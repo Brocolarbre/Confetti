@@ -2,10 +2,10 @@
 
 namespace cft
 {
-	ParticleSystem::ParticleSystem(float timeStep, unsigned int maximumStepsPerFrame, unsigned int width, unsigned int height, unsigned int samples) :
+	ParticleSystem::ParticleSystem(float timeStep, unsigned int maximumStepsPerFrame, unsigned int width, unsigned int height, unsigned int samples, unsigned int mipCount) :
 		m_assetRegistry(),
 		m_simulation(m_assetRegistry),
-		m_renderer(width, height, samples),
+		m_renderer(width, height, samples, mipCount),
 		m_timeStep(timeStep),
 		m_timeScale(1.0f),
 		m_elapsedTime(0.0f),
@@ -20,27 +20,19 @@ namespace cft
 		return m_assetRegistry;
 	}
 
+	ParticleSimulation& ParticleSystem::getParticleSimulation()
+	{
+		return m_simulation;
+	}
+
+	ParticleRenderer& ParticleSystem::getParticleRenderer()
+	{
+		return m_renderer;
+	}
+
 	unsigned int ParticleSystem::getRendererOutputTextureId() const
 	{
 		return m_renderer.getOutputTextureId();
-	}
-
-	void ParticleSystem::loadBillboardRendererTextures(const std::vector<unsigned int>& billboardImageIds, unsigned int imageWidth, unsigned int imageHeight)
-	{
-		if (!billboardImageIds.empty())
-			m_renderer.loadBillboardRendererTextures(m_assetRegistry, billboardImageIds, imageWidth, imageHeight);
-	}
-
-	void ParticleSystem::loadMeshRendererTextures(const std::vector<unsigned int>& meshImageIds)
-	{
-		if (!meshImageIds.empty())
-			m_renderer.loadMeshRendererTextures(m_assetRegistry, meshImageIds);
-	}
-
-	void ParticleSystem::loadMeshRendererMeshes(const std::vector<unsigned int>& meshModelIds)
-	{
-		if (!meshModelIds.empty())
-			m_renderer.loadMeshRendererMeshes(m_assetRegistry, meshModelIds);
 	}
 
 	void ParticleSystem::resize(unsigned int width, unsigned int height)

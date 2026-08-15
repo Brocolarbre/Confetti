@@ -72,6 +72,20 @@ namespace cft
 		particleRenderer.loadBillboardRendererTextures(assetRegistry, imageIds, width, height);
 	}
 
+	void JsonLoader::loadPathRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
+	{
+		unsigned int width = data.at("width");
+		unsigned int height = data.at("height");
+
+		std::vector<unsigned int> imageIds;
+		imageIds.reserve(data.at("imageIds").size());
+
+		for (const auto& imageId : data.at("imageIds"))
+			imageIds.push_back(imageId);
+
+		particleRenderer.loadPathRendererTextures(assetRegistry, imageIds, width, height);
+	}
+
 	void JsonLoader::loadMeshRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
 	{
 		std::vector<unsigned int> meshRendererImageIds;
@@ -118,13 +132,24 @@ namespace cft
 		std::ifstream file(path);
 		json data = json::parse(file);
 
-		particleSystem.m_simulation.setSeed(data.at("seed"));
+		AssetRegistry& assetRegistry = particleSystem.getAssetRegistry();
+		ParticleSimulation& particleSimulation = particleSystem.getParticleSimulation();
+		ParticleRenderer& particleRenderer = particleSystem.getParticleRenderer();
 
-		loadAssets(data.at("assets"), particleSystem.m_assetRegistry);
+		particleSimulation.setSeed(data.at("seed"));
 
-		loadBillboardRendererTextures(data.at("billboardRendererImages"), particleSystem.m_renderer, particleSystem.m_assetRegistry);
-		loadMeshRendererTextures(data.at("meshRendererImageIds"), particleSystem.m_renderer, particleSystem.m_assetRegistry);
-		loadMeshRendererMeshes(data.at("meshRendererModelIds"), particleSystem.m_renderer, particleSystem.m_assetRegistry);
+		loadAssets(data.at("assets"), assetRegistry);
+
+		const json& billboardRendererImages = data.at("billboardRendererImages");
+		if (!billboardRendererImages.is_null())
+			loadBillboardRendererTextures(billboardRendererImages, particleRenderer, assetRegistry);
+
+		const json& pathRendererImages = data.at("pathRendererImages");
+		if (!pathRendererImages.is_null())
+			loadPathRendererTextures(pathRendererImages, particleRenderer, assetRegistry);
+
+		loadMeshRendererTextures(data.at("meshRendererImageIds"), particleRenderer, assetRegistry);
+		loadMeshRendererMeshes(data.at("meshRendererModelIds"), particleRenderer, assetRegistry);
 	}
 
 	void JsonLoader::clear()

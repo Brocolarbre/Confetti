@@ -5,6 +5,7 @@
         "height": 100,
         "imageIds": [ 0 ]
     },
+    "pathRendererImages": null,
     "meshRendererImageIds": [ 1 ],
     "meshRendererModelIds": [ 0 ],
     "assets": {

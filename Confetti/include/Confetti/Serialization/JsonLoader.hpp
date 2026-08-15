@@ -50,6 +50,7 @@ namespace cft
 
 		static void loadAssets(const json& data, AssetRegistry& assetRegistry);
 		static void loadBillboardRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
+		static void loadPathRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
 		static void loadMeshRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
 		static void loadMeshRendererMeshes(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
 

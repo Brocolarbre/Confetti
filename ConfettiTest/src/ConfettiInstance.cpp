@@ -3,7 +3,7 @@
 ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsigned int samples, dove::Window& window) :
     m_renderContext(width, height),
     m_camera(width, height),
-    m_particleSystem(1.0f / 60.0f, 8, width, height, samples),
+    m_particleSystem(1.0f / 60.0f, 8, width, height, samples, 5),
     m_providerRegistry(),
     m_chronometer(false),
     m_worldSpaceMousePosition()
