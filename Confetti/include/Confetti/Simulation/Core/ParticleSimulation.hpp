@@ -10,10 +10,9 @@
 #include "Confetti/Simulation/Registry/RibbonRegistry.hpp"
 #include "Confetti/Simulation/Registry/TrailRegistry.hpp"
 #include "Confetti/Tool/RandomNumberGenerator.hpp"
+#include "Confetti/Tool/ThreadPool.hpp"
 
 #include <deque>
-
-#include <ThreadPool.h>
 
 namespace cft
 {
