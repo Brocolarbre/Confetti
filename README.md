@@ -233,7 +233,7 @@ Some force fields use a `SpatialInfluence` to support additional parameters such
 It takes the following parameters in its constructor :
 - **origin** (vec3) : origin of the force field
 - **radius** (float) : effect radius, any particle outside this radius is unaffected by the force field
-- **falloff** : determines how the force field strength varies proportionally to the object's distance to the origin
+- **falloff** (Falloff) : determines how the force field strength varies proportionally to the object's distance to the origin
 
 Here is the JSON representation :
 ```json
@@ -279,7 +279,7 @@ Here are the available motion behaviors :
   - **path** (curve) : the control points followed by the object through interpolation
   - **interpolator** (interpolator) : the curve interpolation method
   - **easing** (easing) : the easing function
-  - **speed**
+  - **speed** (float)
 - **Segment** : moves the object from a source to a destination
   - **from** (vec3) : the source
   - **to** (vec3) : the destination
@@ -316,7 +316,7 @@ Here is the JSON representation :
 An interpolator provides a way to interpolate control points.\
 Here are the available interpolators :
 - **Bezier**
-  - **pointsPerSegment** : number of points to generate for each curve segment
+  - **pointsPerSegment** (unsigned int) : number of points to generate for each curve segment
 - **BSplineInterpolator**
   - **interpolator** (UniquePtrInterpolator) : the interpolator used by the B-Spline interpolator
 - **CatmullRomInterpolator**
@@ -369,7 +369,7 @@ Multiple visual behaviors can be applied at once.
 Visual behaviors can drastically improve the appearance of particles.
 Here are the available visual behaviors :
 - **ColorShift** : sets the particle's color over time according to a color palette
-  - **colors** : the color palette
+  - **colors** (vec4[]) : the color palette
   - **speed** (float)
   - **cyclic** (bool) : whether the color shifting cycles after reaching the end of the color palette
 - **DimOut** : lowers the particle's color brightness until it reaches zero given a duration
@@ -686,17 +686,17 @@ Here is the JSON representation :
 
 A particle emitter descriptor defines how a particle emitter instance behaves.
 It is defined as :
-- **poolId** : the particle pool in which the spawned particles are stored
-- **particleSpawnerId** : the id of the particle spawner used by the particle emitter instance
-- **emissionPatternId** : the id of the emission pattern used by the particle emitter instance
-- **motionStateInheritance** : information on which motion state attributes are inherited by spawn particles and how
-- **trailConfiguration** : trail behavior settings (optional)
-- **ribbonConfiguration** : ribbon behavior settings (optional)
-- **spawnTriggerDescriptor** : settings for particles that can spawn particle emitter instances (optional)
-- **renderConfiguration** : how particles are rendered
-- **forceFieldIds** : force fields applied to the spawned particles
-- **motionBehaviorIds** : motion behaviors applied to the spawned particles
-- **visualBehaviorIds** : visual behaviors applied to the spawned particles
+- **poolId** (unsigned int) : the particle pool in which the spawned particles are stored
+- **particleSpawnerId** (unsigned int) : the id of the particle spawner used by the particle emitter instance
+- **emissionPatternId** (unsigned int) : the id of the emission pattern used by the particle emitter instance
+- **motionStateInheritance** (MotionStateInheritance) : information on which motion state attributes are inherited by spawn particles and how
+- **trailConfiguration** (TrailConfiguration, optional) : trail behavior settings
+- **ribbonConfiguration** (RibbonConfiguration, optional) : ribbon behavior settings
+- **spawnTriggerDescriptor** (SpawnTriggerDescriptor, optional) : settings for particles that can spawn particle emitter instances
+- **renderConfiguration** (RenderConfiguration) : how particles are rendered
+- **forceFieldIds** (unsigned int[]) : force fields applied to the spawned particles
+- **motionBehaviorIds** (unsigned int[]) : motion behaviors applied to the spawned particles
+- **visualBehaviorIds** (unsigned int[]) : visual behaviors applied to the spawned particles
 
 Here is the JSON representation :
 ```json
@@ -731,10 +731,10 @@ Here is the JSON representation :
 
 Motion state inheritance describes which particle emitter instance's motion state attributes the particles inherit from at spawn.
 It is defined as :
-- **position** : boolean, do particles spawn relative to their parent emitter's position, true most of the time
-- **linearVelocityFactor** : float, to what extent do particle spawn with a linear velocity relative to their parent emitter's position
-- **rotation** : boolean, do particles spawn relative to their parent emitter's position
-- **angularVelocityFactor** : float, to what extent do particle spawn with an angular relative to their parent emitter's position
+- **position** (bool) : do particles spawn relative to their parent emitter's position, true most of the time
+- **linearVelocityFactor** (float) : to what extent do particle spawn with a linear velocity relative to their parent emitter's position
+- **rotation** (bool): do particles spawn relative to their parent emitter's position
+- **angularVelocityFactor** (float) : to what extent do particle spawn with an angular relative to their parent emitter's position
 
 Here is the JSON representation :
 ```json
@@ -817,14 +817,14 @@ It is defined as :
 - **startThickness** (float) : the thickness at the start of the path
 - **endThickness** (float) : the thickness at the end of the path
 - **lifetime** (float, optional) : the lifetime of the points
-- **lifetimeFade** : the fading behavior of the points
+- **lifetimeFade** (LifetimeFade, optional) : the fading behavior of the points
 - **appendParticleColor** (bool) : whether the particle's color should be appended to the color gradient (visual behaviors are taken into account)
-- **colorGradient** : the color gradient used to color the trail
-- **colorStart** (optional) : a list of distances at which each color start to be used
-- **colorInterpolation** : how color should be interpolated between points
-- **thicknessDistribution** : how thickness should be distributed along the path
-- **thicknessEvolution** (optional) : how thickness should evolve over time
-- **image** (optional) : the image that should be displayed on the path
+- **colorGradient** (vec4[]) : the color gradient used to color the trail
+- **colorStart** (float[], optional) : a list of distances at which each color start to be used
+- **colorInterpolation** (ColorInterpolation) : how color should be interpolated between points
+- **thicknessDistribution** (ThicknessDistribution) : how thickness should be distributed along the path
+- **thicknessEvolution** (ThicknessEvolution, optional) : how thickness should evolve over time
+- **image** (PathImage, optional) : the image that should be displayed on the path
 
 #### Lifetime fade
 
@@ -853,8 +853,8 @@ Here is the JSON representation :
 
 Thickness evolution represents how a path's thickness evolves over time.
 It is defined as :
-- **distribution** : how the thickness distribution evolves over time
-- **speed** : how fast the thickness evolves
+- **distribution** (ThicknessEvolutionDistribution) : how the thickness distribution evolves over time
+- **speed** (float) : how fast the thickness evolves
 
 Here is the JSON representation :
 ```json
@@ -872,8 +872,8 @@ Here is the JSON representation :
 
 Path image represents an image displayed on a path.
 It is defined as :
-- **imageId** : (unsigned int), the id of the image to display
-- **repeatStretch** : (float, optional), the stretch factor at which the image is repeated
+- **imageId** (unsigned int) : the id of the image to display
+- **repeatStretch** (float, optional) : the stretch factor at which the image is repeated
 
 Here is the JSON representation :
 ```json
@@ -887,10 +887,10 @@ Here is the JSON representation :
 
 A spawn trigger descriptor defines how particles can instantiate particle emitter descriptors during simulation.
 It is defined as :
-- **maximumRecursionDepth** : the maximum number of recursive emitter spawns from the same particle emitter instance
-- **spawnEmitterSpawnContext** : a particle emitter spawn context triggered when the particle spawns
-- **deathEmitterSpawnContext** : a particle emitter spawn context triggered when the particle dies
-- **periodicEmitterSpawnContext** : a particle emitter spawn context triggered periodically during the particle's lifetime
+- **maximumRecursionDepth** (unsigned int) : the maximum number of recursive emitter spawns from the same particle emitter instance
+- **spawnEmitterSpawnContext** (ParticleEmitterSpawnContext, optional) : a particle emitter spawn context triggered when the particle spawns
+- **deathEmitterSpawnContext** (ParticleEmitterSpawnContext, optional) : a particle emitter spawn context triggered when the particle dies
+- **periodicEmitterSpawnContext** (PeriodicSpawnTriggerContext, optional) : a particle emitter spawn context triggered periodically during the particle's lifetime
 
 Here is the JSON representation :
 ```json
@@ -920,8 +920,8 @@ Here is the JSON representation :
 
 A periodic spawn trigger context associates a particle emitter spawn context with a time interval.
 It is defined as :
-- **emitterSpawnContext** : the emitter spawn context to instantiate periodically
-- **interval** : the time interval between each spawn trigger
+- **emitterSpawnContext** (EmitterSpawnContext) : the emitter spawn context to instantiate periodically
+- **interval** (float) : the time interval between each spawn trigger
 
 Here is the JSON representation :
 ```json
@@ -949,8 +949,8 @@ Here is the JSON representation :
 
 A render configuration describes how particles are rendered.
 It is defined as :
-- **renderType** : the type of render primitive
-- **configurationData** : the render primitive configuration data (different for each primitive type)
+- **renderType** (RenderType) : the type of render primitive
+- **configurationData** (BillboardRenderConfiguration or MeshRenderConfiguration) : the render primitive configuration data (different for each primitive type)
 
 Here are the JSON representations :
 ```json
@@ -981,7 +981,7 @@ The render type value must match the provided configuration data type.
 
 A particle effect descriptor defines which particle emitter to spawn and when.
 It is defined as :
-- **emitterSpawnContexts** : a list of particle emitter spawn contexts
+- **emitterSpawnContexts** (ParticleEmitterSpawnContext[]) : a list of particle emitter spawn contexts
 
 Here is the JSON representation :
 ```json
@@ -995,11 +995,11 @@ Here is the JSON representation :
 
 A particle emitter spawn context associates a particle emitter descriptor id with spawn information.
 It is defined as :
-- **emitterDescriptorId** : id of the particle emitter descriptor to use when spawning the particle emitter instance
-- **timeRange** : spawn time and lifetime of the particle emitter instance
-- **initialMotionState** : initial motion state of the particle emitter instance
-- **forceFieldIds** : force fields applied to the particle emitter instance
-- **motionBehaviorIds** : motion behaviors applied to the particle emitter instance
+- **emitterDescriptorId** (emitterDescriptorId) : id of the particle emitter descriptor to use when spawning the particle emitter instance
+- **timeRange** (TimeRange) : spawn time and lifetime of the particle emitter instance
+- **initialMotionState** (MotionState) : initial motion state of the particle emitter instance
+- **forceFieldIds** (usngigned int[]) : force fields applied to the particle emitter instance
+- **motionBehaviorIds** (usngigned int[]) : motion behaviors applied to the particle emitter instance
 
 Here is the JSON representation :
 ```json
@@ -1024,8 +1024,8 @@ Here is the JSON representation :
 
 A time range represents the spawn time and lifetime of an object.
 It is defined as :
-- **spawnTime** : time in seconds at which the object spawns
-- **duration** : time in seconds the object remains alive
+- **spawnTime** (float) : time in seconds at which the object spawns
+- **duration** (float) : time in seconds the object remains alive
 
 Here is the JSON representation :
 ```json
@@ -1039,10 +1039,10 @@ Here is the JSON representation :
 
 A motion state represents the simulation state of a physical object.
 It is defined as :
-- **position** : vec3 position
-- **linearVelocity** : vec3 linear velocity
-- **rotation** : quaternion rotation
-- **angularVelocity** : vec3 angular velocity
+- **position** (vec3)
+- **linearVelocity** (vec3)
+- **rotation** (quaternion)
+- **angularVelocity** (vec3)
 
 Here is the JSON representation :
 ```json
@@ -1058,12 +1058,12 @@ Here is the JSON representation :
 
 A sprite sheet descriptor defines which image the sprite sheet uses and how it displays it.
 It is defined as :
-- **imageId** : id of the image to display
-- **frameCount** : number of frames that make the sprite sheet animation (use 1 if the sprite is not animated)
-- **rowFrameCount** : number of images per row (this allows frames to be organized into a grid, use 1 if the sprite is not animated)
-- **frameWidth** : width of one frame in pixels (use the image total width if the sprite is not animated)
-- **frameHeight** : height of one frame in pixels (use the image total height if the sprite is not animated)
-- **animationSpeed** : speed at which the sprite sheet displays the next frame (use 0.0 if the sprite is not animated)
+- **imageId** (unsigned int) : id of the image to display
+- **frameCount** (unsigned int) : number of frames that make the sprite sheet animation (use 1 if the sprite is not animated)
+- **rowFrameCount** (unsigned int) : number of images per row (this allows frames to be organized into a grid, use 1 if the sprite is not animated)
+- **frameWidth** (unsigned int) : width of one frame in pixels (use the image total width if the sprite is not animated)
+- **frameHeight** (unsigned int) : height of one frame in pixels (use the image total height if the sprite is not animated)
+- **animationSpeed** (float) : speed at which the sprite sheet displays the next frame (use 0.0 if the sprite is not animated)
 
 Here is the JSON representation :
 ```json
