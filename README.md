@@ -29,7 +29,7 @@ Particles, trails and ribbons update is performed with CPU parallelization throu
 **Particle effect** : an object that describes which emitters to spawn and when\
 **Trail** : a primitive attached to a particle\
 **Ribbon** : a primitive connecting two particles\
-**Descriptor** : a data structure defined once by the user that contains information on how to spawn the instance of the object it describes
+**Descriptor** : a data structure defined once by the user that contains information on how to spawn the instance of the object it describes\
 **Instance** : a runtime object managed by the simulation instantiated from a descriptor
 
 ## Usage
