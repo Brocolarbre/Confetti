@@ -34,16 +34,17 @@ Particles, trails and ribbons update is performed with CPU parallelization throu
 The usage workflow is as follows :
 - Create a `ParticleSystem` instance.
 - Fill the particle system's asset registry
-- Load renderers' resources from the asset registry
+- Load renderer's resources from the asset registry
 - Play particle effects when desired
 
 To use Confetti in your project, you need to include the `Confetti/Confetti.hpp` header file. The entire library resides inside the `cft` namespace.
 
-The main class is `ParticleSystem`, it holds the simulation, renderers and assets.
-The simulation is updated and rendered with the `ParticleSystem::update` and `ParticleSystem::render` methods.
-These methods take a `cft::View`, containing camera information filled by the user. The camera implementation itself is up to the user.
+The main class is `ParticleSystem`, it holds the simulation, renderer and assets.\
+The simulation is updated and rendered with the `ParticleSystem::update` and `ParticleSystem::render` methods.\
+These methods take a `cft::View`, containing camera information **filled by the user**. The camera implementation itself is up to the user.
 
-The update method takes a delta time parameter. The fixed framerate managment is handled by Confetti and the delta time itself is provided by the user.
+The update method takes a delta time parameter.\
+The **fixed framerate** managment is handled by Confetti and the delta time itself is **provided by the user**. This means the user can pass a variable delta time and the engine makes sure the simulation remains stable with an internal fixed framerate.
 
 Here is an example :
 ```c++
@@ -53,26 +54,26 @@ cft::ParticleSystem particleSystem;
 
 void update()
 {
-    float deltaTime = /* ... */;
-    cft::View view = /* ... */;
+    float deltaTime = /* time since last frame */;
+    cft::View view = /* camera information */;
 
     particleSystem.update(deltaTime, view);
     particleSystem.render(view);
 }
 ```
 
-To integrate the engine's result in your own application, the `ParticleSystem::getRendererOutputTextureId` method returns a handle to the OpenGL output texture id.
+To integrate the engine's result in your own application, the `ParticleSystem::getRendererOutputTextureId` method returns a **handle** to the OpenGL output texture id.
 
 Filling the asset registry and loading the renderer assets can be done with a JSON file or with code.
-The assets use an id system. Assets that depend on other assets specify the corresponding asset id. The id must be unique per asset type (two force fields can not have the same id but a force field and a motion behavior can have the same id).
+The assets use an **id system**. Assets that depend on other assets specify the corresponding asset id. The id must be **unique per asset type** (two force fields cannot have the same id but a force field and a motion behavior can have the same id).
 
 ### JSON loading
 
 To load a JSON file, do `JsonLoader::initialize`, then `JsonLoader::load`.\
-The `initialize` method takes a provider registry. The reason is that some effects have dynamic parameters provided by the user in the form of a `std::function` that is called by the effects at evaluation.\
+The `initialize` method takes a provider registry. The reason is that some effects have **dynamic parameters** provided by the user in the form of a `std::function` that is called by the effects at evaluation.\
 This allows effects to use changing values that originate from the user's application (such as following a target or varying intensity depending on a specific variable).\
-As this can not be represented in a JSON file, the file instead stores a provider name.
-This provider name is used as a key by the engine to query the provider registry. The user has to fill the provider registry with all the provider methods used by the effects before loading the json file.
+As this cannot be represented in a JSON file, the file instead stores a **provider name**.
+This provider name is used as a key by the engine to query the provider registry. The user has to fill the provider registry with all the provider methods used by the effects **before** loading the json file.
 
 ```c++
 cft::ProviderRegistry providerRegistry;
@@ -104,7 +105,7 @@ Use the corresponding add method for the asset you need.
 
 ### Force fields
 
-Force fields allow to modify particle emitters and particles motion state by applying a linear and angular velocity acceleration.
+Force fields allow to modify particle emitters and particles **motion state** by applying a linear and angular velocity **acceleration**.
 The nature of the acceleration depends on the active force fields and their parameters.
 Some force fields use a `SpatialInfluence` to support additional parameters such as an effect radius and a strength falloff.
 Here are the available force fields :
@@ -125,10 +126,10 @@ The user can implement additional force fields by implementing the `ForceField` 
 
 ### Motion behaviors
 
-Motion behaviors allow to modify particle emitters and particles position by applying a position offset.
+Motion behaviors allow to modify particle emitters and particles **position** by applying a position **offset**.
 Just like force fields, multiple motion behaviors can be applied at once.
-Note that while the position resulting from the offset affects rendering and trail spawning, the offset itself does not override force fields contribution.
-The motion behavior can be seen as an additional absolute offset applied to the object on top of force fields.
+Note that while the position resulting from the offset affects rendering and trail spawning, the offset itself **does not override** force fields contribution.
+The motion behavior can be seen as an additional **absolute offset** applied to the object on top of force fields.
 Here are the available motion behaviors :
 - Circle
 - FigureEight
@@ -145,7 +146,7 @@ The user can implement additional motion behaviors by implementing the `MotionBe
 
 ### Visual behaviors
 
-Visual behaviors allow to modify particles appearance by modifying their color and scale.
+Visual behaviors allow to modify particles **appearance** by modifying their **color and scale**.
 Multiple visual behaviors can be applied at once.
 Visual behaviors can drastically improve the appearance of particle effects.
 Here are the available visual behaviors :
@@ -165,12 +166,12 @@ The user can implement additional visual behaviors by implementing the `VisualBe
 
 ### Particle spawners and attribute generators
 
-Particle emitters use a particle spawner to describe the initial attributes of the spawned particles.
-Particle spawners use attribute generators to spawn particles.
+Particle emitters use a particle spawner to describe the **initial attributes** of the spawned particles.
+Particle spawners use **attribute generators** to spawn particles.
 
 #### Generic generators
 
-Confetti's attribute generator system is flexible : the same generic attribute generators can be used to generate any attribute type.
+Confetti's attribute generator system is flexible : the same generic attribute generators can be used to generate **any attribute type**.
 For instance, this means that the position and velocity attribute can be generated by the same generator.
 
 Here are the available generic attribute generators :
@@ -187,7 +188,7 @@ The user can implement additional generic attribute generators by implementing t
 
 #### Specialized generators
 
-While generic generators provide a way to cover most generation cases, more specific attribute generation logic can be needed.
+While generic generators provide a way to cover most generation cases, **more specific** attribute generation logic can be needed.
 Specialized generators serve that purpose. The cannot be used for attributes of different types.
 Here are the available specialized attribute generators :
 - BrightnessColor
@@ -229,6 +230,8 @@ Here are the available emission patterns :
 
 The emission patterns can be found in the `Confetti/Emission/EmissionPattern/` folder.
 The user can implement additional emission patterns by implementing the `EmissionPattern` interface.
+
+Note that any user-defined asset is not supported in the JSON loader.
 
 ## Future improvements
 
