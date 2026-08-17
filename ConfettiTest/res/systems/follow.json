@@ -76,7 +76,7 @@
                 },
                 "linearVelocityAttributeGenerator": {
                     "type": "ValueStrength",
-                    "value": {
+                    "valueGenerator": {
                         "type": "Random",
                         "minimum": {
                             "x": -10.0,
@@ -90,7 +90,7 @@
                         },
                         "seed": 0
                     },
-                    "strength": {
+                    "strengthGenerator": {
                         "type": "Time",
                         "from": 0.1,
                         "to": 1.0,

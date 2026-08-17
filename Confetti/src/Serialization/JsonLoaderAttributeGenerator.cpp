@@ -20,7 +20,7 @@ namespace cft
         else if (type == "RandomNormalOffset")
             return std::make_unique<RandomNormalOffsetPositionGenerator>(data.at("minimumStrength"), data.at("maximumStrength"), data.at("seed"));
         else if (type == "ValueStrength")
-            return std::make_unique<ValueStrengthGenerator>(parseAttributeGenerator<glm::vec3, JsonTypes::Vec3>(data.at("value")), parseAttributeGenerator<float, float>(data.at("strength")));
+            return std::make_unique<ValueStrengthGenerator>(parseAttributeGenerator<glm::vec3, JsonTypes::Vec3>(data.at("valueGenerator")), parseAttributeGenerator<float, float>(data.at("strengthGenerator")));
         else
             return nullptr;
     }
@@ -31,7 +31,7 @@ namespace cft
         std::string type = data.at("type");
 
         if (type == "BrightnessColor")
-            return std::make_unique<BrightnessColorGenerator>(parseAttributeGenerator<Color, JsonTypes::Color>(data.at("color")), parseAttributeGenerator<float, float>(data.at("brightness")));
+            return std::make_unique<BrightnessColorGenerator>(parseAttributeGenerator<Color, JsonTypes::Color>(data.at("colorGenerator")), parseAttributeGenerator<float, float>(data.at("brightnessGenerator")));
         else
             return nullptr;
     }

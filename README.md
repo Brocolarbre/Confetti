@@ -155,7 +155,26 @@ To reset asset registry data, `ParticleSystem::getAssetRegistry` and `AssetRegis
 
 ## Assets
 
-The engine uses different asset types, each with a distinct purpose and representation. Below is a description of each asset type, along with its JSON representation.
+The engine uses different asset types, each with a distinct purpose and representation. Below is a description of each asset type, along with its JSON representation.\
+All of the non-primitive C++ attribute types used in the assets belong either to glm (vec2 = glm\::vec2, vec3 = glm\::vec3, vec4 = glm\::vec4, quaternion = glm\::quat), to LineWeaver (Point = lw\::Point), or to Confetti (in that case, the mentioned type has a detailed description in this document).\
+All interface-based assets (behaviors, emission and link assets) whose JSON representation is not specified in this document can be expressed in JSON in the following way (example for `DirectionalForceField`) :
+```json
+{
+    "id": 0,
+    "type": "Directional",
+    "direction": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+    },
+    "strength": 9.81
+}
+```
+
+The `id` attribute is only necessary if the asset type can be stored in the asset registry (force fields, motion behaviors, visual behaviors, emission patterns...). It is not needed for LineWeaver assets (points, curves, interpolators, easings).\
+The `type` attribute must match the class name without its type suffix ("DirectionalForceField" becomes "Directional"). The type suffix is not necessary because the context allows to deduce it : here, the JSON representation is stored in the force field array of the JSON file (`{ ..., "assets": { "forceFields": [], ... }`). 
+The remaining attributes directly map to the asset parameters described below each asset (for the `DirectionalForceField` example, the parameters are "direction" and "strength"). The name uses the same naming convention as in the code and the asset's description. The parameter type is specified next to the attribute name in the asset's description.\
+The arrays T[] map to `std::vector<T>`.
 
 ### Force fields
 
@@ -164,46 +183,46 @@ The nature of the acceleration depends on the active force fields and their para
 
 Here are the available force fields :
 - **Attraction** : moves the object toward the origin of the spatial influence.
-  1. **spatialInfluence**
-  2. **strength** (float)
+  - **spatialInfluence**
+  - **strength** (float)
 - **Directional** : moves the object in a constant direction
-  1. **direction** (vec3)
-  2. **strength** (float)
+  - **direction** (vec3)
+  - **strength** (float)
 - **FollowTarget** : moves the object toward a dynamic target using the mass–spring–damper equation
-  1. **targetProvider** (function -> vec3) : user-defined callable that returns a target
-  2. **responseTime** (float) : the time it takes for the object to reach the target
-  3. **dampingRatio** (float) : the bounciness of the movement
+  - **targetProvider** (function -> vec3) : user-defined callable that returns a target
+  - **responseTime** (float) : the time it takes for the object to reach the target
+  - **dampingRatio** (float) : the bounciness of the movement
 - **LinearDrag** : slows the object down linearly
-  1. **strength**
+  - **strength**
 - **Orbit** : orbits the object around the origin of the spatial influence given an axis
-  1. **spatialInfluence**
-  2. **axis** (vec3) : the axis the object orbits around
-  3. **strength** (float)
-  4. **radius** (float)
-  5. **radialCorrectionStrength** (float) : the force at which the movement corrects itself to keep orbiting
+  - **spatialInfluence**
+  - **axis** (vec3) : the axis the object orbits around
+  - **strength** (float)
+  - **radius** (float)
+  - **radialCorrectionStrength** (float) : the force at which the movement corrects itself to keep orbiting
 - **QuadraticDrag** : slows the object down quadratically
-  1. **strength**
+  - **strength**
 - **Repulsion** : moves the object away from the origin of the spatial influence
-  1. **spatialInfluence**
-  2. **strength** (float)
+  - **spatialInfluence**
+  - **strength** (float)
 - **ShockWave** : moves the object away from the origin of the spatial influence given an axis when it is close to a cylindrical wavefront
-  1. **spatialInfluence**
-  2. **axis** (vec3) : the axis the object move away from
-  3. **speed** (float)
-  3. **strength** (float)
-  4. **thickness** (float) : the effect cylinder's height
+  - **spatialInfluence**
+  - **axis** (vec3) : the axis the object move away from
+  - **speed** (float)
+  - **strength** (float)
+  - **thickness** (float) : the effect cylinder's height
 - **Turbulence** : randomly moves the object around
-  1. **strength** (float)
-  2. **seed** (uint64)
+  - **strength** (float)
+  - **seed** (uint64)
 - **Vortex** : moves the object spin around an axis while pulling it toward the axis
-  1. **spatialInfluence**
-  2. **axis** (vec3) : the axis the object orbits around
-  3. **strength** (float)
-  4. **pullStrengh** (float) : the inward movement force
+  - **spatialInfluence**
+  - **axis** (vec3) : the axis the object orbits around
+  - **strength** (float)
+  - **pullStrengh** (float) : the inward movement force
 - **Wind** : slows down or fastens up the object depending on its velocity relative to the wind direction and strength
-  1. **direction** (vec3)
-  2. **strength** (float)
-  3. **drag** (float) : wind resistance
+  - **direction** (vec3)
+  - **strength** (float)
+  - **drag** (float) : wind resistance
 
 The force fields can be found in the `Confetti/Behavior/Force/` folder.
 The user can implement additional force fields by implementing the `ForceField` interface.
@@ -237,17 +256,111 @@ Note that while the position resulting from the offset affects rendering and tra
 The motion behavior can be seen as an additional **absolute offset** applied to the object on top of force fields.
 Here are the available motion behaviors :
 - **Circle** : moves the object in a circular fashion
+  - **axis** (vec3) : the circle's normal axis
+  - **radius** (float)
+  - **speed** (float)
 - **FigureEight** : moves the object in the shape of an eight
+  - **axis** (vec3) : the figure eight's normal axis
+  - **radius** (float)
+  - **speed** (float)
 - **Jitter** : randomly moves the object around
+  - **strength** (float)
+  - **seed** (uint64)
 - **Orbit** : orbits the object around an origin given an axis
+  - **origin** (vec3)
+  - **axis** (vec3) : the axis the object orbits around
+  - **radius** (float)
+  - **speed** (float)
 - **Oscillation** : repeatedly moves the object from a source to a destination
+  - **from** (vec3) : the source
+  - **to** (vec3) : the destination
+  - **speed** (float)
 - **Path** : moves the object along a path
+  - **path** (curve) : the control points followed by the object through interpolation
+  - **interpolator** (interpolator) : the curve interpolation method
+  - **easing** (easing) : the easing function
+  - **speed**
 - **Segment** : moves the object from a source to a destination
+  - **from** (vec3) : the source
+  - **to** (vec3) : the destination
+  - **speed** (float)
 - **SnapTarget** : snaps the object's position on a dynamic target
+  - **targetProvider** (function -> vec3) : user-defined callable that returns a target
 - **Spiral** : moves the object in a spiral fashion
+  - **origin** (vec3)
+  - **axis** (vec3) : the axis the object spirals around
+  - **startRadius** (float) : the initial radius
+  - **growth** (float) : the speed at which the radius increases
+  - **speed** (float)
+  - **rise** (float) : the speed at which the object moves along the axis
 
 The motion behaviors can be found in the `Confetti/Behavior/Motion/` folder.
 The user can implement additional motion behaviors by implementing the `MotionBehavior` interface.
+
+#### Curve
+
+A curve is a list of points.
+It is defined as `std::vector<Point>`.
+
+Here is the JSON representation :
+```json
+[
+    { "x": 0.0, "y": 0.0, "z": 0.0 },
+    { "x": 1.0, "y": 1.0, "z": 1.0 },
+    { "x": 2.0, "y": 2.0, "z": 2.0 }
+]
+```
+
+#### Interpolator
+
+An interpolator provides a way to interpolate control points.\
+Here are the available interpolators :
+- **Bezier**
+  - **pointsPerSegment** : number of points to generate for each curve segment
+- **BSplineInterpolator**
+  - **interpolator** (UniquePtrInterpolator) : the interpolator used by the B-Spline interpolator
+- **CatmullRomInterpolator**
+- **HermiteInterpolator**
+- **LinearInterpolator**
+
+#### Easing
+
+An easing function determines how the interpolation parameter evolves during interpolation.\
+Here are the available easing functions :
+- **EaseCurve**
+- **EaseInBack**
+- **EaseInBounce**
+- **EaseInCircular**
+- **EaseInCubic**
+- **EaseInElastic**
+- **EaseInExponential**
+- **EaseInOutBack**
+- **EaseInOutBounce**
+- **EaseInOutCircular**
+- **EaseInOutCubic**
+- **EaseInOutElastic**
+- **EaseInOutExponential**
+- **EaseInOutQuadratic**
+- **EaseInOutQuartic**
+- **EaseInOutQuintic**
+- **EaseInOutSine**
+- **EaseInQuadratic**
+- **EaseInQuartic**
+- **EaseInQuintic**
+- **EaseInSine**
+- **EaseLinear**
+- **EaseOutBack**
+- **EaseOutBounce**
+- **EaseOutCircular**
+- **EaseOutCubic**
+- **EaseOutElastic**
+- **EaseOutExponential**
+- **EaseOutQuadratic**
+- **EaseOutQuartic**
+- **EaseOutQuintic**
+- **EaseOutSine**
+- **EaseSmootherstep**
+- **EaseSmoothstep**
 
 ### Visual behaviors
 
@@ -256,18 +369,54 @@ Multiple visual behaviors can be applied at once.
 Visual behaviors can drastically improve the appearance of particles.
 Here are the available visual behaviors :
 - **ColorShift** : sets the particle's color over time according to a color palette
+  - **colors** : the color palette
+  - **speed** (float)
+  - **cyclic** (bool) : whether the color shifting cycles after reaching the end of the color palette
 - **DimOut** : lowers the particle's color brightness until it reaches zero given a duration
+  - **duration** (ParticleTime)
 - **FadeIn** : increases the particle's opacity until it reaches its initial value given a duration
+  - **duration** (ParticleTime)
 - **FadeOut** : lowers the particle's opacity until it reaches zero given a duration
+  - **duration** (ParticleTime)
 - **Flicker** : lowers and increases the particle's color brightness repeatedly given a minimum and maximum strength
+  - **minimumBrightness** (float)
+  - **maximumBrightness** (float)
+  - **speed** (float)
 - **GrowIn** : increases the particle's scale until it reaches its initial value given a duration
+    - **duration** (ParticleTime)
 - **Pulse** : interpolates the particle's color over time between two colors
+  - **colorA** (vec4)
+  - **colorB** (vec4)
+  - **speed** (float)
 - **ShrinkOut** : lowers the particle's scale until it reaches zero given a duration
+    - **duration** (ParticleTime)
 - **SmoothColorShift** : sets the particle's color over time according to a color palette with smooth interpolation
+  - *colors* (vec4[])
+  - **speed** (float)
+  - **cyclic** (bool)
 - **SquashStretch** : lowers and increases the particle's scale repeatedly according to the squash and stretch animation principle
+  - **strength** (vec2)
+  - **speed** (float)
 
 The visual behaviors can be found in the `Confetti/Behavior/Visual/` folder.
 The user can implement additional visual behaviors by implementing the `VisualBehavior` interface.
+
+#### Particle time
+
+A particle time represents the duration a visual behavior takes effect. The particle time can be specified either in normalized time space (0.0 is the beginning of the particle's life, 1.0 is the end), or in absolute time space (in seconds).
+It is defined as :
+- **value** (float)
+- **space** (ParticleTime::Space)
+
+The `ParticleTime::Space` enumeration specifies the time space. It can take the following values : **Absolute**, **Normalized**.
+
+Here is the JSON representation :
+```json
+{
+    "value": 0.2,
+    "space": "Absolute"
+}
+```
 
 ### Particle spawners and attribute generators
 
@@ -293,15 +442,46 @@ For instance, this means that the position and velocity attribute can be generat
 
 Here are the available generic attribute generators :
 - **Constant** : generates the same value for all the particles
+  - **value** (T)
 - **InterpolatedRandomSet** : picks a random value in the set for each particle with smooth interpolation
+  - **values** (T[])
+  - **seed** (uint64)
 - **Linear** : generates values ranging linearly from a source to a destination value
+  - **from** (T) : the source
+  - **to** (T) : the destination
 - **Random** : generates random values between a minimum and a maximum value
+  - **minimum** (T)
+  - **maximum** (T)
+  - **seed** (uint64)
 - **RandomSet** : picks a random value in the set for each particle
+  - **values** (T[])
+  - **seed** (uint64)
 - **Time** : generates values ranging linearly from a source to a destination value according to specific time points
+  - **from** (T) : the source
+  - **to** (T) : the destination
+  - **fromTime** (float) : the source value is returned while the time is less or equal to this value, otherwise
+  - **toTime** (float) : the destination value is returned while the time is greater or equal to this value
 - **WeightedRandomSet** : picks a random value in the set for each particle with weighted probabilities
+  - **values** (WeightedValueT[])
+  - **seed** (uint64)
 
 The generic attribute generators can be found in the `Confetti/Emission/AttributeGenerator/Generic/` folder.
 The user can implement additional generic attribute generators by implementing the `AttributeGenerator` interface.
+
+#### Weighted value
+
+A weighted value associates a generic value with a weight.
+It is defined as :
+- **value** (T)
+- **weight** (unsigned int)
+
+Here is the JSON representation :
+```json
+{
+    "value": 2.0,
+    "weight": 1
+}
+```
 
 #### Specialized generators
 
@@ -309,10 +489,21 @@ While generic generators provide a way to cover most generation cases, **more sp
 Specialized generators serve that purpose. The cannot be used for attributes of different types.
 Here are the available specialized attribute generators :
 - **BrightnessColor** : generates color and strength with user-specified generators and multiplies the color's rgb components with the strength
+  - **colorGenerator** (AttributeGeneratorColor)
+  - **strengthGenerator** (AttributeGeneratorFloat)
 - **NormalBurstLinearVelocity** : generates linear velocity according to the normal and a random offset (requires a spawn shape)
+  - **strength** (float)
+  - **maximumAngle** (float)
+  - **seed** (uint64)
 - **NormalLinearVelocity** : generates linear velocity according to the normal (requires a spawn shape)
+  - **strength** (float)
 - **RandomNormalOffsetPosition** : generates position along the normal with a random offset (requires a spawn shape)
+  - **minimumStrength** (float)
+  - **maximumStrength** (float)
+  - **seed** (uint64)
 - **ValueStrength** : generates three-component values and strength values with user-specified generators and multiplies the three-component value with the strength
+  - **valueGenerator** (AttributeGeneratorVec3)
+  - **strengthGenerator** (AttributeGeneratorFloat)
 
 The specialized attribute generators can be found in the `Confetti/Emission/AttributeGenerator/Specialized/` folder.
 The user can implement additional specialized attribute generators by implementing the `AttributeGenerator` interface.
@@ -324,26 +515,61 @@ A spawn shape generates positions **according to a shape**. It differs from a po
 Some of the specialized attribute generators use the spawn context to generate the values. It is up to the user to ensure that an appropriate spawn shape is used when using any specialized attribute generators that needs a spawn context. Otherwise, a default-generated spawn context is used.
 Here are the available spawn shapes :
 - **Circle** : generates spawn contexts in the shape of a circle
+  - **radius** (float)
+  - **axis** (vec3)
 - **Cone** : generates spawn contexts in the shape of a cone surface
+  - **height** (float)
+  - **radius** (float)
+  - **axis** (vec3)
 - **ConeVolume** : generates spawn contexts in the shape of a circle volume
+  - **height** (float)
+  - **radius** (float)
+  - **axis** (vec3)
 - **Cylinder** : generates spawn contexts in the shape of a cylinder surface
+  - **height** (float)
+  - **radius** (float)
+  - **axis** (vec3)
 - **CylinderVolume** : generates spawn contexts in the shape of a cylinder volume
+  - **height** (float)
+  - **radius** (float)
+  - **axis** (vec3)
 - **Disk** : generates spawn contexts in the shape of a circle surface
+  - **radius** (float)
+  - **axis** (vec3)
 - **Sphere** : generates spawn contexts in the shape of a sphere surface
+  **radius** (float)
 - **SphereVolume** : generates spawn contexts in the shape of a sphere volume
+  - **radius** (float)
 
 ### Emission patterns
 
 To describe **how many** and **how often** particles are spawned, particle emitters use an emission pattern.
 Emission patterns have a significant impact on an emitter's overall appearance.
 Here are the available emission patterns :
-- **ConstantRate** : spawns particles at a constant rate where rate is the number of particles per second
+- **ConstantRate** : spawns particles at a constant rate where rate
+  - **rate** (float) : number of particles to spawn per second
 - **FixedBurst** : spawns a fixed number of particles a fixed number of times at a fixed interval
+  - **count** (unsigned int) : number of particles to spawn per burst
+  - **burstCount** (unsigned int) : total number of bursts
+  - **interval** (float) : interval between bursts in seconds
 - **LinearBurst** : spawns a fixed number of particles at a varying interval
+  - **count** (unsigned int) : number of particles to spawn per burst
+  - **initialInterval** (float)
+  - **finalInterval** (float)
+  - **transitionDuration** (float) : the time it takes in seconds to interpolate from the initial interval to the final interval
 - **LinearRate** : spawns particles at a varying rate
+  - **initialRate** (float)
+  - **finalRate** (float)
+  - **transitionDuration** (float) : the time it takes in seconds to interpolate from the initial rate to the final rate
 - **PeriodicBurst** : spawns a fixed number of particles at a fixed interval
+  - **count** (unsigned int) : number of particles to spawn per burst
+  - **interval** (float) : interval between bursts in seconds
 - **RandomRate** : spawns particles at a random rate
+  - **minimumRate** (float)
+  - **maximumRate** (float)
+  - **seed** (uint64)
 - **SingleBurst** : spawns a fixed number of particles once
+  - **count** (unsigned int) : number of particles to spawn
 
 The emission patterns can be found in the `Confetti/Emission/EmissionPattern/` folder.
 The user can implement additional emission patterns by implementing the `EmissionPattern` interface.
@@ -354,11 +580,18 @@ Link rules are here to determine whether a connection between two particles is p
 The user provides the particle linkers with link rules, which are given the appropriate parameters to ensure the desired connections are created and removed during simulation.
 Here are the available link rules :
 - **AgeSimilarity** : allow connection for particles that have a similar age according to a threshold
+  - **threshold** (float)
 - **ColorSimilarity** : allow connection for particles that have a similar color according to a threshold
+  - **threshold** (float)
 - **Connection** : prevents connection for particles that already have a certain amount of connections
+  - **maximumConnectionCount** (unsigned int)
 - **Distance** : allow connection for particles that are within a specific distance range of each other
+  - **minimumDistance** (float)
+  - **maximumDistance** (float)
 - **PhaseSimilarity** : allow connection for particles that have a similar phase according to a threshold
+  - **threshold** (float)
 - **VelocitySimilarity** : allow connection for particles that have a similar velocity according to a threshold
+  - **threshold** (float)
 
 The link rules can be found in the `Confetti/Simulation/Link/LinkRule/` folder.
 The user can implement additional link rules by implementing the `LinkRule` interface.
@@ -366,14 +599,33 @@ The user can implement additional link rules by implementing the `LinkRule` inte
 ### Particle linkers
 
 Particle linkers connect particles together in order to create ribbons.
-They use a selection algorithm and decice which particles should be connected while respecting the link rules.
+They use a selection algorithm and decide which particles should be connected while respecting the link rules.
+The connection rules must be respected in order to create a connection.
+The validation rules must be respected for existing connections to remain alive.
 Here are the available particle linkers :
 - **Chain** : particles are sorted by spawn time and connected in a chain
+  - **connectionRules** (UniquePtrLinkRule[])
+  - **validationRules** (UniquePtrLinkRule[])
 - **KNearestNeighbor** : each particle is connected to its k nearest neighbors
+  - **connectionRules** (UniquePtrLinkRule[])
+  - **validationRules** (UniquePtrLinkRule[])
+  - **neighborCount** (unsigned int) : k
 - **NearestNeighbor** : each particle is connected to all its neighbors sorted by distance
+  - **connectionRules** (UniquePtrLinkRule[])
+  - **validationRules** (UniquePtrLinkRule[])
 - **Origin** : particles are connected to the closest particle to an origin
+  - **connectionRules** (UniquePtrLinkRule[])
+  - **validationRules** (UniquePtrLinkRule[])
+  - **origin** (vec3)
 - **Random** : particles are randomly connected
+  - **connectionRules** (UniquePtrLinkRule[])
+  - **validationRules** (UniquePtrLinkRule[])
+  - **connectionCount** (unsigned int) : number of connections to create
+  - **seed** (uint64)
 - **Target** : particles are connected to the particle with a specific id
+  - **connectionRules** (UniquePtrLinkRule[])
+  - **validationRules** (UniquePtrLinkRule[])
+  - **targetParticleId** (unsigned int)
 
 The particle linkers can be found in the `Confetti/Simulation/Link/ParticleLinker/` folder.
 The user can implement additional particle linkers by implementing the `ParticleLinker` interface.
@@ -384,9 +636,18 @@ Ribbon generators define the appearance of a connection between two particles.
 They generate a list of points that are later used to generate ribbon geometry.
 Here are the available ribbon generators :
 - **Path** : the connection takes the shape of a path by interpolating control points
+  - **path** (Curve)
+  - **interpolator** (UniquePtrInterpolator)
+  - **easing** (UniquePtrEasing)
 - **Segment** : the connection takes the shape of a straight line
 - **Spiral** : the connection takes the shape of a spiral
+  - **frequency** (float)
+  - **radius** (float)
+  - **animationSpeed** (float)
 - **Wave** : the connection takes the shape of a wave
+  - **frequency** (float)
+  - **amplitude** (float)
+  - **animationSpeed** (float)
 
 The ribbon generators can be found in the `Confetti/Simulation/Link/RibbonGenerator/` folder.
 The user can implement additional ribbon generators by implementing the `RibbonGenerator` interface.
