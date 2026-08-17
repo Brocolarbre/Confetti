@@ -30,6 +30,7 @@ Particles, trails and ribbons update is performed with CPU parallelization throu
 **Trail** : a primitive attached to a particle\
 **Ribbon** : a primitive connecting two particles\
 **Descriptor** : a data structure defined once by the user that contains information on how to spawn the instance of the object it describes\
+**Descriptor** : a data structure filled once and used to instantiate the object it describes\
 **Instance** : a runtime object managed by the simulation instantiated from a descriptor
 
 ## Usage
