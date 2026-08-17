@@ -1,39 +1,43 @@
 # Confetti
 
 Confetti is a high-performance data-driven deterministic C++ particle engine.
-The rendering system is written with OpenGL. The simulation uses CPU multithreading for performance.
+
+The rendering system is written with **OpenGL**. The simulation uses **CPU multithreading** for performance.
+The engine takes the form of a **C++ library** and can be integrated in existing OpenGL applications.
 
 ## Design
 
-The engine is **data-driven**. This means that anything the engine is able to do do can be described in a configuration file.
-Confetti translates this in a JSON file format. The user can either create the assets in the code, or load a JSON file that describes them.
+The engine is :
 
-The engine is **deterministic**. Running the same simulation multiple times produces the same result. The determinism is global : changing any random-based effect of the simulation does not affect the other effects, regardless of order. This is also the case on different machines.
+**data-driven** : anything the engine is able to do do can be described in a configuration file.
+Confetti translates this into a JSON file format. The user can either create the assets in the code, or load a JSON file with an equivalent description.
 
-The engine is **optimized for performance**. The simulation stores particle data as a structure of arrays (SoA idiom).
+**deterministic** : running the same simulation multiple times produces the same result. The determinism is global : changing any random-based effect of the simulation does not affect the other effects, regardless of order. This is also the case on different machines.
+
+**optimized for performance** : the simulation stores particle data as a structure of arrays (SoA idiom).
 Particles, trails and ribbons update is performed with CPU parallelization through multithreading.
 
-The engine is **user-friendly**. The data-driven representation allows for a very expressive system that does not require any code, other than creating the assets or loading the JSON file.
+**user-friendly** : the data-driven representation allows for a very expressive system that does not require any code, other than creating the assets or loading the JSON file. The effects are created using a declarative system, effectively separating artistic authoring from the engine's complexity.
 
-The engine is **expressive**. Many tools and parameters can be specified, some are optional. This gives a very high amount of effects for the user to compose.
+**expressive** : effects are made of many tools and parameters, some being optional. This gives a lot of customization options and a very high amount of effects for the user to compose.
 
 ## Terminology
 
-Particle : a primitive that is simulated and rendered
-Particle emitter : an object that spawns particles
-Particle effect : an object that describes which emitters to spawn and when
-Trail : a primitive attached to a particle
-Ribbon : a primitive representing a connection between two particles
+**Particle** : a primitive that is simulated and rendered\
+**Particle emitter** : an object that spawns particles\
+**Particle effect** : an object that describes which emitters to spawn and when\
+**Trail** : a primitive attached to a particle\
+**Ribbon** : a primitive connecting two particles
 
 ## Usage
 
-The usage workflow is as follow :
+The usage workflow is as follows :
 - Create a `ParticleSystem` instance.
 - Fill the particle system's asset registry
 - Load renderers' resources from the asset registry
 - Play particle effects when desired
 
-To use Confetti in your project, you need to include the `Confetti/Confetti.hpp` header file. The entire library resides in the `cft` namespace.
+To use Confetti in your project, you need to include the `Confetti/Confetti.hpp` header file. The entire library resides inside the `cft` namespace.
 
 The main class is `ParticleSystem`, it holds the simulation, renderers and assets.
 The simulation is updated and rendered with the `ParticleSystem::update` and `ParticleSystem::render` methods.
@@ -49,7 +53,9 @@ cft::ParticleSystem particleSystem;
 
 void update()
 {
-    cft::View view{};
+    float deltaTime = /* ... */;
+    cft::View view = /* ... */;
+
     particleSystem.update(deltaTime, view);
     particleSystem.render(view);
 }
@@ -62,9 +68,11 @@ The assets use an id system. Assets that depend on other assets specify the corr
 
 ### JSON loading
 
-To load a JSON file, do `JsonLoader::initialize`, then `JsonLoader::load`.
-The initialize method takes a provide registry. Some effects have dynamic parameters provided by the user in the form of a `std::function`. As this can not be represented in a JSON file, the file instead stores a provider name.
-This provider name is used by the engine to query the provider registry. This is why the user has to fill the provider registry with all the provider methods used by the effects.
+To load a JSON file, do `JsonLoader::initialize`, then `JsonLoader::load`.\
+The `initialize` method takes a provider registry. The reason is that some effects have dynamic parameters provided by the user in the form of a `std::function` that is called by the effects at evaluation.\
+This allows effects to use changing values that originate from the user's application (such as following a target or varying intensity depending on a specific variable).\
+As this can not be represented in a JSON file, the file instead stores a provider name.
+This provider name is used as a key by the engine to query the provider registry. The user has to fill the provider registry with all the provider methods used by the effects before loading the json file.
 
 ```c++
 cft::ProviderRegistry providerRegistry;
@@ -249,6 +257,7 @@ To build the project:
 - Run the following command:
   - Windows : `.\scripts\windows\set_environment.bat` and `.\scripts\windows\set_workspace.bat`
   - Linux : `.\scripts\linux\set_environment.bat` and `./scripts/linux/set_workspace.sh`
+- Windove is available [here](https://github.com/Brocolarbre/Windove/). Download the repository and follow the build setup instructions. Then copy the header and library files to the appropriate `Confetti/external/` subfolders.
 - Open the project workspace
 - Build the project
 
@@ -261,4 +270,14 @@ The dependencies are listed below, the library is guaranteed to work with the sp
 
 ### External dependencies
 
-The minimum required C++ version is C++17.
+The minimum required C++ version is **C++17**.
+
+**Confetti** has the following external dependencies :
+- GLAD
+- GLM
+- STB
+- tinyobjloader
+- nlohmann-json
+
+**ConfettiTest** has the following external dependencies :
+- [Windove](https://github.com/Brocolarbre/Windove/) (Windove uses GLFW so linking a static version of Windove requires linking GLFW)
