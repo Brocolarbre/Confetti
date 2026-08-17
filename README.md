@@ -12,17 +12,18 @@ The engine is :
 **data-driven** : anything the engine is able to do do can be described in a configuration file.
 Confetti translates this into a JSON file format. The user can either create the assets in the code, or load a JSON file with an equivalent description.
 
-**deterministic** : running the same simulation multiple times produces the same result. The determinism is global : changing any random-based effect of the simulation does not affect the other effects, regardless of order. This is also the case on different machines.
+**deterministic** : running the same simulation multiple times produces the same result. The determinism is global : changing any random-based asset of the simulation does not affect the other assets, regardless of order. This is also the case on different machines.
 
 **optimized for performance** : the simulation stores particle data as a structure of arrays (SoA idiom).
 Particles, trails and ribbons update is performed with CPU parallelization through multithreading.
 
-**user-friendly** : the data-driven representation allows for a very expressive system that does not require any code, other than creating the assets or loading the JSON file. The effects are created using a declarative system, effectively separating artistic authoring from the engine's complexity.
+**user-friendly** : the data-driven representation allows for a very expressive system that does not require any code, other than creating the assets or loading the JSON file. The assets are created using a declarative system, effectively separating artistic authoring from the engine's complexity.
 
-**expressive** : effects are made of many tools and parameters, some being optional. This gives a lot of customization options and a very high amount of effects for the user to compose.
+**expressive** : assets are made of many tools and parameters, some being optional. This gives a lot of customization options and a very high amount of effects for the user to compose.
 
 ## Terminology
 
+**Asset** : a resource used by the engine (particle effect, force field, image...)
 **Particle** : a primitive that is simulated and rendered\
 **Particle emitter** : an object that spawns particles\
 **Particle effect** : an object that describes which emitters to spawn and when\
@@ -70,10 +71,10 @@ The assets use an **id system**. Assets that depend on other assets specify the 
 ### JSON loading
 
 To load a JSON file, do `JsonLoader::initialize`, then `JsonLoader::load`.\
-The `initialize` method takes a provider registry. The reason is that some effects have **dynamic parameters** provided by the user in the form of a `std::function` that is called by the effects at evaluation.\
-This allows effects to use changing values that originate from the user's application (such as following a target or varying intensity depending on a specific variable).\
+The `initialize` method takes a provider registry. The reason is that some assets have **dynamic parameters** provided by the user in the form of a `std::function` that is called by the assets at evaluation.\
+This allows assets to use changing values that originate from the user's application (such as following a target or varying intensity depending on a specific variable).\
 As this cannot be represented in a JSON file, the file instead stores a **provider name**.
-This provider name is used as a key by the engine to query the provider registry. The user has to fill the provider registry with all the provider methods used by the effects **before** loading the json file.
+This provider name is used as a key by the engine to query the provider registry. The user has to fill the provider registry with all the provider methods used by the assets **before** loading the json file.
 
 ```c++
 cft::ProviderRegistry providerRegistry;
@@ -154,17 +155,17 @@ Force fields allow to modify particle emitters and particles **motion state** by
 The nature of the acceleration depends on the active force fields and their parameters.
 Some force fields use a `SpatialInfluence` to support additional parameters such as an effect radius and a strength falloff.
 Here are the available force fields :
-- Attraction
-- Directional
-- FollowTarget
-- LinearDrag
-- Orbit
-- QuadraticDrag
-- Repulsion
-- ShockWave
-- Turbulence
-- Vortex
-- Wind
+- Attraction : moves the object toward the origin of the spatial influence
+- Directional : moves the object in a constant direction
+- FollowTarget : moves the object toward a dynamic target using the mass–spring–damper equation
+- LinearDrag : slows the object down linearly
+- Orbit : orbits the object around the origin of the spatial influence given an axis
+- QuadraticDrag : slows the object down quadratically
+- Repulsion : moves the object away from the origin of the spatial influence
+- ShockWave : moves the object away from the origin of the spatial influence given an axis when it is close to a cylindrical wavefront
+- Turbulence : randomly moves the object around
+- Vortex : moves the object spin around an axis while pulling it toward the axis
+- Wind : slows down or fastens up the object depending on its velocity relative to the wind direction and strength
 
 The force fields can be found in the `Confetti/Behavior/Force/` folder.
 The user can implement additional force fields by implementing the `ForceField` interface.
@@ -176,15 +177,15 @@ Just like force fields, multiple motion behaviors can be applied at once.
 Note that while the position resulting from the offset affects rendering and trail spawning, the offset itself **does not override** force fields contribution.
 The motion behavior can be seen as an additional **absolute offset** applied to the object on top of force fields.
 Here are the available motion behaviors :
-- Circle
-- FigureEight
-- Jitter
-- Orbit
-- Oscillation
-- Path
-- Segment
-- SnapTarget
-- Spiral
+- Circle : moves the object in a circular fashion
+- FigureEight : moves the object in the shape of an eight
+- Jitter : randomly moves the object around
+- Orbit : orbits the object around an origin given an axis
+- Oscillation : repeatedly moves the object from a source to a destination
+- Path : moves the object along a path
+- Segment : moves the object from a source to a destination
+- SnapTarget : snaps the object's position on a dynamic target
+- Spiral : moves the object in a spiral fashion
 
 The motion behaviors can be found in the `Confetti/Behavior/Motion/` folder.
 The user can implement additional motion behaviors by implementing the `MotionBehavior` interface.
@@ -193,18 +194,18 @@ The user can implement additional motion behaviors by implementing the `MotionBe
 
 Visual behaviors allow to modify particles **appearance** by modifying their **color and scale**.
 Multiple visual behaviors can be applied at once.
-Visual behaviors can drastically improve the appearance of particle effects.
+Visual behaviors can drastically improve the appearance of particles.
 Here are the available visual behaviors :
-- ColorShift
-- DimOut
-- FadeIn
-- FadeOut
-- Flicker
-- GrowIn
-- Pulse
-- ShrinkOut
-- SmoothColorShift
-- SquashStretch
+- ColorShift : sets the particle's color over time according to a color palette
+- DimOut : lowers the particle's color brightness until it reaches zero given a duration
+- FadeIn : increases the particle's opacity until it reaches its initial value given a duration
+- FadeOut : lowers the particle's opacity until it reaches zero given a duration
+- Flicker : lowers and increases the particle's color brightness repeatedly given a minimum and maximum strength
+- GrowIn : increases the particle's scale until it reaches its initial value given a duration
+- Pulse : interpolates the particle's color over time between two colors
+- ShrinkOut : lowers the particle's scale until it reaches zero given a duration
+- SmoothColorShift : sets the particle's color over time according to a color palette with smooth interpolation
+- SquashStretch : lowers and increases the particle's scale repeatedly according to the squash and stretch animation principle
 
 The visual behaviors can be found in the `Confetti/Behavior/Visual/` folder.
 The user can implement additional visual behaviors by implementing the `VisualBehavior` interface.
@@ -214,19 +215,31 @@ The user can implement additional visual behaviors by implementing the `VisualBe
 Particle emitters use a particle spawner to describe the **initial attributes** of the spawned particles.
 Particle spawners use **attribute generators** to spawn particles.
 
+Here are the particle attributes generated by particle spawners :
+- color : vec4 (rgba color channels)
+- position : vec3
+- rotation : quaternion
+- scale : vec3
+- linear velocity : vec3
+- angular velocity : vec3
+- phase : an arbitrary float value used by the assets to introduce variation between particles (offset, range, strength factor...)
+- lifetime : float (in seconds)
+
+The above representation applies to both billboard and mesh particles. The only difference with billboards is that the rotation only accounts for roll (z component in Euler angles representation), and the scale only accounts for the first two components (xy).
+
 #### Generic generators
 
 Confetti's attribute generator system is flexible : the same generic attribute generators can be used to generate **any attribute type**.
 For instance, this means that the position and velocity attribute can be generated by the same generator.
 
 Here are the available generic attribute generators :
-- Constant
-- InterpolatedRandomSet
-- Linear
-- Random
-- RandomSet
-- Time
-- WeightedRandomSet
+- Constant : generates the same value for all the particles
+- InterpolatedRandomSet : picks a random value in the set for each particle with smooth interpolation
+- Linear : generates values ranging linearly from a source to a destination value
+- Random : generates random values between a minimum and a maximum value
+- RandomSet : picks a random value in the set for each particle
+- Time : generates values ranging linearly from a source to a destination value according to specific time points
+- WeightedRandomSet : picks a random value in the set for each particle with weighted probabilities
 
 The generic attribute generators can be found in the `Confetti/Emission/AttributeGenerator/Generic/` folder.
 The user can implement additional generic attribute generators by implementing the `AttributeGenerator` interface.
@@ -236,11 +249,11 @@ The user can implement additional generic attribute generators by implementing t
 While generic generators provide a way to cover most generation cases, **more specific** attribute generation logic can be needed.
 Specialized generators serve that purpose. The cannot be used for attributes of different types.
 Here are the available specialized attribute generators :
-- BrightnessColor
-- NormalBurstLinearVelocity
-- NormalLinearVelocity
-- RandomNormalOffsetPosition
-- ValueStrength
+- BrightnessColor : generates color and strength with user-specified generators and multiplies the color's rgb components with the strength
+- NormalBurstLinearVelocity : generates linear velocity according to the normal and a random offset (requires a spawn shape)
+- NormalLinearVelocity : generates linear velocity according to the normal (requires a spawn shape)
+- RandomNormalOffsetPosition : generates position along the normal with a random offset (requires a spawn shape)
+- ValueStrength : generates three-component values and strength values with user-specified generators and multiplies the three-component value with the strength
 
 The specialized attribute generators can be found in the `Confetti/Emission/AttributeGenerator/Specialized/` folder.
 The user can implement additional specialized attribute generators by implementing the `AttributeGenerator` interface.
@@ -251,27 +264,27 @@ The `ParticleSpawner` class constructor has an overload that replaces the positi
 A spawn shape generates positions **according to a shape**. It differs from a position attribute generator because it also provides a normal alongside the position through the `SpawnContext` structure.
 Some of the specialized attribute generators use the spawn context to generate the values. It is up to the user to ensure that an appropriate spawn shape is used when using any specialized attribute generators that needs a spawn context. Otherwise, a default-generated spawn context is used.
 Here are the available spawn shapes :
-- Circle
-- Cone
-- ConeVolume
-- Cylinder
-- CylinderVolume
-- Disk
-- Sphere
-- SphereVolume
+- Circle : generates spawn contexts in the shape of a circle
+- Cone : generates spawn contexts in the shape of a cone surface
+- ConeVolume : generates spawn contexts in the shape of a circle volume
+- Cylinder : generates spawn contexts in the shape of a cylinder surface
+- CylinderVolume : generates spawn contexts in the shape of a cylinder volume
+- Disk : generates spawn contexts in the shape of a circle surface
+- Sphere : generates spawn contexts in the shape of a sphere surface
+- SphereVolume : generates spawn contexts in the shape of a sphere volume
 
 ### Emission patterns
 
 To describe **how many** and **how often** particles are spawned, particle emitters use an emission pattern.
-Emission patterns have a significant impact on an emitter contribution to the particle effect.
+Emission patterns have a significant impact on an emitter's overall appearance.
 Here are the available emission patterns :
-- ConstantRate
-- FixedBurst
-- LinearBurst
-- LinearRate
-- PeriodicBurst
-- RandomRate
-- SingleBurst
+- ConstantRate : spawns particles at a constant rate where rate is the number of particles per second
+- FixedBurst : spawns a fixed number of particles a fixed number of times at a fixed interval
+- LinearBurst : spawns a fixed number of particles at a varying interval
+- LinearRate : spawns particles at a varying rate
+- PeriodicBurst : spawns a fixed number of particles at a fixed interval
+- RandomRate : spawns particles at a random rate
+- SingleBurst : spawns a fixed number of particles once
 
 The emission patterns can be found in the `Confetti/Emission/EmissionPattern/` folder.
 The user can implement additional emission patterns by implementing the `EmissionPattern` interface.
