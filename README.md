@@ -161,22 +161,73 @@ The engine uses different asset types, each with a distinct purpose and represen
 
 Force fields allow to modify particle emitters and particles **motion state** by applying a linear and angular velocity **acceleration**.
 The nature of the acceleration depends on the active force fields and their parameters.
-Some force fields use a `SpatialInfluence` to support additional parameters such as an effect radius and a strength falloff.
+
 Here are the available force fields :
-- **Attraction** : moves the object toward the origin of the spatial influence
+- **Attraction** : moves the object toward the origin of the spatial influence.
+  1. **spatialInfluence**
+  2. **strength** (float)
 - **Directional** : moves the object in a constant direction
+  1. **direction** (vec3)
+  2. **strength** (float)
 - **FollowTarget** : moves the object toward a dynamic target using the mass–spring–damper equation
+  1. **targetProvider** (function -> vec3) : user-defined callable that returns a target
+  2. **responseTime** (float) : the time it takes for the object to reach the target
+  3. **dampingRatio** (float) : the bounciness of the movement
 - **LinearDrag** : slows the object down linearly
+  1. **strength**
 - **Orbit** : orbits the object around the origin of the spatial influence given an axis
+  1. **spatialInfluence**
+  2. **axis** (vec3) : the axis the object orbits around
+  3. **strength** (float)
+  4. **radius** (float)
+  5. **radialCorrectionStrength** (float) : the force at which the movement corrects itself to keep orbiting
 - **QuadraticDrag** : slows the object down quadratically
+  1. **strength**
 - **Repulsion** : moves the object away from the origin of the spatial influence
+  1. **spatialInfluence**
+  2. **strength** (float)
 - **ShockWave** : moves the object away from the origin of the spatial influence given an axis when it is close to a cylindrical wavefront
+  1. **spatialInfluence**
+  2. **axis** (vec3) : the axis the object move away from
+  3. **speed** (float)
+  3. **strength** (float)
+  4. **thickness** (float) : the effect cylinder's height
 - **Turbulence** : randomly moves the object around
+  1. **strength** (float)
+  2. **seed** (uint64)
 - **Vortex** : moves the object spin around an axis while pulling it toward the axis
+  1. **spatialInfluence**
+  2. **axis** (vec3) : the axis the object orbits around
+  3. **strength** (float)
+  4. **pullStrengh** (float) : the inward movement force
 - **Wind** : slows down or fastens up the object depending on its velocity relative to the wind direction and strength
+  1. **direction** (vec3)
+  2. **strength** (float)
+  3. **drag** (float) : wind resistance
 
 The force fields can be found in the `Confetti/Behavior/Force/` folder.
 The user can implement additional force fields by implementing the `ForceField` interface.
+
+#### Spatial influence
+
+Some force fields use a `SpatialInfluence` to support additional parameters such as an effect radius and a strength falloff.
+It takes the following parameters in its constructor :
+- **origin** (vec3) : origin of the force field
+- **radius** (float) : effect radius, any particle outside this radius is unaffected by the force field
+- **falloff** : determines how the force field strength varies proportionally to the object's distance to the origin
+
+Here is the JSON representation :
+```json
+{
+    "origin": { "x": 0.0, "y": 0.0, "z": 0.0 },
+    "radius": 4.0,
+    "falloff": "Linear"
+}
+```
+
+#### Falloff
+
+`Falloff` is an enumeration representing how the force field strength varies depending on the object's distance to the spatial influence's origin. It can take the following values : **Constant**, **Linear**, **Quadratic**, **Cubic**.
 
 ### Motion behaviors
 
