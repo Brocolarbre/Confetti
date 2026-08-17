@@ -2,6 +2,22 @@
 
 namespace cft
 {
+	void AssetRegistry::clear()
+	{
+		m_forceFields.clear();
+		m_motionBehaviors.clear();
+		m_visualBehaviors.clear();
+		m_particleSpawners.clear();
+		m_emissionPatterns.clear();
+		m_particleLinkers.clear();
+		m_ribbonGenerators.clear();
+		m_images.clear();
+		m_models.clear();
+		m_spriteSheetDescriptors.clear();
+		m_particleEffectDescriptors.clear();
+		m_particleEmitterDescriptors.clear();
+	}
+
 	void AssetRegistry::addForceField(unsigned int id, std::unique_ptr<ForceField> forceField)
 	{
 		m_forceFields[id] = std::move(forceField);

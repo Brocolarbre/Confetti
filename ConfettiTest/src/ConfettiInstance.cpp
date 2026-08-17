@@ -19,6 +19,8 @@ void ConfettiInstance::onDragAndDrop(const std::vector<std::string>& paths)
     if (paths.empty() || !paths.front().ends_with(".json"))
         return;
 
+    m_particleSystem.getAssetRegistry().clear();
+
     cft::JsonLoader::clear();
     cft::JsonLoader::initialize(m_providerRegistry);
     cft::JsonLoader::load(paths.front(), m_particleSystem);

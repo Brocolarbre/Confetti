@@ -37,6 +37,8 @@ namespace cft
 		AssetRegistry() = default;
 		AssetRegistry(AssetRegistry&& assetRegistry) noexcept = default;
 
+		void clear();
+
 		void addForceField(unsigned int id, std::unique_ptr<ForceField> forceField);
 		void addMotionBehavior(unsigned int id, std::unique_ptr<MotionBehavior> motionBehavior);
 		void addVisualBehavior(unsigned int id, std::unique_ptr<VisualBehavior> visualBehavior);

@@ -77,10 +77,35 @@ This provider name is used as a key by the engine to query the provider registry
 
 ```c++
 cft::ProviderRegistry providerRegistry;
-providerRegistry.registerProvider<glm::vec3>("mouseCursor", [this]() { return glm::vec3(m_worldSpaceMousePosition, 0.0f); }); // example provider
+providerRegistry.registerProvider<glm::vec3>("mouseCursor", [this]() { return glm::vec3(worldSpaceMousePosition, 0.0f); }); // example provider
 
 cft::JsonLoader::initialize(providerRegistry);
-cft::JsonLoader::load("file.json", m_particleSystem);
+cft::JsonLoader::load("file.json", particleSystem);
+```
+
+Here is the structure of a minimal JSON file with no assets :
+```json
+{
+    "seed": 0,
+    "billboardRendererImages": null,
+    "pathRendererImages": null,
+    "meshRendererImageIds": [],
+    "meshRendererModelIds": [],
+    "assets": {
+        "forceFields": [],
+        "motionBehaviors": [],
+        "visualBehaviors": [],
+        "particleSpawners": [],
+        "emissionPatterns": [],
+        "particleLinkers": [],
+        "ribbonGenerators": [],
+        "images": [],
+        "models": [],
+        "spriteSheetDescriptors": [],
+        "particleEffectDescriptors": [],
+        "particleEmitterDescriptors": []
+    }
+}
 ```
 
 You can find example JSON files in the `ConfettiTest/res/systems/` folder.
@@ -97,11 +122,31 @@ Then, call the loading methods by giving the ids of the resources to load.
 cft::AssetRegistry& assetRegistry = particleSystem.getAssetRegistry();
 
 assetRegistry.addForceField(0, std::make_unique<cft::DirectionalForceField>(glm::vec3(0.0f, -1.0f, 0.0f), 9.81f));
+assetRegistry.addMotionBehavior(0, std::make_unique<cft::CircleMotionBehavior>(glm::vec3(0.0f, 0.0f, 1.0f), 2.0f, 1.0f));
+assetRegistry.addVisualBehavior(0, std::make_unique<cft::FadeInVisualBehavior>(cft::ParticleTime::absolute(0.25f)));
+assetRegistry.addParticleSpawner(0, std::make_unique<cft::ParticleSpawner>(/* ... */));
+assetRegistry.addEmissionPattern(0, std::make_unique<cft::PeriodicBurstEmissionPattern>(150, 0.5f));
+assetRegistry.addImage(0, /* ... */);
+assetRegistry.addModel(0, /* ... */);
+assetRegistry.addParticleLinker(0, std::make_unique<cft::ChainParticleLinker>(/* ... */));
+assetRegistry.addRibbonGenerator(0, std::make_unique<cft::SegmentRibbonGenerator>());
+assetRegistry.addSpriteSheetDescriptor(0, /* ... */);
+assetRegistry.addParticleEffectDescriptor(0, /* ... */);
+assetRegistry.addParticleEmitterDescriptor(0, /* ... */);
 
-particleSystem.loadBillboardRendererTextures({ "image.png" }, 100, 100);
+particleSystem.getParticleRenderer().loadBillboardRendererTextures(assetRegistry, { 0, 1 }, 100, 100);
+particleSystem.getParticleRenderer().loadMeshRendererMeshes(assetRegistry, { 0 });
+particleSystem.getParticleRenderer().loadMeshRendererTextures(assetRegistry, { 2 });
+particleSystem.getParticleRenderer().loadPathRendererTextures(assetRegistry, { 3, 4 }, 120, 120);
 ```
 
-Use the corresponding add method for the asset you need.
+Use the corresponding add method for the asset you need.\
+Note that the path renderer refers to both trains and ribbons.
+
+#### Clearing
+
+`ParticleSystem::clear` resets simulation data. It **does not** reset asset registry data.\
+To reset asset registry data, `ParticleSystem::getAssetRegistry` and `AssetRegistry::clear` cen be used.
 
 ### Force fields
 
@@ -202,8 +247,8 @@ The user can implement additional specialized attribute generators by implementi
 
 #### Spawn shapes
 
-The `ParticleSpawner` class constructor has a variant that replaces the position attribute generator with a `SpawnShape`.
-A spawn shape generates positions according to a shape. It differs from a position attribute generator because it also provides a normal alongside the position through the `SpawnContext` structure.
+The `ParticleSpawner` class constructor has an overload that replaces the position attribute generator with a `SpawnShape`.
+A spawn shape generates positions **according to a shape**. It differs from a position attribute generator because it also provides a normal alongside the position through the `SpawnContext` structure.
 Some of the specialized attribute generators use the spawn context to generate the values. It is up to the user to ensure that an appropriate spawn shape is used when using any specialized attribute generators that needs a spawn context. Otherwise, a default-generated spawn context is used.
 Here are the available spawn shapes :
 - Circle
@@ -217,7 +262,7 @@ Here are the available spawn shapes :
 
 ### Emission patterns
 
-To describe how many and how often particles are spawned, particle emitters use an emission pattern.
+To describe **how many** and **how often** particles are spawned, particle emitters use an emission pattern.
 Emission patterns have a significant impact on an emitter contribution to the particle effect.
 Here are the available emission patterns :
 - ConstantRate
@@ -237,7 +282,7 @@ Note that any user-defined asset is not supported in the JSON loader.
 
 ### GPU acceleration
 
-The data-driven design and CPU optimization were the core principles during developpement.
+The data-driven design and CPU optimization were the core principles during development.
 Particle engines benefit a lot from GPU acceleration. Confetti aims to support GPU parallelism in the future.
 This would allow to greatly improve performance as the heavy simulation work would be hardware accelerated.
 Once simulation data is updated, it could be directly converted to render data by the GPU to avoid a CPU sendback.
@@ -245,8 +290,8 @@ The GPU acceleration would be performed with OpenGL compute shaders.
 
 ### Vulkan
 
-The rendering system uses modern OpenGL features, yet could benefit from a Vulkan rewrite.
-Concepts like triple buffering, pre-compiled shaders and frames in flight would improve performance.
+The rendering system uses modern OpenGL features, yet it could benefit from a Vulkan rewrite.
+Concepts like triple buffering, pre-compiled shaders and frames in flight would improve performance. The vulkan rewrite would be done after OpenGL GPU acceleration is proven efficient.
 
 ## Test application
 

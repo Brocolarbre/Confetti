@@ -1,0 +1,21 @@
+{
+    "seed": 0,
+    "billboardRendererImages": null,
+    "pathRendererImages": null,
+    "meshRendererImageIds": [],
+    "meshRendererModelIds": [],
+    "assets": {
+        "forceFields": [],
+        "motionBehaviors": [],
+        "visualBehaviors": [],
+        "particleSpawners": [],
+        "emissionPatterns": [],
+        "particleLinkers": [],
+        "ribbonGenerators": [],
+        "images": [],
+        "models": [],
+        "spriteSheetDescriptors": [],
+        "particleEffectDescriptors": [],
+        "particleEmitterDescriptors": []
+    }
+}
