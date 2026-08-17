@@ -72,7 +72,7 @@
                 "id": 0,
                 "colorAttributeGenerator": {
                     "type": "BrightnessColor",
-                    "color": {
+                    "colorGenerator": {
                         "type": "InterpolatedRandomSet",
                         "values": [
                             {
@@ -96,7 +96,7 @@
                         ],
                         "seed": 1
                     },
-                    "brightness": {
+                    "brightnessGenerator": {
                         "type": "Constant",
                         "value": 10.0
                     }
