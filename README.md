@@ -492,9 +492,9 @@ Here is the JSON representation :
         "thicknessEvolution": null,
         "image": null
     },
-    "": 0,
-    "": 0,
-    "": 35
+    "particleLinkerId": 0,
+    "ribbonGeneratorId": 0,
+    "ribbonPointCount": 35
 }
 ```
 
