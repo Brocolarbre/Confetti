@@ -289,6 +289,50 @@ Here are the available emission patterns :
 The emission patterns can be found in the `Confetti/Emission/EmissionPattern/` folder.
 The user can implement additional emission patterns by implementing the `EmissionPattern` interface.
 
+### Link rules
+
+Link rules are here to determine whether a connection between two particles is possible in the context of ribbon generation.
+The user provides the particle linkers with link rules, which are given the appropriate parameters to ensure the desired connections are created and removed during simulation.
+Here are the available link rules :
+- **AgeSimilarity** : allow connection for particles that have a similar age according to a threshold
+- **ColorSimilarity** : allow connection for particles that have a similar color according to a threshold
+- **Connection** : prevents connection for particles that already have a certain amount of connections
+- **Distance** : allow connection for particles that are within a specific distance range of each other
+- **PhaseSimilarity** : allow connection for particles that have a similar phase according to a threshold
+- **VelocitySimilarity** : allow connection for particles that have a similar velocity according to a threshold
+
+The link rules can be found in the `Confetti/Simulation/Link/LinkRule/` folder.
+The user can implement additional link rules by implementing the `LinkRule` interface.
+
+### Particle linkers
+
+Particle linkers connect particles together in order to create ribbons.
+They use a selection algorithm and decice which particles should be connected while respecting the link rules.
+Here are the available particle linkers :
+- **Chain** : particles are sorted by spawn time and connected in a chain
+- **KNearestNeighbor** : each particle is connected to its k nearest neighbors
+- **NearestNeighbor** : each particle is connected to all its neighbors sorted by distance
+- **Origin** : particles are connected to the closest particle to an origin
+- **Random** : particles are randomly connected
+- **Target** : particles are connected to the particle with a specific id
+
+The particle linkers can be found in the `Confetti/Simulation/Link/ParticleLinker/` folder.
+The user can implement additional particle linkers by implementing the `ParticleLinker` interface.
+
+### Ribbon generators
+
+Ribbon generators define the appearance of a connection between two particles.
+They generate a list of points that are later used to generate ribbon geometry.
+Here are the available ribbon generators :
+
+**Path** : the connection takes the shape of a path by interpolating control points
+**Segment** : the connection takes the shape of a straight line
+**Spiral** : the connection takes the shape of a spiral
+**Wave** : the connection takes the shape of a wave
+
+The ribbon generators can be found in the `Confetti/Simulation/Link/RibbonGenerator/` folder.
+The user can implement additional ribbon generators by implementing the `RibbonGenerator` interface.
+
 Note that any user-defined asset is not supported in the JSON loader.
 
 ## Future improvements
@@ -305,6 +349,11 @@ The GPU acceleration would be performed with OpenGL compute shaders.
 
 The rendering system uses modern OpenGL features, yet it could benefit from a Vulkan rewrite.
 Concepts like triple buffering, pre-compiled shaders and frames in flight would improve performance. The vulkan rewrite would be done after OpenGL GPU acceleration is proven efficient.
+
+### Additional features
+
+GPU acceleration would make space partitionning viable, which in turn would open the door to boid simulation and particle collision.
+Space partitionning would also allow to improve performance for neighbor-based algorithms such as `KNearestNeighborParticleLinker`.
 
 ## Test application
 
