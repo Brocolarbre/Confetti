@@ -23,12 +23,14 @@ Particles, trails and ribbons update is performed with CPU parallelization throu
 
 ## Terminology
 
-**Asset** : a resource used by the engine (particle effect, force field, image...)
+**Asset** : a resource used by the engine (particle effect, force field, image...)\
 **Particle** : a primitive that is simulated and rendered\
 **Particle emitter** : an object that spawns particles\
 **Particle effect** : an object that describes which emitters to spawn and when\
 **Trail** : a primitive attached to a particle\
 **Ribbon** : a primitive connecting two particles
+**Descriptor** : a data structure defined once by the user that contains information on how to spawn the instance of the object it describes
+**Instance** : a runtime object managed by the simulation instantiated from a descriptor
 
 ## Usage
 
@@ -110,7 +112,9 @@ Here is the structure of a minimal JSON file with no assets :
 ```
 
 You can find example JSON files in the `ConfettiTest/res/systems/` folder.
-Note that if you want to load files multiple times, you should call `JsonLoader::clear` each time.
+Note that if you want to load files multiple times, you should call `JsonLoader::clear` each time.\
+Any asset attribute with the "(optional)" mention means it can be specified as "null" is the JSON file.\
+The enumeration values are represented as string literals.
 
 ### Code
 
@@ -148,6 +152,10 @@ Note that the path renderer refers to both trains and ribbons.
 
 `ParticleSystem::clear` resets simulation data. It **does not** reset asset registry data.\
 To reset asset registry data, `ParticleSystem::getAssetRegistry` and `AssetRegistry::clear` can be used.
+
+## Assets
+
+The engine uses different asset types, each with a distinct purpose and representation. Below is a description of each asset type, along with its JSON representation.
 
 ### Force fields
 
@@ -324,16 +332,477 @@ The user can implement additional particle linkers by implementing the `Particle
 Ribbon generators define the appearance of a connection between two particles.
 They generate a list of points that are later used to generate ribbon geometry.
 Here are the available ribbon generators :
-
-**Path** : the connection takes the shape of a path by interpolating control points
-**Segment** : the connection takes the shape of a straight line
-**Spiral** : the connection takes the shape of a spiral
-**Wave** : the connection takes the shape of a wave
+- **Path** : the connection takes the shape of a path by interpolating control points
+- **Segment** : the connection takes the shape of a straight line
+- **Spiral** : the connection takes the shape of a spiral
+- **Wave** : the connection takes the shape of a wave
 
 The ribbon generators can be found in the `Confetti/Simulation/Link/RibbonGenerator/` folder.
 The user can implement additional ribbon generators by implementing the `RibbonGenerator` interface.
 
 Note that any user-defined asset is not supported in the JSON loader.
+
+### Images
+
+Images load and store the content of an image from a file or from memory with the `Image::loadFromFile` and `Image::loadFromMemory` methods.
+They are used by the renderer to create textures for rendering.
+The library uses `STB` to load images so the supported formats are the ones supported by this library.
+
+Here is the JSON representation :
+```json
+{
+    "id": 0,
+    "path": "image.png"
+}
+```
+
+### Models
+
+Models load and store the content of a model from a file or from memory with the `Model::loadFromFile` and `Model::loadFromMemory` methods.
+They are used by the renderer to create meshes for rendering.
+The library uses `tinyobjloader` to load models so the supported formats is **.obj**.
+
+Here is the JSON representation :
+```json
+{
+    "id": 0,
+    "path": "model.obj"
+}
+```
+
+### Particle emitter descriptors
+
+A particle emitter descriptor defines how a particle emitter instance behaves.
+It is defined as :
+- **poolId** : the particle pool in which the spawned particles are stored
+- **particleSpawnerId** : the id of the particle spawner used by the particle emitter instance
+- **emissionPatternId** : the id of the emission pattern used by the particle emitter instance
+- **motionStateInheritance** : information on which motion state attributes are inherited by spawn particles and how
+- **trailConfiguration** : trail behavior settings (optional)
+- **ribbonConfiguration** : ribbon behavior settings (optional)
+- **spawnTriggerDescriptor** : settings for particles that can spawn particle emitter instances (optional)
+- **renderConfiguration** : how particles are rendered
+- **forceFieldIds** : force fields applied to the spawned particles
+- **motionBehaviorIds** : motion behaviors applied to the spawned particles
+- **visualBehaviorIds** : visual behaviors applied to the spawned particles
+
+Here is the JSON representation :
+```json
+{
+    "id": 0,
+    "poolId": 0,
+    "particleSpawnerId": 0,
+    "emissionPatternId": 0,
+    "motionStateInheritance": {
+        "position": true,
+        "linearVelocityFactor": 1.0,
+        "rotation": true,
+        "angularVelocityFactor": 1.0
+    },
+    "trailConfiguration": null,
+    "ribbonConfiguration": null,
+    "spawnTriggerDescriptor": null,
+    "renderConfiguration": {
+        "renderType": "Mesh",
+        "configurationData": {
+            "modelId": 0,
+            "imageId": 1
+        }
+    },
+    "forceFieldIds": [ 1 ],
+    "motionBehaviorIds": [ 0, 1 ],
+    "visualBehaviorIds": [ 0, 3, 4 ]
+}
+```
+
+#### Motion state inheritance
+
+Motion state inheritance describes which particle emitter instance's motion state attributes the particles inherit from at spawn.
+It is defined as :
+- **position** : boolean, do particles spawn relative to their parent emitter's position, true most of the time
+- **linearVelocityFactor** : float, to what extent do particle spawn with a linear velocity relative to their parent emitter's position
+- **rotation** : boolean, do particles spawn relative to their parent emitter's position
+- **angularVelocityFactor** : float, to what extent do particle spawn with an angular relative to their parent emitter's position
+
+Here is the JSON representation :
+```json
+{
+    "position": true,
+    "linearVelocityFactor": 1.0,
+    "rotation": true,
+    "angularVelocityFactor": 1.0
+}
+```
+
+#### Trail configuration
+
+A trail configuration describes the appearance and behavior of particle trails.
+It is defined as :
+- **presistenceLifetime** (float) : how long the trail stays alive after its owner particle died
+- **minimumSpawnDistance** (float) : the minimum distance the owner particle must have moved before adding a new point to the trail
+- **maximumSpawnTime** (float, optional) : the maximum time the trail can wait before adding a new point (this is a safeguard that overrides the minimum spawn distance attribute)
+- **maximumSegmentCount** (unsigned int, optional) : the maximum number of segments in the trail (oldest ones are truncated)
+- **pathConfiguration** : the appearance and behavior of the path itself
+
+Here is the JSON representation :
+```json
+{
+    "persistenceLifetime": 0.0,
+    "minimumSpawnDistance": 0.05,
+    "maximumSpawnTime": null,
+    "maximumSegmentCount": null,
+    "pathConfiguration": {
+        "startThickness": 0.05,
+        "endThickness": 0.05,
+        "lifetime": 0.1,
+        "lifetimeFade": null,
+        "appendParticleColor": false,
+        "colorGradient": [ { "r": 1.0, "g": 1.0, "b": 1.0, "a": 1.0 } ],
+        "colorStart": null,
+        "colorInterpolation": "Constant",
+        "thicknessDistribution": "Linear",
+        "thicknessEvolution": null,
+        "image": null
+    }
+}
+```
+
+#### Ribbon configuration
+
+A ribbon configuration describes the appearance and behavior of particle ribbons.
+It is defined as :
+- **pathConfiguration** : the appearance and behavior of the path itself
+- **particleLinkerId** (unsigned int) : the id of the particle linker
+- **ribbonGeneratorId** (unsigned int) : the id of the ribbon generator
+- **ribbonPointCount** (unsigned int) : the number of points to create in each ribbon
+
+Here is the JSON representation :
+```json
+{
+    "pathConfiguration": {
+        "startThickness": 0.05,
+        "endThickness": 0.05,
+        "lifetime": 0.1,
+        "lifetimeFade": null,
+        "appendParticleColor": false,
+        "colorGradient": [ { "r": 1.0, "g": 1.0, "b": 1.0, "a": 1.0 } ],
+        "colorStart": null,
+        "colorInterpolation": "Constant",
+        "thicknessDistribution": "Linear",
+        "thicknessEvolution": null,
+        "image": null
+    },
+    "": 0,
+    "": 0,
+    "": 35
+}
+```
+
+#### Path configuration
+
+A path configuration describes a path's appearance and behavior.
+It is defined as :
+- **startThickness** (float) : the thickness at the start of the path
+- **endThickness** (float) : the thickness at the end of the path
+- **lifetime** (float, optional) : the lifetime of the points
+- **lifetimeFade** : the fading behavior of the points
+- **appendParticleColor** (bool) : whether the particle's color should be appended to the color gradient (visual behaviors are taken into account)
+- **colorGradient** : the color gradient used to color the trail
+- **colorStart** (optional) : a list of distances at which each color start to be used
+- **colorInterpolation** : how color should be interpolated between points
+- **thicknessDistribution** : how thickness should be distributed along the path
+- **thicknessEvolution** (optional) : how thickness should evolve over time
+- **image** (optional) : the image that should be displayed on the path
+
+#### Lifetime fade
+
+Lifetime fade represents how a path should fade over its lifetime.
+It is defined as :
+- **start** (float) : the age at which the points' opacity starts to fade out
+- **end** (float) : the age at which points's opacity reaches zero
+
+Here is the JSON representation :
+```json
+{
+    "start": 2.0,
+    "end": 3.0
+}
+```
+
+#### Color interpolation
+
+`ColorInterpolation` is an enumeration representing how color is interpolated along a path. It can take the following values : **Constant**, **Linear**.
+
+#### Thickness distribution
+
+`ThicknessDistribution` is an enumeration representing how thickness is distributed along a path. It can take the following values : **Linear**, **Quadratic**.
+
+#### Thickness evolution
+
+Thickness evolution represents how a path's thickness evolves over time.
+It is defined as :
+- **distribution** : how the thickness distribution evolves over time
+- **speed** : how fast the thickness evolves
+
+Here is the JSON representation :
+```json
+{
+    "distribution": "Constant",
+    "speed": 1.5
+}
+```
+
+#### Thickness evolution distribution
+
+`ThicknessEvolutionDistribution` is an enumeration representing how thickness evolution is distributed along a path. It can take the following values : **Constant**, **Linear**, **Quadratic**.
+
+#### Path image
+
+Path image represents an image displayed on a path.
+It is defined as :
+- **imageId** : (unsigned int), the id of the image to display
+- **repeatStretch** : (float, optional), the stretch factor at which the image is repeated
+
+Here is the JSON representation :
+```json
+{
+    "imageId": "0",
+    "repeatStretch": 3.0
+}
+```
+
+#### Spawn trigger descriptor
+
+A spawn trigger descriptor defines how particles can instantiate particle emitter descriptors during simulation.
+It is defined as :
+- **maximumRecursionDepth** : the maximum number of recursive emitter spawns from the same particle emitter instance
+- **spawnEmitterSpawnContext** : a particle emitter spawn context triggered when the particle spawns
+- **deathEmitterSpawnContext** : a particle emitter spawn context triggered when the particle dies
+- **periodicEmitterSpawnContext** : a particle emitter spawn context triggered periodically during the particle's lifetime
+
+Here is the JSON representation :
+```json
+{
+    "maximumRecursionDepth": 3,
+    "spawnEmitterSpawnContext": null,
+    "deathEmitterSpawnContext": {
+        "emitterDescriptorId": 2,
+        "timeRange": {
+            "spawnTime": 0.0,
+            "duration": 1.0
+        },
+        "initialMotionState": {
+            "position": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "linearVelocity": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "angularVelocity": { "x": 0.0, "y": 0.0, "z": 0.0 }
+        },
+        "forceFieldIds": [],
+        "motionBehaviorIds": []
+    },
+    "periodicEmitterSpawnContext": null
+}
+```
+
+#### Periodic spawn trigger context
+
+A periodic spawn trigger context associates a particle emitter spawn context with a time interval.
+It is defined as :
+- **emitterSpawnContext** : the emitter spawn context to instantiate periodically
+- **interval** : the time interval between each spawn trigger
+
+Here is the JSON representation :
+```json
+{
+    "emitterSpawnContext": {
+        "emitterDescriptorId": 1,
+        "timeRange": {
+            "spawnTime": 0.0,
+            "duration": 1.0
+        },
+        "initialMotionState": {
+            "position": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "linearVelocity": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+            "angularVelocity": { "x": 0.0, "y": 0.0, "z": 0.0 }
+        },
+        "forceFieldIds": [],
+        "motionBehaviorIds": []
+    },
+    "interval": 0.1
+}
+```
+
+#### Render configuration
+
+A render configuration describes how particles are rendered.
+It is defined as :
+- **renderType** : the type of render primitive
+- **configurationData** : the render primitive configuration data (different for each primitive type)
+
+Here are the JSON representations :
+```json
+{
+    "renderType": "Billboard",
+    "configurationData": {
+        "spriteSheetId": 0
+    }
+}
+```
+
+```json
+{
+    "renderType": "Mesh",
+    "configurationData": {
+        "modelId": 0,
+        "imageId": 1
+    }
+}
+```
+
+#### Render type
+
+`RenderType` is an enumeration representing the type of a render primitive. It can take the following values : **Billboard**, **Mesh**.
+The render type value must match the provided configuration data type.
+
+### Particle effect descriptors
+
+A particle effect descriptor defines which particle emitter to spawn and when.
+It is defined as :
+- **emitterSpawnContexts** : a list of particle emitter spawn contexts
+
+Here is the JSON representation :
+```json
+{
+    "id": 0,
+    "emitterSpawnContexts": []
+}
+```
+
+#### Emitter spawn context
+
+A particle emitter spawn context associates a particle emitter descriptor id with spawn information.
+It is defined as :
+- **emitterDescriptorId** : id of the particle emitter descriptor to use when spawning the particle emitter instance
+- **timeRange** : spawn time and lifetime of the particle emitter instance
+- **initialMotionState** : initial motion state of the particle emitter instance
+- **forceFieldIds** : force fields applied to the particle emitter instance
+- **motionBehaviorIds** : motion behaviors applied to the particle emitter instance
+
+Here is the JSON representation :
+```json
+{
+    "emitterDescriptorId": 0,
+    "timeRange": {
+        "spawnTime": 0.0,
+        "duration": 1.0
+    },
+    "initialMotionState": {
+        "position": { "x": 0.0, "y": 0.0, "z": 0.0 },
+        "linearVelocity": { "x": 0.0, "y": 0.0, "z": 0.0 },
+        "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+        "angularVelocity": { "x": 0.0, "y": 0.0, "z": 0.0 }
+    },
+    "forceFieldIds": [ 0, 1 ],
+    "motionBehaviorIds": [ 0 ]
+}
+```
+
+#### Time range
+
+A time range represents the spawn time and lifetime of an object.
+It is defined as :
+- **spawnTime** : time in seconds at which the object spawns
+- **duration** : time in seconds the object remains alive
+
+Here is the JSON representation :
+```json
+{
+    "spawnTime": 0.0,
+    "duration": 1.0
+}
+```
+
+#### MotionState
+
+A motion state represents the simulation state of a physical object.
+It is defined as :
+- **position** : vec3 position
+- **linearVelocity** : vec3 linear velocity
+- **rotation** : quaternion rotation
+- **angularVelocity** : vec3 angular velocity
+
+Here is the JSON representation :
+```json
+{
+    "position": { "x": 0.0, "y": 0.0, "z": 0.0 },
+    "linearVelocity": { "x": 0.0, "y": 0.0, "z": 0.0 },
+    "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+    "angularVelocity": { "x": 0.0, "y": 0.0, "z": 0.0 }
+}
+```
+
+### Sprite sheet descriptors
+
+A sprite sheet descriptor defines which image the sprite sheet uses and how it displays it.
+It is defined as :
+- **imageId** : id of the image to display
+- **frameCount** : number of frames that make the sprite sheet animation (use 1 if the sprite is not animated)
+- **rowFrameCount** : number of images per row (this allows frames to be organized into a grid, use 1 if the sprite is not animated)
+- **frameWidth** : width of one frame in pixels (use the image total width if the sprite is not animated)
+- **frameHeight** : height of one frame in pixels (use the image total height if the sprite is not animated)
+- **animationSpeed** : speed at which the sprite sheet displays the next frame (use 0.0 if the sprite is not animated)
+
+Here is the JSON representation :
+```json
+{
+    "id": 0,
+    "imageId": 0,
+    "frameCount": 1,
+    "rowFrameCount": 1,
+    "frameWidth": 100,
+    "frameHeight": 100,
+    "animationSpeed": 0.0
+}
+```
+
+### Renderer models and textures
+
+The renderer needs to convert image and model data into texture and mesh data for rendering.\
+The loading can be done by accessing the particle renderer with `ParticleSystem::getParticleRenderer` and using the appropriate methods :
+- `ParticleRenderer::loadBillboardRendererTextures` : loads billboard renderer textures from the images (note that all the images given to this method need to have the same size, this allows to render every billboard particle in a single draw call by using texture arrays, which require all textures to have the same size)
+- `ParticleRenderer::loadMeshRendererMeshes` : loads mesh renderer meshes from the models
+- `ParticleRenderer::loadMeshRendererTextures` : loads mesh renderer textures from the images
+- `ParticleRenderer::loadPathRendererTextures` : loads path (trails and ribbons) renderer textures from the images (the same size constraint also applies here but the size can be different than the billboard renderer texture size)
+
+Here is the JSON representation, the `billboardRendererImages`, `pathRendererImages`, `meshRendererImageIds`  and `meshRendererModelIds` attributes resides in the root object of the JSON file :
+```json
+"billboardRendererImages": {
+    "width": 100,
+    "height": 100,
+    "imageIds": [ 0 ]
+},
+"pathRendererImages": {
+    "width": 120,
+    "height": 120,
+    "imageIds": [ 1, 2 ]
+},
+"meshRendererImageIds": [ 3 ],
+"meshRendererModelIds": [ 4 ]
+```
+
+The `billboardRendererImages` and `pathRendererImages` attributes can be null.
+The `meshRendererImageIds` and `meshRendererModelIds` attributes ban be empty.
+
+### Seeds
+
+The `ParticleSimulation` class stores a seed that is **global to the simulation** : changing this seed changes **every** random-asset result. More fine-grained seed control is possible everytime a **local seed attribute** is exposed. This allows to limit the random behavior change to a select few assets if needed.
+The seed can be set by accessing the particle simulation with `ParticleSystem::getParticleSimulation` and using `ParticleSimulation::setSeed`.
+
+Here is the JSON representation, this `seed` attribute resides in the root object of the JSON file :
+```json
+"seed": 0
+```
 
 ## Future improvements
 
