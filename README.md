@@ -9,17 +9,17 @@ The engine takes the form of a **C++ library** and can be integrated in existing
 
 The engine is :
 
-**data-driven** : anything the engine is able to do do can be described in a configuration file.
+**data-driven** : anything the engine is able to do can be described in a configuration file.
 Confetti translates this into a JSON file format. The user can either create the assets in the code, or load a JSON file with an equivalent description.
 
-**deterministic** : running the same simulation multiple times produces the same result. The determinism is global : changing any random-based asset of the simulation does not affect the other assets, regardless of order. This is also the case on different machines.
+**deterministic** : running the same simulation multiple times produces the same result. Determinism is global : changing any random-based asset of the simulation does not affect the other assets, regardless of their order. This is also the case on different machines.
 
 **optimized for performance** : the simulation stores particle data as a structure of arrays (SoA idiom).
-Particles, trails and ribbons update is performed with CPU parallelization through multithreading.
+Particles, trails and ribbons are updated using CPU parallelization through multithreading.
 
 **user-friendly** : the data-driven representation allows for a very expressive system that does not require any code, other than creating the assets or loading the JSON file. The assets are created using a declarative system, effectively separating artistic authoring from the engine's complexity.
 
-**expressive** : assets are made of many tools and parameters, some being optional. This gives a lot of customization options and a very high amount of effects for the user to compose.
+**expressive** : assets are made of many tools and parameters, some being optional. This gives a lot of customization options and a very large number of effects for the user to compose.
 
 ## Terminology
 
@@ -36,9 +36,9 @@ Particles, trails and ribbons update is performed with CPU parallelization throu
 
 The usage workflow is as follows :
 - Create a `ParticleSystem` instance.
-- Fill the particle system's asset registry
-- Load renderer's resources from the asset registry
-- Play particle effects when desired
+- Fill the particle system's asset registry.
+- Load the renderer's resources from the asset registry.
+- Play particle effects when desired.
 
 To use Confetti in your project, you need to include the `Confetti/Confetti.hpp` header file. The entire library resides inside the `cft` namespace.
 
@@ -47,7 +47,7 @@ The simulation is updated and rendered with the `ParticleSystem::update` and `Pa
 These methods take a `cft::View`, containing camera information **filled by the user**. The camera implementation itself is up to the user.
 
 The update method takes a delta time parameter.\
-The **fixed framerate** managment is handled by Confetti and the delta time itself is **provided by the user**. This means the user can pass a variable delta time and the engine makes sure the simulation remains stable with an internal fixed framerate.
+**Fixed timestep** management is handled by Confetti and the delta time itself is **provided by the user**. This means the user can pass a variable delta time and the engine makes sure the simulation remains stable with an internal fixed frame rate.
 
 Here is an example :
 ```c++
@@ -113,7 +113,7 @@ Here is the structure of a minimal JSON file with no assets :
 
 You can find example JSON files in the `ConfettiTest/res/systems/` folder.
 Note that if you want to load files multiple times, you should call `JsonLoader::clear` each time.\
-Any asset attribute with the "(optional)" mention means it can be specified as "null" is the JSON file.\
+Any asset attribute marked as (optional) can be specified as `null` in the JSON file.\
 The enumeration values are represented as string literals.
 
 ### Code
@@ -146,7 +146,7 @@ particleSystem.getParticleRenderer().loadPathRendererTextures(assetRegistry, { 3
 ```
 
 Use the corresponding add method for the asset you need.\
-Note that the path renderer refers to both trains and ribbons.
+Note that the path renderer refers to both trails and ribbons.
 
 #### Clearing
 
@@ -182,7 +182,7 @@ Force fields allow to modify particle emitters and particles **motion state** by
 The nature of the acceleration depends on the active force fields and their parameters.
 
 Here are the available force fields :
-- **Attraction** : moves the object toward the origin of the spatial influence.
+- **Attraction** : moves the object toward the origin
   - **spatialInfluence**
   - **strength** (float)
 - **Directional** : moves the object in a constant direction
@@ -194,7 +194,7 @@ Here are the available force fields :
   - **dampingRatio** (float) : the bounciness of the movement
 - **LinearDrag** : slows the object down linearly
   - **strength**
-- **Orbit** : orbits the object around the origin of the spatial influence given an axis
+- **Orbit** : orbits the object around the origin given an axis
   - **spatialInfluence**
   - **axis** (vec3) : the axis the object orbits around
   - **strength** (float)
@@ -202,10 +202,10 @@ Here are the available force fields :
   - **radialCorrectionStrength** (float) : the force at which the movement corrects itself to keep orbiting
 - **QuadraticDrag** : slows the object down quadratically
   - **strength**
-- **Repulsion** : moves the object away from the origin of the spatial influence
+- **Repulsion** : moves the object away from the origin
   - **spatialInfluence**
   - **strength** (float)
-- **ShockWave** : moves the object away from the origin of the spatial influence given an axis when it is close to a cylindrical wavefront
+- **ShockWave** : moves the object away from the origin along an axis when it is close to a cylindrical wavefront
   - **spatialInfluence**
   - **axis** (vec3) : the axis the object move away from
   - **speed** (float)
@@ -214,7 +214,7 @@ Here are the available force fields :
 - **Turbulence** : randomly moves the object around
   - **strength** (float)
   - **seed** (uint64)
-- **Vortex** : moves the object spin around an axis while pulling it toward the axis
+- **Vortex** : spins the object around an axis while pulling it toward the axis
   - **spatialInfluence**
   - **axis** (vec3) : the axis the object orbits around
   - **strength** (float)
@@ -253,7 +253,7 @@ Here is the JSON representation :
 Motion behaviors allow to modify particle emitters and particles **position** by applying a position **offset**.
 Just like force fields, multiple motion behaviors can be applied at once.
 Note that while the position resulting from the offset affects rendering and trail spawning, the offset itself **does not override** force fields contribution.
-The motion behavior can be seen as an additional **absolute offset** applied to the object on top of force fields.
+Motion behaviors can be seen as an additional **absolute offset** applied to the object on top of force fields.
 Here are the available motion behaviors :
 - **Circle** : moves the object in a circular fashion
   - **axis** (vec3) : the circle's normal axis
@@ -433,7 +433,7 @@ Here are the particle attributes generated by particle spawners :
 - **phase** (float) : an arbitrary value used by the assets to introduce variation between particles (offset, range, strength factor...)
 - **lifetime** (float) : in seconds
 
-The above representation applies to both billboard and mesh particles. The only difference with billboards is that the rotation only accounts for roll (z component in Euler angles representation), and the scale only accounts for the first two components (xy).
+The above representation applies to both billboard and mesh particles. The only difference with billboards is that the rotation only accounts for roll (z component in Euler angles representation) and the scale only accounts for the first two components (xy).
 
 #### Generic generators
 
@@ -486,7 +486,7 @@ Here is the JSON representation :
 #### Specialized generators
 
 While generic generators provide a way to cover most generation cases, **more specific** attribute generation logic can be needed.
-Specialized generators serve that purpose. The cannot be used for attributes of different types.
+Specialized generators serve that purpose. They cannot be used for attributes of different types.
 Here are the available specialized attribute generators :
 - **BrightnessColor** : generates color and strength with user-specified generators and multiplies the color's rgb components with the strength
   - **colorGenerator** (AttributeGeneratorColor)
@@ -512,7 +512,7 @@ The user can implement additional specialized attribute generators by implementi
 
 The `ParticleSpawner` class constructor has an overload that replaces the position attribute generator with a `SpawnShape`.
 A spawn shape generates positions **according to a shape**. It differs from a position attribute generator because it also provides a normal alongside the position through the `SpawnContext` structure.
-Some of the specialized attribute generators use the spawn context to generate the values. It is up to the user to ensure that an appropriate spawn shape is used when using any specialized attribute generators that needs a spawn context. Otherwise, a default-generated spawn context is used.
+Some of the specialized attribute generators use the spawn context to generate the values. It is up to the user to ensure that an appropriate spawn shape is used when using any specialized attribute generators that need a spawn context. Otherwise, a default spawn context is used.
 Here are the available spawn shapes :
 - **Circle** : generates spawn contexts in the shape of a circle
   - **radius** (float)
@@ -537,7 +537,7 @@ Here are the available spawn shapes :
   - **radius** (float)
   - **axis** (vec3)
 - **Sphere** : generates spawn contexts in the shape of a sphere surface
-  **radius** (float)
+  - **radius** (float)
 - **SphereVolume** : generates spawn contexts in the shape of a sphere volume
   - **radius** (float)
 
@@ -546,7 +546,7 @@ Here are the available spawn shapes :
 To describe **how many** and **how often** particles are spawned, particle emitters use an emission pattern.
 Emission patterns have a significant impact on an emitter's overall appearance.
 Here are the available emission patterns :
-- **ConstantRate** : spawns particles at a constant rate where rate
+- **ConstantRate** : spawns particles at a constant rate
   - **rate** (float) : number of particles to spawn per second
 - **FixedBurst** : spawns a fixed number of particles a fixed number of times at a fixed interval
   - **count** (unsigned int) : number of particles to spawn per burst
@@ -610,7 +610,7 @@ Here are the available particle linkers :
   - **connectionRules** (UniquePtrLinkRule[])
   - **validationRules** (UniquePtrLinkRule[])
   - **neighborCount** (unsigned int) : k
-- **NearestNeighbor** : each particle is connected to all its neighbors sorted by distance
+- **NearestNeighbor** : each particle is connected to its neighbors, sorted by distance
   - **connectionRules** (UniquePtrLinkRule[])
   - **validationRules** (UniquePtrLinkRule[])
 - **Origin** : particles are connected to the closest particle to an origin
@@ -672,7 +672,7 @@ Here is the JSON representation :
 
 Models load and store the content of a model from a file or from memory with the `Model::loadFromFile` and `Model::loadFromMemory` methods.
 They are used by the renderer to create meshes for rendering.
-The library uses `tinyobjloader` to load models so the supported formats is **.obj**.
+The library uses `tinyobjloader` to load models so the supported format is **.obj**.
 
 Here is the JSON representation :
 ```json
@@ -731,10 +731,10 @@ Here is the JSON representation :
 
 Motion state inheritance describes which particle emitter instance's motion state attributes the particles inherit from at spawn.
 It is defined as :
-- **position** (bool) : do particles spawn relative to their parent emitter's position, true most of the time
-- **linearVelocityFactor** (float) : to what extent do particle spawn with a linear velocity relative to their parent emitter's position
-- **rotation** (bool): do particles spawn relative to their parent emitter's position
-- **angularVelocityFactor** (float) : to what extent do particle spawn with an angular relative to their parent emitter's position
+- **position** (bool) : do particles inherit position from their parent emitter, true most of the time
+- **linearVelocityFactor** (float) : to what extent do particles inherit linear velocity from their parent emitter
+- **rotation** (bool): do particles inherit rotation from their parent emitter
+- **angularVelocityFactor** (float) : to what extent do particles inherit angular velocity from their parent emitter
 
 Here is the JSON representation :
 ```json
@@ -750,7 +750,7 @@ Here is the JSON representation :
 
 A trail configuration describes the appearance and behavior of particle trails.
 It is defined as :
-- **presistenceLifetime** (float) : how long the trail stays alive after its owner particle died
+- **persistenceLifetime** (float) : how long the trail stays alive after its owner particle died
 - **minimumSpawnDistance** (float) : the minimum distance the owner particle must have moved before adding a new point to the trail
 - **maximumSpawnTime** (float, optional) : the maximum time the trail can wait before adding a new point (this is a safeguard that overrides the minimum spawn distance attribute)
 - **maximumSegmentCount** (unsigned int, optional) : the maximum number of segments in the trail (oldest ones are truncated)
@@ -831,7 +831,7 @@ It is defined as :
 Lifetime fade represents how a path should fade over its lifetime.
 It is defined as :
 - **start** (float) : the age at which the points' opacity starts to fade out
-- **end** (float) : the age at which points's opacity reaches zero
+- **end** (float) : the age at which points' opacity reaches zero
 
 Here is the JSON representation :
 ```json
@@ -878,7 +878,7 @@ It is defined as :
 Here is the JSON representation :
 ```json
 {
-    "imageId": "0",
+    "imageId": 0,
     "repeatStretch": 3.0
 }
 ```
@@ -998,8 +998,8 @@ It is defined as :
 - **emitterDescriptorId** (emitterDescriptorId) : id of the particle emitter descriptor to use when spawning the particle emitter instance
 - **timeRange** (TimeRange) : spawn time and lifetime of the particle emitter instance
 - **initialMotionState** (MotionState) : initial motion state of the particle emitter instance
-- **forceFieldIds** (usngigned int[]) : force fields applied to the particle emitter instance
-- **motionBehaviorIds** (usngigned int[]) : motion behaviors applied to the particle emitter instance
+- **forceFieldIds** (unsigned int[]) : force fields applied to the particle emitter instance
+- **motionBehaviorIds** (unsigned int[]) : motion behaviors applied to the particle emitter instance
 
 Here is the JSON representation :
 ```json
@@ -1087,7 +1087,7 @@ The loading can be done by accessing the particle renderer with `ParticleSystem:
 - `ParticleRenderer::loadMeshRendererTextures` : loads mesh renderer textures from the images
 - `ParticleRenderer::loadPathRendererTextures` : loads path (trails and ribbons) renderer textures from the images (the same size constraint also applies here but the size can be different than the billboard renderer texture size)
 
-Here is the JSON representation, the `billboardRendererImages`, `pathRendererImages`, `meshRendererImageIds`  and `meshRendererModelIds` attributes resides in the root object of the JSON file :
+Here is the JSON representation, the `billboardRendererImages`, `pathRendererImages`, `meshRendererImageIds`  and `meshRendererModelIds` attributes reside in the root object of the JSON file :
 ```json
 "billboardRendererImages": {
     "width": 100,
@@ -1104,11 +1104,11 @@ Here is the JSON representation, the `billboardRendererImages`, `pathRendererIma
 ```
 
 The `billboardRendererImages` and `pathRendererImages` attributes can be null.
-The `meshRendererImageIds` and `meshRendererModelIds` attributes ban be empty.
+The `meshRendererImageIds` and `meshRendererModelIds` attributes can be empty.
 
 ### Seeds
 
-The `ParticleSimulation` class stores a seed that is **global to the simulation** : changing this seed changes **every** random-asset result. More fine-grained seed control is possible everytime a **local seed attribute** is exposed. This allows to limit the random behavior change to a select few assets if needed.
+The `ParticleSimulation` class stores a seed that is **global to the simulation** : changing this seed changes **every** random-asset result. More fine-grained seed control is available whenever a **local seed attribute** is exposed. This allows to limit the random behavior change to a select few assets if needed.
 The seed can be set by accessing the particle simulation with `ParticleSystem::getParticleSimulation` and using `ParticleSimulation::setSeed`.
 
 Here is the JSON representation, this `seed` attribute resides in the root object of the JSON file :
@@ -1122,19 +1122,19 @@ Here is the JSON representation, this `seed` attribute resides in the root objec
 
 The data-driven design and CPU optimization were the core principles during development.
 Particle engines benefit a lot from GPU acceleration. Confetti aims to support GPU parallelism in the future.
-This would allow to greatly improve performance as the heavy simulation work would be hardware accelerated.
-Once simulation data is updated, it could be directly converted to render data by the GPU to avoid a CPU sendback.
+This would allow to greatly improve performance as the heavy simulation work would be hardware-accelerated.
+Once simulation data is updated, it could be directly converted to render data by the GPU to avoid transferring the data back to the CPU.
 The GPU acceleration would be performed with OpenGL compute shaders.
 
 ### Vulkan
 
 The rendering system uses modern OpenGL features, yet it could benefit from a Vulkan rewrite.
-Concepts like triple buffering, pre-compiled shaders and frames in flight would improve performance. The vulkan rewrite would be done after OpenGL GPU acceleration is proven efficient.
+Concepts like triple buffering, pre-compiled shaders and frames in flight would improve performance. The Vulkan rewrite would be done after OpenGL GPU acceleration is proven efficient.
 
 ### Additional features
 
-GPU acceleration would make space partitionning viable, which in turn would open the door to boid simulation and particle collision.
-Space partitionning would also allow to improve performance for neighbor-based algorithms such as `KNearestNeighborParticleLinker`.
+GPU acceleration would make space partitioning viable, which in turn would open the door to boids simulation and particle collision.
+Space partitioning would also allow to improve performance for neighbor-based algorithms such as `KNearestNeighborParticleLinker`.
 
 ## Test application
 
@@ -1145,16 +1145,16 @@ Space partitionning would also allow to improve performance for neighbor-based a
 The project follows the [Nest](https://github.com/Brocolarbre/Nest/) structure.
 To build the project:
 - Open a terminal in the **root folder** of the project
-- Run the following command:
-  - Windows : `.\scripts\windows\set_environment.bat` and `.\scripts\windows\set_workspace.bat`
-  - Linux : `.\scripts\linux\set_environment.bat` and `./scripts/linux/set_workspace.sh`
+- Run the following command :
+  - Windows : `.\scripts\windows\set_environment.bat`
+  - Linux : `./scripts/linux/set_environment.sh`
 - Windove is available [here](https://github.com/Brocolarbre/Windove/). Download the repository and follow the build setup instructions. Then copy the header and library files to the appropriate `Confetti/external/` subfolders.
 - Open the project workspace
 - Build the project
 
 ### Static and dynamic linkage
 
-Any project that uses the the static version of the library shoud define the `CONFETTI_STATIC` macro.
+Any project that uses the static version of the library should define the `CONFETTI_STATIC` macro.
 To manually export the library as a shared library, the project should define the `CONFETTI_BUILD` macro.
 Using the library as a static library requires to link the external dependencies of the library (as only a dynamic library or an executable can store static dependencies).
 The dependencies are listed below, the library is guaranteed to work with the specified library versions. Replacing a library with another version may or may not work.
