@@ -11,7 +11,7 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
     window.addEventHandler(*this);
 
     m_providerRegistry.registerProvider<glm::vec3>("mouseCursor", [this]() { return glm::vec3(m_worldSpaceMousePosition, 0.0f); });
-    onDragAndDrop({ "res/systems/follow.json" });
+    //onDragAndDrop({ "res/systems/follow.json" });
 }
 
 void ConfettiInstance::onDragAndDrop(const std::vector<std::string>& paths)
@@ -32,13 +32,28 @@ void ConfettiInstance::onDragAndDrop(const std::vector<std::string>& paths)
 
 void ConfettiInstance::onKeyPressed(dove::KeyEvent keyEvent)
 {
-    if (keyEvent.key == dove::Keyboard::Key::R)
+    int particleEffect = -1;
+
+    switch (keyEvent.key)
     {
-        m_particleSystem.clear();
-        m_particleSystem.playEffect(0);
-        m_chronometer.restart();
-        m_worldSpaceMousePosition = glm::vec2(0.0f);
+    case dove::Keyboard::Key::One: particleEffect = 0; break;
+    case dove::Keyboard::Key::Two: particleEffect = 1; break;
+    case dove::Keyboard::Key::Three: particleEffect = 2; break;
+    case dove::Keyboard::Key::Four: particleEffect = 3; break;
+    case dove::Keyboard::Key::Five: particleEffect = 4; break;
+    case dove::Keyboard::Key::Six: particleEffect = 5; break;
+    case dove::Keyboard::Key::Seven: particleEffect = 6; break;
+    case dove::Keyboard::Key::Eight: particleEffect = 7; break;
+    case dove::Keyboard::Key::Nine: particleEffect = 8; break;
     }
+
+    if (particleEffect == -1)
+        return;
+
+    m_particleSystem.clear();
+    m_particleSystem.playEffect(static_cast<unsigned int>(particleEffect));
+    m_chronometer.restart();
+    m_worldSpaceMousePosition = glm::vec2(0.0f);
 }
 
 void ConfettiInstance::onMouseMoved(unsigned int x, unsigned int y)

@@ -3,6 +3,7 @@
 #include "Confetti/ParticleSystem.hpp"
 
 #include <fstream>
+#include <iostream>
 
 namespace cft
 {
@@ -136,20 +137,35 @@ namespace cft
 		ParticleSimulation& particleSimulation = particleSystem.getParticleSimulation();
 		ParticleRenderer& particleRenderer = particleSystem.getParticleRenderer();
 
-		particleSimulation.setSeed(data.at("seed"));
+		try
+		{
+			particleSimulation.setSeed(data.at("seed"));
 
-		loadAssets(data.at("assets"), assetRegistry);
+			loadAssets(data.at("assets"), assetRegistry);
 
-		const json& billboardRendererImages = data.at("billboardRendererImages");
-		if (!billboardRendererImages.is_null())
-			loadBillboardRendererTextures(billboardRendererImages, particleRenderer, assetRegistry);
+			const json& billboardRendererImages = data.at("billboardRendererImages");
+			if (!billboardRendererImages.is_null())
+				loadBillboardRendererTextures(billboardRendererImages, particleRenderer, assetRegistry);
 
-		const json& pathRendererImages = data.at("pathRendererImages");
-		if (!pathRendererImages.is_null())
-			loadPathRendererTextures(pathRendererImages, particleRenderer, assetRegistry);
+			const json& pathRendererImages = data.at("pathRendererImages");
+			if (!pathRendererImages.is_null())
+				loadPathRendererTextures(pathRendererImages, particleRenderer, assetRegistry);
 
-		loadMeshRendererTextures(data.at("meshRendererImageIds"), particleRenderer, assetRegistry);
-		loadMeshRendererMeshes(data.at("meshRendererModelIds"), particleRenderer, assetRegistry);
+			loadMeshRendererTextures(data.at("meshRendererImageIds"), particleRenderer, assetRegistry);
+			loadMeshRendererMeshes(data.at("meshRendererModelIds"), particleRenderer, assetRegistry);
+		}
+		catch (const json::parse_error& error)
+		{
+			std::cerr << "JSON loader parsing error : " << error.what() << std::endl;
+		}
+		catch (const json::out_of_range& error)
+		{
+			std::cerr << "JSON loader missing key error : " << error.what() << std::endl;
+		}
+		catch (const std::exception& error)
+		{
+			std::cerr << "JSON loader error : " << error.what() << std::endl;
+		}
 	}
 
 	void JsonLoader::clear()
