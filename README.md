@@ -1,9 +1,49 @@
 # Confetti
 
-Confetti is a high-performance data-driven deterministic C++ particle engine.
+Confetti is a data-driven deterministic C++ particle engine designed for high-performance real-time effects.\
+It uses **OpenGL** for rendering and CPU multithreading for simulation, and can be integrated into existing OpenGL applications as a **C++ library**.
 
-The rendering system is written with **OpenGL**. The simulation uses **CPU multithreading** for performance.
-The engine takes the form of a **C++ library** and can be integrated in existing OpenGL applications.
+## Features
+
+- Data-driven, declarative particle effects
+- Deterministic simulation across machines
+  - Global and local random seeds
+- Fixed-timestep simulation
+- Billboard particles
+- Mesh particles
+- Sprite sheet animation
+- Trails
+- Ribbons
+  - Particle linking
+  - Procedural ribbon generation
+- Particle behaviors
+  - Force fields
+  - Motion behaviors
+  - Visual behaviors
+- Procedural particle spawning
+  - Generic and specialized attribute generators
+  - Random and weighted generation
+  - Procedural spawn shapes
+- Nested and recursive particle effects
+  - Spawn-on-spawn
+  - Spawn-on-death
+  - Periodic spawning
+- Dynamic application-provided parameters
+- JSON-based asset authoring
+- OpenGL rendering
+  - HDR
+  - Bloom
+  - Anamorphic lens flares
+  - Tone mapping
+  - Gamma correction
+- CPU multithreaded simulation
+- Structure-of-arrays (SoA) particle storage
+- Extensible asset system
+  - Custom force fields
+  - Custom motion and visual behaviors
+  - Custom attribute generators
+  - Custom emission patterns
+  - Custom particle linkers and ribbon generators
 
 ## Design
 
@@ -153,7 +193,66 @@ Note that the path renderer refers to both trails and ribbons.
 `ParticleSystem::clear` resets simulation data. It **does not** reset asset registry data.\
 To reset asset registry data, `ParticleSystem::getAssetRegistry` and `AssetRegistry::clear` can be used.
 
-## Assets
+## Future improvements
+
+### GPU acceleration
+
+The data-driven design and CPU optimization were the core principles during development.
+Particle engines benefit a lot from GPU acceleration. Confetti aims to support GPU parallelism in the future.
+This would allow to greatly improve performance as the heavy simulation work would be hardware-accelerated.
+Once simulation data is updated, it could be directly converted to render data by the GPU to avoid transferring the data back to the CPU.
+The GPU acceleration would be performed with OpenGL compute shaders.
+
+### Vulkan
+
+The rendering system uses modern OpenGL features, yet it could benefit from a Vulkan rewrite.
+Concepts like triple buffering, pre-compiled shaders and frames in flight would improve performance. The Vulkan rewrite would be done after OpenGL GPU acceleration is proven efficient.
+
+### Additional features
+
+GPU acceleration would make space partitioning viable, which in turn would open the door to boids simulation and particle collision.
+Space partitioning would also allow to improve performance for neighbor-based algorithms such as `KNearestNeighborParticleLinker`.
+
+## Test application
+
+**LineWeaverTest** is a test application that can be used to try the library with ease. It implements a window with an OpenGL context, as well as drag and drop for JSON files.
+
+## Setup
+
+The project follows the [Nest](https://github.com/Brocolarbre/Nest/) structure.
+To build the project:
+- Open a terminal in the **root folder** of the project
+- Run the following command :
+  - Windows : `.\scripts\windows\set_environment.bat`
+  - Linux : `./scripts/linux/set_environment.sh`
+- Windove is available [here](https://github.com/Brocolarbre/Windove/). Download the repository and follow the build setup instructions. Then copy the header and library files to the appropriate `Confetti/external/` subfolders.
+- Open the project workspace
+- Build the project
+
+### Static and dynamic linkage
+
+Any project that uses the static version of the library should define the `CONFETTI_STATIC` macro.
+To manually export the library as a shared library, the project should define the `CONFETTI_BUILD` macro.
+Using the library as a static library requires to link the external dependencies of the library (as only a dynamic library or an executable can store static dependencies).
+The dependencies are listed below, the library is guaranteed to work with the specified library versions. Replacing a library with another version may or may not work.
+
+### External dependencies
+
+The minimum required C++ version is **C++17**.
+
+**Confetti** has the following external dependencies :
+- GLAD
+- GLM
+- STB
+- tinyobjloader
+- nlohmann-json
+
+**ConfettiTest** has the following external dependencies :
+- [Windove](https://github.com/Brocolarbre/Windove/) (Windove uses GLFW so linking a static version of Windove requires linking GLFW)
+
+## Documentation
+
+### Assets
 
 The engine uses different asset types, each with a distinct purpose and representation. Below is a description of each asset type, along with its JSON representation.\
 All of the non-primitive C++ attribute types used in the assets belong either to glm (vec2 = glm\::vec2, vec3 = glm\::vec3, vec4 = glm\::vec4, quaternion = glm\::quat), to LineWeaver (Point = lw\::Point), or to Confetti (in that case, the mentioned type has a detailed description in this document).\
@@ -1115,60 +1214,3 @@ Here is the JSON representation, this `seed` attribute resides in the root objec
 ```json
 "seed": 0
 ```
-
-## Future improvements
-
-### GPU acceleration
-
-The data-driven design and CPU optimization were the core principles during development.
-Particle engines benefit a lot from GPU acceleration. Confetti aims to support GPU parallelism in the future.
-This would allow to greatly improve performance as the heavy simulation work would be hardware-accelerated.
-Once simulation data is updated, it could be directly converted to render data by the GPU to avoid transferring the data back to the CPU.
-The GPU acceleration would be performed with OpenGL compute shaders.
-
-### Vulkan
-
-The rendering system uses modern OpenGL features, yet it could benefit from a Vulkan rewrite.
-Concepts like triple buffering, pre-compiled shaders and frames in flight would improve performance. The Vulkan rewrite would be done after OpenGL GPU acceleration is proven efficient.
-
-### Additional features
-
-GPU acceleration would make space partitioning viable, which in turn would open the door to boids simulation and particle collision.
-Space partitioning would also allow to improve performance for neighbor-based algorithms such as `KNearestNeighborParticleLinker`.
-
-## Test application
-
-**LineWeaverTest** is a test application that can be used to try the library with ease. It implements a window with an OpenGL context, as well as drag and drop for JSON files.
-
-## Setup
-
-The project follows the [Nest](https://github.com/Brocolarbre/Nest/) structure.
-To build the project:
-- Open a terminal in the **root folder** of the project
-- Run the following command :
-  - Windows : `.\scripts\windows\set_environment.bat`
-  - Linux : `./scripts/linux/set_environment.sh`
-- Windove is available [here](https://github.com/Brocolarbre/Windove/). Download the repository and follow the build setup instructions. Then copy the header and library files to the appropriate `Confetti/external/` subfolders.
-- Open the project workspace
-- Build the project
-
-### Static and dynamic linkage
-
-Any project that uses the static version of the library should define the `CONFETTI_STATIC` macro.
-To manually export the library as a shared library, the project should define the `CONFETTI_BUILD` macro.
-Using the library as a static library requires to link the external dependencies of the library (as only a dynamic library or an executable can store static dependencies).
-The dependencies are listed below, the library is guaranteed to work with the specified library versions. Replacing a library with another version may or may not work.
-
-### External dependencies
-
-The minimum required C++ version is **C++17**.
-
-**Confetti** has the following external dependencies :
-- GLAD
-- GLM
-- STB
-- tinyobjloader
-- nlohmann-json
-
-**ConfettiTest** has the following external dependencies :
-- [Windove](https://github.com/Brocolarbre/Windove/) (Windove uses GLFW so linking a static version of Windove requires linking GLFW)
