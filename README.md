@@ -1051,6 +1051,13 @@ It is defined as :
 - **renderType** (RenderType) : the type of render primitive
 - **configurationData** (BillboardRenderConfiguration or MeshRenderConfiguration) : the render primitive configuration data (different for each primitive type)
 
+BillboardRenderConfiguration is defined as :
+- **spriteSheetId** (unsigned int, optional)
+
+MeshRenderConfiguration is defined as :
+- **modelId** (unsigned int)
+- **imageId** (unsigned int)
+
 Here are the JSON representations :
 ```json
 {
