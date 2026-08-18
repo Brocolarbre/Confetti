@@ -56,7 +56,7 @@ namespace cft
 
 	public:
 		static void initialize(const ProviderRegistry& providerRegistry);
-		static void load(const std::string& path, ParticleSystem& particleSystem);
+		static bool load(const std::string& path, ParticleSystem& particleSystem);
 		static void clear();
 
 		static JsonFactory<ForceField>& getForceFieldFactory();

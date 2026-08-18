@@ -11,7 +11,6 @@ ConfettiInstance::ConfettiInstance(unsigned int width, unsigned int height, unsi
     window.addEventHandler(*this);
 
     m_providerRegistry.registerProvider<glm::vec3>("mouseCursor", [this]() { return glm::vec3(m_worldSpaceMousePosition, 0.0f); });
-    //onDragAndDrop({ "res/systems/follow.json" });
 }
 
 void ConfettiInstance::onDragAndDrop(const std::vector<std::string>& paths)
@@ -23,7 +22,8 @@ void ConfettiInstance::onDragAndDrop(const std::vector<std::string>& paths)
 
     cft::JsonLoader::clear();
     cft::JsonLoader::initialize(m_providerRegistry);
-    cft::JsonLoader::load(paths.front(), m_particleSystem);
+    if (!cft::JsonLoader::load(paths.front(), m_particleSystem))
+        return;
 
     m_particleSystem.clear();
     m_particleSystem.playEffect(0);

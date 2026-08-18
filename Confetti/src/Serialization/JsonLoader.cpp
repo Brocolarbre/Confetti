@@ -128,7 +128,7 @@ namespace cft
 		m_initialized = true;
 	}
 
-	void JsonLoader::load(const std::string& path, ParticleSystem& particleSystem)
+	bool JsonLoader::load(const std::string& path, ParticleSystem& particleSystem)
 	{
 		std::ifstream file(path);
 		json data = json::parse(file);
@@ -157,15 +157,20 @@ namespace cft
 		catch (const json::parse_error& error)
 		{
 			std::cerr << "JSON loader parsing error : " << error.what() << std::endl;
+			return false;
 		}
 		catch (const json::out_of_range& error)
 		{
 			std::cerr << "JSON loader missing key error : " << error.what() << std::endl;
+			return false;
 		}
 		catch (const std::exception& error)
 		{
 			std::cerr << "JSON loader error : " << error.what() << std::endl;
+			return false;
 		}
+
+		return true;
 	}
 
 	void JsonLoader::clear()
