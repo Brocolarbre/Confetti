@@ -47,19 +47,17 @@ It uses **OpenGL** for rendering and CPU multithreading for simulation, and can 
 
 ## Design
 
-The engine is :
+The engine is built around five core principles : **data-driven authoring**, **determinism**, **performance**, **composability** and **extensibility**.
 
-**data-driven** : anything the engine is able to do can be described in a configuration file.
-Confetti translates this into a JSON file format. The user can either create the assets in the code, or load a JSON file with an equivalent description.
+**Data-driven authoring** : every engine feature can be represented in a configuration file. Assets can be created directly in C++ or loaded from an equivalent JSON representation. This separates effect authoring from the engine implementation.
 
-**deterministic** : running the same simulation multiple times produces the same result. Determinism is global : changing any random-based asset of the simulation does not affect the other assets, regardless of their order. This is also the case on different machines.
+**Determinism** : the same input produces the same result across runs and machines. Randomness is explicitly controlled through a global simulation seed and local seeds. Each random-based asset has its own deterministic random sequence, so changing the random configuration of one asset does not alter the random results of unrelated assets. This makes effects reproducible while allowing individual assets to be modified independently.
 
-**optimized for performance** : the simulation stores particle data as a structure of arrays (SoA idiom).
-Particles, trails and ribbons are updated using CPU parallelization through multithreading.
+**Performance** : particle data is stored using a structure-of-arrays (SoA) layout to improve data locality and make bulk processing efficient. Simulation work is parallelized across CPU threads, including particle, trail, and ribbon updates. The simulation also uses a fixed timestep to provide stable and predictable behavior regardless of the variable frame time supplied by the application.
 
-**user-friendly** : the data-driven representation allows for a very expressive system that does not require any code, other than creating the assets or loading the JSON file. The assets are created using a declarative system, effectively separating artistic authoring from the engine's complexity.
+**Composability** : effects are constructed by combining specialized assets such as spawners, emission patterns, force fields, motion behaviors, visual behaviors, linkers, and ribbon generators. Assets can be reused across multiple effects and combined in different ways without modifying the underlying engine. Particle effects can also spawn other effects, allowing complex behavior to be built recursively from simpler components.
 
-**expressive** : assets are made of many tools and parameters, some being optional. This gives a lot of customization options and a very large number of effects for the user to compose.
+**Extensibility** : the asset system is based on interfaces for the major types of particle behavior. Applications can provide their own force fields, motion and visual behaviors, attribute generators, emission patterns, particle linkers, and ribbon generators. This allows the engine's built-in functionality to be extended without changing the core simulation.
 
 ## Terminology
 
