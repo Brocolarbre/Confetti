@@ -223,6 +223,7 @@ To build the project:
 - Run the following command :
   - Windows : `.\scripts\windows\set_environment.bat`
   - Linux : `./scripts/linux/set_environment.sh`
+- LineWeaver is available [here](https://github.com/Brocolarbre/LineWeaver/). Download the repository and follow the build setup instructions. Then copy the header and library files to the appropriate `Confetti/external/` subfolders.
 - Windove is available [here](https://github.com/Brocolarbre/Windove/). Download the repository and follow the build setup instructions. Then copy the header and library files to the appropriate `Confetti/external/` subfolders.
 - Open the project workspace
 - Build the project
@@ -244,6 +245,7 @@ The minimum required C++ version is **C++17**.
 - STB
 - tinyobjloader
 - nlohmann-json
+- - [LineWeaver](https://github.com/Brocolarbre/LineWeaver/)
 
 **ConfettiTest** has the following external dependencies :
 - [Windove](https://github.com/Brocolarbre/Windove/) (Windove uses GLFW so linking a static version of Windove requires linking GLFW)
