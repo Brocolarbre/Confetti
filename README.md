@@ -218,7 +218,7 @@ Here are the available force fields :
   - **spatialInfluence**
   - **axis** (vec3) : the axis the object orbits around
   - **strength** (float)
-  - **pullStrengh** (float) : the inward movement force
+  - **pullStrength** (float) : the inward movement force
 - **Wind** : slows down or fastens up the object depending on its velocity relative to the wind direction and strength
   - **direction** (vec3)
   - **strength** (float)
@@ -490,7 +490,7 @@ Specialized generators serve that purpose. The cannot be used for attributes of 
 Here are the available specialized attribute generators :
 - **BrightnessColor** : generates color and strength with user-specified generators and multiplies the color's rgb components with the strength
   - **colorGenerator** (AttributeGeneratorColor)
-  - **strengthGenerator** (AttributeGeneratorFloat)
+  - **brightnessGenerator** (AttributeGeneratorFloat)
 - **NormalBurstLinearVelocity** : generates linear velocity according to the normal and a random offset (requires a spawn shape)
   - **strength** (float)
   - **maximumAngle** (float)

@@ -1,0 +1,161 @@
+{
+    "seed": 42,
+    "billboardRendererImages": {
+        "width": 64,
+        "height": 64,
+        "imageIds": [ 0 ]
+    },
+    "pathRendererImages": null,
+    "meshRendererImageIds": [],
+    "meshRendererModelIds": [],
+    "assets": {
+        "forceFields": [
+            {
+                "id": 0,
+                "type": "Directional",
+                "direction": { "x": 0.0, "y": -1.0, "z": 0.0 },
+                "strength": 9.81
+            },
+            {
+                "id": 1,
+                "type": "Wind",
+                "direction": { "x": 1.0, "y": 0.0, "z": 0.0 },
+                "strength": 0.4,
+                "drag": 0.2
+            }
+        ],
+        "motionBehaviors": [
+            {
+                "id": 0,
+                "type": "Jitter",
+                "strength": 0.015,
+                "seed": 7
+            }
+        ],
+        "visualBehaviors": [
+            {
+                "id": 0,
+                "type": "FadeIn",
+                "duration": { "value": 0.3, "space": "Absolute" }
+            },
+            {
+                "id": 1,
+                "type": "FadeOut",
+                "duration": { "value": 0.5, "space": "Absolute" }
+            }
+        ],
+        "particleSpawners": [
+            {
+                "id": 0,
+                "colorAttributeGenerator": {
+                    "type": "Constant",
+                    "value": { "r": 1.0, "g": 1.0, "b": 1.0, "a": 0.9 }
+                },
+                "positionAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": { "x": -10.0, "y": 8.0, "z": -10.0 },
+                    "maximum": { "x": 10.0, "y": 9.0, "z": 10.0 },
+                    "seed": 0
+                },
+                "rotationAttributeGenerator": {
+                    "type": "Constant",
+                    "value": { "x": 0.0, "y": 0.0, "z": 0.0 }
+                },
+                "scaleAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": { "x": 0.08, "y": 0.08, "z": 0.08 },
+                    "maximum": { "x": 0.2, "y": 0.2, "z": 0.2 },
+                    "seed": 1
+                },
+                "linearVelocityAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": { "x": -0.1, "y": -0.5, "z": -0.1 },
+                    "maximum": { "x": 0.1, "y": -0.2, "z": 0.1 },
+                    "seed": 2
+                },
+                "angularVelocityAttributeGenerator": {
+                    "type": "Constant",
+                    "value": { "x": 0.0, "y": 0.0, "z": 0.0 }
+                },
+                "phaseAttributeGenerator": {
+                    "type": "Constant",
+                    "value": 0.0
+                },
+                "lifetimeAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": 8.0,
+                    "maximum": 12.0,
+                    "seed": 3
+                },
+                "maximumParticleLifetime": 12.0
+            }
+        ],
+        "emissionPatterns": [
+            {
+                "id": 0,
+                "type": "ConstantRate",
+                "rate": 40.0
+            }
+        ],
+        "particleLinkers": [],
+        "ribbonGenerators": [],
+        "images": [
+            { "id": 0, "path": "res/images/snowflake.png" }
+        ],
+        "models": [],
+        "spriteSheetDescriptors": [
+            {
+                "id": 0,
+                "imageId": 0,
+                "frameCount": 1,
+                "rowFrameCount": 1,
+                "frameWidth": 64,
+                "frameHeight": 64,
+                "animationSpeed": 0.0
+            }
+        ],
+        "particleEffectDescriptors": [
+            {
+                "id": 0,
+                "emitterSpawnContexts": [
+                    {
+                        "emitterDescriptorId": 0,
+                        "timeRange": { "spawnTime": 0.0, "duration": 300.0 },
+                        "initialMotionState": {
+                            "position": { "x": 0.0, "y": 0.0, "z": 0.0 },
+                            "linearVelocity": { "x": 0.0, "y": 0.0, "z": 0.0 },
+                            "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+                            "angularVelocity": { "x": 0.0, "y": 0.0, "z": 0.0 }
+                        },
+                        "forceFieldIds": [],
+                        "motionBehaviorIds": []
+                    }
+                ]
+            }
+        ],
+        "particleEmitterDescriptors": [
+            {
+                "id": 0,
+                "poolId": 0,
+                "particleSpawnerId": 0,
+                "emissionPatternId": 0,
+                "motionStateInheritance": {
+                    "position": true,
+                    "linearVelocityFactor": 1.0,
+                    "rotation": true,
+                    "angularVelocityFactor": 1.0
+                },
+                "trailConfiguration": null,
+                "ribbonConfiguration": null,
+                "spawnTriggerDescriptor": null,
+                "renderConfiguration": {
+                    "renderType": "Billboard",
+                    "configurationData": { "spriteSheetId": 0 }
+                },
+                "forceFieldIds": [ 0, 1 ],
+                "motionBehaviorIds": [ 0 ],
+                "visualBehaviorIds": [ 0, 1 ]
+            }
+        ]
+    }
+}

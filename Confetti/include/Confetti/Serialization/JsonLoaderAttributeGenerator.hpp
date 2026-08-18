@@ -69,8 +69,6 @@ namespace cft
 	template <typename Type, typename WrapperType>
 	inline std::unique_ptr<AttributeGenerator<Type>> JsonLoaderAttributeGenerator::parseAttributeGenerator(const json& data)
 	{
-		std::string type = data.at("type");
-
 		if (std::unique_ptr<AttributeGenerator<Type>> generator = parseSpecializedGenerator<Type, WrapperType>(data))
 			return generator;
 		else

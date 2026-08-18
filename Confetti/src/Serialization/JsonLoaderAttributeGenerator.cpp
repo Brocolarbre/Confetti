@@ -13,11 +13,11 @@ namespace cft
     {
         std::string type = data.at("type");
 
-        if (type == "NormalBurst")
+        if (type == "NormalBurstLinearVelocity")
             return std::make_unique<NormalBurstLinearVelocityGenerator>(data.at("strength"), data.at("maximumAngle"), data.at("seed"));
-        else if (type == "Normal")
+        else if (type == "NormalLinearVelocity")
             return std::make_unique<NormalLinearVelocityGenerator>(data.at("strength"));
-        else if (type == "RandomNormalOffset")
+        else if (type == "RandomNormalOffsetPosition")
             return std::make_unique<RandomNormalOffsetPositionGenerator>(data.at("minimumStrength"), data.at("maximumStrength"), data.at("seed"));
         else if (type == "ValueStrength")
             return std::make_unique<ValueStrengthGenerator>(parseAttributeGenerator<glm::vec3, JsonTypes::Vec3>(data.at("valueGenerator")), parseAttributeGenerator<float, float>(data.at("strengthGenerator")));
