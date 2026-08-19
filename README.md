@@ -3,6 +3,15 @@
 Confetti is a data-driven deterministic C++ particle engine designed for high-performance real-time effects.\
 It uses **OpenGL** for rendering and CPU multithreading for simulation, and can be integrated into existing OpenGL applications as a **C++ library**.
 
+![](ConfettiTest/res/videos/fireworks.gif)
+![](ConfettiTest/res/videos/flares.gif)
+![](ConfettiTest/res/videos/ribbons.gif)
+![](ConfettiTest/res/videos/target_1.gif)
+![](ConfettiTest/res/videos/target_2.gif)
+![](ConfettiTest/res/videos/trails_1.gif)
+![](ConfettiTest/res/videos/trails_2.gif)
+![](ConfettiTest/res/videos/explosion.gif)
+
 ## Features
 
 - Data-driven, declarative particle effects
