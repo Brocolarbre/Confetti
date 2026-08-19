@@ -79,24 +79,24 @@ namespace cft
 		m_flareEnabled = enabled;
 	}
 
-	void ParticleRenderer::loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
+	bool ParticleRenderer::loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
 	{
-		m_billboardParticleRenderer.loadTextures(assetRegistry, imageIds, width, height);
+		return m_billboardParticleRenderer.loadTextures(assetRegistry, imageIds, width, height);
 	}
 
-	void ParticleRenderer::loadPathRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
+	bool ParticleRenderer::loadPathRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
 	{
-		m_particlePathRenderer.loadTextures(assetRegistry, imageIds, width, height);
+		return m_particlePathRenderer.loadTextures(assetRegistry, imageIds, width, height);
 	}
 
-	void ParticleRenderer::loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds)
+	bool ParticleRenderer::loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds)
 	{
-		m_meshParticleRenderer.loadTextures(assetRegistry, imageIds);
+		return m_meshParticleRenderer.loadTextures(assetRegistry, imageIds);
 	}
 
-	void ParticleRenderer::loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds)
+	bool ParticleRenderer::loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds)
 	{
-		m_meshParticleRenderer.loadMeshes(assetRegistry, modelIds);
+		return m_meshParticleRenderer.loadMeshes(assetRegistry, modelIds);
 	}
 
 	void ParticleRenderer::resize(unsigned int width, unsigned int height)

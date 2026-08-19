@@ -26,7 +26,7 @@ namespace cft
 	public:
 		BillboardParticleRenderer();
 
-		void loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
+		bool loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
 
 		void update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry, float elapsedTime);
 		void render(const View& view) const;

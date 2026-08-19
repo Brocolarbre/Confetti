@@ -40,7 +40,7 @@ namespace cft
 		m_shader.setUniform("uTexture", 0);
 	}
 
-	void BillboardParticleRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
+	bool BillboardParticleRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
 	{
 		m_imageIdToTextureIndex.clear();
 
@@ -56,8 +56,17 @@ namespace cft
 			unsigned int imageWidth = image.getWidth();
 			unsigned int imageHeight = image.getHeight();
 
+			if (image.getWidth() == 0 || image.getHeight() == 0)
+			{
+				std::cerr << "Particle renderer texture loading error : invalid size for image at id " << imageId << " : " << imageWidth << "x" << imageHeight << std::endl;
+				return false;
+			}
+
 			if (imageWidth != width || imageHeight != height)
+			{
 				std::cerr << "Particle renderer texture loading error : size mismatch for image at id " << imageId << " : " << imageWidth << "x" << imageHeight << " instead of " << width << "x" << height << std::endl;
+				return false;
+			}
 		}
 
 		std::vector<const void*> textureData;
@@ -69,6 +78,7 @@ namespace cft
 		m_textureArray.load(textureData, width, height, GL_NEAREST, GL_CLAMP_TO_EDGE);
 
 		loadSpriteSheets(assetRegistry);
+		return true;
 	}
 
 	void BillboardParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry, const AssetRegistry& assetRegistry, float elapsedTime)

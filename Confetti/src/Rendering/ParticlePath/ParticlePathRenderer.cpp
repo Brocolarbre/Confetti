@@ -222,7 +222,7 @@ namespace cft
 		m_shader.loadFromMemory(std::string(PARTICLE_PATH_VERTEX_SHADER_SOURCE), std::string(PARTICLE_PATH_FRAGMENT_SHADER_SOURCE));
 	}
 
-	void ParticlePathRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
+	bool ParticlePathRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height)
 	{
 		m_imageIdToTextureIndex.clear();
 
@@ -238,8 +238,17 @@ namespace cft
 			unsigned int imageWidth = image.getWidth();
 			unsigned int imageHeight = image.getHeight();
 
+			if (image.getWidth() == 0 || image.getHeight() == 0)
+			{
+				std::cerr << "Particle renderer texture loading error : invalid size for image at id " << imageId << " : " << imageWidth << "x" << imageHeight << std::endl;
+				return false;
+			}
+
 			if (imageWidth != width || imageHeight != height)
+			{
 				std::cerr << "Trail renderer texture loading error : size mismatch for image at id " << imageId << " : " << imageWidth << "x" << imageHeight << " instead of " << width << "x" << height << std::endl;
+				return false;
+			}
 		}
 
 		std::vector<const void*> textureData;
@@ -249,6 +258,7 @@ namespace cft
 			textureData.push_back(data.data());
 
 		m_textureArray.load(textureData, width, height, GL_NEAREST, GL_REPEAT);
+		return true;
 	}
 
 	void ParticlePathRenderer::update(const std::unordered_map<unsigned int, TrailPool>& trailPools, const TrailRegistry& trailRegistry, const std::unordered_map<unsigned int, RibbonPool>& ribbonPools, const RibbonRegistry& ribbonRegistry, const View& view)

@@ -2,6 +2,7 @@
 #include "Confetti/Rendering/ShaderSource/MeshParticleShaderSource.hpp"
 
 #include <glad/glad.h>
+#include <iostream>
 
 namespace cft
 {
@@ -17,39 +18,61 @@ namespace cft
 		m_shader.setUniform("uTexture", 0);
 	}
 
-	void MeshParticleRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds)
+	bool MeshParticleRenderer::loadTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds)
 	{
 		m_textures.clear();
 
 		for (unsigned int imageId : imageIds)
 		{
 			const Image& image = assetRegistry.getImage(imageId);
+
+			unsigned int imageWidth = image.getWidth();
+			unsigned int imageHeight = image.getHeight();
+
+			if (image.getWidth() == 0 || image.getHeight() == 0)
+			{
+				std::cerr << "Particle renderer texture loading error : invalid size for image at id " << imageId << " : " << imageWidth << "x" << imageHeight << std::endl;
+				return false;
+			}
+
 			unsigned int channelCount = image.getChannelCount();
 			Texture texture(GL_TEXTURE_2D, channelCount > 3 ? GL_RGBA8 : GL_RGB8, channelCount > 3 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE);
-			texture.load(image.getData().data(), image.getWidth(), image.getHeight(), GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, true);
+			texture.load(image.getData().data(), imageWidth, imageHeight, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, true);
 			m_textures.try_emplace(imageId, std::move(texture));
 		}
+
+		return true;
 	}
 
-	void MeshParticleRenderer::loadMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds)
+	bool MeshParticleRenderer::loadMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds)
 	{
 		m_meshes.clear();
 
 		for (unsigned int modelId : modelIds)
 		{
+			if (!assetRegistry.hasModel(modelId))
+				return false;
+
 			const Model& model = assetRegistry.getModel(modelId);
 			MeshParticleMesh mesh;
 
 			const std::vector<Vertex>& vertexData = model.getVertexData();
+			const std::vector<unsigned int>& indexData = model.getIndexData();
+
+			if (vertexData.empty() || indexData.empty())
+				return false;
+
 			std::vector<MeshParticleMesh::Vertex> particleMeshVertexData;
 			particleMeshVertexData.reserve(vertexData.size());
 
 			for (const Vertex& vertex : vertexData)
 				particleMeshVertexData.push_back(MeshParticleMesh::Vertex{ vertex.position, vertex.color, vertex.textureCoordinates });
 
-			mesh.load(particleMeshVertexData, model.getIndexData());
+			mesh.load(particleMeshVertexData, indexData);
 			m_meshes.try_emplace(modelId, std::move(mesh));
 		}
+
+		return true;
 	}
 
 	void MeshParticleRenderer::update(const std::unordered_map<unsigned int, ParticlePool>& particlePools, const ParticleRegistry& particleRegistry)

@@ -58,10 +58,10 @@ namespace cft
 		void setBloomEnabled(bool enabled);
 		void setFlareEnabled(bool enabled);
 
-		void loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
-		void loadPathRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
-		void loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds);
-		void loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds);
+		bool loadBillboardRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
+		bool loadPathRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds, unsigned int width, unsigned int height);
+		bool loadMeshRendererTextures(AssetRegistry& assetRegistry, const std::vector<unsigned int>& imageIds);
+		bool loadMeshRendererMeshes(AssetRegistry& assetRegistry, const std::vector<unsigned int>& modelIds);
 
 		void resize(unsigned int width, unsigned int height);
 

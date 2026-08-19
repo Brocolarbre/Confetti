@@ -65,6 +65,19 @@ namespace cft
 		void removeParticleEffectDescriptor(unsigned int id);
 		void removeParticleEmitterDescriptor(unsigned int id);
 
+		bool hasForceField(unsigned int id) const;
+		bool hasMotionBehavior(unsigned int id) const;
+		bool hasVisualBehavior(unsigned int id) const;
+		bool hasParticleSpawner(unsigned int id) const;
+		bool hasEmissionPattern(unsigned int id) const;
+		bool hasParticleLinker(unsigned int id) const;
+		bool hasRibbonGenerator(unsigned int id) const;
+		bool hasImage(unsigned int id) const;
+		bool hasModel(unsigned int id) const;
+		bool hasSpriteSheetDescriptor(unsigned int id) const;
+		bool hasParticleEffectDescriptor(unsigned int id) const;
+		bool hasParticleEmitterDescriptor(unsigned int id) const;
+
 		const ForceField& getForceField(unsigned int id) const;
 		const MotionBehavior& getMotionBehavior(unsigned int id) const;
 		const VisualBehavior& getVisualBehavior(unsigned int id) const;

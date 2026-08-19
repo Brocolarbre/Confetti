@@ -49,10 +49,10 @@ namespace cft
 		static void registerTypes(JsonFactory<lw::Easing>& factory, const ProviderRegistry& providerRegistry);
 
 		static void loadAssets(const json& data, AssetRegistry& assetRegistry);
-		static void loadBillboardRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
-		static void loadPathRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
-		static void loadMeshRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
-		static void loadMeshRendererMeshes(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
+		static bool loadBillboardRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
+		static bool loadPathRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
+		static bool loadMeshRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
+		static bool loadMeshRendererMeshes(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
 
 	public:
 		static void initialize(const ProviderRegistry& providerRegistry);

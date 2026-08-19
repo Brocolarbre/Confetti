@@ -138,6 +138,66 @@ namespace cft
 		m_particleEmitterDescriptors.erase(id);
 	}
 
+	bool AssetRegistry::hasForceField(unsigned int id) const
+	{
+		return m_forceFields.find(id) != m_forceFields.end();
+	}
+
+	bool AssetRegistry::hasMotionBehavior(unsigned int id) const
+	{
+		return m_motionBehaviors.find(id) != m_motionBehaviors.end();
+	}
+
+	bool AssetRegistry::hasVisualBehavior(unsigned int id) const
+	{
+		return m_visualBehaviors.find(id) != m_visualBehaviors.end();
+	}
+
+	bool AssetRegistry::hasParticleSpawner(unsigned int id) const
+	{
+		return m_particleSpawners.find(id) != m_particleSpawners.end();
+	}
+
+	bool AssetRegistry::hasEmissionPattern(unsigned int id) const
+	{
+		return m_emissionPatterns.find(id) != m_emissionPatterns.end();
+	}
+
+	bool AssetRegistry::hasParticleLinker(unsigned int id) const
+	{
+		return m_particleLinkers.find(id) != m_particleLinkers.end();
+	}
+
+	bool AssetRegistry::hasRibbonGenerator(unsigned int id) const
+	{
+		return m_ribbonGenerators.find(id) != m_ribbonGenerators.end();
+	}
+
+	bool AssetRegistry::hasImage(unsigned int id) const
+	{
+		return m_images.find(id) != m_images.end();
+	}
+
+	bool AssetRegistry::hasModel(unsigned int id) const
+	{
+		return m_models.find(id) != m_models.end();
+	}
+
+	bool AssetRegistry::hasSpriteSheetDescriptor(unsigned int id) const
+	{
+		return m_spriteSheetDescriptors.find(id) != m_spriteSheetDescriptors.end();
+	}
+
+	bool AssetRegistry::hasParticleEffectDescriptor(unsigned int id) const
+	{
+		return m_particleEffectDescriptors.find(id) != m_particleEffectDescriptors.end();
+	}
+
+	bool AssetRegistry::hasParticleEmitterDescriptor(unsigned int id) const
+	{
+		return m_particleEmitterDescriptors.find(id) != m_particleEmitterDescriptors.end();
+	}
+
 	const ForceField& AssetRegistry::getForceField(unsigned int id) const
 	{
 		return *m_forceFields.at(id);

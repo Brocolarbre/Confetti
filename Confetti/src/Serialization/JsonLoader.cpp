@@ -59,7 +59,7 @@ namespace cft
 			assetRegistry.addParticleEmitterDescriptor(particleEmitterDescriptorData.at("id"), particleEmitterDescriptorData.get<ParticleEmitterDescriptor>());
 	}
 
-	void JsonLoader::loadBillboardRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
+	bool JsonLoader::loadBillboardRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
 	{
 		unsigned int width = data.at("width");
 		unsigned int height = data.at("height");
@@ -70,10 +70,10 @@ namespace cft
 		for (const auto& imageId : data.at("imageIds"))
 			imageIds.push_back(imageId);
 
-		particleRenderer.loadBillboardRendererTextures(assetRegistry, imageIds, width, height);
+		return particleRenderer.loadBillboardRendererTextures(assetRegistry, imageIds, width, height);
 	}
 
-	void JsonLoader::loadPathRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
+	bool JsonLoader::loadPathRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
 	{
 		unsigned int width = data.at("width");
 		unsigned int height = data.at("height");
@@ -84,10 +84,10 @@ namespace cft
 		for (const auto& imageId : data.at("imageIds"))
 			imageIds.push_back(imageId);
 
-		particleRenderer.loadPathRendererTextures(assetRegistry, imageIds, width, height);
+		return particleRenderer.loadPathRendererTextures(assetRegistry, imageIds, width, height);
 	}
 
-	void JsonLoader::loadMeshRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
+	bool JsonLoader::loadMeshRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
 	{
 		std::vector<unsigned int> meshRendererImageIds;
 		meshRendererImageIds.reserve(data.size());
@@ -95,10 +95,10 @@ namespace cft
 		for (const auto& meshRendererImageId : data)
 			meshRendererImageIds.push_back(meshRendererImageId);
 
-		particleRenderer.loadMeshRendererTextures(assetRegistry, meshRendererImageIds);
+		return particleRenderer.loadMeshRendererTextures(assetRegistry, meshRendererImageIds);
 	}
 
-	void JsonLoader::loadMeshRendererMeshes(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
+	bool JsonLoader::loadMeshRendererMeshes(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry)
 	{
 		std::vector<unsigned int> meshRendererModelIds;
 		meshRendererModelIds.reserve(data.size());
@@ -106,7 +106,7 @@ namespace cft
 		for (const auto& meshRendererModelId : data)
 			meshRendererModelIds.push_back(meshRendererModelId);
 
-		particleRenderer.loadMeshRendererMeshes(assetRegistry, meshRendererModelIds);
+		return particleRenderer.loadMeshRendererMeshes(assetRegistry, meshRendererModelIds);
 	}
 
 	void JsonLoader::initialize(const ProviderRegistry& providerRegistry)
@@ -145,14 +145,23 @@ namespace cft
 
 			const json& billboardRendererImages = data.at("billboardRendererImages");
 			if (!billboardRendererImages.is_null())
-				loadBillboardRendererTextures(billboardRendererImages, particleRenderer, assetRegistry);
+			{
+				if (!loadBillboardRendererTextures(billboardRendererImages, particleRenderer, assetRegistry))
+					return false;
+			}
 
 			const json& pathRendererImages = data.at("pathRendererImages");
 			if (!pathRendererImages.is_null())
-				loadPathRendererTextures(pathRendererImages, particleRenderer, assetRegistry);
+			{
+				if (!loadPathRendererTextures(pathRendererImages, particleRenderer, assetRegistry))
+					return false;
+			}
 
-			loadMeshRendererTextures(data.at("meshRendererImageIds"), particleRenderer, assetRegistry);
-			loadMeshRendererMeshes(data.at("meshRendererModelIds"), particleRenderer, assetRegistry);
+			if (!loadMeshRendererTextures(data.at("meshRendererImageIds"), particleRenderer, assetRegistry))
+				return false;
+			
+			if (!loadMeshRendererMeshes(data.at("meshRendererModelIds"), particleRenderer, assetRegistry))
+				return false;
 		}
 		catch (const json::parse_error& error)
 		{
