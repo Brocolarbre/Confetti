@@ -35,8 +35,6 @@ namespace cft
 		static JsonFactory<lw::Interpolator> m_interpolatorFactory;
 		static JsonFactory<lw::Easing> m_easingFactory;
 
-		static bool m_initialized;
-
 		static void registerTypes(JsonFactory<ForceField>& factory, const ProviderRegistry& providerRegistry);
 		static void registerTypes(JsonFactory<MotionBehavior>& factory, const ProviderRegistry& providerRegistry);
 		static void registerTypes(JsonFactory<VisualBehavior>& factory, const ProviderRegistry& providerRegistry);
@@ -54,10 +52,11 @@ namespace cft
 		static bool loadMeshRendererTextures(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
 		static bool loadMeshRendererMeshes(const json& data, ParticleRenderer& particleRenderer, AssetRegistry& assetRegistry);
 
+		static void clearFactories();
+
 	public:
 		static void initialize(const ProviderRegistry& providerRegistry);
 		static bool load(const std::string& path, ParticleSystem& particleSystem);
-		static void clear();
 
 		static JsonFactory<ForceField>& getForceFieldFactory();
 		static JsonFactory<MotionBehavior>& getMotionBehaviorFactory();

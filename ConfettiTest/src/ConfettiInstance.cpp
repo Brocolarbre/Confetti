@@ -20,7 +20,6 @@ void ConfettiInstance::onDragAndDrop(const std::vector<std::string>& paths)
 
     m_particleSystem.getAssetRegistry().clear();
 
-    cft::JsonLoader::clear();
     cft::JsonLoader::initialize(m_providerRegistry);
     if (!cft::JsonLoader::load(paths.front(), m_particleSystem))
         return;
@@ -34,24 +33,41 @@ void ConfettiInstance::onKeyPressed(dove::KeyEvent keyEvent)
 {
     int particleEffect = -1;
 
-    switch (keyEvent.key)
-    {
-    case dove::Keyboard::Key::One: particleEffect = 0; break;
-    case dove::Keyboard::Key::Two: particleEffect = 1; break;
-    case dove::Keyboard::Key::Three: particleEffect = 2; break;
-    case dove::Keyboard::Key::Four: particleEffect = 3; break;
-    case dove::Keyboard::Key::Five: particleEffect = 4; break;
-    case dove::Keyboard::Key::Six: particleEffect = 5; break;
-    case dove::Keyboard::Key::Seven: particleEffect = 6; break;
-    case dove::Keyboard::Key::Eight: particleEffect = 7; break;
-    case dove::Keyboard::Key::Nine: particleEffect = 8; break;
-    }
+    if (keyEvent.key == dove::Keyboard::Key::Q)
+        particleEffect = 9;
+    else if (keyEvent.key == dove::Keyboard::Key::One || keyEvent.key == dove::Keyboard::Key::Numpad1)
+        particleEffect = 0;
+    else if (keyEvent.key == dove::Keyboard::Key::Two || keyEvent.key == dove::Keyboard::Key::Numpad2)
+        particleEffect = 1;
+    else if (keyEvent.key == dove::Keyboard::Key::Three || keyEvent.key == dove::Keyboard::Key::Numpad3)
+        particleEffect = 2;
+    else if (keyEvent.key == dove::Keyboard::Key::Four || keyEvent.key == dove::Keyboard::Key::Numpad4)
+        particleEffect = 3;
+    else if (keyEvent.key == dove::Keyboard::Key::Five || keyEvent.key == dove::Keyboard::Key::Numpad5)
+        particleEffect = 4;
+    else if (keyEvent.key == dove::Keyboard::Key::Six || keyEvent.key == dove::Keyboard::Key::Numpad6)
+        particleEffect = 5;
+    else if (keyEvent.key == dove::Keyboard::Key::Seven || keyEvent.key == dove::Keyboard::Key::Numpad7)
+        particleEffect = 6;
+    else if (keyEvent.key == dove::Keyboard::Key::Eight || keyEvent.key == dove::Keyboard::Key::Numpad8)
+        particleEffect = 7;
+    else if (keyEvent.key == dove::Keyboard::Key::Nine || keyEvent.key == dove::Keyboard::Key::Numpad9)
+        particleEffect = 8;
 
     if (particleEffect == -1)
         return;
-
+    
     m_particleSystem.clear();
-    m_particleSystem.playEffect(static_cast<unsigned int>(particleEffect));
+    if (particleEffect == 9)
+    {
+        for (unsigned int i = 0; m_particleSystem.getAssetRegistry().hasParticleEffectDescriptor(i); ++i)
+            m_particleSystem.playEffect(i);
+    }
+    else
+    {
+        if (m_particleSystem.getAssetRegistry().hasParticleEffectDescriptor(static_cast<unsigned int>(particleEffect)))
+            m_particleSystem.playEffect(static_cast<unsigned int>(particleEffect));
+    }
     m_chronometer.restart();
     m_worldSpaceMousePosition = glm::vec2(0.0f);
 }

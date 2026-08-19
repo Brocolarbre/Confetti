@@ -18,8 +18,6 @@ namespace cft
 	JsonFactory<lw::Interpolator> JsonLoader::m_interpolatorFactory;
 	JsonFactory<lw::Easing> JsonLoader::m_easingFactory;
 
-	bool JsonLoader::m_initialized = false;
-
 	void JsonLoader::loadAssets(const json& data, AssetRegistry& assetRegistry)
 	{
 		for (const auto& forceFieldData : data.at("forceFields"))
@@ -109,10 +107,23 @@ namespace cft
 		return particleRenderer.loadMeshRendererMeshes(assetRegistry, meshRendererModelIds);
 	}
 
+	void JsonLoader::clearFactories()
+	{
+		m_forceFieldFactory.clear();
+		m_motionBehaviorFactory.clear();
+		m_visualBehaviorFactory.clear();
+		m_emissionPatternFactory.clear();
+		m_particleLinkerFactory.clear();
+		m_ribbonGeneratorFactory.clear();
+		m_spawnShapeFactory.clear();
+		m_linkRuleFactory.clear();
+		m_interpolatorFactory.clear();
+		m_easingFactory.clear();
+	}
+
 	void JsonLoader::initialize(const ProviderRegistry& providerRegistry)
 	{
-		if (m_initialized)
-			return;
+		clearFactories();
 
 		registerTypes(m_forceFieldFactory, providerRegistry);
 		registerTypes(m_motionBehaviorFactory, providerRegistry);
@@ -124,8 +135,6 @@ namespace cft
 		registerTypes(m_linkRuleFactory, providerRegistry);
 		registerTypes(m_interpolatorFactory, providerRegistry);
 		registerTypes(m_easingFactory, providerRegistry);
-
-		m_initialized = true;
 	}
 
 	bool JsonLoader::load(const std::string& path, ParticleSystem& particleSystem)
@@ -180,25 +189,6 @@ namespace cft
 		}
 
 		return true;
-	}
-
-	void JsonLoader::clear()
-	{
-		if (!m_initialized)
-			return;
-
-		m_forceFieldFactory.clear();
-		m_motionBehaviorFactory.clear();
-		m_visualBehaviorFactory.clear();
-		m_emissionPatternFactory.clear();
-		m_particleLinkerFactory.clear();
-		m_ribbonGeneratorFactory.clear();
-		m_spawnShapeFactory.clear();
-		m_linkRuleFactory.clear();
-		m_interpolatorFactory.clear();
-		m_easingFactory.clear();
-
-		m_initialized = false;
 	}
 
 	JsonFactory<ForceField>& JsonLoader::getForceFieldFactory()

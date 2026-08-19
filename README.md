@@ -150,7 +150,7 @@ Here is the structure of a minimal JSON file with no assets :
 ```
 
 You can find example JSON files in the `ConfettiTest/res/systems/` folder.
-Note that if you want to load files multiple times, you should call `JsonLoader::clear` each time.\
+`JsonLoader::initialize` should be called every time the provider registry is modified so that `JsonLoader::load` uses the correct providers.\
 Any asset attribute marked as (optional) can be specified as `null` in the JSON file.\
 The enumeration values are represented as string literals.
 
