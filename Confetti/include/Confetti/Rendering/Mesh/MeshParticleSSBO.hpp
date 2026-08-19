@@ -20,6 +20,8 @@ namespace cft
 		unsigned int m_id;
 		unsigned int m_capacity;
 
+		ParticleData* m_mappedData;
+
 		void resize(unsigned int capacity);
 
 	public:
