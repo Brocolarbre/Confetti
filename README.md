@@ -3,33 +3,24 @@
 Confetti is a data-driven deterministic C++ particle engine designed for high-performance real-time effects.\
 It uses **OpenGL** for rendering and CPU multithreading for simulation, and can be integrated into existing OpenGL applications as a **C++ library**.
 
-<table>
+<table border="0">
   <tr>
-    <td><img src="ConfettiTest/res/videos/fireworks.gif" width="300"></td>
-    <td><img src="ConfettiTest/res/videos/flares.gif" width="300"></td>
+    <td><img src="ConfettiTest/res/videos/fireworks.gif" width="100%"></td>
+    <td><img src="ConfettiTest/res/videos/flares.gif" width="100%"></td>
   </tr>
   <tr>
-    <td><img src="ConfettiTest/res/videos/ribbons.gif" width="300"></td>
-    <td><img src="ConfettiTest/res/videos/target_1.gif" width="300"></td>
+    <td><img src="ConfettiTest/res/videos/ribbons.gif" width="100%"></td>
+    <td><img src="ConfettiTest/res/videos/target_1.gif" width="100%"></td>
   </tr>
   <tr>
-    <td><img src="ConfettiTest/res/videos/target_2.gif" width="300"></td>
-    <td><img src="ConfettiTest/res/videos/trails_1.gif" width="300"></td>
+    <td><img src="ConfettiTest/res/videos/target_2.gif" width="100%"></td>
+    <td><img src="ConfettiTest/res/videos/trails_1.gif" width="100%"></td>
   </tr>
   <tr>
-    <td><img src="ConfettiTest/res/videos/trails_2.gif" width="300"></td>
-    <td><img src="ConfettiTest/res/videos/explosion.gif" width="300"></td>
+    <td><img src="ConfettiTest/res/videos/trails_2.gif" width="100%"></td>
+    <td><img src="ConfettiTest/res/videos/explosion.gif" width="100%"></td>
   </tr>
 </table>
-
-<img src="ConfettiTest/res/videos/fireworks.gif" width="300">
-<img src="ConfettiTest/res/videos/flares.gif" width="300">
-<img src="ConfettiTest/res/videos/ribbons.gif" width="300">
-<img src="ConfettiTest/res/videos/target_1.gif" width="300">
-<img src="ConfettiTest/res/videos/target_2.gif" width="300">
-<img src="ConfettiTest/res/videos/trails_1.gif" width="300">
-<img src="ConfettiTest/res/videos/trails_2.gif" width="300">
-<img src="ConfettiTest/res/videos/explosion.gif" width="300">
 
 ## Features
 
