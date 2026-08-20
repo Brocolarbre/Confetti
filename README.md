@@ -289,10 +289,11 @@ All interface-based assets (behaviors, emission and link assets) whose JSON repr
 }
 ```
 
-The `id` attribute is only necessary if the asset type can be stored in the asset registry (force fields, motion behaviors, visual behaviors, emission patterns...). It is not needed for LineWeaver assets (points, curves, interpolators, easings).\
+The `id` attribute is only necessary if the asset type can be stored in the asset registry (force fields, motion behaviors, visual behaviors, emission patterns...). It is not needed for LineWeaver assets (points, curves, interpolators, easings). Its absence in the examples means the corresponding asset type cannot be stored in the asset registry.\
 The `type` attribute must match the class name without its type suffix ("DirectionalForceField" becomes "Directional"). The type suffix is not necessary because the context allows to deduce it : here, the JSON representation is stored in the force field array of the JSON file (`{ ..., "assets": { "forceFields": [], ... }`). 
 The remaining attributes directly map to the asset parameters described below each asset (for the `DirectionalForceField` example, the parameters are "direction" and "strength"). The name uses the same naming convention as in the code and the asset's description. The parameter type is specified next to the attribute name in the asset's description.\
 The arrays T[] map to `std::vector<T>`.
+Note that any user-defined asset is not supported in the JSON loader.
 
 ### Force fields
 
@@ -345,6 +346,20 @@ Here are the available force fields :
 The force fields can be found in the `Confetti/Behavior/Force/` folder.
 The user can implement additional force fields by implementing the `ForceField` interface.
 
+Here is a JSON representation example :
+```json
+{
+    "id": 0,
+    "type": "Repulsion"
+    "spatialInfluence": {
+        "origin": { "x": 0.0, "y": 0.0, "z": 0.0 },
+        "radius": 5.0,
+        "falloff"
+    },
+    "strength": 2.0
+}
+```
+
 #### Spatial influence
 
 Some force fields use a `SpatialInfluence` to support additional parameters such as an effect radius and a strength falloff.
@@ -358,7 +373,7 @@ Here is the JSON representation :
 {
     "origin": { "x": 0.0, "y": 0.0, "z": 0.0 },
     "radius": 4.0,
-    "falloff": "Linear"
+    "falloff": "Constant"
 }
 ```
 
@@ -415,6 +430,17 @@ Here are the available motion behaviors :
 The motion behaviors can be found in the `Confetti/Behavior/Motion/` folder.
 The user can implement additional motion behaviors by implementing the `MotionBehavior` interface.
 
+Here is a JSON representation example :
+```json
+{
+    "id": 0,
+    "type": "Oscillation"
+    "from": { "x": 0.0, "y": 0.0, "z": 0.0 },
+    "to": { "x": 0.0, "y": 0.0, "z": 0.0 },
+    "speed": 2.5
+}
+```
+
 #### Curve
 
 A curve is a list of points.
@@ -440,6 +466,14 @@ Here are the available interpolators :
 - **CatmullRomInterpolator**
 - **HermiteInterpolator**
 - **LinearInterpolator**
+
+Here is a JSON representation example :
+```json
+{
+    "type": "Bezier"
+    "pointsPerSegment": 3
+}
+```
 
 #### Easing
 
@@ -480,6 +514,14 @@ Here are the available easing functions :
 - **EaseSmootherstep**
 - **EaseSmoothstep**
 
+Here is a JSON representation example :
+```json
+{
+    "type": "EaseInSine"
+    "pointsPerSegment": 3
+}
+```
+
 ### Visual behaviors
 
 Visual behaviors allow to modify particles **appearance** by modifying their **color and scale**.
@@ -518,6 +560,18 @@ Here are the available visual behaviors :
 
 The visual behaviors can be found in the `Confetti/Behavior/Visual/` folder.
 The user can implement additional visual behaviors by implementing the `VisualBehavior` interface.
+
+Here is a JSON representation example :
+```json
+{
+    "id": 0,
+    "type": "FadeIn",    
+    "duration": {
+        "value": 0.15,
+        "space": "Normalized"
+    }
+}
+```
 
 #### Particle time
 
@@ -558,60 +612,62 @@ The above representation applies to both billboard and mesh particles. The only 
 Here is the JSON representation :
 ```json
 {
-                "id": 0,
-                "colorAttributeGenerator": {
-                    "type": "BrightnessColor",
-                    "colorGenerator": {
-                        "type": "InterpolatedRandomSet",
-                        "values": [
-                            { "r": 1.0, "g": 0.0, "b": 0.0, "a": 1.0 },
-                            { "r": 0.0, "g": 1.0, "b": 0.0, "a": 1.0 },
-                            { "r": 0.0, "g": 0.0, "b": 1.0, "a": 1.0 }
-                        ],
-                        "seed": 1
-                    },
-                    "brightnessGenerator": {
-                        "type": "Constant",
-                        "value": 10.0
-                    }
-                },
-                "positionAttributeGenerator": {
-                    "type": "Random",
-                    "minimum": { "x": -6.0, "y": -12.0, "z": 6.0 },
-                    "maximum": { "x": 6.0, "y": -10.5, "z": 6.0 },
-                    "seed": 0
-                },
-                "rotationAttributeGenerator": {
-                    "type": "Constant",
-                    "value": { "x": 0.0, "y": 0.0, "z": 0.0 }
-                },
-                "scaleAttributeGenerator": {
-                    "type": "Random",
-                    "minimum": { "x": 0.5, "y": 0.5, "z": 0.5 },
-                    "maximum": { "x": 0.6, "y": 0.6, "z": 0.6 },
-                    "seed": 0
-                },
-                "linearVelocityAttributeGenerator": {
-                    "type": "Random",
-                    "minimum": { "x": -1.0, "y": 0.8, "z": -1.0 },
-                    "maximum": { "x": 1.0, "y": 1.5, "z": 1.0 },
-                    "seed": 0
-                },
-                "angularVelocityAttributeGenerator": {
-                    "type": "Constant",
-                    "value": { "x": 0.0, "y": 0.0, "z": 0.0 }
-                },
-                "phaseAttributeGenerator": {
-                    "type": "Constant",
-                    "value": 0.0
-                },
-                "lifetimeAttributeGenerator": {
-                    "type": "Constant",
-                    "value": 1.3
-                },
-                "maximumParticleLifetime": 1.3
-            }
+    "id": 0,
+    "colorAttributeGenerator": {
+        "type": "BrightnessColor",
+        "colorGenerator": {
+            "type": "InterpolatedRandomSet",
+            "values": [
+                { "r": 1.0, "g": 0.0, "b": 0.0, "a": 1.0 },
+                { "r": 0.0, "g": 1.0, "b": 0.0, "a": 1.0 },
+                { "r": 0.0, "g": 0.0, "b": 1.0, "a": 1.0 }
+            ],
+            "seed": 1
+        },
+        "brightnessGenerator": {
+            "type": "Constant",
+            "value": 10.0
+        }
+    },
+    "positionAttributeGenerator": {
+        "type": "Random",
+        "minimum": { "x": -6.0, "y": -12.0, "z": 6.0 },
+        "maximum": { "x": 6.0, "y": -10.5, "z": 6.0 },
+        "seed": 0
+    },
+    "rotationAttributeGenerator": {
+        "type": "Constant",
+        "value": { "x": 0.0, "y": 0.0, "z": 0.0 }
+    },
+    "scaleAttributeGenerator": {
+        "type": "Random",
+        "minimum": { "x": 0.5, "y": 0.5, "z": 0.5 },
+        "maximum": { "x": 0.6, "y": 0.6, "z": 0.6 },
+        "seed": 0
+    },
+    "linearVelocityAttributeGenerator": {
+        "type": "Random",
+        "minimum": { "x": -1.0, "y": 0.8, "z": -1.0 },
+        "maximum": { "x": 1.0, "y": 1.5, "z": 1.0 },
+        "seed": 0
+    },
+    "angularVelocityAttributeGenerator": {
+        "type": "Constant",
+        "value": { "x": 0.0, "y": 0.0, "z": 0.0 }
+    },
+    "phaseAttributeGenerator": {
+        "type": "Constant",
+        "value": 0.0
+    },
+    "lifetimeAttributeGenerator": {
+        "type": "Constant",
+        "value": 1.3
+    },
+    "maximumParticleLifetime": 1.3
+}
 ```
+
+The position attribute generator can be replaced with a spawn shape, as explained later.
 
 #### Generic generators
 
@@ -645,6 +701,17 @@ Here are the available generic attribute generators :
 
 The generic attribute generators can be found in the `Confetti/Emission/AttributeGenerator/Generic/` folder.
 The user can implement additional generic attribute generators by implementing the `AttributeGenerator` interface.
+
+Here is a JSON representation example :
+```json
+{
+    "type": "Linear",
+    "from": 0.0,
+    "to": 5.0
+}
+```
+
+In this example, the value of the `from` and `to` attributes is specified as a float, meaning this specific generation can be appplied for phase and lifetime attribute generators.
 
 #### Weighted value
 
@@ -686,6 +753,26 @@ Here are the available specialized attribute generators :
 The specialized attribute generators can be found in the `Confetti/Emission/AttributeGenerator/Specialized/` folder.
 The user can implement additional specialized attribute generators by implementing the `AttributeGenerator` interface.
 
+Here is a JSON representation example :
+```json
+{
+    "type": "BrightnessColor",
+    "colorGenerator": {
+        "type": "InterpolatedRandomSet",
+        "values": [
+            { "r": 1.0, "g": 0.0, "b": 0.0, "a": 1.0 },
+            { "r": 0.0, "g": 1.0, "b": 0.0, "a": 1.0 },
+            { "r": 0.0, "g": 0.0, "b": 1.0, "a": 1.0 }
+        ],
+        "seed": 1
+    },
+    "brightnessGenerator": {
+        "type": "Constant",
+        "value": 10.0
+    }
+}
+```
+
 #### Spawn shapes
 
 The `ParticleSpawner` class constructor has an overload that replaces the position attribute generator with a `SpawnShape`.
@@ -718,6 +805,23 @@ Here are the available spawn shapes :
   - **radius** (float)
 - **SphereVolume** : generates spawn contexts in the shape of a sphere volume
   - **radius** (float)
+- **Spiral** : generates spawn contexts in the shape of a spiral
+  - **height** (float)
+  - **radius** (float)
+  - **turns** (float) : number of spiral rotations
+  - **helix** (bool) : whether the radius is constant like a spring
+  - **axis** (vec3)
+
+In the JSON representation, replace the `positionAttributeGenerator` with a `spawnShape` attribute.
+
+Here is a JSON representation example :
+```json
+{
+    "type": "Circle",
+    "radius": 4.0,
+    "axis": { "x": 0.0, "y": 1.0, "z": 0.0 }
+}
+```
 
 ### Emission patterns
 
@@ -752,6 +856,14 @@ Here are the available emission patterns :
 The emission patterns can be found in the `Confetti/Emission/EmissionPattern/` folder.
 The user can implement additional emission patterns by implementing the `EmissionPattern` interface.
 
+Here is a JSON representation example :
+```json
+{
+    "type": "ConstantRate",
+    "rate": 80
+}
+```
+
 ### Link rules
 
 Link rules are here to determine whether a connection between two particles is possible in the context of ribbon generation.
@@ -774,12 +886,21 @@ Here are the available link rules :
 The link rules can be found in the `Confetti/Simulation/Link/LinkRule/` folder.
 The user can implement additional link rules by implementing the `LinkRule` interface.
 
+Here is a JSON representation example :
+```json
+{
+    "type": "AgeSimilarity",
+    "threshold": 0.6
+}
+```
+
 ### Particle linkers
 
 Particle linkers connect particles together in order to create ribbons.
 They use a selection algorithm and decide which particles should be connected while respecting the link rules.
 The connection rules must be respected in order to create a connection.
 The validation rules must be respected for existing connections to remain alive.
+The rules are optional and the connection and validation rules arrays can be empty.
 Here are the available particle linkers :
 - **Chain** : particles are sorted by spawn time and connected in a chain
   - **connectionRules** (UniquePtrLinkRule[])
@@ -808,6 +929,26 @@ Here are the available particle linkers :
 The particle linkers can be found in the `Confetti/Simulation/Link/ParticleLinker/` folder.
 The user can implement additional particle linkers by implementing the `ParticleLinker` interface.
 
+Here is a JSON representation example :
+```json
+{
+    "type": "Chain",
+    "connectionRules": [
+        {
+            "type": "ColorSimilarity",
+            "threshold": 0.8
+        }
+    ],
+    "validationRules": [
+        {
+            "type": "Distance",
+            "minimumDistance": 0.5,
+            "maximumDistance": 1.5
+        }
+    ]
+}
+```
+
 ### Ribbon generators
 
 Ribbon generators define the appearance of a connection between two particles.
@@ -830,7 +971,15 @@ Here are the available ribbon generators :
 The ribbon generators can be found in the `Confetti/Simulation/Link/RibbonGenerator/` folder.
 The user can implement additional ribbon generators by implementing the `RibbonGenerator` interface.
 
-Note that any user-defined asset is not supported in the JSON loader.
+Here is a JSON representation example :
+```json
+{
+    "type": "Spiral",
+    "frequency": 1.5,
+    "radius": 0.3,
+    "animationSpeed": 0.0
+}
+```
 
 ### Images
 
