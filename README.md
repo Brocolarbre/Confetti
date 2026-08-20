@@ -5,20 +5,20 @@ It uses **OpenGL** for rendering and CPU multithreading for simulation, and can 
 
 <table>
 	<tr>
-		<td><img src="ConfettiTest/res/videos/fireworks.gif" width="100%"></td>
-		<td><img src="ConfettiTest/res/videos/galaxy.gif" width="100%"></td>
+		<td width="50%"><img src="ConfettiTest/res/videos/fireworks.gif" width="100%"></td>
+		<td width="50%"><img src="ConfettiTest/res/videos/galaxy.gif" width="100%"></td>
 	</tr>
 	<tr>
-		<td><img src="ConfettiTest/res/videos/flares.gif" width="100%"></td>
-		<td><img src="ConfettiTest/res/videos/ribbons.gif" width="100%"></td>
+		<td width="50%"><img src="ConfettiTest/res/videos/flares.gif" width="100%"></td>
+		<td width="50%"><img src="ConfettiTest/res/videos/ribbons.gif" width="100%"></td>
 	</tr>
 	<tr>
-		<td><img src="ConfettiTest/res/videos/target_1.gif" width="100%"></td>
-		<td><img src="ConfettiTest/res/videos/target_2.gif" width="100%"></td>
+		<td width="50%"><img src="ConfettiTest/res/videos/target_1.gif" width="100%"></td>
+		<td width="50%"><img src="ConfettiTest/res/videos/target_2.gif" width="100%"></td>
 	</tr>
 	<tr>
-		<td><img src="ConfettiTest/res/videos/trails_1.gif" width="100%"></td>
-		<td><img src="ConfettiTest/res/videos/trails_2.gif" width="100%"></td>
+		<td width="50%"><img src="ConfettiTest/res/videos/trails_1.gif" width="100%"></td>
+		<td width="50%"><img src="ConfettiTest/res/videos/trails_2.gif" width="100%"></td>
 	</tr>
 </table>
 
