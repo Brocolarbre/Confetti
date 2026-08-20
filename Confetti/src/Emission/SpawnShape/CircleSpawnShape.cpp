@@ -7,7 +7,7 @@ namespace cft
 	SpawnContext CircleSpawnShape::generateValue(unsigned int count, unsigned int index) const
 	{
 		constexpr float twoPi = glm::two_pi<float>();
-		float t = static_cast<float>(index) / static_cast<float>(count - 1);
+		float t = count > 1 ? static_cast<float>(index) / static_cast<float>(count - 1) : 0.0f;
 		float angle = twoPi * t;
 		
 		glm::vec3 tangent = glm::abs(m_axis.y) < 0.999f ? glm::normalize(glm::cross(m_axis, glm::vec3(0.0f, 1.0f, 0.0f))) : glm::normalize(glm::cross(m_axis, glm::vec3(1.0f, 0.0f, 0.0f)));

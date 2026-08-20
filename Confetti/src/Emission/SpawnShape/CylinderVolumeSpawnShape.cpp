@@ -8,7 +8,7 @@ namespace cft
 	{
 		constexpr float goldenAngle = 2.39996323f;
 
-		float t = static_cast<float>(index) / static_cast<float>(count - 1);
+		float t = count > 1 ? static_cast<float>(index) / static_cast<float>(count - 1) : 0.0f;
 		float currentHeight = t * m_height;
 		float angle = index * goldenAngle;
 		float radius = m_radius * glm::sqrt(static_cast<float>((index * 2654435761u) & 0xFFFF) / 65535.0f);

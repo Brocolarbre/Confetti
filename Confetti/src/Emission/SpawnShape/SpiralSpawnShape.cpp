@@ -1,33 +1,38 @@
-#include "Confetti/Emission/SpawnShape/ConeVolumeSpawnShape.hpp"
+#include "Confetti/Emission/SpawnShape/SpiralSpawnShape.hpp"
 
 #include <glm/gtc/constants.hpp>
 
 namespace cft
 {
-	SpawnContext ConeVolumeSpawnShape::generateValue(unsigned int count, unsigned int index) const
+	SpawnContext SpiralSpawnShape::generateValue(unsigned int count, unsigned int index) const
 	{
-		constexpr float goldenAngle = 2.39996323f;
+		if (count == 0)
+			return SpawnContext{ glm::vec3(0.0f), m_axis };
+
+		constexpr float twoPi = glm::two_pi<float>();
 
 		float t = count > 1 ? static_cast<float>(index) / static_cast<float>(count - 1) : 0.0f;
+
 		float currentHeight = t * m_height;
-		float currentRadius = (currentHeight / m_height) * m_radius;
-		float radius = currentRadius * glm::sqrt(t);
-		float angle = index * goldenAngle;
+		float currentRadius = m_helix ? t * m_radius : m_radius;
+		float angle = t * m_turns * twoPi;
 
 		glm::vec3 tangent = glm::abs(m_axis.y) < 0.999f ? glm::normalize(glm::cross(m_axis, glm::vec3(0.0f, 1.0f, 0.0f))) : glm::normalize(glm::cross(m_axis, glm::vec3(1.0f, 0.0f, 0.0f)));
 		glm::vec3 bitangent = glm::cross(m_axis, tangent);
 
 		glm::vec3 radial = glm::cos(angle) * tangent + glm::sin(angle) * bitangent;
 
-		glm::vec3 position = m_axis * currentHeight + radial * radius;
-		glm::vec3 normal = glm::normalize(radial * m_height - m_axis * m_radius);
+		glm::vec3 position = m_axis * currentHeight + radial * currentRadius;
+		glm::vec3 normal = glm::normalize(radial);
 
 		return SpawnContext{ position, normal };
 	}
 
-	ConeVolumeSpawnShape::ConeVolumeSpawnShape(float height, float radius, const glm::vec3& axis) :
+	SpiralSpawnShape::SpiralSpawnShape(float height, float radius, float turns, bool helix, const glm::vec3& axis) :
 		m_height(height),
 		m_radius(glm::max(radius, 0.0001f)),
+		m_turns(turns),
+		m_helix(helix),
 		m_axis(glm::normalize(axis))
 	{
 

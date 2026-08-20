@@ -1,0 +1,546 @@
+{
+    "seed": 1337,
+
+    "billboardRendererImages": {
+        "width": 100,
+        "height": 100,
+        "imageIds": [0]
+    },
+
+    "pathRendererImages": null,
+
+    "meshRendererImageIds": [],
+
+    "meshRendererModelIds": [],
+
+    "assets": {
+        "forceFields": [
+            {
+                "id": 0,
+                "type": "Vortex",
+                "spatialInfluence": {
+                    "origin": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "radius": 20.0,
+                    "falloff": "Linear"
+                },
+                "axis": {
+                    "x": 0.0,
+                    "y": 1.0,
+                    "z": 0.0
+                },
+                "strength": 3.5,
+                "pullStrength": 15.0
+            },
+            {
+                "id": 1,
+                "type": "Attraction",
+                "spatialInfluence": {
+                    "origin": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "radius": 10.0,
+                    "falloff": "Quadratic"
+                },
+                "strength": 0.8
+            }
+        ],
+
+        "motionBehaviors": [],
+
+        "visualBehaviors": [
+            {
+                "id": 0,
+                "type": "FadeIn",
+                "duration": {
+                    "value": 0.15,
+                    "space": "Normalized"
+                }
+            },
+            {
+                "id": 1,
+                "type": "FadeOut",
+                "duration": {
+                    "value": 0.35,
+                    "space": "Normalized"
+                }
+            },
+            {
+                "id": 2,
+                "type": "GrowIn",
+                "duration": {
+                    "value": 0.12,
+                    "space": "Normalized"
+                }
+            },
+            {
+                "id": 3,
+                "type": "SmoothColorShift",
+                "colors": [
+                    {
+                        "r": 0.15,
+                        "g": 0.25,
+                        "b": 1.0,
+                        "a": 1.0
+                    },
+                    {
+                        "r": 0.35,
+                        "g": 0.05,
+                        "b": 1.0,
+                        "a": 1.0
+                    },
+                    {
+                        "r": 0.8,
+                        "g": 0.15,
+                        "b": 1.0,
+                        "a": 1.0
+                    },
+                    {
+                        "r": 0.15,
+                        "g": 0.55,
+                        "b": 1.0,
+                        "a": 1.0
+                    }
+                ],
+                "speed": 0.08,
+                "cyclic": true
+            },
+            {
+                "id": 4,
+                "type": "Flicker",
+                "minimumBrightness": 1.0,
+                "maximumBrightness": 1.3,
+                "speed": 6.0
+            }
+        ],
+
+        "particleSpawners": [
+            {
+                "id": 0,
+
+                "colorAttributeGenerator": {
+                    "type": "BrightnessColor",
+                    "colorGenerator": {
+                        "type": "InterpolatedRandomSet",
+                        "values": [
+                            {
+                                "r": 0.12,
+                                "g": 0.25,
+                                "b": 1.0,
+                                "a": 1.0
+                            },
+                            {
+                                "r": 0.35,
+                                "g": 0.08,
+                                "b": 1.0,
+                                "a": 1.0
+                            },
+                            {
+                                "r": 0.75,
+                                "g": 0.2,
+                                "b": 1.0,
+                                "a": 1.0
+                            },
+                            {
+                                "r": 0.45,
+                                "g": 0.75,
+                                "b": 1.0,
+                                "a": 1.0
+                            },
+                            {
+                                "r": 1.0,
+                                "g": 0.75,
+                                "b": 0.25,
+                                "a": 1.0
+                            }
+                        ],
+                        "seed": 101
+                    },
+                    "brightnessGenerator": {
+                        "type": "Random",
+                        "minimum": 2.0,
+                        "maximum": 5.0,
+                        "seed": 102
+                    }
+                },
+
+                "spawnShape": {
+                    "type": "SphereVolume",
+                    "radius": 0.65
+                },
+
+                "rotationAttributeGenerator": {
+                    "type": "Constant",
+                    "value": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    }
+                },
+
+                "scaleAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": {
+                        "x": 0.025,
+                        "y": 0.025,
+                        "z": 0.025
+                    },
+                    "maximum": {
+                        "x": 0.09,
+                        "y": 0.09,
+                        "z": 0.09
+                    },
+                    "seed": 103
+                },
+
+                "linearVelocityAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": {
+                        "x": -0.15,
+                        "y": -0.15,
+                        "z": -0.15
+                    },
+                    "maximum": {
+                        "x": 0.15,
+                        "y": 0.15,
+                        "z": 0.15
+                    },
+                    "seed": 104
+                },
+
+                "angularVelocityAttributeGenerator": {
+                    "type": "Constant",
+                    "value": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    }
+                },
+
+                "phaseAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": 0.0,
+                    "maximum": 1.0,
+                    "seed": 105
+                },
+
+                "lifetimeAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": 2.5,
+                    "maximum": 4.0,
+                    "seed": 106
+                },
+
+                "maximumParticleLifetime": 4.0
+            },
+
+            {
+                "id": 1,
+
+                "colorAttributeGenerator": {
+                    "type": "BrightnessColor",
+                    "colorGenerator": {
+                        "type": "InterpolatedRandomSet",
+                        "values": [
+                            {
+                                "r": 0.12,
+                                "g": 0.25,
+                                "b": 1.0,
+                                "a": 1.0
+                            },
+                            {
+                                "r": 0.35,
+                                "g": 0.08,
+                                "b": 1.0,
+                                "a": 1.0
+                            },
+                            {
+                                "r": 0.75,
+                                "g": 0.2,
+                                "b": 1.0,
+                                "a": 1.0
+                            },
+                            {
+                                "r": 0.45,
+                                "g": 0.75,
+                                "b": 1.0,
+                                "a": 1.0
+                            },
+                            {
+                                "r": 1.0,
+                                "g": 0.75,
+                                "b": 0.25,
+                                "a": 1.0
+                            }
+                        ],
+                        "seed": 201
+                    },
+                    "brightnessGenerator": {
+                        "type": "Random",
+                        "minimum": 0.8,
+                        "maximum": 2.5,
+                        "seed": 202
+                    }
+                },
+
+                "spawnShape": {
+                    "type": "GalaxyDisk",
+                    "radius": 1.0,
+                    "bulgeRadius": 1.15,
+                    "thickness": 0.35,
+                    "arms": 4,
+                    "turns": 1.65,
+                    "armSpread": 0.48,
+                    "axis": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    }
+                },
+
+                "rotationAttributeGenerator": {
+                    "type": "Constant",
+                    "value": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    }
+                },
+
+                "scaleAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": {
+                        "x": 0.018,
+                        "y": 0.018,
+                        "z": 0.018
+                    },
+                    "maximum": {
+                        "x": 0.055,
+                        "y": 0.055,
+                        "z": 0.055
+                    },
+                    "seed": 203
+                },
+
+                "linearVelocityAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": {
+                        "x": -0.05,
+                        "y": -0.025,
+                        "z": -0.05
+                    },
+                    "maximum": {
+                        "x": 0.05,
+                        "y": 0.025,
+                        "z": 0.05
+                    },
+                    "seed": 204
+                },
+
+                "angularVelocityAttributeGenerator": {
+                    "type": "Constant",
+                    "value": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    }
+                },
+
+                "phaseAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": 0.0,
+                    "maximum": 10.0,
+                    "seed": 205
+                },
+
+                "lifetimeAttributeGenerator": {
+                    "type": "Random",
+                    "minimum": 5.0,
+                    "maximum": 9.0,
+                    "seed": 206
+                },
+
+                "maximumParticleLifetime": 9.0
+            }
+        ],
+
+        "emissionPatterns": [
+            {
+                "id": 0,
+                "type": "ConstantRate",
+                "rate": 180.0
+            },
+            {
+                "id": 1,
+                "type": "ConstantRate",
+                "rate": 850.0
+            }
+        ],
+
+        "particleLinkers": [],
+
+        "ribbonGenerators": [],
+
+        "images": [
+            {
+                "id": 0,
+                "path": "res/images/rounded_diamond.png"
+            }
+        ],
+
+        "models": [],
+
+        "spriteSheetDescriptors": [],
+
+        "particleEffectDescriptors": [
+            {
+                "id": 0,
+                "emitterSpawnContexts": [
+                    {
+                        "emitterDescriptorId": 0,
+                        "timeRange": {
+                            "spawnTime": 0.0,
+                            "duration": 100000.0
+                        },
+                        "initialMotionState": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "linearVelocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotation": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "angularVelocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            }
+                        },
+                        "forceFieldIds": [],
+                        "motionBehaviorIds": []
+                    },
+                    {
+                        "emitterDescriptorId": 1,
+                        "timeRange": {
+                            "spawnTime": 0.0,
+                            "duration": 100000.0
+                        },
+                        "initialMotionState": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "linearVelocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotation": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "angularVelocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            }
+                        },
+                        "forceFieldIds": [],
+                        "motionBehaviorIds": []
+                    }
+                ]
+            }
+        ],
+
+        "particleEmitterDescriptors": [
+            {
+                "id": 0,
+                "poolId": 0,
+                "particleSpawnerId": 0,
+                "emissionPatternId": 0,
+
+                "motionStateInheritance": {
+                    "position": true,
+                    "linearVelocityFactor": 0.0,
+                    "rotation": true,
+                    "angularVelocityFactor": 0.0
+                },
+
+                "trailConfiguration": null,
+                "ribbonConfiguration": null,
+                "spawnTriggerDescriptor": null,
+
+                "renderConfiguration": {
+                    "renderType": "Billboard",
+                    "configurationData": {
+                        "spriteSheetId": null
+                    }
+                },
+
+                "forceFieldIds": [],
+
+                "motionBehaviorIds": [],
+
+                "visualBehaviorIds": [
+                    0,
+                    1,
+                    2
+                ]
+            },
+
+            {
+                "id": 1,
+                "poolId": 1,
+                "particleSpawnerId": 1,
+                "emissionPatternId": 1,
+
+                "motionStateInheritance": {
+                    "position": true,
+                    "linearVelocityFactor": 0.0,
+                    "rotation": true,
+                    "angularVelocityFactor": 0.0
+                },
+
+                "trailConfiguration": null,
+                "ribbonConfiguration": null,
+                "spawnTriggerDescriptor": null,
+
+                "renderConfiguration": {
+                    "renderType": "Billboard",
+                    "configurationData": {
+                        "spriteSheetId": null
+                    }
+                },
+
+                "forceFieldIds": [
+                    0
+                ],
+
+                "motionBehaviorIds": [],
+
+                "visualBehaviorIds": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            }
+        ]
+    }
+}

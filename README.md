@@ -801,6 +801,14 @@ Here are the available spawn shapes :
 - **Disk** : generates spawn contexts in the shape of a circle surface
   - **radius** (float)
   - **axis** (vec3)
+- **GalaxyDisk** : generates spawn contexts in the shape of a galaxy
+  - **radius** (float)
+  - **bulgeRadius** (float) : size of the dense center
+  - **thickness** (float) : size along the axis
+  - **arms** (unsigned int) : how many arms are created
+  - **turns** (float) : how tightly the arms wrap
+  - **armSpread** (float) : how large each arm is
+  - **axis** (vec3)
 - **Sphere** : generates spawn contexts in the shape of a sphere surface
   - **radius** (float)
 - **SphereVolume** : generates spawn contexts in the shape of a sphere volume

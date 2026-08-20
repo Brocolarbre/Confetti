@@ -9,7 +9,7 @@ namespace cft
 		constexpr float goldenAngle = 2.39996323f;
 		constexpr float twoPi = glm::two_pi<float>();
 		
-		float t = static_cast<float>(index) / static_cast<float>(count - 1);
+		float t = count > 1 ? static_cast<float>(index) / static_cast<float>(count - 1) : 0.0f;
 	
 		float angle = goldenAngle * static_cast<float>(index);
 		float radius = m_radius * glm::sqrt(t);
